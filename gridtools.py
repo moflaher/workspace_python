@@ -10,7 +10,7 @@ from StringIO import StringIO
 
 from datatools import *
 from regions import makeregions
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 
 def regions(regionname=None):
     """Returns region locations and full names
@@ -44,11 +44,12 @@ def loadnei(neifilename=None):
         fp=open(neifilename,'r')
     except IOError:
         print 'Can not find ' + neifilename
+        return
 
     nnodes=int(fp.readline())
     maxnei=int(fp.readline())
     llminmax=np.genfromtxt(StringIO(fp.readline()))
-    t_data=np.loadtxt(neifilename,skiprows=3)
+    t_data=np.loadtxt(neifilename,skiprows=3,dtype='float64')
     fp.close()
 
     neifile={}
@@ -57,6 +58,7 @@ def loadnei(neifilename=None):
     neifile['maxnei']=maxnei
     neifile['llminmax']=llminmax
 
+    neifile['nodenumber']=t_data[:,0]
     neifile['nodell']=t_data[:,1:3]
     neifile['bcode']=t_data[:,3]
     neifile['h']=t_data[:,4]
