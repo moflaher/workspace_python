@@ -67,4 +67,6 @@ zips/
 *.llz
 *.nod
 *.csv
+*.mat
+*.dat
 

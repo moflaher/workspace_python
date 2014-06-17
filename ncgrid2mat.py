@@ -38,24 +38,19 @@ import sys
 
 
 data = loadnc('/media/moflaher/My Book/kitimat3_runs/kitimat3_56_0.25_45day/output/')
-kelp=np.genfromtxt('kelplocations.dat')
-savepath='figures/png/kitimat3/misc/'
-if not os.path.exists(savepath): os.makedirs(savepath)
+data=ncdatasort(data)
 
-host=data['trigrid'].get_trifinder().__call__(kelp[:,0],kelp[:,1])
-host=np.unique(host)
-host=host[host !=-1]
+tempdic={}
 
-np.savetxt('kelptriangles.dat',host+1,fmt='%i')
+tempdic['trigrid']=data['nv']+1
+tempdic['lon']=data['lon']
+tempdic['lat']=data['lat']
+tempdic['lonc']=data['uvnodell'][:,0]
+tempdic['latc']=data['uvnodell'][:,1]
+tempdic['h']=data['h']
+tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
 
-trihost=np.zeros([data['nv'].shape[0],])
-trihost[host]=1
 
+sio.savemat('kitgrid.mat',mdict=tempdic)
 
-plt.tripcolor(data['trigrid'],trihost)
-plt.colorbar()
-plt.grid()
-plt.title('Locations with kelp')
-plt.savefig(savepath + 'kelp_host_locations.png',dpi=1200)
-plt.close()
 
