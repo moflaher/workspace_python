@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
+from gridtools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -27,7 +28,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 for i in xrange(len(data['time'])):
     print i
     plt.close()
-    plt.tripcolor(data['trigrid'],data['hs'][i,:],vmin=0,vmax=2)
+    plt.tripcolor(data['trigrid'],data['hs'][i,:],vmin=0,vmax=10)
     plt.colorbar()
     plt.grid()
     plt.axis(region['region'])

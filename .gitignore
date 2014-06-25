@@ -69,4 +69,6 @@ zips/
 *.csv
 *.mat
 *.dat
+*.ll
+*.xy
 

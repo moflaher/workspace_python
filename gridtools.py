@@ -62,7 +62,7 @@ def loadnei(neifilename=None):
     neifile['nodell']=t_data[:,1:3]
     neifile['bcode']=t_data[:,3]
     neifile['h']=t_data[:,4]
-    neifile['neighbours']=t_data[:,5:-1]
+    neifile['neighbours']=t_data[:,5:]
     
     return neifile
 
@@ -86,5 +86,43 @@ def find_land_nodes(neifile=None):
     nodes=np.where(y[0]==2)[0]+1
 
     return nodes
+
+
+def savenei(neifilename=None,neifile=None):
+    """
+    Loads a .nei file and returns the data as a dictionary.
+
+ 
+    """
+    
+    if neifilename==None:
+        print 'savenei requires a filename to save.'
+        return
+    try:
+        fp=open(neifilename,'w')
+    except IOError:
+        print 'Can''t make ' + neifilename
+        return
+
+    if neifile==None:
+        print 'No neifile dict given.'
+        return
+
+
+
+    fp.write('%d\n' % neifile['nnodes'])
+    fp.write('%d\n' % neifile['maxnei'])
+    fp.write('%f %f %f %f\n' % (neifile['llminmax'][0],neifile['llminmax'][1],neifile['llminmax'][2],neifile['llminmax'][3]))   
+   
+
+    for i in range(0,neifile['nnodes']):
+        fp.write('%d %f %f %d %f %s\n' % (neifile['nodenumber'][i], neifile['nodell'][i,0], neifile['nodell'][i,1], neifile['bcode'][i] ,neifile['h'][i],np.array_str(neifile['neighbours'][i,].astype(int))[1:-1] ) )
+
+    
+    fp.close()
+
+
+
+
 
 
