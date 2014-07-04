@@ -49,7 +49,7 @@ for i in range(0,len(data['nodell'])):
             idx=np.where((xloc2==data['nodell'][i,0]) & (yloc2==data['nodell'][i,1]) & (xloc1==data['nodell'][neifile['neighbours'][i,j]-1,0]) & (yloc1==data['nodell'][neifile['neighbours'][i,j]-1,1]) )[0]
 
             if (idx.size>0):            
-                runningdist[idx]=np.max([runningdist[idx],dist/tnd[i]])
+                runningdist[idx]=np.max([runningdist[idx],(dist/tnd[i])*(6/sum(neifile['neighbours'][i,]!=0))])
         
             else:        
                 xloc1=np.append(xloc1,data['nodell'][i,0])
@@ -73,7 +73,7 @@ for i in range(0,len(data['nodell'])):
 
 #Slow hacky plot, use jet reversed as it is better for my vision.
 jet = cm = plt.get_cmap('jet_r') 
-cNorm  = mpl.colors.Normalize(vmin=runningdist.min(), vmax=runningdist.max())
+cNorm  = mpl.colors.Normalize(vmin=runningdist[runningdist!=0].min(), vmax=runningdist.max())
 scalarMap = mpl.cm.ScalarMappable(norm=cNorm, cmap=jet)
 print scalarMap.get_clim()
 

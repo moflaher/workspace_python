@@ -59,6 +59,7 @@ old/
 ttide_py/
 UTide/
 zips/
+misc/
 
 #other files that might contain information not to be public
 *.ele

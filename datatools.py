@@ -539,11 +539,7 @@ def get_elements(data, region):
     rectangle) and determines the elements of uvnode that lie within the
     region
     """
-    uvnode = data['uvnodell']
-    elements = np.where((uvnode[:,0] >= region[0]) & \
-        (uvnode[:,0] <= region[1]) & \
-        (uvnode[:,1] >= region[2]) & \
-        (uvnode[:,1] <= region[3]))[0]
+    elements = np.where((data['uvnodell'][:,0] >= region['region'][0]) & (data['uvnodell'][:,0] <= region['region'][1]) & (data['uvnodell'][:,1] >= region['region'][2]) & (data['uvnodell'][:,1] <= region['region'][3]))[0]
 
     return elements
 
@@ -551,13 +547,8 @@ def get_nodes(data, region):
     """Takes nodexy and a region (specified by the corners of a rectangle)
     and determines the nodes that lie in the region
     """
-    nodexy = data['nodell']
-    region = np.abs(region)
-    nodexy = np.abs(nodexy)
-    nodes = np.where((nodexy[:,0] >= region[0]) & \
-        (nodexy[:,0] <= region[1]) & \
-        (nodexy[:,1] >= region[2]) & \
-        (nodexy[:,1] <= region[3]))[0]
+   
+    nodes = np.where((data['nodell'][:,0] >= region['region'][0]) & (data['nodell'][:,0] <= region['region'][1]) & (data['nodell'][:,1] >= region['region'][2]) & (data['nodell'][:,1] <= region['region'][3]))[0]
     return nodes
 
 def regioner(region, data, name=None, savedir=None, dim='2D'):

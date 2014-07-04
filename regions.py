@@ -76,6 +76,12 @@ def makeregions():
     allregions['kitimat3']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-132.32,  -126.665,  51.16,  55.925])
+    tmpdic['passage']='kit4'
+    tmpdic['passageP']='Kitimat Grid'
+    allregions['kit4']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-129.5, -128.25,  53.25,  54.1])
     tmpdic['passage']='douglas'
     tmpdic['passageP']='Douglas Channel'
@@ -101,9 +107,17 @@ def makeregions():
 
     tmpdic={}  
     tmpdic['region']=np.array([-131, -128.5, 52.25, 54.1])
-    tmpdic['passage']='hiparea1'
+    tmpdic['passage']='shiparea1'
     tmpdic['passageP']='Shipping Area 1'
-    allregions['hiparea1']=tmpdic
+    allregions['shiparea1']=tmpdic
+    
+    #General regions
+    tmpdic={}  
+    tmpdic['region']=np.array([-67.5, -66, 44.5, 45.3])
+    tmpdic['passage']='musq'
+    tmpdic['passageP']='musq'
+    allregions['musq']=tmpdic
+
 
 
 
