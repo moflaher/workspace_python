@@ -81,8 +81,10 @@ def loadnc(datadir, singlename=None):
         data['nv']=data['nv'].astype(int).T-1
     if data.has_key('nbe'):
         data['nbe']=data['nbe'].astype(int).T-1
-    data['nele'] = ncid.dimensions['nele']
-    data['node'] = ncid.dimensions['node']
+    if ncid.dimensions.has_key('nele'):    
+        data['nele'] = ncid.dimensions['nele']
+    if ncid.dimensions.has_key('node'):
+        data['node'] = ncid.dimensions['node']
 
    
     ncid.close()
@@ -297,7 +299,11 @@ def ncdatasort(data):
     uvnodell = np.empty((len(nv[:,0]),2))
     uvnodell[:,0] = (lon[nv[:,0]] + lon[nv[:,1]] + lon[nv[:,2]]) / 3.0
     uvnodell[:,1] = (lat[nv[:,0]] + lat[nv[:,1]] + lat[nv[:,2]]) / 3.0
+    
+    uvh= np.empty((len(nv[:,0]),1))   
+    uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
 
+    data['uvh']=uvh
     data['uvnode'] = uvnode
     data['uvnodell'] = uvnodell
     data['nodell'] = nodell

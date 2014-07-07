@@ -121,6 +121,51 @@ def savenei(neifilename=None,neifile=None):
     
     fp.close()
 
+def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
+    """
+    Saves a fvcom cage file.
+
+ 
+    """
+    #Check for filename and open, catch expection if it can't create file.
+    if filename==None:
+        print 'fvcom_savecage requires a filename to save.'
+        return
+    try:
+        fp=open(filename,'w')
+    except IOError:
+        print 'Can''t make ' + filename
+        return
+
+    #Make sure all arrays were given
+    if ((nodes==None) or (drag==None) or (depth==None)):
+        print 'Need to gives arrays of nodes,drag, and depth.'
+        fp.close()
+        return
+    #Make sure they are all the same size
+    if ((nodes.size!=drag.size) or (nodes.size!=depth.size)):
+        print 'Arrays are not the same size.'
+        fp.close()
+        return 
+    #Make sure that the arrays are single columns or rank 1. If not then transpose them.
+    #Check if the transposed arrays are the same as size, if not then they have more then one column/row so exit
+    if (nodes.shape[0]<nodes.size):
+        nodes=nodes.T
+        drag=drag.T
+        depth=depth.T
+        if (nodes.shape[0]<nodes.size):  
+            fp.close()
+            return
+     
+  
+    fp.write('%s %d\n' % ('CAGE Node Number = ',np.max(nodes.shape) ) )
+
+    for i in range(0,len(nodes)):
+        fp.write('%d %f %f\n' % (nodes[i],drag[i],depth[i]) )
+
+    
+    fp.close()
+
 
 
 
