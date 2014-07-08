@@ -12,8 +12,8 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2'
-grid='sfm6_musq2'
+name='cage_0.6_baserun_2'
+grid='sfm6_musq'
 regionname='musq'
 datatype='2d'
 
@@ -25,7 +25,7 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-starttime=383
+starttime=0
 region=regions(regionname)
 nodes=get_nodes(data,region)
 elements=get_elements(data,region)

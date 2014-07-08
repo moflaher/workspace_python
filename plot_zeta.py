@@ -12,9 +12,9 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2'
+name='sfm6_musq2_test_2'
 grid='sfm6_musq2'
-regionname='musq'
+regionname='sfmwhole'
 datatype='2d'
 
 
@@ -26,17 +26,18 @@ data = ncdatasort(data)
 print 'done sort'
 
 
+region=regions(regionname)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/zeta/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/zeta/' + name + '_' + regionname + '_-.5_.5/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 
 # Plot mesh
-for i in range(0,20):
-    plt.tripcolor(data['trigrid'],data['zeta'][i,:])
+for i in range(0,len(data['time'])):
+    plt.tripcolor(data['trigrid'],data['zeta'][i,:],vmin=-.5,vmax=.5)
     plt.grid()
     plt.colorbar()
-    plt.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=1200)
+    plt.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=300)
     plt.close()
 
 
