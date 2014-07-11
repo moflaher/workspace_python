@@ -55,22 +55,21 @@ host=data['trigrid'].get_trifinder().__call__(kelp[:,0],kelp[:,1])
 
 newhost=host
 
-for i in range(0,len(host)):
-    if (host[i]!=-1):
-        dist=(data['nodell'][data['nv'][host[i],],0]-kelp[i,0])**2+(data['nodell'][data['nv'][host[i],],1]-kelp[i,1])**2
-        newhost[i]=data['nv'][host[i],np.argsort(dist)[0]]
+
     
         
 newhost=np.unique(newhost)
 newhost=newhost[newhost !=-1]     
 
-host_lt_depth=data['h'][newhost]<depth
+host_lt_depth=data['uvh'][newhost]<depth
 
 
 
 newhost=newhost[host_lt_depth.flatten()]
 
-
+tempdic={}
+tempdic['kelp_elements']=newhost
+sio.savemat('kelp_elements_kit4.mat',mdict=tempdic)
 
 
 np.savetxt('kelpnodes_kit4.dat',newhost+1,fmt='%i')
@@ -80,7 +79,7 @@ depth=np.zeros([newhost.shape[0],])+40
 
 fvcom_savecage('kit4_cage.dat',newhost+1,drag,depth)
 
-trihost=np.zeros([data['nodell'].shape[0],])
+trihost=np.zeros([data['uvnodell'].shape[0],])
 trihost[newhost]=1
 
 plt.close()

@@ -11,6 +11,7 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
+import sys
 from StringIO import StringIO
 
 from gridtools import *
