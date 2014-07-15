@@ -121,6 +121,26 @@ def savenei(neifilename=None,neifile=None):
     
     fp.close()
 
+def max_element_side_ll(data=None,elenum=None):
+    """
+    Given data and an element number returns the length of the longest side in ll.
+
+ 
+    """
+    if data==None:
+        print 'Need proper data structure'
+        return
+    if elenum==None:
+        print 'Need to specify an element'
+        return
+    
+    a=data['nodell'][data['nv'][elenum,0],]
+    b=data['nodell'][data['nv'][elenum,1],]
+    c=data['nodell'][data['nv'][elenum,2],]
+
+    return np.max(sp.spatial.distance.pdist(np.array([a,b,c])))
+
+
 def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
     """
     Saves a fvcom cage file.
