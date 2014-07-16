@@ -9,6 +9,7 @@ import scipy as sp
 import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
+import scipy.io as sio
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
