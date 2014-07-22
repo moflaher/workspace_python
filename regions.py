@@ -106,6 +106,12 @@ def makeregions():
     allregions['gilisland']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-129.7,  -129.5,  52.9,  53.1])
+    tmpdic['passage']='fasttip'
+    tmpdic['passageP']='fasttip'
+    allregions['fasttip']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-131, -128.5, 52.25, 54.1])
     tmpdic['passage']='shiparea1'
     tmpdic['passageP']='Shipping Area 1'
@@ -117,6 +123,12 @@ def makeregions():
     tmpdic['passage']='musq'
     tmpdic['passageP']='musq'
     allregions['musq']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-66.925, -66.8,45.0,45.075])
+    tmpdic['passage']='musq_cage'
+    tmpdic['passageP']='musq_cage'
+    allregions['musq_cage']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-72,   -56,    37,    47])

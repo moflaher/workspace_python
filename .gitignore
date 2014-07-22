@@ -73,4 +73,5 @@ misc/
 *.ll
 *.xy
 *.nc
+kernprof.py
 

@@ -12,17 +12,17 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
-regionname='kit4'
+name='sfm6_musq2_old_cages'
+grid='sfm6_musq2'
+regionname='musq_cage'
 datatype='2d'
-starttime=384
+starttime=0
 cmin=0
-cmax=1
+cmax=0.5
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
