@@ -118,7 +118,7 @@ def makeregions():
     allregions['shiparea1']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.15, -128.65, 53.4, 53.7])
+    tmpdic['region']=np.array([-129.15, -128.65, 53.4, 53.8])
     tmpdic['passage']='kit4_area1'
     tmpdic['passageP']='kit4_area1'
     allregions['kit4_area1']=tmpdic

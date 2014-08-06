@@ -188,6 +188,13 @@ def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
 
 
 def equal_vectors(data,region,spacing):
+    """
+    Take an FVCOM data dictionary, a region dictionary and a spacing in meters.
+    Returns: The element idx that best approximates the given spacing in the region.
+
+ 
+    """
+
     centerele=np.argsort((data['uvnodell'][:,1]-(region['region'][3]+region['region'][2])/2)**2+(data['uvnodell'][:,0]-(region['region'][1]+region['region'][0])/2)**2)
     xhalf=0.5*np.fabs(region['region'][1]-region['region'][0])*112200
     yhalf=0.5*np.fabs(region['region'][3]-region['region'][2])*112200
