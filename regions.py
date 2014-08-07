@@ -106,10 +106,40 @@ def makeregions():
     allregions['gilisland']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-129.7,  -129.5,  52.9,  53.1])
+    tmpdic['passage']='fasttip'
+    tmpdic['passageP']='fasttip'
+    allregions['fasttip']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-131, -128.5, 52.25, 54.1])
     tmpdic['passage']='shiparea1'
     tmpdic['passageP']='Shipping Area 1'
     allregions['shiparea1']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.15, -128.65, 53.4, 53.8])
+    tmpdic['passage']='kit4_area1'
+    tmpdic['passageP']='kit4_area1'
+    allregions['kit4_area1']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.65, -129.35, 52.85, 53.15])
+    tmpdic['passage']='kit4_area2'
+    tmpdic['passageP']='kit4_area2'
+    allregions['kit4_area2']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.25, -128.75, 52.6, 52.8])
+    tmpdic['passage']='kit4_area3'
+    tmpdic['passageP']='kit4_area3'
+    allregions['kit4_area3']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-130, -128, 52, 54.1])
+    tmpdic['passage']='mostchannels'
+    tmpdic['passageP']='mostchannels'
+    allregions['mostchannels']=tmpdic
     
     #General regions
     tmpdic={}  
@@ -117,6 +147,12 @@ def makeregions():
     tmpdic['passage']='musq'
     tmpdic['passageP']='musq'
     allregions['musq']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-66.925, -66.8,45.0,45.075])
+    tmpdic['passage']='musq_cage'
+    tmpdic['passageP']='musq_cage'
+    allregions['musq_cage']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-72,   -56,    37,    47])

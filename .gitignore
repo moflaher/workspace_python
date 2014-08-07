@@ -60,6 +60,7 @@ ttide_py/
 UTide/
 zips/
 misc/
+data/
 
 #other files that might contain information not to be public
 *.ele
@@ -73,4 +74,5 @@ misc/
 *.ll
 *.xy
 *.nc
+kernprof.py
 

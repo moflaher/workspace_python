@@ -69,7 +69,7 @@ def loadnc(datadir, singlename=None):
     data['filepath'] = filepath
 
     #load data
-    ncid = netcdf.netcdf_file(filepath, 'r')
+    ncid = netcdf.netcdf_file(filepath, 'r',mmap=True)
 
     for i in ncid.variables.keys():
         data[i]=ncid.variables[i].data
@@ -88,7 +88,6 @@ def loadnc(datadir, singlename=None):
 
    
     ncid.close()
-
     #Now we get the long/lat data.  Note that this method will search
     #for long/lat files in the datadir and up to two levels above
     #the datadir.

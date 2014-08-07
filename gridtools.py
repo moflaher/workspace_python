@@ -187,6 +187,65 @@ def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
     fp.close()
 
 
+def equal_vectors(data,region,spacing):
+    """
+    Take an FVCOM data dictionary, a region dictionary and a spacing in meters.
+    Returns: The element idx that best approximates the given spacing in the region.
+
+ 
+    """
+
+    centerele=np.argsort((data['uvnodell'][:,1]-(region['region'][3]+region['region'][2])/2)**2+(data['uvnodell'][:,0]-(region['region'][1]+region['region'][0])/2)**2)
+    xhalf=0.5*np.fabs(region['region'][1]-region['region'][0])*112200
+    yhalf=0.5*np.fabs(region['region'][3]-region['region'][2])*112200
+
+    #xmultiplier=np.floor(np.fabs(xhalf*2)/spacing)
+    #ymultiplier=np.floor(np.fabs(yhalf*2)/spacing)    
+
+    XI=np.arange((data['uvnode'][centerele[1],0]-xhalf),(data['uvnode'][centerele[1],0]+xhalf),spacing)
+    YI=np.arange((data['uvnode'][centerele[1],1]-yhalf),(data['uvnode'][centerele[1],1]+yhalf),spacing)
+
+    xv,yv=np.meshgrid(XI,YI)
+    xytrigrid = mplt.Triangulation(data['x'], data['y'],data['nv'])
+    host=xytrigrid.get_trifinder().__call__(xv.reshape(-1,1),yv.reshape(-1,1))
+
+    idx=get_elements(data,region)
+
+    common=np.in1d(host,idx)
+
+    return host[common]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

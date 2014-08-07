@@ -12,15 +12,16 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='cage_0.6_baserun_2'
-grid='sfm6_musq'
-regionname='musq'
+name='kit4_45days_3'
+grid='kit4'
+regionname='kit4_area3'
 datatype='2d'
+starttime=384
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -43,7 +44,6 @@ plt.axis(region['region'])
 plt.title(grid + ' Grid')
 plt.savefig(savepath + grid + '_' + regionname +'_grid.png',dpi=1200)
 plt.close()
-
 
 # Plot depth
 plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nodes].min(),vmax=data['h'][nodes].max())
