@@ -12,6 +12,32 @@ from datatools import *
 from regions import makeregions
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 
+"""
+Front Matter
+=============
+
+Created in 2014
+
+Author: Mitchell O'Flaherty-Sproul
+
+A bunch of functions dealing with finite element grids.
+
+Requirements
+===================================
+Absolutely Necessary:
+
+
+Optional, but recommended:
+
+
+Functions
+=========
+regions -   given no input regions returns a list of regions, given a valid location it returns long/lat of the region and the passage name in file format and title format.
+            
+"""
+
+
+
 def regions(regionname=None):
     """Returns region locations and full names
 

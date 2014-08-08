@@ -18,6 +18,7 @@ from StringIO import StringIO
 from gridtools import *
 from datatools import *
 from misctools import *
+from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 

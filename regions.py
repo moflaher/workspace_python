@@ -19,7 +19,7 @@ Optional, but recommended:
 
 Functions
 =========
-regions -   given no input regions returns a list of regions, given a valid location it returns long/lat of the region and the passage name in file format and title format.
+makeregions - function creates all the regions and returns a dictionary containing them.
             
 """
 import numpy as np
@@ -120,19 +120,19 @@ def makeregions():
     tmpdic={}  
     tmpdic['region']=np.array([-129.15, -128.65, 53.4, 53.8])
     tmpdic['passage']='kit4_area1'
-    tmpdic['passageP']='kit4_area1'
+    tmpdic['passageP']='Area 1'
     allregions['kit4_area1']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-129.65, -129.35, 52.85, 53.15])
     tmpdic['passage']='kit4_area2'
-    tmpdic['passageP']='kit4_area2'
+    tmpdic['passageP']='Area 2'
     allregions['kit4_area2']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-129.25, -128.75, 52.6, 52.8])
     tmpdic['passage']='kit4_area3'
-    tmpdic['passageP']='kit4_area3'
+    tmpdic['passageP']='Area 3'
     allregions['kit4_area3']=tmpdic
 
     tmpdic={}  
