@@ -61,6 +61,7 @@ UTide/
 zips/
 misc/
 data/
+qstat_data/
 
 #other files that might contain information not to be public
 *.ele

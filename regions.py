@@ -106,7 +106,7 @@ def makeregions():
     allregions['gilisland']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.7,  -129.5,  52.9,  53.1])
+    tmpdic['region']=np.array([-129.7,  -129.4,  52.9,  53.1])
     tmpdic['passage']='fasttip'
     tmpdic['passageP']='fasttip'
     allregions['fasttip']=tmpdic
@@ -146,6 +146,12 @@ def makeregions():
     tmpdic['passage']='mostchannels'
     tmpdic['passageP']='mostchannels'
     allregions['mostchannels']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.7, -129.1, 52.3, 52.9])
+    tmpdic['passage']='aristazabal_west'
+    tmpdic['passageP']='West of Aristazabal Island'
+    allregions['aristazabal_west']=tmpdic
     
     #General regions
     tmpdic={}  
