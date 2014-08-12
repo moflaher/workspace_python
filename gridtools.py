@@ -222,8 +222,8 @@ def equal_vectors(data,region,spacing):
     """
 
     centerele=np.argsort((data['uvnodell'][:,1]-(region['region'][3]+region['region'][2])/2)**2+(data['uvnodell'][:,0]-(region['region'][1]+region['region'][0])/2)**2)
-    xhalf=0.5*np.fabs(region['region'][1]-region['region'][0])*112200
-    yhalf=0.5*np.fabs(region['region'][3]-region['region'][2])*112200
+    xhalf=0.75*np.fabs(region['region'][1]-region['region'][0])*112200
+    yhalf=0.75*np.fabs(region['region'][3]-region['region'][2])*112200
 
     #xmultiplier=np.floor(np.fabs(xhalf*2)/spacing)
     #ymultiplier=np.floor(np.fabs(yhalf*2)/spacing)    

@@ -23,7 +23,7 @@ name='kit4_45days_3'
 grid='kit4'
 regionname='mostchannels'
 datatype='2d'
-regionsub=['kit4_area1','kit4_area2','kit4_area3']
+regionsub=['kit4_area1','kit4_area2','kit4_area3','kit4_area4']
 
 
 ### load the .nc file #####

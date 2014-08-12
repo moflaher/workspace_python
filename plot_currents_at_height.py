@@ -20,10 +20,10 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_45days_3'
 grid='kit4'
-regionname='kit4_area3'
+regionname='kit4_area4'
 datatype='2d'
 starttime=384
-spacing=500
+spacing=100
 interpheight=1
 
 ### load the .nc file #####
@@ -35,6 +35,7 @@ print 'done sort'
 
 region=regions(regionname)
 sidx=equal_vectors(data,region,spacing)
+nidx=get_nodes(data,region)
 
 savepath='figures/png/' + grid + '_' + datatype + '/currents_' + ("%d" %interpheight)+ 'm/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -81,7 +82,7 @@ vplot=newv[ebb,sidx].copy()
 tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'])
+plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
 cb=plt.colorbar()
 cb.set_label('(meter)')
 Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)
@@ -109,7 +110,7 @@ vplot=newv[fld,sidx].copy()
 tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'])
+plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
 cb=plt.colorbar()
 cb.set_label('(meter)')
 Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)

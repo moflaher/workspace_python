@@ -38,8 +38,9 @@ def prettyplot_ll(plt,**kwargs):
                 plt.axis(value['region'])
 
     plt.gca().get_xaxis().get_major_formatter().set_useOffset(False)
+    plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
     plt.gca().set_xticklabels(-1*(plt.gca().get_xticks()))
-    plt.gca().set_xlabel(r'Longitude $(W^{\circ})$')
-    plt.gca().set_ylabel(r'Latitude $(N^{\circ})$')
+    plt.gca().set_xlabel(r'Longitude (W$^{\circ}$)')
+    plt.gca().set_ylabel(r'Latitude (N$^{\circ}$)')
 
     return plt

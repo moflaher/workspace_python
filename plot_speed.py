@@ -12,17 +12,17 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_old_cages'
-grid='sfm6_musq2'
-regionname='musq_cage'
+name='kit4_45days_3'
+grid='kit4'
+regionname='fasttip'
 datatype='2d'
-starttime=0
+starttime=384
 cmin=0
 cmax=0.5
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -38,9 +38,8 @@ plt.close()
 for i in range(starttime,len(data['time'])):
     print i
     plt.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
-    plt.grid()
+    plt=prettyplot_ll(plt,setregion=region,grid=True)
     plt.colorbar()
-    plt.axis(region['region'])
     plt.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)
     plt.close()
 

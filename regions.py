@@ -130,10 +130,16 @@ def makeregions():
     allregions['kit4_area2']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.25, -128.75, 52.6, 52.8])
+    tmpdic['region']=np.array([-129.4, -128.9, 52.4, 53.0])
     tmpdic['passage']='kit4_area3'
     tmpdic['passageP']='Area 3'
     allregions['kit4_area3']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-128.975, -128.825, 53.52, 53.6])
+    tmpdic['passage']='kit4_area4'
+    tmpdic['passageP']='Area 4'
+    allregions['kit4_area4']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-130, -128, 52, 54.1])

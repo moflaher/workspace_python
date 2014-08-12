@@ -14,7 +14,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_45days_3'
 grid='kit4'
-regionname='kit4_area3'
+regionname='kit4_area4'
 datatype='2d'
 starttime=384
 spacing=500
