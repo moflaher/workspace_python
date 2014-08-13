@@ -112,6 +112,12 @@ def makeregions():
     allregions['fasttip']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-129.9,  -129.6,  53.0,  53.35])
+    tmpdic['passage']='fasttip_back'
+    tmpdic['passageP']='fasttip_back'
+    allregions['fasttip_back']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-131, -128.5, 52.25, 54.1])
     tmpdic['passage']='shiparea1'
     tmpdic['passageP']='Shipping Area 1'

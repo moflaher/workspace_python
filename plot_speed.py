@@ -3,6 +3,7 @@ import matplotlib as mpl
 import scipy as sp
 from datatools import *
 from gridtools import *
+from plottools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -12,13 +13,14 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
+name='kit4_kelp_0.1'
 grid='kit4'
-regionname='fasttip'
+regionname='fasttip_back'
 datatype='2d'
-starttime=384
+starttime=300
+endtime=384
 cmin=0
-cmax=0.5
+cmax=1
 
 
 ### load the .nc file #####
