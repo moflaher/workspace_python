@@ -12,50 +12,52 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide
 
+
+
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
-regionname='kit4'
+name='sfm6_musq2_all_cages'
+grid='sfm6_musq2'
+regionname='musq_cage'
 datatype='2d'
-starttime=384
-endtime=1081
+starttime=1033-1008
+endtime=1729-1008
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
+data['time']=data['time']+55055
 
 
 
 
-tidecon_el=np.empty([len(data['nodell'][:,0]),5,4])
-for j in range(0,len(data['nodell'][:,0])):
-    print j
-    [nameu, freq, tidecon_el[j,], xout]=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['nodell'][j,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  ']]))
 
-tidesave={}
-tidesave['nameu']=nameu
-tidesave['freq']=freq
-tidesave['tidecon']=tidecon_el
-np.save('data/'+grid+'_'+name+'_'+datatype+'_el.npy',tidesave)
-
-
-
-
-#tidecon_uv=np.empty([len(data['uvnodell'][:,0]),5,8])
-#for i in range(0,len(data['uvnodell'][:,0])):
-#    print i
-#    [nameu, freq, tidecon_uv[i,], xout]=t_tide(data['ua'][starttime:endtime,i]+1j*data['va'][starttime:endtime,i],stime=data['time'][starttime],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  ']]))
+#tidecon_el=np.empty([len(data['nodell'][:,0]),5,4])
+#for j in range(0,len(data['nodell'][:,0])):
+#    print j
+#    [nameu, freq, tidecon_el[j,], xout]=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['nodell'][j,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  ']]))
 
 #tidesave={}
 #tidesave['nameu']=nameu
 #tidesave['freq']=freq
-#tidesave['tidecon']=tidecon_uv
-#np.save('data/'+grid+'_'+name+'_'+datatype+'_uv.npy',tidesave)
+#tidesave['tidecon']=tidecon_el
+#np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_el.npy',tidesave)
+
+
+tidecon_uv=np.empty([len(data['uvnodell'][:,0]),5,8])
+for i in range(0,len(data['uvnodell'][:,0])):
+    print i
+    [nameu, freq, tidecon_uv[i,], xout]=t_tide(data['ua'][starttime:endtime,i]+1j*data['va'][starttime:endtime,i],stime=data['time'][starttime],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  ']]))
+
+tidesave={}
+tidesave['nameu']=nameu
+tidesave['freq']=freq
+tidesave['tidecon']=tidecon_uv
+np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy',tidesave)
 
 
 

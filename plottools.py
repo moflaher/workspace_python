@@ -30,39 +30,43 @@ prettyplotll -   sets axis labels and stuff for long lat plots.
 """
 
 
-def prettyplot_ll(plt,**kwargs):
+def prettyplot_ll(axin,**kwargs):
+
+    cblabel=None
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
             if ((key=='grid') and (value==True)):
-                plt.grid()
+                axin.grid()
             if (key=='title'):
-                plt.title(value)
+                axin.set_title(value)
             if (key=='setregion'):
-                plt.axis(value['region'])
-                plt.gca().set_aspect(get_aspectratio(value))
+                axin.axis(value['region'])
+                axin.set_aspect(get_aspectratio(value))
             if (key=='cblabel'):
                 cblabel=value    
                
 
-    plt.gca().get_xaxis().get_major_formatter().set_useOffset(False)
-    plt.gca().get_yaxis().get_major_formatter().set_useOffset(False)
-    plt.gca().set_xticklabels(-1*(plt.gca().get_xticks()))
-    plt.gca().set_xlabel(r'Longitude (W$^{\circ}$)')
-    plt.gca().set_ylabel(r'Latitude (N$^{\circ}$)')
 
-    aspect=plt.gca().get_aspect()
+    _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+    axin.yaxis.set_major_formatter(_formatter)
+    axin.xaxis.set_major_formatter(_formatter)
+    axin.set_xticklabels(-1*(axin.get_xticks()))
+    axin.set_xlabel(r'Longitude (W$^{\circ}$)')
+    axin.set_ylabel(r'Latitude (N$^{\circ}$)')
+
+    aspect=axin.get_aspect()
     if (aspect>1):
         slicer=(np.floor(aspect).astype(int)+1)
-        for label in plt.gca().get_xticklabels()[::slicer]:
+        for label in axin.get_xticklabels()[::slicer]:
             label.set_visible(False)
     
     if (cblabel != None):
-        divider = make_axes_locatable(plt.gca())
-        cax = divider.append_axes("right", size="5%", pad=0.05)
+        divider = make_axes_locatable(axin)
+        cax = divider.append_axes("right", size="5%", pad=0.5)
         plt.colorbar(cax=cax)
 
-    return plt
+    return axin
 
 
 def get_aspectratio(region,LL=1):

@@ -16,7 +16,6 @@ from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
-from scipy.spatial import ConvexHull
 
 
 
@@ -40,14 +39,6 @@ cages=(cages[:,0]-1).astype(int)
 region=regions(regionname)
 savepath='figures/png/' + grid + '_' + datatype + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
-
-ncages=np.unique(data['nv'][cages,:])
-
-
-
-cv=ConvexHull(data['nodell'][ncages,:])
-
-trueidx=ncages[cv.vertices]
 
 
 plt.close()
