@@ -35,22 +35,34 @@ print 'done sort'
 trigridxy = mplt.Triangulation(data['x'], data['y'],data['nv'])
 region=regions(regionname)
 
-savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/25_particles_all_cages/all_cages_25part_per_ele_sfm6_musq2_all_cages_6_noclass.mat',squeeze_me=True,struct_as_record=False))['savelag']
+savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/testzf.mat',squeeze_me=True,struct_as_record=False))['savelag']
 
+daysi=1
+lph=24*2
 testi=0
-region['region']=[np.nanmin(savelag.x[:,3*testi*48]),np.nanmax(savelag.x[:,3*testi*48]),np.nanmin(savelag.y[:,3*testi*48]),np.nanmax(savelag.y[:,3*testi*48])]
+region['region']=[np.nanmin(savelag.x[:,daysi*testi*lph]),np.nanmax(savelag.x[:,daysi*testi*lph]),np.nanmin(savelag.y[:,daysi*testi*lph]),np.nanmax(savelag.y[:,daysi*testi*lph])]
 
 
-f, ax = plt.subplots(nrows=3,ncols=3, sharex=True, sharey=True)
+
+f, ax = plt.subplots(nrows=3,ncols=4, sharex=True, sharey=True)
 ax=ax.flatten()
 
 for i in range(0,len(ax)):
+    print i
     ax[i].triplot(trigridxy,lw=.3)
-    plotidx=np.where(((savelag.x[:,3*i*48]-savelag.x[:,3*(i-1)*48])!=0) & ((savelag.x[:,3*i*48]-savelag.x[:,3*(i-1)*48])!=np.nan))
-    ax[i].plot(savelag.x[plotidx,3*i*48],savelag.y[plotidx,3*i*48],'g.')
+    plotidx=np.where(np.isnan(savelag.x[:,daysi*i*lph]) & ((savelag.x[:,daysi*i*lph]-savelag.x[:,daysi*(i-1)*lph])!=0))
+    plotidxb=np.zeros(shape=(savelag.x.shape[0],), dtype=bool)
+    plotidxb[plotidx]=1
+    ax[i].plot(savelag.x[plotidxb,daysi*i*lph],savelag.y[plotidxb,daysi*i*lph],'g.')
+    ax[i].plot(savelag.x[~plotidxb,daysi*i*lph],savelag.y[~plotidxb,daysi*i*lph],'r.')
+    #ax[i].plot(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph],'g.')
+    
+    #plotidx2=np.where(np.fabs(savelag.z[:,daysi*i*lph]-data['uvh'][trigridxy.get_trifinder().__call__(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph])])<=1 )
+    #ax[i].plot(savelag.x[plotidx2,daysi*i*lph],savelag.y[plotidx2,daysi*i*lph],'y.')
+
     ax[i].axis(region['region'])
-    ax[i].set_title('Day '+ ("%d"% (48*3*i/48)))
-    #ax[i]=prettyplot_ll(ax[i],setregion=region,grid=True,title='Day '+ ("%d"% (48*3*i/48)))
+    ax[i].set_title('Day '+ ("%d"% (48*daysi*i/48)))
+    #ax[i]=prettyplot_ll(ax[i],setregion=region,grid=True,title='Day '+ ("%d"% (48*daysi*i/48)))
 
 
 

@@ -91,7 +91,7 @@ def loadnc(datadir, singlename=None):
     #Now we get the long/lat data.  Note that this method will search
     #for long/lat files in the datadir and up to two levels above
     #the datadir.
-    if (data.has_key('lon')):
+    if (data.has_key('lon') and data.has_key('x')):
         if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
             long_matches = []
             lat_matches = []
@@ -288,6 +288,9 @@ def ncdatasort(data):
 
     #make uvnodes by averaging the values of ua/va over the nodes of
     #an element
+    nodexy = np.empty((len(lon),2))
+    nodexy[:,0] = x
+    nodexy[:,1] = y
     uvnode = np.empty((len(nv[:,0]),2))
     uvnode[:,0] = (x[nv[:,0]] + x[nv[:,1]] + x[nv[:,2]]) / 3.0
     uvnode[:,1] = (y[nv[:,0]] + y[nv[:,1]] + y[nv[:,2]]) / 3.0
@@ -306,6 +309,7 @@ def ncdatasort(data):
     data['uvnode'] = uvnode
     data['uvnodell'] = uvnodell
     data['nodell'] = nodell
+    data['nodexy'] = nodexy
     data['time']=data['time']+678576
 
     return data

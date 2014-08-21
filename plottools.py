@@ -62,9 +62,19 @@ def prettyplot_ll(axin,**kwargs):
             label.set_visible(False)
     
     if (cblabel != None):
-        divider = make_axes_locatable(axin)
-        cax = divider.append_axes("right", size="5%", pad=0.5)
-        plt.colorbar(cax=cax)
+        #doesnt really work        
+        #divider = make_axes_locatable(axin)
+        #cax = divider.append_axes("right", size="5%", pad=0.25)
+        #plt.colorbar(cax=cax)
+        plt.draw()
+        box=axin.get_position()
+        box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-.1,box.ymax]]))
+        axin.set_position(box)
+        plt.draw()
+        box=axin.get_position()
+        cax=plt.gcf().add_axes([box.xmax + .05, box.ymin, .025, box.height])
+        cb=plt.colorbar(cax=cax)
+        cb.set_label(cblabel,fontsize=10)
 
     return axin
 

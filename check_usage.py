@@ -13,7 +13,7 @@ import pandas
 
 
 #load usage file
-usagedata=np.genfromtxt('qstat_history_aug01_2014.dat', dtype=None,skiprows=2)
+usagedata=np.genfromtxt('qstat_history_aug20_2014.dat', dtype=None,skiprows=2)
 
 
 
