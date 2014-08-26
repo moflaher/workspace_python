@@ -18,24 +18,24 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
-regionname='kit4_area3'
+name='sfm6_musq2_all_cages'
+grid='sfm6_musq2'
+regionname='musq_cage'
 datatype='2d'
-starttime=384
+starttime=0
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-starttime=0
+
 region=regions(regionname)
-nodes=get_nodes(data,region)
-elements=get_elements(data,region)
+nidx=get_nodes(data,region)
+eidx=get_elements(data,region)
 
 
 
@@ -45,29 +45,21 @@ plt.close()
 
 # Plot mesh
 plt.triplot(data['trigrid'],lw=.1)
-plt.grid()
-plt.axis(region['region'])
-plt.title(grid + ' Grid')
+prettyplot_ll(plt.gca(),setregion=region,grid=True,title=grid + ' Grid')
 plt.savefig(savepath + grid + '_' + regionname +'_grid.png',dpi=1200)
 plt.close()
 
 # Plot depth
-plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nodes].min(),vmax=data['h'][nodes].max())
-plt.grid()
-plt.axis(region['region'])
-plt.title('Depth (m)')
-plt.colorbar()
+plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel='Depth (m)')
 plt.savefig(savepath + grid + '_' + regionname +'_depth.png',dpi=600)
 plt.close()
 
 
 # Plot depth percentile
-clims=np.percentile(data['h'][nodes],[1,99])
+clims=np.percentile(data['h'][nidx],[1,99])
 plt.tripcolor(data['trigrid'],data['h'],vmin=clims[0],vmax=clims[1])
-plt.grid()
-plt.axis(region['region'])
-plt.title('Depth (m)')
-plt.colorbar()
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel='Depth (m)')
 plt.savefig(savepath + grid + '_' + regionname +'_depth_percentile.png',dpi=600)
 plt.close()
 
@@ -85,35 +77,26 @@ for i in range(0,len(data['nv'])):
 	
     if ( (first > 0) or (second >0) or (thrid> 0) ):
         dh[i]=np.max([first,second,thrid]);
-clims=np.percentile(dh[nodes],[1,99])
+clims=np.percentile(dh[nidx],[1,99])
 plt.tripcolor(data['trigrid'],dh,vmin=clims[0],vmax=clims[1])
-plt.grid()
-plt.axis(region['region'])
-plt.title(r'$\frac{\delta H}{H}$')
-plt.colorbar()
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'$\frac{\delta H}{H}$')
 plt.savefig(savepath + grid + '_' + regionname +'_dhh.png',dpi=600)
 plt.close()
 
 
 # Plot mean speed
 meanspeed=(np.sqrt(data['ua'][starttime:,]**2 +data['va'][starttime:,]**2)).mean(axis=0)
-plt.tripcolor(data['trigrid'],meanspeed,vmin=meanspeed[elements].min(),vmax=meanspeed[elements].max())
-plt.grid()
-plt.axis(region['region'])
-plt.title(r'Mean Speed $(ms^{-1})$')
-plt.colorbar()
+plt.tripcolor(data['trigrid'],meanspeed,vmin=meanspeed[eidx].min(),vmax=meanspeed[eidx].max())
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Mean Speed (ms$^{-1}$)')
 plt.savefig(savepath + grid + '_' + regionname +'_DA_meanspeed.png',dpi=600)
 plt.close()
 
 
 
 # Plot mean speed percentile
-clims=np.percentile(meanspeed[elements],[1,99])
+clims=np.percentile(meanspeed[eidx],[1,99])
 plt.tripcolor(data['trigrid'],meanspeed,vmin=clims[0],vmax=clims[1])
-plt.grid()
-plt.axis(region['region'])
-plt.title(r'Mean Speed $(ms^{-1})$')
-plt.colorbar()
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Mean Speed (ms$^{-1}$)')
 plt.savefig(savepath + grid + '_' + regionname +'_DA_meanspeed_percentile.png',dpi=600)
 plt.close()
 
@@ -121,23 +104,17 @@ plt.close()
 
 # Plot max speed
 maxspeed=(np.sqrt(data['ua'][starttime:,]**2 +data['va'][starttime:,]**2)).max(axis=0)
-plt.tripcolor(data['trigrid'],maxspeed,vmin=maxspeed[elements].min(),vmax=maxspeed[elements].max())
-plt.grid()
-plt.axis(region['region'])
-plt.title(r'Max Speed $(ms^{-1})$')
-plt.colorbar()
+plt.tripcolor(data['trigrid'],maxspeed,vmin=maxspeed[eidx].min(),vmax=maxspeed[eidx].max())
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Speed (ms$^{-1}$)')
 plt.savefig(savepath + grid + '_' + regionname +'_DA_maxspeed.png',dpi=600)
 plt.close()
 
 
 
 # Plot max speed percentile
-clims=np.percentile(maxspeed[elements],[1,99])
+clims=np.percentile(maxspeed[eidx],[1,99])
 plt.tripcolor(data['trigrid'],maxspeed,vmin=clims[0],vmax=clims[1])
-plt.grid()
-plt.axis(region['region'])
-plt.title(r'Max Speed $(ms^{-1})$')
-plt.colorbar()
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Speed (ms$^{-1}$)')
 plt.savefig(savepath + grid + '_' + regionname +'_DA_maxspeed_percentile.png',dpi=600)
 plt.close()
 

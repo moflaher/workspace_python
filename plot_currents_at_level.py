@@ -18,11 +18,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
+name='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_cage'
 datatype='2d'
-starttime=0
+starttime=0+1008
 spacing=150
 scaleset=75
 #remember 0 is surface and 19/9 is bottom
@@ -84,12 +84,10 @@ vplot=newv[ebb,sidx].copy()
 tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
-cb=plt.colorbar()
-cb.set_label('(meter)')
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
-prettyplot_ll(plt.gca(),setregion=region,grid=True)
+ax=plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+prettyplot_ll(ax.get_axes(),setregion=region,grid=True,cblabel=r'Depth (m)')
+Q=ax.get_axes().quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
+qk = ax.get_axes().quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
 if datatype=='2d':
     plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '_with_bathy.png',dpi=1200)
 else:
@@ -118,12 +116,10 @@ vplot=newv[fld,sidx].copy()
 tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
-cb=plt.colorbar()
-cb.set_label('(meter)')
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
-prettyplot_ll(plt.gca(),setregion=region,grid=True)
+ax=plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+prettyplot_ll(ax.get_axes(),setregion=region,grid=True,cblabel=r'Depth (m)')
+Q=ax.get_axes().quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
+qk = ax.get_axes().quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
 if datatype=='2d':
     plt.savefig(savepath + name + '_' + regionname +'_vector_fld_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '_with_bathy.png',dpi=1200)
 else:
@@ -131,10 +127,13 @@ else:
 
 #plot max speed
 plt.close()
-plt.tripcolor(data['trigrid'],np.max(np.sqrt(newu**2+newv**2),axis=0),vmin=1.15*np.min(np.max(np.sqrt(newu[:,sidx]**2+newv[:,sidx]**2),axis=0)),vmax=.85*np.max(np.max(np.sqrt(newu[:,sidx]**2+newv[:,sidx]**2),axis=0)))
-cb=plt.colorbar()
-cb.set_label(r'$(ms^{-1})$')
-prettyplot_ll(plt.gca(),setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_' + ("%d" %level)+ 'm.png',dpi=1200)
+maxs=np.max(np.sqrt(newu**2+newv**2),axis=0)
+plt.tripcolor(data['trigrid'],np.max(np.sqrt(newu**2+newv**2),axis=0),vmin=1.15*np.min(maxs[sidx]),vmax=.85*np.max(maxs[sidx]))
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Speed (ms$^{-1}$)')
+if datatype=='2d':
+    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_levelDA.png',dpi=1200)
+else:
+    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_level_' + ("%d" %level)+ '.png',dpi=1200)
+
 
 

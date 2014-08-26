@@ -48,8 +48,8 @@ prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Elevation Amplit
 plt.savefig(savepathe + grid + '_' + regionname +'_el_m2_amp',dpi=600)
 plt.close()
 
-plt.tripcolor(data['trigrid'],el['tidecon'][:,3,2],vmin=el['tidecon'][nidx,3,2].min(),vmax=el['tidecon'][nidx,3,2].max())
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Elevation Phase ($^{\deg}$)')
+plt.tripcolor(data['trigrid'],el['tidecon'][:,3,2],vmin=el['tidecon'][nidx,3,2].min(),vmax=el['tidecon'][nidx,3,2].max(),cmap=plt.cm.hsv)
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Elevation Phase ($^{\circ}$)')
 plt.savefig(savepathe + grid + '_' + regionname +'_el_m2_phase',dpi=600)
 plt.close()
 
@@ -65,13 +65,13 @@ prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Amplitud
 plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_minor_phase',dpi=600)
 plt.close()
 
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,4],vmin=0,vmax=360)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Direction ($^{\deg}$)')
+plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,4],vmin=0,vmax=360,cmap=plt.cm.hsv)
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Direction ($^{\circ}$)')
 plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_inc',dpi=600)
 plt.close()
 
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,6],vmin=0,vmax=360)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Phase ($^{\deg}$)')
+plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,6],vmin=0,vmax=360,cmap=plt.cm.hsv)
+prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Phase ($^{\circ}$)')
 plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_phase',dpi=600)
 plt.close()
 

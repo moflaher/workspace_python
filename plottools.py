@@ -56,10 +56,11 @@ def prettyplot_ll(axin,**kwargs):
     axin.set_ylabel(r'Latitude (N$^{\circ}$)')
 
     aspect=axin.get_aspect()
-    if (aspect>1):
-        slicer=(np.floor(aspect).astype(int)+1)
-        for label in axin.get_xticklabels()[::slicer]:
-            label.set_visible(False)
+    if (aspect!='auto'):
+        if (aspect>1):
+            slicer=(np.floor(aspect).astype(int)+1)
+            for label in axin.get_xticklabels()[::slicer]:
+                label.set_visible(False)
     
     if (cblabel != None):
         #doesnt really work        
