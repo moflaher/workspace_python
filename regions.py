@@ -179,6 +179,13 @@ def makeregions():
     allregions['musq_cage']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-66.90,-66.815,45.025,45.06])
+    tmpdic['passage']='musq_cage_tight'
+    tmpdic['passageP']='musq_cage_tight'
+    allregions['musq_cage_tight']=tmpdic
+
+
+    tmpdic={}  
     tmpdic['region']=np.array([-71.5,   -57.5,    37.5,    46])
     tmpdic['passage']='sfmwhole'
     tmpdic['passageP']='Scotia Fundy Maine'
