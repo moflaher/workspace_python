@@ -18,11 +18,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_no_cages'
+name='sfm6_musq2_all_cages'
 grid='sfm6_musq2'
 regionname='musq_cage'
 datatype='2d'
-starttime=0+1008
+starttime=0
 spacing=150
 scaleset=75
 #remember 0 is surface and 19/9 is bottom
@@ -55,28 +55,28 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 
-zeta_grad=np.gradient(data['zeta'][starttime:,:])[0]
+zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
 
 
 #find biggest ebb and fld
-fld=np.argmax(np.sum(zeta_grad>0,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<0,axis=1))
+fld=np.argmax(np.sum(zeta_grad>1,axis=1))
+ebb=np.argmax(np.sum(zeta_grad<-1,axis=1))
 
 
 #plot ebb vectors
-plt.close()
-uplot=newu[ebb,sidx].copy()
-vplot=newv[ebb,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
-prettyplot_ll(plt.gca(),setregion=region,grid=True)
-if datatype=='2d':
-    plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '.png',dpi=1200)
-else:
-    plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_level' +("%d" %level)+ '_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '.png',dpi=1200)
+#plt.close()
+#uplot=newu[ebb,sidx].copy()
+#vplot=newv[ebb,sidx].copy()
+#tspeed=np.sqrt(uplot**2+vplot**2)
+#uplot[tspeed<=.01]=np.nan
+#vplot[tspeed<=.01]=np.nan
+#Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
+#qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
+#prettyplot_ll(plt.gca(),setregion=region,grid=True)
+#if datatype=='2d':
+#    plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '.png',dpi=1200)
+#else:
+#    plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_level' +("%d" %level)+ '_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '.png',dpi=1200)
 
 plt.close()
 uplot=newu[ebb,sidx].copy()
@@ -96,19 +96,19 @@ else:
 
 
 #plot fld vectors
-plt.close()
-uplot=newu[fld,sidx].copy()
-vplot=newv[fld,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
-prettyplot_ll(plt.gca(),setregion=region,grid=True)
-if datatype=='2d':
-    plt.savefig(savepath + name + '_' + regionname +'_vector_fld_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '.png',dpi=1200)
-else:
-    plt.savefig(savepath + name + '_' + regionname +'_vector_fld_level' +("%d" %level)+ '_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '.png',dpi=1200)
+#plt.close()
+#uplot=newu[fld,sidx].copy()
+#vplot=newv[fld,sidx].copy()
+#tspeed=np.sqrt(uplot**2+vplot**2)
+#uplot[tspeed<=.01]=np.nan
+#vplot[tspeed<=.01]=np.nan
+#Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
+#qk = plt.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
+#prettyplot_ll(plt.gca(),setregion=region,grid=True)
+#if datatype=='2d':
+#    plt.savefig(savepath + name + '_' + regionname +'_vector_fld_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '.png',dpi=1200)
+#else:
+#    plt.savefig(savepath + name + '_' + regionname +'_vector_fld_level' +("%d" %level)+ '_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '.png',dpi=1200)
 
 plt.close()
 uplot=newu[fld,sidx].copy()
@@ -126,14 +126,14 @@ else:
     plt.savefig(savepath + name + '_' + regionname +'_vector_fld_level' +("%d" %level)+ '_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '_with_bathy.png',dpi=1200)
 
 #plot max speed
-plt.close()
-maxs=np.max(np.sqrt(newu**2+newv**2),axis=0)
-plt.tripcolor(data['trigrid'],np.max(np.sqrt(newu**2+newv**2),axis=0),vmin=1.15*np.min(maxs[sidx]),vmax=.85*np.max(maxs[sidx]))
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Speed (ms$^{-1}$)')
-if datatype=='2d':
-    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_levelDA.png',dpi=1200)
-else:
-    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_level_' + ("%d" %level)+ '.png',dpi=1200)
+#plt.close()
+#maxs=np.max(np.sqrt(newu**2+newv**2),axis=0)
+#plt.tripcolor(data['trigrid'],np.max(np.sqrt(newu**2+newv**2),axis=0),vmin=1.15*np.min(maxs[sidx]),vmax=.85*np.max(maxs[sidx]))
+#prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Speed (ms$^{-1}$)')
+#if datatype=='2d':
+#    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_levelDA.png',dpi=1200)
+#else:
+#    plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_level_' + ("%d" %level)+ '.png',dpi=1200)
 
 
 

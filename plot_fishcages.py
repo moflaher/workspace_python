@@ -38,7 +38,8 @@ print 'done sort'
 
 cages=np.genfromtxt('/media/moflaher/My Book/cages/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
-
+oldcages=np.genfromtxt('/media/moflaher/My Book/cages/sfm6_musq2_old_cages/input/' +grid+ '_cage.dat',skiprows=1)
+oldcages=(oldcages[:,0]-1).astype(int)
 
 
 savepath='figures/png/' + grid + '_' + datatype + '/misc/'
@@ -81,6 +82,7 @@ ax_bof.annotate("",xy=(.45,.14+.415),xycoords='figure fraction',xytext=(cregion[
 ax_bof.annotate("",xy=(.45+.375,.14+.415),xycoords='figure fraction',xytext=(cregion['region'][1],cregion['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 ax_bof.text(-67,45.65,'New Brunswick',fontsize=18)
 ax_bof.text(-67.25,45.25,'Passamaquoddy Bay',fontsize=10)
+ax_bof.annotate("",xy=(-67,45.1),xycoords='data',xytext=(-66.75,45.225), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='k',headwidth=3))
 ax_bof.text(-65.9,44.65,'Nova Scotia',fontsize=18,rotation=28)
 ax_bof.text(-67.5,45.65,'B',fontsize=24)
 #ax_bof.annotate("",xy=(.475,.14+.415),xycoords='figure fraction',xytext=(-66.9,45), textcoords='data',arrowprops=dict(width=5,facecolor='w',shrink=0))
@@ -90,7 +92,7 @@ ax_bof.text(-67.5,45.65,'B',fontsize=24)
 
 #add cage subplot
 ax_cages=f.add_axes([.45,.14,.375,.415])
-ax_cages.triplot(data['trigrid'],color='black',lw=.2,label='Mesh')
+ax_cages.triplot(data['trigrid'],color='black',lw=.2)
 ax_cages.axis(cregion['region'])
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax_cages.yaxis.set_major_formatter(_formatter)
@@ -104,16 +106,24 @@ label.set_visible(False)
 
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_cages.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'r',lw=.6,label='Cage')
-    ax_cages.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'r',lw=.6,label='Cage')
-    ax_cages.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'r',lw=.6,label='Cage')
+    ax_cages.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'r',lw=.6,label='Mesh')
+    ax_cages.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'r',lw=.6,label='Cages')
+    ax_cages.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'r',lw=.6,label='Single Cage')
+
+for i in oldcages:
+    tnodes=data['nv'][i,:]    
+    ax_cages.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'b',lw=.6)
+    ax_cages.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'b',lw=.6)
+    ax_cages.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'b',lw=.6)
 
 handles, labels = ax_cages.get_legend_handles_labels()
 handles=handles[::-1]
 labels=labels[::-1]
-legend=ax_cages.legend(handles[1:3], labels[0:2],loc=2,prop={'size':8})
+
+legend=ax_cages.legend(handles[0:3], labels[0:3],loc=2,prop={'size':8})
 t=legend.get_lines()
-t[0].set_color('black')
+t[2].set_color('black')
+t[0].set_color('b')
 for label in legend.get_lines():
     label.set_linewidth(1.5)
 
