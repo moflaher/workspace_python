@@ -72,7 +72,7 @@ for i in range(starttime,endtime):
     ax1.set_ylabel(r'Latitude (N$^{\circ}$)')
     ax1.annotate("A",xy=(.025,.85),xycoords='axes fraction')
 
-    ax2tri=ax2.tripcolor(data1['trigrid'],np.divide(speed1-speed2,speed1+.01),vmin=cmin,vmax=cmax)
+    ax2tri=ax2.tripcolor(data1['trigrid'],np.divide(speed2-speed1,speed1+.01),vmin=cmin,vmax=cmax)
     ax2cb=plt.colorbar(ax2tri,ax=ax2)
     ax2cb.set_label(r'Relative Difference')
     ax2.yaxis.set_major_formatter(_formatter)
@@ -81,7 +81,7 @@ for i in range(starttime,endtime):
     ax2.annotate("B",xy=(.025,.85),xycoords='axes fraction')
     ax2.plot(data1['uvnodell'][cages2,0],data1['uvnodell'][cages2,1],'k.',markersize=.5)
 
-    ax3tri=ax3.tripcolor(data1['trigrid'],np.divide(speed1-speed3,speed1+.01),vmin=cmin,vmax=cmax)
+    ax3tri=ax3.tripcolor(data1['trigrid'],np.divide(speed3-speed1,speed1+.01),vmin=cmin,vmax=cmax)
     ax3cb=plt.colorbar(ax3tri,ax=ax3)
     ax3cb.set_label(r'Relative Difference')
     ax3.yaxis.set_major_formatter(_formatter)

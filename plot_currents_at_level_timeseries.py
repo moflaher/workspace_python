@@ -18,13 +18,13 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
+name='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_cage'
 datatype='2d'
-offset=1008
-starttime=0
-endtime=72
+offset=0
+starttime=1008
+endtime=1080
 spacing=150
 scaleset=75
 #remember 0 is surface and 19/9 is bottom

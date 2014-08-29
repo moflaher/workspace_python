@@ -15,16 +15,16 @@ from misctools import *
 from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-
+import pandas as pd
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
+name='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
-regionname='musq_cage'
+regionname='musq_cage_tight'
 datatype='2d'
-lfolder='25_part_all_cage_in60min_time1min_out10min'
-lname='all_cages_25_part_sfm6_musq2_6'
+lfolder='25_part_no_cage_in60min_time1min_out10min'
+lname='no_cages_25_part_sfm6_musq2_0'
 
 
 ### load the .nc file #####
@@ -41,7 +41,36 @@ region=regions(regionname)
 
 
 savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/'+lfolder+'/'+lname+'.mat',squeeze_me=True,struct_as_record=False))['savelag']
+cages=np.genfromtxt('/media/moflaher/My Book/cages/sfm6_musq2_all_cages/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
 
+sortedcages=np.zeros([100,data['nv'].shape[0]],dtype=bool)
+cagesleft=cages
+cagecnt=0
+while (len(cagesleft)>0):    
+    cage1=np.array([cagesleft[0]])
+    clen=1
+    cnt=0
+    while (cnt<clen):
+        #print cage1
+        v=data['nbe'][cage1[cnt],:]
+        cage1=np.append(cage1,cagesleft[np.vectorize(lambda x: x in v)(cagesleft)])
+        idx=np.unique(cage1,return_index=True)[1]
+        #print idx
+        cage1=cage1[np.sort(idx)]
+        cnt+=1
+        clen=cage1.shape[0]    
+        #print 'cnt:'+ ("%d"%cnt)
+        #print clen
+
+    print 'cagecnt:' +("%d"%cagecnt)
+    #print cage1  
+    sortedcages[cagecnt,cage1]=True
+    cagecnt+=1
+    #print np.vectorize(lambda x: x in cage1)(cagesleft)
+    cagesleft=np.delete(cagesleft,np.flatnonzero(np.vectorize(lambda x: x in cage1)(cagesleft)))
+    
+sortedcages=sortedcages[0:cagecnt,:]
 
 
 
@@ -62,11 +91,34 @@ for i in np.unique(host):
     if hostcnt[i]!=0:
         final[i]=(pltarray[i]/1000)/hostcnt[i]
 
+rows = ['%d' % x for x in range(1,sortedcages.shape[0]+1)]
+
+cageposx=np.empty([sortedcages.shape[0],])
+cageposy=np.empty([sortedcages.shape[0],])
+cagemean=np.empty([sortedcages.shape[0],])
+cagestd=np.empty([sortedcages.shape[0],])
+for i in range(0,sortedcages.shape[0]):
+    print i
+    cageposx[i]=np.mean(data['uvnodell'][sortedcages[i,:],0])
+    cageposy[i]=np.mean(data['uvnodell'][sortedcages[i,:],1]) 
+    cagemean[i]=np.mean(final[sortedcages[i,:]])
+    cagestd[i]=np.std(final[sortedcages[i,:]])
+
 
 plt.close()
-plt.tripcolor(data['trigrid'],final)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Path Travel Distance (km)')
+ax1=plt.axes([.15,0,.8,1])
+#ax1 = plt.subplot2grid((1,3), (0,0), colspan=2)
+#ax2 = plt.subplot2grid((1,3), (0,2), colspan=1)
+ax1.triplot(data['trigrid'],lw=.3)
+ax1.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'r.')
+for i in range(0,sortedcages.shape[0]):
+    ax1.text(cageposx[i],cageposy[i],"%d"%(i+1),fontsize=20,color='b')
+
+prettyplot_ll(ax1,setregion=region,grid=True)
+mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean','Std'],loc='right',fontsize=20, bbox=[0, 1.15, 1, .4])
+
 plt.savefig(savepath +lname+'_path_distance.png',dpi=600)
+
 
 
 
@@ -87,10 +139,29 @@ for i in np.unique(host):
     if hostcnt[i]!=0:
         final[i]=(pltarray[i]/1000)/hostcnt[i]
 
+cageposx=np.empty([sortedcages.shape[0],])
+cageposy=np.empty([sortedcages.shape[0],])
+cagemean=np.empty([sortedcages.shape[0],])
+cagestd=np.empty([sortedcages.shape[0],])
+for i in range(0,sortedcages.shape[0]):
+    print i
+    cageposx[i]=np.mean(data['uvnodell'][sortedcages[i,:],0])
+    cageposy[i]=np.mean(data['uvnodell'][sortedcages[i,:],1]) 
+    cagemean[i]=np.mean(final[sortedcages[i,:]])
+    cagestd[i]=np.std(final[sortedcages[i,:]])
 
 plt.close()
-plt.tripcolor(data['trigrid'],final)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'Max Distance (km)')
+ax1=plt.axes([.15,0,.8,1])
+#ax1 = plt.subplot2grid((1,3), (0,0), colspan=2)
+#ax2 = plt.subplot2grid((1,3), (0,2), colspan=1)
+ax1.triplot(data['trigrid'],lw=.3)
+ax1.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'r.')
+for i in range(0,sortedcages.shape[0]):
+    ax1.text(cageposx[i],cageposy[i],"%d"%(i+1),fontsize=20,color='b')
+
+prettyplot_ll(ax1,setregion=region,grid=True)
+mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean','Std'],loc='right',fontsize=20, bbox=[0, 1.15, 1, .4])
+
 plt.savefig(savepath +lname+'_max_distance.png',dpi=600)
 
 

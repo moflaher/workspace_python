@@ -19,12 +19,12 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_no_cages'
+name='sfm6_musq2_old_cages'
 grid='sfm6_musq2'
 regionname='musq_cage'
 datatype='2d'
-lfolder='25_part_no_cage_in60min_time1min_out10min'
-lname='no_cages_25_part_sfm6_musq2_0'
+lfolder='25_part_old_cage_in60min_time1min_out10min'
+lname='old_cages_25_part_sfm6_musq2_0'
 
 
 ### load the .nc file #####
