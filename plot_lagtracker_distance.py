@@ -19,12 +19,13 @@ import pandas as pd
 
 
 # Define names and types of data
-name='sfm6_musq2_no_cages'
+tmpn='no'
+name='sfm6_musq2_'+tmpn+'_cages'
 grid='sfm6_musq2'
 regionname='musq_cage_tight'
 datatype='2d'
-lfolder='25_part_no_cage_in60min_time1min_out10min'
-lname='no_cages_25_part_sfm6_musq2_0'
+lfolder='25_part_'+tmpn+'_cage_in60min_time1min_out10min'
+lname=''+tmpn+'_cages_25_part_sfm6_musq2_0'
 
 
 ### load the .nc file #####
@@ -114,8 +115,14 @@ ax1.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'r.')
 for i in range(0,sortedcages.shape[0]):
     ax1.text(cageposx[i],cageposy[i],"%d"%(i+1),fontsize=20,color='b')
 
+ax1.text(-66.89,45.0525,'No Farms',fontsize=18,color='k')
 prettyplot_ll(ax1,setregion=region,grid=True)
-mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean','Std'],loc='right',fontsize=20, bbox=[0, 1.15, 1, .4])
+mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean (km)','Std (km)'],loc='right',fontsize=20, bbox=[.175, 1.15, .85, .4])
+
+tcel=mytable.get_celld()[0, 1]
+mytable.add_cell(0,-1,tcel.get_width(),tcel.get_height(),text='    Farm Number')
+
+
 
 plt.savefig(savepath +lname+'_path_distance.png',dpi=600)
 
@@ -159,8 +166,12 @@ ax1.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'r.')
 for i in range(0,sortedcages.shape[0]):
     ax1.text(cageposx[i],cageposy[i],"%d"%(i+1),fontsize=20,color='b')
 
+ax1.text(-66.89,45.0525,'No Farms',fontsize=18,color='k')
 prettyplot_ll(ax1,setregion=region,grid=True)
-mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean','Std'],loc='right',fontsize=20, bbox=[0, 1.15, 1, .4])
+mytable=ax1.table(cellText=np.vstack([cagemean.round(1),cagestd.round(1)]),colLabels=rows,rowLabels=['Mean (km)','Std (km)'],loc='right',fontsize=20, bbox=[.175, 1.15, .85, .4])
+
+tcel=mytable.get_celld()[0, 1]
+mytable.add_cell(0,-1,tcel.get_width(),tcel.get_height(),text='    Farm Number')
 
 plt.savefig(savepath +lname+'_max_distance.png',dpi=600)
 

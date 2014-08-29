@@ -135,10 +135,10 @@ print df.sort(['User Max Wait Time (h)'],ascending=False)
 print ''
 
 
-print 'Average cluster wait time (m): ' + ("%d"%np.mean(waittime*24*60))
-print 'Max cluster wait time (m): ' + ("%d"%np.max(waittime*24*60))
-print 'Min cluster wait time (m): ' + ("%d"%np.min(waittime*24*60))
-print ''
+#print 'Average cluster wait time (m): ' + ("%d"%np.mean(waittime*24*60))
+#print 'Max cluster wait time (m): ' + ("%d"%np.max(waittime*24*60))
+#print 'Min cluster wait time (m): ' + ("%d"%np.min(waittime*24*60))
+#print ''
 
 
 print ''

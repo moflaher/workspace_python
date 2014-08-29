@@ -42,6 +42,38 @@ oldcages=np.genfromtxt('/media/moflaher/My Book/cages/sfm6_musq2_old_cages/input
 oldcages=(oldcages[:,0]-1).astype(int)
 
 
+
+sortedcages=np.zeros([100,data['nv'].shape[0]],dtype=bool)
+cagesleft=cages
+cagecnt=0
+while (len(cagesleft)>0):    
+    cage1=np.array([cagesleft[0]])
+    clen=1
+    cnt=0
+    while (cnt<clen):
+        #print cage1
+        v=data['nbe'][cage1[cnt],:]
+        cage1=np.append(cage1,cagesleft[np.vectorize(lambda x: x in v)(cagesleft)])
+        idx=np.unique(cage1,return_index=True)[1]
+        #print idx
+        cage1=cage1[np.sort(idx)]
+        cnt+=1
+        clen=cage1.shape[0]    
+        #print 'cnt:'+ ("%d"%cnt)
+        #print clen
+
+    print 'cagecnt:' +("%d"%cagecnt)
+    #print cage1  
+    sortedcages[cagecnt,cage1]=True
+    cagecnt+=1
+    #print np.vectorize(lambda x: x in cage1)(cagesleft)
+    cagesleft=np.delete(cagesleft,np.flatnonzero(np.vectorize(lambda x: x in cage1)(cagesleft)))
+    
+sortedcages=sortedcages[0:cagecnt,:]
+
+
+
+
 savepath='figures/png/' + grid + '_' + datatype + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
@@ -115,6 +147,20 @@ for i in oldcages:
     ax_cages.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'b',lw=.6)
     ax_cages.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'b',lw=.6)
     ax_cages.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'b',lw=.6)
+
+
+
+cageposx=np.empty([sortedcages.shape[0],])
+cageposy=np.empty([sortedcages.shape[0],])
+for i in range(0,sortedcages.shape[0]):
+    print i
+    cageposx[i]=np.mean(data['uvnodell'][sortedcages[i,:],0])
+    cageposy[i]=np.mean(data['uvnodell'][sortedcages[i,:],1]) 
+
+for i in range(0,sortedcages.shape[0]):
+    if i==5:
+        cageposx[i]=cageposx[i]-.005
+    ax_cages.text(cageposx[i],cageposy[i],"%d"%(i+1),fontsize=20,color='g')
 
 handles, labels = ax_cages.get_legend_handles_labels()
 handles=handles[::-1]
