@@ -22,23 +22,30 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-grid='sfm6_musq2'
-regionname='musq_cage'
+name='kit4_45days_3'
+grid='kit4'
+regionname='mostchannels'
 datatype='2d'
+lfolder='kit4_kelp_0.0'
+lname='kit4_kelp_0.0_0'
+spacing=10
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name +'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
+savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/' + lfolder + '/singles/'
+if not os.path.exists(savepath): os.makedirs(savepath)
+
 trigridxy = mplt.Triangulation(data['x'], data['y'],data['nv'])
 region=regions(regionname)
 
-savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/test_240i.mat',squeeze_me=True,struct_as_record=False))['savelag']
+
+savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/'+lfolder+'/'+lname+'.mat',squeeze_me=True,struct_as_record=False))['savelag']
 
 
 
@@ -48,36 +55,49 @@ whichtri=-39
 whichtri=2936
 whichtri=5
 
-
-l=savelag.x.shape[1]
-
-
-#fig = plt.figure(figsize=(14,6))
-f, ax = plt.subplots(nrows=1,ncols=2)
-#ax.plot_trisurf(trigridxy,data['h'])
-#ax.axis([-100000,-300000,200000,400000])
-#plt.plot(savelag.x[whichtri,0],savelag.z[whichtri,0],'r*')
-ax[0].plot(savelag.time,savelag.z[whichtri,:],'b')
-ax[0].plot(savelag.time,-savelag.h[whichtri,:],'g')
-#plt.show()
+for whichtri in range(0,len(savelag.x),spacing):
+    region={}
+    region['region']=[np.nanmin(savelag.x[whichtri,:]), np.nanmax(savelag.x[whichtri,:]), np.nanmin(savelag.y[whichtri,:]), np.nanmax(savelag.y[whichtri,:])]
 
 
-ax[1].tripcolor(trigridxy,data['h'],vmin=-5,vmax=40)
-ax[1].plot(savelag.x[whichtri,:],savelag.y[whichtri,:],'r')
-ax[1].plot(savelag.x[whichtri,0],savelag.y[whichtri,0],'b*')
-ax[1].plot(savelag.x[whichtri,-1],savelag.y[whichtri,-1],'k*')
-last=np.max(np.flatnonzero(~np.isnan(savelag.x[whichtri,:])))
-tdiff=savelag.time[2]-savelag.time[1]
-newx=savelag.x[whichtri,last]+savelag.u[whichtri,last]*tdiff
-newy=savelag.y[whichtri,last]+savelag.v[whichtri,last]*tdiff
-ax[1].plot(newx,newy,'m*',markersize=16)
-
-ax[1].axis([np.nanmin(savelag.x[whichtri,:])*1.01, np.nanmax(savelag.x[whichtri,:])*.99, np.nanmin(savelag.y[whichtri,:])*.99, np.nanmax(savelag.y[whichtri,:])*1.01])
-#plt.show()
-
-#ax[i]=prettyplot_ll(ax[i],setregion=region,grid=True,title='Day '+ ("%d"% (48*3*i/48)))
+    l=savelag.x.shape[1]
 
 
-f.show()
-    
-    #f.savefig(savepath + grid + '_' +name1+ '_'+name2+'_currents_at_' +("%d"%idx[i])+ '.png',dpi=1200)
+
+    #f, ax = plt.subplots(nrows=1,ncols=2)
+
+    f=plt.figure()    
+    ax0 = plt.subplot2grid((1,4),(0, 0),colspan=2)
+    ax1 = plt.subplot2grid((1,4),(0, 2),colspan=2)
+
+
+    ax0.plot(savelag.time,savelag.z[whichtri,:],'b')
+    ax0.plot(savelag.time,-savelag.h[whichtri,:],'g')
+    ax0.set_xticklabels((ax0.get_xticks())/100000,rotation=90)
+
+
+
+    nidx=get_nodes_xy(data,region)
+
+    ax1tri=ax1.tripcolor(trigridxy,data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+    plt.colorbar(ax1tri,ax=ax1)
+    ax1.plot(savelag.x[whichtri,:],savelag.y[whichtri,:],'k')
+    ax1.plot(savelag.x[whichtri,0],savelag.y[whichtri,0],'b*',markersize=12)
+    ax1.plot(savelag.x[whichtri,-1],savelag.y[whichtri,-1],'k*')
+    last=np.max(np.flatnonzero(~np.isnan(savelag.x[whichtri,:])))
+    tdiff=savelag.time[2]-savelag.time[1]
+    newx=savelag.x[whichtri,last]+savelag.u[whichtri,last]*tdiff
+    newy=savelag.y[whichtri,last]+savelag.v[whichtri,last]*tdiff
+    ax1.plot(newx,newy,'m*',markersize=16)
+    ax1.axis(region['region'])
+    ax1.set_xticklabels((ax1.get_xticks())/1000,rotation=90)
+    ax1.set_yticklabels((ax1.get_yticks())/1000)
+
+
+
+    #f.show()
+    f.tight_layout(pad=0.4)
+    f.savefig(savepath + grid + '_' +name+ '_'+lname+'_particle_path_'+("%05d"%whichtri)+'.png',dpi=300)
+    plt.close(f)
+
+

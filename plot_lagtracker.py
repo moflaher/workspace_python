@@ -19,16 +19,16 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_old_cages'
-grid='sfm6_musq2'
-regionname='musq_cage'
+name='kit4_45days_3'
+grid='kit4'
+regionname='mostchannels'
 datatype='2d'
-lfolder='25_part_old_cage_in60min_time1min_out10min'
-lname='old_cages_25_part_sfm6_musq2_0'
+lfolder='kit4_kelp_0.0'
+lname='kit4_kelp_0.0_0'
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name +'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -59,12 +59,12 @@ ax=ax.flatten()
 
 for i in range(0,len(ax)):
     print i
-    ax[i].triplot(trigridxy,lw=.1)
+    ax[i].triplot(trigridxy,lw=.05)
     plotidx=np.where(np.isnan(savelag.x[:,daysi*i*lph]) & ((savelag.x[:,daysi*i*lph]-savelag.x[:,daysi*(i-1)*lph])!=0))
     plotidxb=np.zeros(shape=(savelag.x.shape[0],), dtype=bool)
     plotidxb[plotidx]=1
     #ax[i].plot(savelag.x[plotidxb,daysi*i*lph],savelag.y[plotidxb,daysi*i*lph],'g.')
-    ax[i].plot(savelag.x[~plotidxb,daysi*i*lph],savelag.y[~plotidxb,daysi*i*lph],'r.',markersize=1)
+    ax[i].plot(savelag.x[~plotidxb,daysi*i*lph],savelag.y[~plotidxb,daysi*i*lph],'r.',markersize=2)
     #ax[i].plot(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph],'g.')
     
     #plotidx2=np.where(np.fabs(savelag.z[:,daysi*i*lph]-data['uvh'][trigridxy.get_trifinder().__call__(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph])])<=1 )
