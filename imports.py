@@ -2,7 +2,7 @@ from __future__ import division
 
 import sys
 sys.path.append('/home/moflaher/Desktop/workspace_python/')
-
+sys.path.append('/home/moe46/Desktop/school/workspace_python/')
 
 import numpy as np
 import scipy as sp
