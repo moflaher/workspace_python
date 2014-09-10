@@ -552,12 +552,29 @@ def get_elements(data, region):
 
     return elements
 
+def get_elements_xy(data, region):
+    """Takes uvnodes and a  region (specified by the corners of a
+    rectangle) and determines the elements of uvnode that lie within the
+    region
+    """
+    elements = np.where((data['uvnode'][:,0] >= region['region'][0]) & (data['uvnode'][:,0] <= region['region'][1]) & (data['uvnode'][:,1] >= region['region'][2]) & (data['uvnode'][:,1] <= region['region'][3]))[0]
+
+    return elements
+
 def get_nodes(data, region):
     """Takes nodexy and a region (specified by the corners of a rectangle)
     and determines the nodes that lie in the region
     """
    
     nodes = np.where((data['nodell'][:,0] >= region['region'][0]) & (data['nodell'][:,0] <= region['region'][1]) & (data['nodell'][:,1] >= region['region'][2]) & (data['nodell'][:,1] <= region['region'][3]))[0]
+    return nodes
+
+def get_nodes_xy(data, region):
+    """Takes nodexy and a region (specified by the corners of a rectangle)
+    and determines the nodes that lie in the region
+    """
+   
+    nodes = np.where((data['nodexy'][:,0] >= region['region'][0]) & (data['nodexy'][:,0] <= region['region'][1]) & (data['nodexy'][:,1] >= region['region'][2]) & (data['nodexy'][:,1] <= region['region'][3]))[0]
     return nodes
 
 def regioner(region, data, name=None, savedir=None, dim='2D'):
