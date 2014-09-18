@@ -24,11 +24,11 @@ grid='kit4'
 regionname='mostchannels'
 datatype='2d'
 lfolder='kit4_kelp_0.0'
-lname='kit4_kelp_0.0_0'
+lname='kit4_kelp_0.0_0_all_in_a_box'
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/My Passport/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -40,7 +40,15 @@ trigridxy = mplt.Triangulation(data['x'], data['y'],data['nv'])
 region=regions(regionname)
 
 
-savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/'+lfolder+'/'+lname+'.mat',squeeze_me=True,struct_as_record=False))['savelag']
+savelag=(sio.loadmat('/home/moe46/workspace_matlab/lagtracker/savedir/'+lfolder+'/kit4_kelp_0.0_0.mat',squeeze_me=True,struct_as_record=False))['savelag']
+
+if True:
+    import h5py as h5
+    fileload=h5.File('/home/moe46/workspace_matlab/lagtracker/savedir/'+lfolder+'/'+lname+'.mat')
+    fileload=fileload['savelag']
+    savelag.x=fileload['x'].value.T
+    savelag.y=fileload['y'].value.T
+
 
 daysi=9
 lph=24*6
@@ -64,7 +72,7 @@ for i in range(0,len(ax)):
     plotidxb=np.zeros(shape=(savelag.x.shape[0],), dtype=bool)
     plotidxb[plotidx]=1
     #ax[i].plot(savelag.x[plotidxb,daysi*i*lph],savelag.y[plotidxb,daysi*i*lph],'g.')
-    ax[i].plot(savelag.x[~plotidxb,daysi*i*lph],savelag.y[~plotidxb,daysi*i*lph],'r.',markersize=2)
+    ax[i].plot(savelag.x[~plotidxb,daysi*i*lph],savelag.y[~plotidxb,daysi*i*lph],'r.',markersize=.5)
     #ax[i].plot(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph],'g.')
     
     #plotidx2=np.where(np.fabs(savelag.z[:,daysi*i*lph]-data['uvh'][trigridxy.get_trifinder().__call__(savelag.x[:,daysi*i*lph],savelag.y[:,daysi*i*lph])])<=1 )

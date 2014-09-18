@@ -82,6 +82,12 @@ def makeregions():
     allregions['kit4']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-132.32,  -126.665,  51.16,  55.925])
+    tmpdic['passage']='kit4_tight'
+    tmpdic['passageP']='Kitimat Grid'
+    allregions['kit4_tight']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-129.5, -128.25,  53.25,  54.1])
     tmpdic['passage']='douglas'
     tmpdic['passageP']='Douglas Channel'
@@ -118,7 +124,7 @@ def makeregions():
     allregions['fasttip_back']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-130.1,  -129.0,  52.4,  53.6])
+    tmpdic['region']=np.array([-130.1,  -128.9,  52.4,  53.6])
     tmpdic['passage']='kelparea'
     tmpdic['passageP']='kelparea'
     allregions['kelparea']=tmpdic
@@ -165,6 +171,15 @@ def makeregions():
     tmpdic['passageP']='West of Aristazabal Island'
     allregions['aristazabal_west']=tmpdic
     
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.675, -129.45, 52.98, 53.14])
+    tmpdic['passage']='cross_shore_1'
+    tmpdic['passageP']='cross_shore_1'
+    allregions['cross_shore_1']=tmpdic
+
+
+
+
     #General regions
     tmpdic={}  
     tmpdic['region']=np.array([-67.5, -66, 44.5, 45.3])

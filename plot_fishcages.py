@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 import scipy.io as sio
-from mpl_toolkits.basemap import Basemap
+#from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
 from StringIO import StringIO
@@ -31,14 +31,14 @@ cregion=regions('musq_cage_tight')
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/My Passport/cages/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moflaher/My Book/cages/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moe46/My Passport/cages/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
-oldcages=np.genfromtxt('/media/moflaher/My Book/cages/sfm6_musq2_old_cages/input/' +grid+ '_cage.dat',skiprows=1)
+oldcages=np.genfromtxt('/media/moe46/My Passport/cages/sfm6_musq2_old_cages/input/' +grid+ '_cage.dat',skiprows=1)
 oldcages=(oldcages[:,0]-1).astype(int)
 
 

@@ -33,6 +33,7 @@ prettyplotll -   sets axis labels and stuff for long lat plots.
 def prettyplot_ll(axin,**kwargs):
 
     cblabel=None
+    skinny=False
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -45,6 +46,8 @@ def prettyplot_ll(axin,**kwargs):
                 axin.set_aspect(get_aspectratio(value))
             if (key=='cblabel'):
                 cblabel=value    
+            if (key=='cb'):
+                colorax=value    
                
 
 
@@ -58,8 +61,9 @@ def prettyplot_ll(axin,**kwargs):
     aspect=axin.get_aspect()
     if (aspect!='auto'):
         if (aspect>1):
-            slicer=(np.floor(aspect).astype(int)+1)
-            for label in axin.get_xticklabels()[::slicer]:
+            skinny=True
+            #slicer=(np.floor(aspect).astype(int)+1)
+            for label in axin.get_xticklabels()[::2]:
                 label.set_visible(False)
     
     if (cblabel != None):
@@ -67,15 +71,22 @@ def prettyplot_ll(axin,**kwargs):
         #divider = make_axes_locatable(axin)
         #cax = divider.append_axes("right", size="5%", pad=0.25)
         #plt.colorbar(cax=cax)
-        plt.draw()
-        box=axin.get_position()
-        box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-.1,box.ymax]]))
-        axin.set_position(box)
-        plt.draw()
-        box=axin.get_position()
-        cax=plt.gcf().add_axes([box.xmax + .05, box.ymin, .025, box.height])
-        cb=plt.colorbar(cax=cax)
-        cb.set_label(cblabel,fontsize=10)
+        if skinny==True:
+            plt.draw()
+            box=axin.get_position()
+            cax=axin.get_figure().add_axes([box.xmax + .05, box.ymin, .025, box.height])
+            cb=plt.colorbar(colorax,cax=cax)
+            cb.set_label(cblabel,fontsize=10)
+        else:
+            plt.draw()
+            box=axin.get_position()
+            box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-.1,box.ymax]]))
+            axin.set_position(box)
+            plt.draw()
+            box=axin.get_position()
+            cax=axin.get_figure().add_axes([box.xmax + .05, box.ymin, .025, box.height])
+            cb=plt.colorbar(colorax,cax=cax)
+            cb.set_label(cblabel,fontsize=10)
 
     return axin
 
