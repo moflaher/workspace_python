@@ -177,6 +177,18 @@ def makeregions():
     tmpdic['passageP']='cross_shore_1'
     allregions['cross_shore_1']=tmpdic
 
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.85, -129.25, 52.9, 53.225])
+    tmpdic['passage']='doubleisland'
+    tmpdic['passageP']='doubleisland'
+    allregions['doubleisland']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.6, -129.1, 52.45, 52.825])
+    tmpdic['passage']='kelpchain'
+    tmpdic['passageP']='kelpchain'
+    allregions['kelpchain']=tmpdic
+
 
 
 

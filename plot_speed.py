@@ -15,7 +15,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_0.05'
 grid='kit4'
-regionname='fasttip'
+regionname='doubleisland'
 datatype='2d'
 starttime=384
 endtime=450
@@ -24,7 +24,7 @@ cmax=1
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/kit4_runs/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
