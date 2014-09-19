@@ -115,3 +115,8 @@ def plot_box(axin,region,color,lw=1):
     axin.plot([region['region'][0],region['region'][1]],[region['region'][3],region['region'][3]],color,lw=lw)
 
 
+def fix_osw(axin):
+    _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+    axin.yaxis.set_major_formatter(_formatter)
+    axin.xaxis.set_major_formatter(_formatter)
+    axin.set_xticklabels(-1*(axin.get_xticks()))
