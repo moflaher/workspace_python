@@ -4,6 +4,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seawater as sw
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.collections import LineCollection as LC
+from datatools import *
 
 """
 Front Matter
@@ -60,7 +62,7 @@ def prettyplot_ll(axin,**kwargs):
 
     aspect=axin.get_aspect()
     if (aspect!='auto'):
-        if (aspect>1):
+        if (aspect>1.3):
             skinny=True
             #slicer=(np.floor(aspect).astype(int)+1)
             for label in axin.get_xticklabels()[::2]:
@@ -74,7 +76,7 @@ def prettyplot_ll(axin,**kwargs):
         if skinny==True:
             plt.draw()
             box=axin.get_position()
-            cax=axin.get_figure().add_axes([box.xmax + .05, box.ymin, .025, box.height])
+            cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
             cb=plt.colorbar(colorax,cax=cax)
             cb.set_label(cblabel,fontsize=10)
         else:
@@ -84,7 +86,7 @@ def prettyplot_ll(axin,**kwargs):
             axin.set_position(box)
             plt.draw()
             box=axin.get_position()
-            cax=axin.get_figure().add_axes([box.xmax + .05, box.ymin, .025, box.height])
+            cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
             cb=plt.colorbar(colorax,cax=cax)
             cb.set_label(cblabel,fontsize=10)
 
@@ -120,3 +122,52 @@ def fix_osw(axin):
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
     axin.set_xticklabels(-1*(axin.get_xticks()))
+
+
+
+def plotcoast(axin,**kwargs):
+    
+    color='k'
+    lw=1
+    ls='solid'
+    filename='mid_nwatl6b.nc'
+
+    if kwargs is not None:
+        for key, value in kwargs.iteritems():            
+            if (key=='color'):
+                color=value
+            if (key=='lw'):
+                lw=value
+            if (key=='ls'):
+                ls=value    
+            if (key=='filename'):
+                filename=value    
+
+    sl=loadnc("",singlename='data/shorelines/'+filename)
+
+    idx=np.where(sl['count']!=0)[0]
+    sl['count']=sl['count'][idx]
+    sl['start']=sl['start'][idx]
+
+    tmparray=[list(zip(sl['lon'][sl['start'][i]:(sl['start'][i]+sl['count'][i])],sl['lat'][sl['start'][i]:(sl['start'][i]+sl['count'][i])])) for i in range(0,len(sl['start']))]
+    lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+
+    axin.add_collection(lseg)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

@@ -24,7 +24,7 @@ cmax=1
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'

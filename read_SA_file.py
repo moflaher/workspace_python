@@ -20,10 +20,11 @@ rain=np.empty([0,],dtype=np.float)
 
 #load usage file
 f=open('/home/moe46/Desktop/bio/wqs/TEXT_HOURLIES_WQS_20030101-20140915_clean.txt')
-#f=open('/home/moe46/Desktop/bio/wqs/HOURLIES_WQS_20030101.txt')
+f=open('/home/moe46/Desktop/bio/cfki_2003-2014/cpyear/all_cfki_clean.dat')
 jcnt=0
 next=False
 for line in f:
+    print jcnt
     jcnt=jcnt+1
     if line.startswith('\r'):
         continue
@@ -85,7 +86,7 @@ for line in f:
 f.close()       
 
 
-fp=open('wqs_alldata.dat','w')
+fp=open('cfki_alldata.dat','w')
 
 fp.write('%s\n' % ('time pressure temp(C) dewpoint(C) wind_direction(degree) wind_speed(knots) wind_gust(knots) rain(mm)'))
 

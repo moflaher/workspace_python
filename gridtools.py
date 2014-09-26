@@ -239,7 +239,7 @@ def equal_vectors(data,region,spacing):
 
     common=np.in1d(host,idx)
 
-    return host[common]
+    return host[common].flatten()
 
 
 

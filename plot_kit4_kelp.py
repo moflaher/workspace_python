@@ -35,12 +35,12 @@ region2f=[.39,.55,.575,.32]
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/My Passport/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moflaher/My Book/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moe46/My Passport/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -80,6 +80,11 @@ plot_box(ax_all,region2,'g',1.5)
 prettyplot_ll(ax_all,setregion=regionA)
 #ax_all.yaxis.set_tick_params(labelright='on',labelleft='off')
 
+ax_all.text(-129.1,54.1,'Kitimat',fontsize=8)
+ax_all.text(-129.5,53.7,'D.C.',fontsize=8)
+ax_all.text(-128.25,53,'British Columbia',fontsize=8)
+ax_all.text(-127.9,52.88,'Canada',fontsize=8)
+
 #add bof subplot
 axsub1=f.add_axes(region1f)
 axsub1.triplot(data['trigrid'],color='black',lw=.2)
@@ -102,6 +107,13 @@ for label in axsub1.get_xticklabels()[::2]:
     label.set_visible(False)
 for label in axsub1.get_yticklabels()[::2]:
     label.set_visible(False)
+
+for label in axsub1.get_xticklabels():
+    label.set_fontsize(8)
+for label in axsub1.get_yticklabels():
+    label.set_fontsize(8)
+
+
 #plot_box(axsub1,region2,'g',1.5)
 #axsub1.annotate("",xy=(region2f[0],region2f[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 #axsub1.annotate("",xy=(region2f[0],region2f[1]+region2f[3]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -129,6 +141,10 @@ for label in axsub2.get_xticklabels()[::2]:
     label.set_visible(False)
 for label in axsub2.get_yticklabels()[::2]:
     label.set_visible(False)
+for label in axsub2.get_xticklabels():
+    label.set_fontsize(8)
+for label in axsub2.get_yticklabels():
+    label.set_fontsize(8)
 #label=axsub2.get_yticklabels()[-2]
 #label.set_visible(False)
 
@@ -162,7 +178,7 @@ ax_all.annotate("",xy=(axsub2bb[0],axsub2bb[1]),xycoords='figure fraction',xytex
 
 
 
-plt.savefig(savepath + grid + '_' +name+ '_gmt_clone_cage_outline.png',dpi=600)
+plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
 
 plt.close(f)
 
