@@ -20,7 +20,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_kelp_0.05'
+name='kit4_kelp_20m_0.018'
 grid='kit4'
 datatype='2d'
 
@@ -35,12 +35,12 @@ region2f=[.39,.55,.575,.32]
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moe46/My Passport/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -81,7 +81,8 @@ prettyplot_ll(ax_all,setregion=regionA)
 #ax_all.yaxis.set_tick_params(labelright='on',labelleft='off')
 
 ax_all.text(-129.1,54.1,'Kitimat',fontsize=8)
-ax_all.text(-129.5,53.7,'D.C.',fontsize=8)
+ax_all.text(-129.24,53.58,'Douglas',fontsize=4,rotation=90)
+ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
 ax_all.text(-128.25,53,'British Columbia',fontsize=8)
 ax_all.text(-127.9,52.88,'Canada',fontsize=8)
 
@@ -113,6 +114,7 @@ for label in axsub1.get_xticklabels():
 for label in axsub1.get_yticklabels():
     label.set_fontsize(8)
 
+axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
 
 #plot_box(axsub1,region2,'g',1.5)
 #axsub1.annotate("",xy=(region2f[0],region2f[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -157,7 +159,8 @@ for i in cages:
 
 
 
-
+axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
+axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
 
 #force draw to get accurate ax bounds
 plt.draw()
