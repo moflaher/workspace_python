@@ -133,6 +133,11 @@ axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
 axsub2=f.add_axes(region2f)
 axsub2.triplot(data['trigrid'],color='black',lw=.2)
 
+locations=[119754,118418,119991,118339]
+labelstr=['A','B','C','D']
+for j in range(0,len(locations)):
+    axsub2.text(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1],labelstr[j],fontsize=4)
+
 axsub2.axis(region2['region'])
 axsub2.set_aspect(get_aspectratio(region2))
 fix_osw(axsub2)

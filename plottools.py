@@ -57,8 +57,8 @@ def prettyplot_ll(axin,**kwargs):
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
     axin.set_xticklabels(-1*(axin.get_xticks()))
-    axin.set_xlabel(r'Longitude (W$^{\circ}$)')
-    axin.set_ylabel(r'Latitude (N$^{\circ}$)')
+    axin.set_xlabel(r'Longitude ($^{\circ}$ W)')
+    axin.set_ylabel(r'Latitude ($^{\circ}$ N)')
 
     aspect=axin.get_aspect()
     if (aspect!='auto'):

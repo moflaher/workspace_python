@@ -26,7 +26,11 @@ starttime=384
 endtime=400
 offset=0
 
-
+#kelp_tight2
+kl=[.85,.875,.175,.06]
+#crossdouble
+#kl=[.93,.825,.1,.08]
+#should be able to set the rectangle using the plt.draw() bbox of the legend. do it next time.
 
 region=regions(regionname)
 
@@ -63,15 +67,17 @@ for i in cages:
     ax_fld.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
     ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_fld.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
-Q=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+fld,eidx],data2['va'][starttime+offset+fld,eidx],angles='xy',scale_units='xy',scale=200,zorder=10000)
-
-ax_fld.annotate("        ",xy=(.925,.875),xycoords='axes fraction',bbox={'facecolor':'white', 'alpha':1, 'pad':3},zorder=99999)
-ax_fld.quiverkey(Q,  .925,.875,0.5, r'0.5 ms$^{-1}$', labelpos='S',fontproperties={'size': 8},zorder=100000)
-ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10000)
+Q=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+fld,eidx],data2['va'][starttime+offset+fld,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
+ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
 ax_fld.axis(region['region'])
 #for label in ax_fld.get_xticklabels():
 #    label.set_visible(False)
 prettyplot_ll(ax_fld,setregion=region)
+
+rec=mpl.patches.Rectangle((kl[0]-kl[2]/2,kl[1]-kl[3]/1.25),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
+ax_fld.add_patch(rec)
+aqk=ax_fld.quiverkey(Q,kl[0],kl[1],0.5, r'0.5 m s$^{-1}$', labelpos='S',fontproperties={'size': 8})
+aqk.set_zorder(30)
 
 handles, labels = ax_fld.get_legend_handles_labels()
 legend=ax_fld.legend(handles[0:2], labels[0:2],loc=1,prop={'size':8})
@@ -84,6 +90,9 @@ t[1].set_color('black')
 f.savefig(savepath + grid + '_'+regionname+'_fld_vectors_at_' + ("%04d" %(starttime+fld)) + '.png',dpi=600)
 plt.close(f)
 
+
+
+
 f=plt.figure()
 ax_ebb=f.add_axes([.1,.1,.85,.85])
 ax_ebb.triplot(data['trigrid'],lw=.5)
@@ -93,13 +102,17 @@ for i in cages:
     ax_ebb.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
     ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_ebb.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
-Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+ebb,eidx],data2['va'][starttime+offset+ebb,eidx],angles='xy',scale_units='xy',scale=200,zorder=10000)
-ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10000)
-ax_ebb.quiverkey(Q2,  .925,.875,0.5, r'0.5 ms$^{-1}$', labelpos='S',fontproperties={'size': 8},zorder=100000,bbox={'facecolor':'white', 'alpha':1, 'pad':3})
+Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+ebb,eidx],data2['va'][starttime+offset+ebb,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
+ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
 ax_ebb.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
 #    label.set_visible(False)
 prettyplot_ll(ax_ebb,setregion=region)
+
+rec=mpl.patches.Rectangle((kl[0]-kl[2]/2,kl[1]-kl[3]/1.25),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
+ax_ebb.add_patch(rec)
+aqk2=ax_ebb.quiverkey(Q2,kl[0],kl[1],0.5, r'0.5 m s$^{-1}$', labelpos='S',fontproperties={'size': 8})
+aqk2.set_zorder(30)
 
 handles, labels = ax_ebb.get_legend_handles_labels()
 legend=ax_ebb.legend(handles[0:2], labels[0:2],loc=1,prop={'size':8})
@@ -111,6 +124,7 @@ t[1].set_color('black')
 
 f.savefig(savepath + grid +'_'+regionname+ '_ebb_vectors_at_' + ("%04d" %(starttime+offset+ebb)) + '.png',dpi=600)
 plt.close(f)
+
 
 
 
@@ -140,13 +154,18 @@ for i in cages:
     ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
     ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
-Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10000)
-ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10000)
-ax_res.quiverkey(Q3,  .925,.875,0.1, r'0.1 ms$^{-1}$', labelpos='S',fontproperties={'size': 8},zorder=100000,bbox={'facecolor':'white', 'alpha':1, 'pad':3})
+Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
+ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
+
 ax_res.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
 #    label.set_visible(False)
 prettyplot_ll(ax_res,setregion=region)
+
+rec=mpl.patches.Rectangle((kl[0]-kl[2]/2,kl[1]-kl[3]/1.25),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
+ax_res.add_patch(rec)
+aqk3=ax_res.quiverkey(Q3,kl[0],kl[1],0.5, r'0.5 m s$^{-1}$', labelpos='S',fontproperties={'size': 8})
+aqk3.set_zorder(30)
 
 handles, labels = ax_res.get_legend_handles_labels()
 legend=ax_res.legend(handles[0:2], labels[0:2],loc=1,prop={'size':8})
