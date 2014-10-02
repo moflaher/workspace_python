@@ -10,27 +10,28 @@ import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
+sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide
 
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-grid='sfm6_musq2'
-regionname='musq_cage'
+name='kit4_kelp_20m_0.018'
+grid='kit4'
 datatype='2d'
-starttime=1033-1008
-endtime=1729-1008
+starttime=384
+endtime=1081
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-data['time']=data['time']+55055
+data['time']=data['time']
 
 
 

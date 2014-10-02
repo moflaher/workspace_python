@@ -35,12 +35,14 @@ region2f=[.39,.55,.575,.32]
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -86,9 +88,21 @@ ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
 ax_all.text(-128.25,53,'British Columbia',fontsize=8)
 ax_all.text(-127.9,52.88,'Canada',fontsize=8)
 
+_formatter = mpl.ticker.FormatStrFormatter("%3.0f")
+ax_all.xaxis.set_major_formatter(_formatter)
+#plotcoast(ax_all,filename='pacific.nc',color='k')
+
+
 #add bof subplot
 axsub1=f.add_axes(region1f)
 axsub1.triplot(data['trigrid'],color='black',lw=.2)
+
+
+locations=[11974,11418]
+labelstr=['1','2']
+arrows=[(.8,.65),(.85,.55)]
+for j in range(0,len(locations)):
+    axsub1.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
 
 axsub1.axis(region1['region'])
 axsub1.set_aspect(get_aspectratio(region1))
@@ -116,6 +130,7 @@ for label in axsub1.get_yticklabels():
 
 axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
 
+
 #plot_box(axsub1,region2,'g',1.5)
 #axsub1.annotate("",xy=(region2f[0],region2f[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 #axsub1.annotate("",xy=(region2f[0],region2f[1]+region2f[3]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -133,10 +148,11 @@ axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
 axsub2=f.add_axes(region2f)
 axsub2.triplot(data['trigrid'],color='black',lw=.2)
 
-locations=[119754,118418,119991,118339]
-labelstr=['A','B','C','D']
+locations=[119754,118418]
+labelstr=['1','2']
+arrows=[(.45,.365),(.85,.325)]
 for j in range(0,len(locations)):
-    axsub2.text(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1],labelstr[j],fontsize=4)
+    axsub2.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
 
 axsub2.axis(region2['region'])
 axsub2.set_aspect(get_aspectratio(region2))
@@ -167,6 +183,7 @@ for i in cages:
 axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
 axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
 
+
 #force draw to get accurate ax bounds
 plt.draw()
 
@@ -183,7 +200,9 @@ ax_all.annotate("",xy=(axsub2bb[0],axsub2bb[1]),xycoords='figure fraction',xytex
 
 #plt.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'b.',markersize=2)
 
-
+ax_all.annotate("A",xy=(.025,.95),xycoords='axes fraction')
+axsub1.annotate("C",xy=(.025,.925),xycoords='axes fraction')
+axsub2.annotate("B",xy=(.025,.9),xycoords='axes fraction')
 
 
 plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
