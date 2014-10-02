@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-#sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
+sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide
 from t_predic import t_predic
@@ -35,8 +35,10 @@ kl=[.85,.875,.175,.06]
 region=regions(regionname)
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/Hardy/spet_18_work/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -45,7 +47,7 @@ print 'done sort'
 savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage/' + name + '_' + name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -68,7 +70,7 @@ for i in cages:
     ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_fld.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
 Q=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+fld,eidx],data2['va'][starttime+offset+fld,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
-ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
+ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10,alpha=.7)
 ax_fld.axis(region['region'])
 #for label in ax_fld.get_xticklabels():
 #    label.set_visible(False)
@@ -103,7 +105,7 @@ for i in cages:
     ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_ebb.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
 Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+ebb,eidx],data2['va'][starttime+offset+ebb,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
-ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
+ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10,alpha=.7)
 ax_ebb.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
 #    label.set_visible(False)
@@ -155,7 +157,7 @@ for i in cages:
     ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
     ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
 Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
-ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
+ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10,alpha=.7)
 
 ax_res.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
