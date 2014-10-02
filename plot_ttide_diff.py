@@ -17,11 +17,11 @@ name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 grid='kit4'
 datatype='2d'
-regionname='kit4_crossdouble'
+regionname='kit4_kelp_tight2'
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -54,7 +54,8 @@ uv_change=uv_change[()]
 f=plt.figure()
 ax=f.add_axes([.125,.1,.8,.8])
 uvdiff=uv_orig['tidecon'][:,3,0]-uv_change['tidecon'][:,3,0]
-axtri=ax.tripcolor(data['trigrid'],uvdiff,vmin=uvdiff[eidx].min(),vmax=uvdiff[eidx].max())
+#axtri=ax.tripcolor(data['trigrid'],uvdiff,vmin=uvdiff[eidx].min(),vmax=uvdiff[eidx].max())
+axtri=ax.tripcolor(data['trigrid'],uvdiff,vmin=-.1,vmax=.6)
 prettyplot_ll(ax,setregion=region,cb=axtri,cblabel=r'M2 Major Axis (m s$^{-1}$) ')
 f.savefig(savepath + grid + '_' + regionname +'_uv_m2_amp_major_difference.png',dpi=600)
 plt.close(f)

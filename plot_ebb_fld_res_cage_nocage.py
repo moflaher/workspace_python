@@ -20,25 +20,27 @@ from t_predic import t_predic
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='kit4_kelp_tight2'
+regionname='kit4_kelp_tight'
 datatype='2d'
 starttime=384
 endtime=400
 offset=0
+cagecolor='r'
+
 
 #kelp_tight2
-kl=[.85,.875,.175,.06]
+#kl=[.85,.875,.175,.06]
 #crossdouble
-#kl=[.93,.825,.1,.08]
+kl=[.93,.825,.1,.08]
 #should be able to set the rectangle using the plt.draw() bbox of the legend. do it next time.
 
 region=regions(regionname)
 
 ### load the .nc file #####
-#data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/Hardy/spet_18_work/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moe46/Hardy/spet_18_work/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -47,7 +49,8 @@ print 'done sort'
 savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage/' + name + '_' + name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -66,11 +69,11 @@ ax_fld.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_fld.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
-    ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
-    ax_fld.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
+    ax_fld.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
+    ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_fld.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+fld,eidx],data2['va'][starttime+offset+fld,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
-ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10,alpha=.7)
+ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
 ax_fld.axis(region['region'])
 #for label in ax_fld.get_xticklabels():
 #    label.set_visible(False)
@@ -101,11 +104,11 @@ ax_ebb.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_ebb.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
-    ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
-    ax_ebb.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
+    ax_ebb.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
+    ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_ebb.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+ebb,eidx],data2['va'][starttime+offset+ebb,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
-ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10,alpha=.7)
+ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
 ax_ebb.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
 #    label.set_visible(False)
@@ -153,11 +156,11 @@ ax_res.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'0.75',lw=axsub1lw,label='Kelp')
-    ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'0.75',lw=axsub1lw,label='No Kelp')
-    ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'0.75',lw=axsub1lw)
+    ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
+    ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
-ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10,alpha=.7)
+ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
 
 ax_res.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():
@@ -166,7 +169,7 @@ prettyplot_ll(ax_res,setregion=region)
 
 rec=mpl.patches.Rectangle((kl[0]-kl[2]/2,kl[1]-kl[3]/1.25),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
 ax_res.add_patch(rec)
-aqk3=ax_res.quiverkey(Q3,kl[0],kl[1],0.5, r'0.5 m s$^{-1}$', labelpos='S',fontproperties={'size': 8})
+aqk3=ax_res.quiverkey(Q3,kl[0],kl[1],0.1, r'0.1 m s$^{-1}$', labelpos='S',fontproperties={'size': 8})
 aqk3.set_zorder(30)
 
 handles, labels = ax_res.get_legend_handles_labels()

@@ -130,6 +130,12 @@ def makeregions():
     allregions['kelparea']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-130.0,  -129.0,  52.4,  53.4])
+    tmpdic['passage']='kelparea2'
+    tmpdic['passageP']='kelparea2'
+    allregions['kelparea2']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-131, -128.5, 52.25, 54.1])
     tmpdic['passage']='shiparea1'
     tmpdic['passageP']='Shipping Area 1'
@@ -190,13 +196,13 @@ def makeregions():
     allregions['kelpchain']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.435, -129.38, 52.97, 53.01])
+    tmpdic['region']=np.array([-129.45, -129.38, 52.97, 53.01])
     tmpdic['passage']='kit4_kelp_tight'
     tmpdic['passageP']='kit4_kelp_tight'
     allregions['kit4_kelp_tight']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.5, -129.35, 52.6, 52.75])
+    tmpdic['region']=np.array([-129.53, -129.38, 52.6, 52.75])
     tmpdic['passage']='kit4_kelp_tight2'
     tmpdic['passageP']='kit4_kelp_tight2'
     allregions['kit4_kelp_tight2']=tmpdic
