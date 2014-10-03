@@ -20,7 +20,7 @@ from t_predic import t_predic
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='kit4_kelp_tight'
+regionname='kit4_crossdouble'
 datatype='2d'
 starttime=384
 endtime=400
@@ -64,7 +64,7 @@ ebb=np.argmax(np.sum(zeta_grad<1,axis=1))
 
 f=plt.figure()
 
-ax_fld=f.add_axes([.1,.1,.85,.85])
+ax_fld=f.add_axes([.125,.1,.825,.85])
 ax_fld.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
@@ -99,7 +99,7 @@ plt.close(f)
 
 
 f=plt.figure()
-ax_ebb=f.add_axes([.1,.1,.85,.85])
+ax_ebb=f.add_axes([.125,.1,.825,.85])
 ax_ebb.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
@@ -151,7 +151,7 @@ for j in range(0,len(eidx)):
 
 
 f=plt.figure()
-ax_res=f.add_axes([.1,.1,.85,.85])
+ax_res=f.add_axes([.125,.1,.825,.85])
 ax_res.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:

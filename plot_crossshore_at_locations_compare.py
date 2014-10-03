@@ -24,14 +24,14 @@ offset=0
 labelstr=['A','B']#,'C','D']
 labelstr2=['C','D']#,'G','H']
 
-ylim1=[0,0.5]
+ylim1=[0,.5]
 ylim2=[0,0.4]
 
 ### load the .nc file #####
-#data = loadnc('/media/moflaher/My Book/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data2 = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moe46/Hardy/spet_18_work/'+name2+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/My Book/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moe46/Hardy/spet_18_work/'+name2+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -48,22 +48,37 @@ vectorx=np.array([vectorstart[0],vectorend[0]])
 vectory=np.array([vectorstart[1],vectorend[1]])
 snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
 
-#right shore
-vectorstart=np.array([-105000,-15000])
-vectorend=np.array([-103000,-17000])
-vectorx=np.array([vectorstart[0],vectorend[0]])
-vectory=np.array([vectorstart[1],vectorend[1]])
-snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
-locations=[119754,118418]#,119991,118339]
-
 #south shore
 vectorstart=np.array([-115000,-55000])
 vectorend=np.array([-115000,-65000])
 vectorx=np.array([vectorstart[0],vectorend[0]])
 vectory=np.array([vectorstart[1],vectorend[1]])
 snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
-locations=[89520,89530]
+locations=[89579,88053]
 
+#right shore
+vectorstart=np.array([-105000,-15000])
+vectorend=np.array([-103000,-17000])
+vectorx=np.array([vectorstart[0],vectorend[0]])
+vectory=np.array([vectorstart[1],vectorend[1]])
+snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
+locations=[71718,66651]#,119991,118339]
+
+#right shore2
+vectorstart=np.array([-105000,-15000])
+vectorend=np.array([-103000,-17000])
+vectorx=np.array([vectorstart[0],vectorend[0]])
+vectory=np.array([vectorstart[1],vectorend[1]])
+snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
+locations=[126991,115472]#,119991,118339]
+
+#south shore2
+vectorstart=np.array([-115000,-55000])
+vectorend=np.array([-115000,-65000])
+vectorx=np.array([vectorstart[0],vectorend[0]])
+vectory=np.array([vectorstart[1],vectorend[1]])
+snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
+locations=[85049,77563]
 
 #angle between vectors but dont need, save for another day
 #np.arccos(np.dot(snv,spv)
@@ -137,8 +152,8 @@ for j in range(0,len(locations)):
 
 
 ax[j,0].set_xlabel(r'Time (day)')
-#ax[j,0].annotate(r'Along Shore (m s$^{-1}$)',xy=(.025,.625),xycoords='figure fraction',rotation=90,color='r')
-#ax[j,0].annotate(r'Cross Shore (m s$^{-1}$)',xy=(.95,.625),xycoords='figure fraction',rotation=90,color='b')
+ax[j,0].annotate(r'Along Shore (m s$^{-1}$)',xy=(.025,.625),xycoords='figure fraction',rotation=90,color='r')
+ax[j,0].annotate(r'Cross Shore (m s$^{-1}$)',xy=(.95,.625),xycoords='figure fraction',rotation=90,color='b')
 
 
 

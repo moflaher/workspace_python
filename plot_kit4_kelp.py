@@ -35,14 +35,14 @@ region2f=[.39,.55,.575,.32]
 
 
 ### load the .nc file #####
-#data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-#cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -101,8 +101,8 @@ axsub1.triplot(data['trigrid'],color='black',lw=.2)
 locations=[11974,11418]
 labelstr=['1','2']
 arrows=[(.8,.65),(.85,.55)]
-for j in range(0,len(locations)):
-    axsub1.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
+#for j in range(0,len(locations)):
+#    axsub1.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
 
 axsub1.axis(region1['region'])
 axsub1.set_aspect(get_aspectratio(region1))
@@ -129,7 +129,8 @@ for label in axsub1.get_yticklabels():
     label.set_fontsize(8)
 
 axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
-
+axsub1.text(-129.3,52.525,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white', 'alpha':1, 'pad':3})
+axsub1.text(-129.39,52.675,'Moore Islands',fontsize=6,rotation=0,bbox={'facecolor':'white', 'alpha':1, 'pad':3})
 
 #plot_box(axsub1,region2,'g',1.5)
 #axsub1.annotate("",xy=(region2f[0],region2f[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -151,8 +152,8 @@ axsub2.triplot(data['trigrid'],color='black',lw=.2)
 locations=[119754,118418]
 labelstr=['1','2']
 arrows=[(.45,.365),(.85,.325)]
-for j in range(0,len(locations)):
-    axsub2.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
+#for j in range(0,len(locations)):
+#    axsub2.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
 
 axsub2.axis(region2['region'])
 axsub2.set_aspect(get_aspectratio(region2))
@@ -182,7 +183,7 @@ for i in cages:
 
 axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
 axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
-
+axsub2.text(-129.775,53.20,'Banks Island',fontsize=6,rotation=0,bbox={'facecolor':'white', 'alpha':1, 'pad':3})
 
 #force draw to get accurate ax bounds
 plt.draw()
