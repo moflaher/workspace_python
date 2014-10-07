@@ -39,11 +39,12 @@ import sys
 
 
 
-data = loadnc('/media/moflaher/My Book/kit4_runs/kit4_45days_3/output/')
+data = loadnc('/media/moflaher/My Book/kit4/kit4_45days_3/output/')
 data =ncdatasort(data)
 kelp=np.genfromtxt('kelplocations.dat')
 
-depth=20
+maxdepth=20
+mindepth=5
 
 
 savepath='figures/png/kit4/misc/'
@@ -61,9 +62,9 @@ newhost=host
 newhost=np.unique(newhost)
 newhost=newhost[newhost !=-1]     
 
-host_lt_depth=data['uvh'][newhost]<depth
-
-
+host_lt_depth=np.where((data['uvh'][newhost]<=maxdepth) & (data['uvh'][newhost]>=mindepth))[0]
+newhostbool=np.zeros(shape=newhost.shape,dtype=bool)
+newhostbool[host_lt_depth]=True
 
 newhost=newhost[host_lt_depth.flatten()]
 
@@ -74,7 +75,7 @@ sio.savemat('kelp_elements_kit4.mat',mdict=tempdic)
 
 np.savetxt('kelpnodes_kit4.dat',newhost+1,fmt='%i')
 
-drag=np.zeros([newhost.shape[0],])+0.0075
+drag=np.zeros([newhost.shape[0],])+0.018
 depth=np.zeros([newhost.shape[0],])+40
 
 fvcom_savecage('kit4_cage.dat',newhost+1,drag,depth)

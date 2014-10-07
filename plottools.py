@@ -157,10 +157,48 @@ def plotcoast(axin,**kwargs):
 
 
 
+def plotgrid_num(data,size,num,nore):
+
+    if nore=='n':
+        region={}
+        region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
+        idx=get_nodes_xy(data,region)
+        plt.triplot(data['trigridxy'],lw=.5)
+        for i in idx:
+            plt.text(data['nodexy'][i,0],data['nodexy'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
+        region2={}
+        region2['region']=[data['nodexy'][num,0]-(size*2),data['nodexy'][num,0]+(size*2),data['nodexy'][num,1]-(size*2),data['nodexy'][num,1]+(size*2)]
+        plt.axis(region2['region'])
+        plt.show()
+    if nore=='e':
+        region={}
+        region['region']=[data['uvnode'][num,0]-size,data['uvnode'][num,0]+size,data['uvnode'][num,1]-size,data['uvnode'][num,1]+size]
+        idx=get_elements_xy(data,region)
+        plt.triplot(data['trigridxy'],lw=.5)
+        for i in idx:
+            plt.text(data['uvnode'][i,0],data['uvnode'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
+        region2={}
+        region2['region']=[data['uvnode'][num,0]-(size*2),data['uvnode'][num,0]+(size*2),data['uvnode'][num,1]-(size*2),data['uvnode'][num,1]+(size*2)]
+        plt.axis(region2['region'])
+        plt.show()
 
 
+def add_num_label(axin,data,size,num,nore):
 
-
+    if nore=='n':
+        region={}
+        region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
+        idx=get_nodes_xy(data,region)
+        for i in idx:
+            axin.text(data['nodell'][i,0],data['nodell'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
+       
+    if nore=='e':
+        region={}
+        region['region']=[data['uvnode'][num,0]-size,data['uvnode'][num,0]+size,data['uvnode'][num,1]-size,data['uvnode'][num,1]+size]
+        idx=get_elements_xy(data,region)
+        for i in idx:
+            axin.text(data['uvnodell'][i,0],data['uvnodell'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
+        
 
 
 

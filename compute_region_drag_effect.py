@@ -23,7 +23,7 @@ pd.options.display.float_format = '{:,.3f}'.format
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='kit4_kelp_tight2'
+regionname='kelpchain'
 datatype='2d'
 starttime=384
 endtime=400
@@ -64,63 +64,60 @@ eidx=get_elements(data,region)
 
 
 
-resu=np.empty((len(eidx),len(data['time'][starttime:])))
-resv=np.empty((len(eidx),len(data['time'][starttime:])))
-resu2=np.empty((len(eidx),len(data['time'][starttime:])))
-resv2=np.empty((len(eidx),len(data['time'][starttime:])))
-tideconsave1=np.empty((len(eidx),7,8))
-tideconsave2=np.empty((len(eidx),7,8))
-for j in range(0,len(eidx)):
-    print j
-    i=eidx[j]
-    [nameu, freq, tidecon_uv, xout]=t_tide(data['ua'][starttime:,i]+1j*data['va'][starttime:,i],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  '],['M4  '],['M6  ']]))
-    resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],nameu,freq,tidecon_uv)).flatten()
-    resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],nameu,freq,tidecon_uv)).flatten()
-    tideconsave1[j,]=tidecon_uv
-
-    [nameu, freq, tidecon_uv, xout]=t_tide(data2['ua'][starttime:,i]+1j*data2['va'][starttime:,i],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  '],['M4  '],['M6  ']]))
-    resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],nameu,freq,tidecon_uv)).flatten()
-    resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],nameu,freq,tidecon_uv)).flatten()
-    tideconsave2[j,]=tidecon_uv
-
+#resu=np.empty((len(eidx),len(data['time'][starttime:])))
+#resv=np.empty((len(eidx),len(data['time'][starttime:])))
+#resu2=np.empty((len(eidx),len(data['time'][starttime:])))
+#resv2=np.empty((len(eidx),len(data['time'][starttime:])))
 
 #np.in1d is the same as matlab ismember or close
 cageidx=np.in1d(eidx,cages)
+cageidx=eidx[cageidx]
+
+tidecon_cages=np.empty((len(cageidx),7,8))
+tidecon_nocages=np.empty((len(cageidx),7,8))
+
+
+for j in range(0,len(cageidx)):
+    print j
+    i=cageidx[j]
+    [nameu, freq, tidecon_uv, xout]=t_tide(data['ua'][starttime:,i]+1j*data['va'][starttime:,i],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  '],['M4  '],['M6  ']]))
+    #resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],nameu,freq,tidecon_uv)).flatten()
+    #resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],nameu,freq,tidecon_uv)).flatten()
+    tidecon_cages[j,]=tidecon_uv
+
+    [nameu, freq, tidecon_uv, xout]=t_tide(data2['ua'][starttime:,i]+1j*data2['va'][starttime:,i],lat=data['uvnodell'][i,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  '],['M4  '],['M6  ']]))
+    #resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],nameu,freq,tidecon_uv)).flatten()
+    #resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],nameu,freq,tidecon_uv)).flatten()
+    tidecon_nocages[j,]=tidecon_uv
 
 
 
-tidecon_cages=np.divide(tideconsave1[cageidx,:,:],tideconsave2[cageidx,:,:])
-tidecon_nocages=np.divide(tideconsave1[~cageidx,:,:],tideconsave2[~cageidx,:,:])
 
 
 
-uvar_o=data2['ua'][starttime:,eidx].var(axis=0)
-vvar_o=data2['va'][starttime:,eidx].var(axis=0)
-uvar_c=data['ua'][starttime:,eidx].var(axis=0)
-vvar_c=data['va'][starttime:,eidx].var(axis=0)
+uvar_o=data2['ua'][starttime:,cageidx].var(axis=0)
+vvar_o=data2['va'][starttime:,cageidx].var(axis=0)
+uvar_c=data['ua'][starttime:,cageidx].var(axis=0)
+vvar_c=data['va'][starttime:,cageidx].var(axis=0)
 
 cvarm_o=np.sqrt(uvar_o+vvar_o)
 cvarm_c=np.sqrt(uvar_c+vvar_c)
 
 
-cvarm_cages=np.divide(cvarm_c[cageidx],cvarm_o[cageidx])
-cvarm_nocages=np.divide(cvarm_c[~cageidx],cvarm_o[~cageidx])
-
-
 tcc_mean=tidecon_cages.mean(axis=0)
 tcnc_mean=tidecon_nocages.mean(axis=0)
-cvmc_mean=cvarm_cages.mean()
-cvmnc_mean=cvarm_nocages.mean()
+cvmc_mean=cvarm_c.mean()
+cvmnc_mean=cvarm_o.mean()
 
 cages_values=np.hstack([cvmc_mean,tcc_mean[:,0]])
 nocages_values=np.hstack([cvmnc_mean,tcnc_mean[:,0]])
 
 
 
-df=pd.DataFrame(np.vstack([cages_values, nocages_values]),['Cages','No Cages'],['VarMag']+[nameu[i].encode('ascii') for i in range(0,len(nameu))])
+df=pd.DataFrame(np.vstack([cages_values, nocages_values]),['Drag','No Drag'],['VarMag']+[nameu[i].encode('ascii') for i in range(0,len(nameu))])
 
 print df
 
-df.to_pickle('data/cagenocage' + regionname +'.panda')
-
+df.to_pickle('data/cagenocage_' + regionname +'.panda')
+df.to_csv('data/cagenocage_' + regionname +'.csv')
 
