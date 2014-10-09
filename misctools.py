@@ -16,7 +16,7 @@ np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 
 
 def runstats(datain=None):
-    """Takes an array and returns basic stats on it. Min,Max,Mean,Std
+    """Takes an array and returns basic stats on it. Max,Min,Mean,Std
 
     :Parameters:
     
@@ -27,7 +27,7 @@ def runstats(datain=None):
    
 
     if datain==None:
-        print 'Need to pass data an array'  
+        print 'Need to pass in data array'  
     else:
         maxval=np.max(datain)
         minval=np.min(datain)

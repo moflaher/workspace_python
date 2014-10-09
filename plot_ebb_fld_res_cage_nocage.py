@@ -20,7 +20,7 @@ from t_predic import t_predic
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='kit4_crossdouble'
+regionname='doubleisland'
 datatype='2d'
 starttime=384
 endtime=400
@@ -37,10 +37,10 @@ kl=[.93,.825,.1,.08]
 region=regions(regionname)
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-#data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-#data = loadnc('/media/moe46/Hardy/spet_18_work/'+name+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -49,8 +49,8 @@ print 'done sort'
 savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage/' + name + '_' + name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-#cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
