@@ -39,10 +39,10 @@ kl=[.93,.825,.1,.08]
 region=regions(regionname)
 
 ### load the .nc file #####
-#data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -51,8 +51,8 @@ print 'done sort'
 savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage_subplot/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-#cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -72,9 +72,9 @@ lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
 
-uv1=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
 uv2=uv2[()]
 
 
@@ -83,7 +83,7 @@ uv2=uv2[()]
 
 nidx=get_nodes(data,region)
 #eidx=get_elements(data,region)
-eidx=equal_vectors(data,region,350)
+eidx=equal_vectors(data,region,250)
 scale1=150
 scale2=35
 
@@ -94,7 +94,7 @@ ebb=np.argmax(np.sum(zeta_grad<1,axis=1))
 
 f=plt.figure()
 
-ax_fld=f.add_axes([.125,.675,.825,.275])
+ax_fld=f.add_axes([.125,.68,.825,.275])
 #ax_fld.triplot(data['trigrid'],lw=.5)
 
 ax_fld.add_collection(lsegf)
@@ -124,10 +124,10 @@ for label in ax_fld.get_yticklabels()[::2]:
 plotcoast(ax_fld,filename='pacific.nc',color='k')
 
 ax_fld.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
-ax_fld.text(-129.821,53.18,r'Banks Islands',fontsize=7,rotation=0)
+ax_fld.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
 
 
-ax_ebb=f.add_axes([.125,.375,.825,.275])
+ax_ebb=f.add_axes([.125,.38,.825,.275])
 #ax_ebb.triplot(data['trigrid'],lw=.5)
 
 ax_ebb.add_collection(lsege)
@@ -154,7 +154,7 @@ for label in ax_ebb.get_yticklabels()[::2]:
     label.set_visible(False)
 plotcoast(ax_ebb,filename='pacific.nc',color='k')
 ax_ebb.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
-ax_ebb.text(-129.821,53.18,r'Banks Islands',fontsize=7,rotation=0)
+ax_ebb.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
 
 
 resu=np.empty((len(eidx),len(data['time'][starttime:])))
@@ -169,13 +169,13 @@ for j in range(0,len(eidx)):
     resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
     resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
-ax_res=f.add_axes([.125,.075,.825,.275])
+ax_res=f.add_axes([.125,.08,.825,.275])
 #ax_res.triplot(data['trigrid'],lw=.5)
 
 ax_res.add_collection(lsegr)
 
-Q1=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
-Q2=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)
+Q1=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
+Q2=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)
 
 ax_res.axis(region['region'])
 
@@ -197,7 +197,38 @@ for label in ax_res.get_xticklabels()[::2]:
     label.set_visible(False)
 plotcoast(ax_res,filename='pacific.nc',color='k')
 ax_res.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
-ax_res.text(-129.821,53.18,r'Banks Islands',fontsize=7,rotation=0)
+ax_res.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
+
+
+
+
+
+ax_fld.text(.925,.875,"A",transform=ax_fld.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+ax_ebb.text(.925,.875,"B",transform=ax_ebb.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+ax_res.text(.925,.875,"C",transform=ax_res.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+
+
+#ax_res.annotate(r'Longitude ($^{\circ}$W)',xy=(.45,.015),xycoords='figure fraction')
+#ax_res.annotate(r'Latitude ($^{\circ}$N)',xy=(.275,.575),xycoords='figure fraction',rotation=90)
+
+ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)')
+ax_ebb.set_ylabel(r'Latitude ($^{\circ}$N)')
+ax_res.set_ylabel(r'Latitude ($^{\circ}$N)')
+ax_res.set_xlabel(r'Longitude ($^{\circ}$W)')
+
+for label in ax_fld.get_xticklabels():
+    label.set_fontsize(8)
+for label in ax_fld.get_yticklabels():
+    label.set_fontsize(8)
+for label in ax_ebb.get_xticklabels():
+    label.set_fontsize(8)
+for label in ax_ebb.get_yticklabels():
+    label.set_fontsize(8)
+for label in ax_res.get_xticklabels():
+    label.set_fontsize(8)
+for label in ax_res.get_yticklabels():
+    label.set_fontsize(8)
+
 
 
 f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_ebb_fld_res.png',dpi=600)

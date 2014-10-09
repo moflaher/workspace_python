@@ -159,8 +159,8 @@ for i in cages:
     ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
     ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
     ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
-Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
-ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
+Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
+ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
 
 ax_res.axis(region['region'])
 #for label in ax_ebb.get_xticklabels():

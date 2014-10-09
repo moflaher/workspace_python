@@ -23,7 +23,7 @@ pd.options.display.float_format = '{:,.3f}'.format
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='doubleisland'
+regionname='kit4_kelp_tight'
 datatype='2d'
 starttime=384
 endtime=400
@@ -36,10 +36,10 @@ cagecolor='r'
 region=regions(regionname)
 
 ### load the .nc file #####
-#data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 data2 = ncdatasort(data2)
@@ -48,8 +48,8 @@ print 'done sort'
 
 
 
-#cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -92,6 +92,11 @@ for j in range(0,len(cageidx)):
     tidecon_nocages[j,]=tidecon_uv
 
 
+#calc speed of the mean of time of res
+resms1=np.sqrt(resu.mean(axis=1)**2+resv.mean(axis=1)**2)
+resms2=np.sqrt(resu2.mean(axis=1)**2+resv2.mean(axis=1)**2)
+
+#calc speed of res
 ress1=np.sqrt(resu**2+resv**2)
 ress2=np.sqrt(resu2**2+resv2**2)
 
@@ -111,16 +116,26 @@ cvmc_mean=cvarm_c.mean()
 cvmnc_mean=cvarm_o.mean()
 ress1m=ress1.mean()
 ress2m=ress2.mean()
+resms1m=resms1.mean()
+resms2m=resms2.mean()
 
-cages_values=np.hstack([cvmc_mean,tcc_mean[:,0],ress1m])
-nocages_values=np.hstack([cvmnc_mean,tcnc_mean[:,0],ress2m])
+cages_values=np.hstack([cvmc_mean,tcc_mean[:,0],ress1m,resms1m])
+nocages_values=np.hstack([cvmnc_mean,tcnc_mean[:,0],ress2m,resms2m])
 
 
 
-df=pd.DataFrame(np.vstack([cages_values, nocages_values]),['Drag','No Drag'],['VarMag']+[nameu[i].encode('ascii') for i in range(0,len(nameu))]+['res'])
+df=pd.DataFrame(np.vstack([cages_values, nocages_values]),['Drag','No Drag'],['VarMag']+[nameu[i].encode('ascii') for i in range(0,len(nameu))]+['res sm']+['res msm'])
 
 print df
 
 df.to_pickle('data/cagenocage_' + regionname +'.panda')
 df.to_csv('data/cagenocage_' + regionname +'.csv')
 
+
+plt.triplot(data['trigrid'])
+for j in range(0,len(cageidx)):
+    print j
+    i=cageidx[j]
+    plt.plot(data['uvnodell'][i,0],data['uvnodell'][i,1],'*')
+
+plt.show()
