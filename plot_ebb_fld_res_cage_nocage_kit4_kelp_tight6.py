@@ -22,13 +22,14 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-regionname='kit4_crossdouble'
+regionname='kit4_kelp_tight6'
 datatype='2d'
 starttime=384
 endtime=400
 offset=0
 cagecolor='r'
 
+testing=False
 
 #kelp_tight2
 #kl=[.85,.875,.175,.06]
@@ -78,15 +79,14 @@ uv2=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name2
 uv2=uv2[()]
 
 
-
+scale1=100
+scale2=15
 
 
 
 nidx=get_nodes(data,region)
 #eidx=get_elements(data,region)
-eidx=equal_vectors(data,region,200)
-scale1=150
-scale2=35
+eidx=equal_vectors(data,region,400)
 
 zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
 fld=np.argmax(np.sum(zeta_grad,axis=1))
@@ -96,7 +96,7 @@ ebb=np.argmin(np.sum(zeta_grad,axis=1))
 
 f=plt.figure()
 
-ax_fld=f.add_axes([.125,.675,.825,.275])
+ax_fld=f.add_axes([.1,.1,.275,.8])
 #ax_fld.triplot(data['trigrid'],lw=.5)
 
 ax_fld.add_collection(lsegf)
@@ -107,27 +107,31 @@ Q2=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][st
 ax_fld.axis(region['region'])
 fix_osw(ax_fld)
 ax_fld.set_aspect(get_aspectratio(region))
-ax_fld.xaxis.set_tick_params(labelbottom='off')
+#ax_fld.xaxis.set_tick_params(labelbottom='off')
 
 plt.draw()
 ax_fldbb=ax_fld.get_axes().get_position().bounds
 #kl=[ax_fldbb[0]+ax_fldbb[2]-.05,ax_fldbb[1]+ax_fldbb[3]-.2,.1,.1]
-kl=[.725,.725,.25,.225]
+kl=[.625,.02,.345,.1]
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
 ax_fld.add_patch(rec)
-ax_fld.annotate(r'0.5 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.15),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_fld.quiverkey(Q1,kl[0]+.05,kl[1]+.1,0.5, r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_fld.quiverkey(Q2,kl[0]+.05,kl[1]+.0325,0.5, r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_fld.annotate(r'0.75 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.07),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_fld.quiverkey(Q1,kl[0]+.075,kl[1]+.045,0.75, r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_fld.quiverkey(Q2,kl[0]+.075,kl[1]+.015,0.75, r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 
-for label in ax_fld.get_yticklabels()[::2]:
+#for label in ax_fld.get_yticklabels()[::2]:
+#    label.set_visible(False)
+for label in ax_fld.get_xticklabels()[1::2]:
     label.set_visible(False)
 
 plotcoast(ax_fld,filename='pacific.nc',color='k')
-ax_fld.text(-129.42,53.01,'Campania Island',fontsize=4)
 
-ax_ebb=f.add_axes([.125,.375,.825,.275])
+#ax_fld.text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
+
+
+ax_ebb=f.add_axes([.385,.1,.275,.8])
 #ax_ebb.triplot(data['trigrid'],lw=.5)
 
 ax_ebb.add_collection(lsege)
@@ -139,36 +143,37 @@ ax_ebb.axis(region['region'])
 #    label.set_visible(False)
 fix_osw(ax_ebb)
 ax_ebb.set_aspect(get_aspectratio(region))
-ax_ebb.xaxis.set_tick_params(labelbottom='off')
+ax_ebb.yaxis.set_tick_params(labelleft='off')
 
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
 ax_ebb.add_patch(rec)
-ax_ebb.annotate(r'0.5 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.15),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_ebb.quiverkey(Q1,kl[0]+.05,kl[1]+.1,0.5, r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_ebb.quiverkey(Q2,kl[0]+.05,kl[1]+.0325,0.5, r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_ebb.annotate(r'0.75 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.07),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_ebb.quiverkey(Q1,kl[0]+.075,kl[1]+.045,0.75, r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_ebb.quiverkey(Q2,kl[0]+.075,kl[1]+.015,0.75, r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 
-for label in ax_ebb.get_yticklabels()[::2]:
+for label in ax_ebb.get_xticklabels()[1::2]:
     label.set_visible(False)
 plotcoast(ax_ebb,filename='pacific.nc',color='k')
-ax_ebb.text(-129.42,53.01,'Campania Island',fontsize=4)
+#ax_ebb.text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
 
 
 resu=np.empty((len(eidx),len(data['time'][starttime:])))
 resv=np.empty((len(eidx),len(data['time'][starttime:])))
 resu2=np.empty((len(eidx),len(data['time'][starttime:])))
 resv2=np.empty((len(eidx),len(data['time'][starttime:])))
-for j in range(0,len(eidx)):
-    print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
-    i=eidx[j]    
-    resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
-    resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
-    resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
-    resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
+if testing==False:
+    for j in range(0,len(eidx)):
+        print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
+        i=eidx[j]    
+        resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
+        resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
+        resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
+        resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
-ax_res=f.add_axes([.125,.075,.825,.275])
+ax_res=f.add_axes([.67,.1,.275,.8])
 #ax_res.triplot(data['trigrid'],lw=.5)
 
 ax_res.add_collection(lsegr)
@@ -184,36 +189,33 @@ ax_res.set_aspect(get_aspectratio(region))
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
 ax_res.add_patch(rec)
-ax_res.annotate(r'0.2 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.15),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.1,0.2, r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.0325,0.2, r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_res.annotate(r'0.05 m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.07),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_res.quiverkey(Q1,kl[0]+.075,kl[1]+.045,0.05, r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_res.quiverkey(Q2,kl[0]+.075,kl[1]+.015,0.05, r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 
-for label in ax_res.get_yticklabels()[::2]:
-    label.set_visible(False)
-for label in ax_res.get_xticklabels()[::2]:
+ax_res.yaxis.set_tick_params(labelleft='off')
+#for label in ax_res.get_yticklabels()[::2]:
+#    label.set_visible(False)
+for label in ax_res.get_xticklabels()[1::2]:
     label.set_visible(False)
 plotcoast(ax_res,filename='pacific.nc',color='k')
-ax_res.text(-129.42,53.01,'Campania Island',fontsize=4)
+
+#ax_res.text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
+
+ax_fld.text(.05,.95,"A",transform=ax_fld.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+ax_ebb.text(.05,.95,"B",transform=ax_ebb.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+ax_res.text(.05,.95,"C",transform=ax_res.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
 
 
+#ax_res.annotate(r'Longitude ($^{\circ}$W)',xy=(.45,.175),xycoords='figure fraction')
+#ax_res.annotate(r'Latitude ($^{\circ}$N)',xy=(.015,.575),xycoords='figure fraction',rotation=90)
 
-
-
-ax_fld.text(.025,.875,"A",transform=ax_fld.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
-ax_ebb.text(.025,.875,"B",transform=ax_ebb.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
-ax_res.text(.025,.875,"C",transform=ax_res.transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
-
-
-#ax_res.annotate(r'Longitude ($^{\circ}$W)',xy=(.45,.015),xycoords='figure fraction')
-#ax_res.annotate(r'Latitude ($^{\circ}$N)',xy=(.29,.575),xycoords='figure fraction',rotation=90)
-
+ax_fld.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
+ax_ebb.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
 ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
-ax_ebb.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
-ax_res.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
 ax_res.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
-
 
 for label in ax_fld.get_xticklabels():
     label.set_fontsize(8)
@@ -227,7 +229,6 @@ for label in ax_res.get_xticklabels():
     label.set_fontsize(8)
 for label in ax_res.get_yticklabels():
     label.set_fontsize(8)
-
 
 
 f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_ebb_fld_res.png',dpi=600)

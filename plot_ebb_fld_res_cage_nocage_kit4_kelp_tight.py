@@ -86,8 +86,9 @@ nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
 zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
-fld=np.argmax(np.sum(zeta_grad>1,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<1,axis=1))
+fld=np.argmax(np.sum(zeta_grad,axis=1))
+ebb=np.argmin(np.sum(zeta_grad,axis=1))
+
 
 
 f=plt.figure()
@@ -205,10 +206,10 @@ ax_res.text(.025,.875,"C",transform=ax_res.transAxes,bbox={'facecolor':'white','
 #ax_res.annotate(r'Longitude ($^{\circ}$W)',xy=(.45,.015),xycoords='figure fraction')
 #ax_res.annotate(r'Latitude ($^{\circ}$N)',xy=(.25,.575),xycoords='figure fraction',rotation=90)
 
-ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)')
-ax_ebb.set_ylabel(r'Latitude ($^{\circ}$N)')
-ax_res.set_ylabel(r'Latitude ($^{\circ}$N)')
-ax_res.set_xlabel(r'Longitude ($^{\circ}$W)')
+ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
+ax_ebb.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
+ax_res.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
+ax_res.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
 
 for label in ax_fld.get_xticklabels():
     label.set_fontsize(8)

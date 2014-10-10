@@ -58,8 +58,8 @@ nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
 zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
-fld=np.argmax(np.sum(zeta_grad>1,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<1,axis=1))
+fld=np.argmax(np.sum(zeta_grad>0,axis=1))
+ebb=np.argmax(np.sum(zeta_grad<0,axis=1))
 
 
 f=plt.figure()

@@ -87,8 +87,9 @@ nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
 zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
-fld=np.argmax(np.sum(zeta_grad>1,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<1,axis=1))
+fld=np.argmax(np.sum(zeta_grad,axis=1))
+ebb=np.argmin(np.sum(zeta_grad,axis=1))
+
 
 
 f=plt.figure()
@@ -128,7 +129,7 @@ plotcoast(ax_fld,filename='pacific.nc',color='k')
 ax_fld.text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
 
 
-ax_ebb=f.add_axes([.4,.1,.275,.8])
+ax_ebb=f.add_axes([.385,.1,.275,.8])
 #ax_ebb.triplot(data['trigrid'],lw=.5)
 
 ax_ebb.add_collection(lsege)
@@ -169,7 +170,7 @@ for j in range(0,len(eidx)):
     resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
     resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
-ax_res=f.add_axes([.7,.1,.275,.8])
+ax_res=f.add_axes([.67,.1,.275,.8])
 #ax_res.triplot(data['trigrid'],lw=.5)
 
 ax_res.add_collection(lsegr)
@@ -208,10 +209,10 @@ ax_res.text(.05,.925,"C",transform=ax_res.transAxes,bbox={'facecolor':'white','e
 #ax_res.annotate(r'Longitude ($^{\circ}$W)',xy=(.45,.175),xycoords='figure fraction')
 #ax_res.annotate(r'Latitude ($^{\circ}$N)',xy=(.015,.575),xycoords='figure fraction',rotation=90)
 
-ax_fld.set_xlabel(r'Longitude ($^{\circ}$W)')
-ax_ebb.set_xlabel(r'Longitude ($^{\circ}$W)')
-ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)')
-ax_res.set_xlabel(r'Longitude ($^{\circ}$W)')
+ax_fld.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
+ax_ebb.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
+ax_fld.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=8)
+ax_res.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=8)
 
 for label in ax_fld.get_xticklabels():
     label.set_fontsize(8)

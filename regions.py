@@ -214,7 +214,7 @@ def makeregions():
     allregions['kit4_kelp_tight2_small']=tmpdic
 
     tmpdic={}  
-    tmpdic['region']=np.array([-129.54, -129.39, 52.96, 53.05])
+    tmpdic['region']=np.array([-129.54, -129.39, 52.95, 53.04])
     tmpdic['passage']='kit4_crossdouble'
     tmpdic['passageP']='kit4_crossdouble'
     allregions['kit4_crossdouble']=tmpdic
@@ -230,6 +230,30 @@ def makeregions():
     tmpdic['passage']='conroy_island'
     tmpdic['passageP']='conroy_island'
     allregions['conroy_island']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.5, -129.44, 53.04, 53.08])
+    tmpdic['passage']='kit4_kelp_tight3'
+    tmpdic['passageP']='kit4_kelp_tight3'
+    allregions['kit4_kelp_tight3']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.61, -129.5, 52.96, 53.02])
+    tmpdic['passage']='kit4_kelp_tight4'
+    tmpdic['passageP']='kit4_kelp_tight4'
+    allregions['kit4_kelp_tight4']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.45, -129.3, 52.48, 52.62])
+    tmpdic['passage']='kit4_kelp_tight5'
+    tmpdic['passageP']='kit4_kelp_tight5'
+    allregions['kit4_kelp_tight5']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.43, -129.29, 52.725, 52.88])
+    tmpdic['passage']='kit4_kelp_tight6'
+    tmpdic['passageP']='kit4_kelp_tight6'
+    allregions['kit4_kelp_tight6']=tmpdic
 
 
     #General regions
