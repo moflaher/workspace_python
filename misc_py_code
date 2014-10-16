@@ -1,0 +1,14 @@
+
+
+
+#plot grid,coastline,kelp, and element numbers.
+from matplotlib.collections import PolyCollection as PC
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
+f=plt.figure()
+ax=f.add_axes([.1,.1,.8,.8])
+ax.triplot(data['trigrid'])
+ax.add_collection(lsegf)
+add_num_label(ax,data,4000,77555,'e')
+plotcoast(ax,filename='pacific.nc',color='k')
+f.show()

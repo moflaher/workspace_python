@@ -24,8 +24,8 @@ cbfix=True
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name_change+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('runs/'+grid+'/'+name_change+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -62,7 +62,7 @@ ax1=f.add_axes([.3,.25,.8,.675])
 
 
 if cbfix==True:
-    axtri1=ax0.tripcolor(data['trigrid'],cvarm_o,vmin=0,vmax=.7)
+    axtri1=ax0.tripcolor(data['trigrid'],cvarm_o,vmin=.1,vmax=.5)
 else:
     axtri1=ax0.tripcolor(data['trigrid'],cvarm_o,vmin=cvarm_o[eidx].min(),vmax=cvarm_o[eidx].max())
 prettyplot_ll(ax0,setregion=region)

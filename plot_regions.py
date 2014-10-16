@@ -24,7 +24,7 @@ cmax=1
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -41,7 +41,7 @@ for i in range(0,len(regionlist)):
     regionname=regionlist[i]
     region=regions(regionname)
     f=plt.figure()
-    ax=plt.axes([.125,.1,.85,.85])
+    ax=plt.axes([.125,.1,.8,.8])
     ax.triplot(data['trigrid'],lw=.5)
     prettyplot_ll(ax,setregion=region,grid=True)
     f.savefig(savepath + grid + '_' + regionname +'_mesh.png',dpi=150)

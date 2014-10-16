@@ -27,7 +27,7 @@ regionsub=['kit4_area1','kit4_area2','kit4_area3','kit4_area4']
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
