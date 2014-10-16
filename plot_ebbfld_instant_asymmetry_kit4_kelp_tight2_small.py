@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from misctools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -20,14 +21,14 @@ grid='kit4'
 regionname='kit4_kelp_tight2_small'
 datatype='2d'
 starttime=384
-cmin=-1
-cmax=1
+cmin=-0.8
+cmax=0.8
 
 
 data_f=[.1,.1,.375,.8]
 data2_f=[.485,.1,.375,.8]
 cb_f=[.885,.1625,.025,.675]
-ABC=[.05,.925]
+ABC=[.025,.95]
 
 
 ### load the .nc file #####
@@ -76,6 +77,7 @@ ue=data['ua'][starttime+ebb,:]
 vf=data['va'][starttime+fld,:]
 ve=data['va'][starttime+ebb,:]
 efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
+print runstats(efs[eidx])
 ax1=f.add_axes(data_f)  
 ax1.tripcolor(data['trigrid'],efs,vmin=cmin,vmax=cmax)
 ax1.axis(region['region'])
@@ -92,6 +94,7 @@ ue=data2['ua'][starttime+ebb,:]
 vf=data2['va'][starttime+fld,:]
 ve=data2['va'][starttime+ebb,:]
 efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
+print runstats(efs[eidx])
 ax2=f.add_axes(data2_f)  
 triax=ax2.tripcolor(data['trigrid'],efs,vmin=cmin,vmax=cmax)
 ax2.axis(region['region'])
