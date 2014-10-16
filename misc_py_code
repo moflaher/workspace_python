@@ -12,3 +12,23 @@ ax.add_collection(lsegf)
 add_num_label(ax,data,4000,77555,'e')
 plotcoast(ax,filename='pacific.nc',color='k')
 f.show()
+
+
+
+
+
+#testing set_aspect 
+region={}
+region['region']=[-129.5, -129.30,52.45,52.625]
+f=plt.figure()
+ax1=f.add_axes([.125,.1,.4,.8])
+ax2=f.add_axes([.55,.1,.4,.8])
+ax1.tripcolor(data['trigrid'],data['h'])
+tr=ax2.tripcolor(data['trigrid'],data['h'])
+plt.colorbar(tr,ax=ax2)
+ax1.axis(region['region'])
+ax2.axis(region['region'])
+ax1.set_aspect(get_aspectratio(region),anchor='N')
+ax2.set_aspect(get_aspectratio(region),anchor='N')
+f.show()
+

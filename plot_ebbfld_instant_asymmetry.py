@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+from matplotlib.collections import LineCollection as LC
 
 
 # Define names and types of data
@@ -29,12 +30,22 @@ data = ncdatasort(data)
 print 'done sort'
 
 
+cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
+
+
+
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+color='g'
+lw=.5
+ls='solid'
 
 
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_instant_symmetry/'+name+'/'
+
+savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_instant_asymmetry/'+name+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 
@@ -55,13 +66,23 @@ for i in range(0,len(regionlist)):
     vf=data['va'][starttime+fld,:]
     ve=data['va'][starttime+ebb,:]
     efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
-
+    
     f=plt.figure()
     ax=plt.axes([.125,.1,.8,.8])  
     triax=ax.tripcolor(data['trigrid'],efs,vmin=cmin,vmax=cmax)
-    prettyplot_ll(ax,setregion=region,cblabel=r'EbbFld Symmetry',cb=triax)
+    prettyplot_ll(ax,setregion=region,cblabel=r'Asymmetry',cb=triax)
+    plotcoast(ax,filename='pacific.nc',color='k')
+
+    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax.add_collection(lseg1)
+
+    for label in ax.get_yticklabels():
+        label.set_fontsize(8)
+    for label in ax.get_xticklabels():
+        label.set_fontsize(8)
+
     #f.savefig(savepath + grid + '_'+name+'_' + regionname +'_ebbfld_symmetry.png',dpi=150)
-    f.savefig(savepath + grid + '_'+name+'_' + regionname +'_ebbfld_symmetry.png',dpi=600)
+    f.savefig(savepath + grid + '_'+name+'_' + regionname +'_ebbfld_asymmetry.png',dpi=600)
     plt.close(f)
 
 

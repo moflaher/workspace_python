@@ -19,9 +19,11 @@ grid='kit4'
 datatype='2d'
 starttime=384
 endtime=432
-elements=[77566,80184,80168]
+endtime=456
+#elements=[77566,80184,80168]
+elements=[80184]
 
-
+single=False
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
@@ -45,18 +47,23 @@ for i in range(0,len(elements)):
 
     f,ax=plt.subplots(nrows=3,ncols=1,sharex=True)
 
-    ax[0].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k--')
-    ax[0].plot(data['time'][starttime:endtime],data['uvzeta'][:,elements[i]],'r',lw=2,label='Kelp')
+    ax[0].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k')
+    ax[0].plot(data['time'][starttime:endtime],data['uvzeta'][:,elements[i]],'r',lw=1,label='Kelp')
     ax[0].plot(data2['time'][starttime:endtime],data2['uvzeta'][:,elements[i]],'k',label='No kelp')
 
-    ax[1].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k--')
-    ax[1].plot(data['time'][starttime:endtime],data['ua'][starttime:endtime,elements[i]],'r',lw=2,label='Kelp')
+    ax[1].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k')
+    ax[1].plot(data['time'][starttime:endtime],data['ua'][starttime:endtime,elements[i]],'r',lw=1,label='Kelp')
     ax[1].plot(data2['time'][starttime:endtime],data2['ua'][starttime:endtime,elements[i]],'k',label='No kelp')
+    ax[1].plot(data['time'][starttime:endtime],np.zeros(shape=data['ua'][starttime:endtime,elements[i]].shape)+data['ua'][starttime:endtime,elements[i]].mean(),'r-.',lw=1,label='Kelp mean')
+    ax[1].plot(data2['time'][starttime:endtime],np.zeros(shape=data2['ua'][starttime:endtime,elements[i]].shape)+data2['ua'][starttime:endtime,elements[i]].mean(),'k-.',label='No kelp mean')
 
 
-    ax[2].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k--')
-    ax[2].plot(data['time'][starttime:endtime],data['va'][starttime:endtime,elements[i]],'r',lw=2,label='Kelp')
+    ax[2].plot(data['time'][starttime:endtime],np.zeros(shape=data['time'][starttime:endtime].shape),'k')
+    ax[2].plot(data['time'][starttime:endtime],data['va'][starttime:endtime,elements[i]],'r',lw=1,label='Kelp')
     ax[2].plot(data2['time'][starttime:endtime],data2['va'][starttime:endtime,elements[i]],'k',label='No kelp')
+    ax[2].plot(data['time'][starttime:endtime],np.zeros(shape=data['va'][starttime:endtime,elements[i]].shape)+data['va'][starttime:endtime,elements[i]].mean(),'r-.',lw=1,label='Kelp mean')
+    ax[2].plot(data2['time'][starttime:endtime],np.zeros(shape=data2['va'][starttime:endtime,elements[i]].shape)+data2['va'][starttime:endtime,elements[i]].mean(),'k-.',label='No kelp mean')
+
 
 
     ax[0].set_ylabel(r'Elevation (m)',fontsize=8)
@@ -81,19 +88,29 @@ for i in range(0,len(elements)):
         label.set_fontsize(8)
 
     handles, labels = ax[0].get_legend_handles_labels()
-    legend=ax[0].legend(handles, labels,prop={'size':6})
+    legend=ax[0].legend(handles, labels,prop={'size':6},loc=4)
     for label in legend.get_lines():
         label.set_linewidth(1.5)
 
     handles, labels = ax[1].get_legend_handles_labels()
-    legend=ax[1].legend(handles, labels,prop={'size':6})
+    legend=ax[1].legend(handles, labels,prop={'size':6},loc=4)
     for label in legend.get_lines():
         label.set_linewidth(1.5)
     handles, labels = ax[2].get_legend_handles_labels()
-    legend=ax[2].legend(handles, labels,prop={'size':6})
+    legend=ax[2].legend(handles, labels,prop={'size':6},loc=4)
     for label in legend.get_lines():
         label.set_linewidth(1.5)
 
+    ABC=[.02,.87]
+    ax[0].text(ABC[0],ABC[1],"A",transform=ax[0].transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+    ax[1].text(ABC[0],ABC[1],"B",transform=ax[1].transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+    ax[2].text(ABC[0],ABC[1],"C",transform=ax[2].transAxes,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
+
+    if single==True:
+        ax[1].set_ylim([-.4,.1])
+        ax[2].set_ylim([-.2,.4])
+
+    f.subplots_adjust(hspace=.075)
 
     f.savefig(savepath + grid + '_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.png',dpi=300)
 

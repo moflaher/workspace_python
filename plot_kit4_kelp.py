@@ -131,10 +131,10 @@ for label in axsub1.get_yticklabels():
     label.set_fontsize(8)
 
 axsub1.text(-129.275,52.775,'Aristazabal Island',fontsize=8,rotation=-45)
-axsub1.text(-129.4,52.485,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None','alpha':1, 'pad':3})
 axsub1.text(-129.39,52.675,'Moore Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub1.text(-129.53,52.78,'Rennison Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
-axsub1.text(-129.29,52.575,'Harvey Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+axsub1.text(-129.53,52.5,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None','alpha':1, 'pad':3})
+axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
 #plot_box(axsub1,region2,'g',1.5)
 #axsub1.annotate("",xy=(region2f[0],region2f[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -186,8 +186,10 @@ for i in cages:
 
 
 axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
+axsub2.text(-129.6,53.1175,'Estevan Sound',fontsize=8,rotation=-40)
 axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
 axsub2.text(-129.775,53.20,'Banks Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+axsub2.text(-129.715,53.16,'Otter Passage',fontsize=5,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
 #force draw to get accurate ax bounds
 plt.draw()
