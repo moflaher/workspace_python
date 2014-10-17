@@ -63,7 +63,7 @@ plt.close()
 
 
 
-zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
+zeta_grad=np.gradient(data2['zeta'][starttime:,nidx])[0]
 fld=np.argmax(np.sum(zeta_grad,axis=1))
 ebb=np.argmin(np.sum(zeta_grad,axis=1))
 

@@ -51,9 +51,11 @@ def regions(regionname=None):
 
     if regionname==None:
         print 'Valid regions are'
-        print allregions.keys()        
+        return allregions.keys()        
     else:
-        return allregions[regionname]
+        tmpregion=allregions[regionname]
+        tmpregion['center']=[(tmpregion['region'][0]+tmpregion['region'][1])/2,(tmpregion['region'][2]+tmpregion['region'][3])/2]
+        return tmpregion
 
 
 def loadnei(neifilename=None):
@@ -243,8 +245,22 @@ def equal_vectors(data,region,spacing):
 
 
 
+def regionll2xy(data,region):
+    """
+    Take an FVCOM data dictionary, a region dictionary and return a region dictionary with regionxy added which best approximates the ll region in xy.
+ 
+    """
+
+    left=np.argmin(np.fabs(data['uvnodell'][:,0]-region['region'][0]))
+    right=np.argmin(np.fabs(data['uvnodell'][:,0]-region['region'][1]))
+    
+    top=np.argmin(np.fabs(data['uvnodell'][:,1]-region['region'][3]))
+    bottom=np.argmin(np.fabs(data['uvnodell'][:,1]-region['region'][2]))
+
+    region['regionxy']=[data['uvnode'][left,0],data['uvnode'][right,0],data['uvnode'][bottom,1],data['uvnode'][top,1]]
 
 
+    return region
 
 
 

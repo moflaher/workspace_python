@@ -212,7 +212,32 @@ axsub1.annotate("C",xy=(.025,.925),xycoords='axes fraction')
 axsub2.annotate("B",xy=(.025,.9),xycoords='axes fraction')
 
 
-plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
 
-plt.close(f)
+#add region boxes
+rn=regions('kit4_kelp_tight5')
+plot_box(axsub1,rn,'k',1.5)
+aa=axsub1.text(rn['center'][0],rn['center'][1],'R1',fontsize=12,rotation=0,color='k')
+
+rn=regions('kit4_kelp_tight2_small')
+plot_box(axsub1,rn,'k',1.5)
+axsub1.text(rn['center'][0],rn['center'][1],'R2',fontsize=12,rotation=0,color='k')
+
+rn=regions('kit4_kelp_tight6')
+plot_box(axsub1,rn,'k',1.5)
+axsub1.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='k')
+
+rn=regions('kit4_crossdouble')
+plot_box(axsub2,rn,'k',1.5)
+axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='k')
+
+rn=regions('kit4_ftb')
+plot_box(axsub2,rn,'k',1.5)
+axsub2.text(rn['center'][0],rn['center'][1],'R5',fontsize=12,rotation=0,color='k')
+
+
+
+
+#plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
+
+#plt.close(f)
 
