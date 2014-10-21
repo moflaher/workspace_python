@@ -39,11 +39,11 @@ import sys
 
 
 
-data = loadnc('/media/moflaher/My Book/kit4/kit4_45days_3/output/')
+data = loadnc('runs/kit4/kit4_45days_3/output/')
 data =ncdatasort(data)
 kelp=np.genfromtxt('kelplocations.dat')
 
-maxdepth=20
+maxdepth=30
 mindepth=5
 
 
@@ -70,15 +70,15 @@ newhost=newhost[host_lt_depth.flatten()]
 
 tempdic={}
 tempdic['kelp_elements']=newhost
-sio.savemat('kelp_elements_kit4.mat',mdict=tempdic)
+#sio.savemat('kelp_elements_kit4.mat',mdict=tempdic)
 
 
-np.savetxt('kelpnodes_kit4.dat',newhost+1,fmt='%i')
+#np.savetxt('kelpnodes_kit4.dat',newhost+1,fmt='%i')
 
 drag=np.zeros([newhost.shape[0],])+0.018
 depth=np.zeros([newhost.shape[0],])+40
 
-fvcom_savecage('kit4_cage.dat',newhost+1,drag,depth)
+fvcom_savecage('data/cage_files/kit4_cage_'+("%d"%mindepth)+'m_'+("%d"%maxdepth)+'m.dat',newhost+1,drag,depth)
 
 trihost=np.zeros([data['uvnodell'].shape[0],])
 trihost[newhost]=1

@@ -76,4 +76,5 @@ qstat_data/
 *.xy
 *.nc
 kernprof.py
+*.lprof
 

@@ -10,10 +10,6 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
-sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
-from t_tide import t_tide
-from t_predic import t_predic
 import pandas as pd
 
 pd.options.display.float_format = '{:,.3f}'.format
@@ -23,7 +19,7 @@ pd.options.display.float_format = '{:,.3f}'.format
 baserun='kit4_45days_3'
 dragrunlist=['kit4_kelp_20m_0.018','kit4_kelp_20m_0.011','kit4_kelp_20m_0.007']
 grid='kit4'
-regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
+regionlist=['kit4_crossdouble','kit4_ftb','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_kelp_tight6']
 datatype='2d'
 starttime=384
 endtime=400
@@ -52,8 +48,11 @@ print 'done sort'
 cages=np.genfromtxt('runs/'+grid+'/' +dragrunlist[0]+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
+regionnameout=[]
+cageout=np.empty((0))
 
 for i in range(0,len(regionlist)):
+    print ("%d"%i)+"              "+("%f"%(i/len(regionlist)*100)) 
     regionname=regionlist[i]
     region=regions(regionname)
 
@@ -70,9 +69,10 @@ for i in range(0,len(regionlist)):
     uvar_d=np.empty((len(dragrunlist),len(cageidx)))
     vvar_d=np.empty((len(dragrunlist),len(cageidx)))
 
-    for i in range(0,len(dragrunlist)):
-        uvar_d[i,:]=dragdata[i]['ua'][starttime:,cageidx].var(axis=0)
-        vvar_d[i,:]=dragdata[i]['va'][starttime:,cageidx].var(axis=0)
+    for k in range(0,len(dragrunlist)):
+        print k
+        uvar_d[k,:]=dragdata[k]['ua'][starttime:,cageidx].var(axis=0)
+        vvar_d[k,:]=dragdata[k]['va'][starttime:,cageidx].var(axis=0)
 
     cvarm_b=np.sqrt(uvar_b+vvar_b)
     cvarm_d=np.sqrt(uvar_d+vvar_d)
@@ -85,13 +85,23 @@ for i in range(0,len(regionlist)):
     for i in range(0,len(dragrunlist)):
         cagevalues=np.append(cagevalues,[cvmd_mean[i],(cvmd_mean[i]-cvmb_mean)/cvmb_mean])
         stringlist=stringlist+[dragrunlist[i]]
-        stringlist=stringlist+['<- Rel. Change']    
+        stringlist=stringlist+['<- Rel. Change']  
 
-    df=pd.DataFrame([cagevalues],[regionname],['VarMag Base']+stringlist)
+    regionnameout=regionnameout+[regionname]
+    cageout=np.append(cageout,cagevalues)
 
-    print df
 
-    df.to_pickle('data/dragnodrag/dragnodrag_kelp_' + regionname +'.panda')
-    df.to_csv('data/dragnodrag/dragnodrag_kelp_' + regionname +'.csv')
+
+
+
+  
+cageout=cageout.reshape(len(regionlist),(len(dragrunlist)*2)+1)
+
+df=pd.DataFrame(cageout,regionnameout,['VarMag Base']+stringlist)
+
+print df
+
+df.to_pickle('data/dragnodrag/dragnodrag_kelp_regions.panda')
+df.to_csv('data/dragnodrag/dragnodrag_kelp_regions.csv')
 
 
