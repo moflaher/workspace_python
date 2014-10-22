@@ -26,7 +26,7 @@ name2='kit4_kelp_20m_0.018'
 grid='kit4'
 regionname='kit4_kelp_tight2'
 datatype='2d'
-
+lname='kelpstart_in_kit4_kelp_tight2'
 
 
 ### load the .nc file #####
@@ -45,7 +45,7 @@ region=regionll2xy(data,region)
 
 if 'savelag1' not in globals():
     print "Loading savelag1"
-    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
     savelag1={}
     for i in fileload['savelag'].keys():
             savelag1[i]=fileload['savelag'][i].value.T
@@ -55,7 +55,7 @@ if 'savelag1' not in globals():
 
 if 'savelag2' not in globals():
     print "Loading savelag2"
-    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name2+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name2+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
     savelag2={}
     for i in fileload['savelag'].keys():
             savelag2[i]=fileload['savelag'][i].value.T
@@ -109,7 +109,7 @@ ax.set_xlabel(r'Time (hour)',fontsize=8)
 for label in (ax.get_xticklabels() + ax.get_yticklabels()):
     label.set_fontsize(8)
 
-f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_compare_particles_inkelp_regionstart.png',dpi=150)
+f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_compare_particles_inkelp_regionstart.png',dpi=150)
 plt.close(f)
 
 
@@ -134,7 +134,7 @@ ax.set_xlabel(r'Time (hour)',fontsize=8)
 for label in (ax.get_xticklabels() + ax.get_yticklabels()):
     label.set_fontsize(8)
 
-f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_compare_particles_inkelp_kelpstart.png',dpi=150)
+f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_compare_particles_inkelp_kelpstart.png',dpi=150)
 plt.close(f)
 
 

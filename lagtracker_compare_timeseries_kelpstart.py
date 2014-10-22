@@ -24,7 +24,7 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-regionname='kit4_kelp_tight5'
+regionname='kit4_kelp_tight2'
 datatype='2d'
 
 
@@ -35,7 +35,7 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/kelpstart/' + name + '_'+name2+'/'+regionname+'/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/kelpstart/' + name + '_'+name2+'/'+regionname+'_kelpstart_15m_deep_s0/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
@@ -45,14 +45,14 @@ region=regionll2xy(data,region)
 
 if 'savelag1' not in globals():
     print "Loading savelag1"
-    fileload=h5.File('/media/moe46/Hardy/spet_18_work/savedir/'+name+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
     savelag1={}
     for i in fileload['savelag'].keys():
             savelag1[i]=fileload['savelag'][i].value.T
 
 if 'savelag2' not in globals():
     print "Loading savelag2"
-    fileload=h5.File('/media/moe46/Hardy/spet_18_work/savedir/'+name2+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name2+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
     savelag2={}
     for i in fileload['savelag'].keys():
             savelag2[i]=fileload['savelag'][i].value.T

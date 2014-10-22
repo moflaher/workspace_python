@@ -1,6 +1,7 @@
 from __future__ import division
 import matplotlib as mpl
 import scipy as sp
+import numpy as np
 from datatools import *
 from gridtools import *
 from plottools import *
