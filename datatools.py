@@ -578,7 +578,7 @@ def get_nodes_xy(data, region):
     nodes = np.where((data['nodexy'][:,0] >= region['region'][0]) & (data['nodexy'][:,0] <= region['region'][1]) & (data['nodexy'][:,1] >= region['region'][2]) & (data['nodexy'][:,1] <= region['region'][3]))[0]
     return nodes
 
-def regioner(region, data, name=None, savedir=None, dim='2D'):
+def regioner_old(region, data, name=None, savedir=None, dim='2D'):
     """
     Takes as input a region (given by a four elemenTakes as input a region
     (given by a four element NumPy array),

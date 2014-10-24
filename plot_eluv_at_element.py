@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-
+import scipy.io as sio
 
 # Define names and types of data
 name='kit4_kelp_20m_0.018'
@@ -20,8 +20,8 @@ datatype='2d'
 starttime=384
 endtime=432
 endtime=456
-#elements=[77566,80184,80168]
-elements=[80184]
+elements=[77566,80184,80168]
+#elements=[80184]
 
 single=False
 
@@ -35,7 +35,7 @@ data['time']=data['time']-678576
 
 savepath='figures/png/' + grid + '_' + datatype + '/eluv_at_element/'
 if not os.path.exists(savepath): os.makedirs(savepath)
-
+base_dir = os.path.dirname(__file__)
 
 
 data['uvzeta']=(data['zeta'][starttime:endtime,data['nv'][:,0]] + data['zeta'][starttime:endtime,data['nv'][:,1]] + data['zeta'][starttime:endtime,data['nv'][:,2]]) / 3.0
@@ -112,15 +112,19 @@ for i in range(0,len(elements)):
 
     f.subplots_adjust(hspace=.075)
 
-    f.savefig(savepath + grid + '_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.png',dpi=300)
+    #f.savefig(savepath + grid + '_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.png',dpi=300)
 
+    tempdic={}
+    tempdic['uvzeta_drag']=data['uvzeta'][:,elements[i]]
+    tempdic['uvzeta_nodrag']=data2['uvzeta'][:,elements[i]]
 
+    tempdic['ua_drag']=data['ua'][starttime:endtime,elements[i]]
+    tempdic['ua_nodrag']=data2['ua'][starttime:endtime,elements[i]]
 
+    tempdic['va_drag']=data['va'][starttime:endtime,elements[i]]
+    tempdic['va_nodrag']=data2['va'][starttime:endtime,elements[i]]
 
-
-
-
-
+    sio.savemat(os.path.join(base_dir,'data',grid+'_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.mat'),mdict=tempdic)
 
 
 
