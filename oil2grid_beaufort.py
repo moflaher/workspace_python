@@ -37,11 +37,20 @@ import sys
 
 
 
+# Define names and types of data
+name='try16'
+grid='beaufort3'
+datatype='2d'
+regionname='beaufort3'
 
 
-data = loadnc('/media/moe46/My Passport/test1/output/')
-data =ncdatasort(data)
-cages=sio.loadmat('/home/moe46/workspace_matlab/beaufort_oil/oil_locations.mat')
+
+### load the .nc file #####
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+print 'done load'
+data = ncdatasort(data)
+
+cages=sio.loadmat('oil_locations.mat')
 
 cageloc=np.hstack([cages['lonmap'],cages['latmap']])
 

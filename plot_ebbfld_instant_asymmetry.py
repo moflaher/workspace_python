@@ -14,11 +14,12 @@ from matplotlib.collections import LineCollection as LC
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
-grid='kit4'
-regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
+name='try16'
+grid='beaufort3'
+#regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
+regionlist=['beaufort3_southcoast']
 datatype='2d'
-starttime=384
+starttime=0
 cmin=-1
 cmax=1
 
@@ -30,15 +31,15 @@ data = ncdatasort(data)
 print 'done sort'
 
 
-cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+#cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=(cages[:,0]-1).astype(int)
 
 
 
-tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-color='g'
-lw=.5
-ls='solid'
+#tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+#color='g'
+#lw=.5
+#ls='solid'
 
 
 
@@ -73,8 +74,8 @@ for i in range(0,len(regionlist)):
     prettyplot_ll(ax,setregion=region,cblabel=r'Asymmetry',cb=triax)
     plotcoast(ax,filename='pacific.nc',color='k')
 
-    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax.add_collection(lseg1)
+    #lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    #ax.add_collection(lseg1)
 
     for label in ax.get_yticklabels():
         label.set_fontsize(8)

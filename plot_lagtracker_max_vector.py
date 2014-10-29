@@ -46,16 +46,20 @@ region=regionll2xy(data,region)
 
 if 'savelag1' not in globals():
     print "Loading savelag1"
-    fileload=h5.File('/media/moe46/Hardy/spet_18_work/savedir/'+name+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/media/moflaher/Hardy/work_rsync/savedir/'+name+'/allelements_s0in_aristazabal_west.mat')
     savelag1={}
     for i in fileload['savelag'].keys():
+            if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+                continue
             savelag1[i]=fileload['savelag'][i].value.T
 
 if 'savelag2' not in globals():
     print "Loading savelag2"
-    fileload=h5.File('/media/moe46/Hardy/spet_18_work/savedir/'+name2+'/allelements_s0in_aristazabal_west.mat')
+    fileload=h5.File('/media/moflaher/Hardy/work_rsync/savedir/'+name2+'/allelements_s0in_aristazabal_west.mat')
     savelag2={}
     for i in fileload['savelag'].keys():
+            if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+                continue
             savelag2[i]=fileload['savelag'][i].value.T
 
 
@@ -111,12 +115,12 @@ aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax.get_xticklabels()[::2]:
     label.set_visible(False)
-#plotcoast(ax,filename='pacific.nc',color='k')
+plotcoast(ax,filename='pacific_kit4.nc',color='k')
 
 
-f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_max_particle_vector.png',dpi=600)
+#f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_max_particle_vector.png',dpi=600)
 
-plt.close(f)
+#plt.close(f)
 
 
 

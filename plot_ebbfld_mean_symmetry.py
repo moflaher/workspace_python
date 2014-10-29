@@ -13,11 +13,12 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
-regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
+name='try16'
+grid='beaufort3'
+#regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
+regionlist=['beaufort3_southcoast']
 datatype='2d'
-starttime=384
+starttime=0
 cmin=-1
 cmax=1
 

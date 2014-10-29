@@ -32,3 +32,6 @@ ax1.set_aspect(get_aspectratio(region),anchor='N')
 ax2.set_aspect(get_aspectratio(region),anchor='N')
 f.show()
 
+
+for i in fileload['savelag'].keys():
+   exec(i + "=fileload['savelag'][i].value.T")
