@@ -19,7 +19,7 @@ from matplotlib.collections import PolyCollection as PC
 name='try16'
 grid='beaufort3'
 datatype='2d'
-regionname='beaufort3_southcoast'
+regionname='beaufort3_oilmap_1'
 lname='southcoast_10pp_s0'
 
 
@@ -44,6 +44,7 @@ if 'savelag' not in globals():
             savelag[i]=fileload['savelag'][i].value.T
 
 
+oilmat=sio.loadmat('oil_locations.mat')
 
 
 
@@ -103,9 +104,20 @@ ax.axis(region['region'])
 #ax.plot(savelag['x'][when>0,0],savelag['y'][when>0,0],'g.',markersize=6)
 plotcoast(ax,filename='world_GSHHS_f_L1.nc',color='k')
 
+ax.plot(oilmat['lonmap'],oilmat['latmap'],'g.',alpha=.5,markersize=3)
+
 box={}
-box['region']=[-141,-131.5,68,71.5]
-plot_box(ax,box,'g',lw=2)
+box['region']=[-134,-133.66,69.625,69.675]
+plot_box(ax,box,'k',lw=2)
+ax.text(-133.75,69.7,'SDL091',fontsize=8,rotation=0,bbox={'facecolor':'white','edgecolor':'k', 'alpha':1, 'pad':3})
+
+
+box2={}
+box2['region']=[-135.4,-135,69.65,69.75]
+plot_box(ax,box2,'k',lw=2)
+ax.text(-135.4,69.8,'SDL095',fontsize=8,rotation=0,bbox={'facecolor':'white','edgecolor':'k', 'alpha':1, 'pad':3})
+
+
 
 ax.set_xticklabels(-1*(ax.get_xticks()))
 ax.set_xlabel(r'Longitude ($^{\circ}$W)')
@@ -113,7 +125,7 @@ ax.set_ylabel(r'Latitude ($^{\circ}$N)')
 
 
 #f.show()
-f.savefig(savepath +''+name+'_'+regionname+'_'+lname+'_percent2coast.png',dpi=600)
+f.savefig(savepath +''+name+'_'+regionname+'_'+lname+'_percent2coast_withoil.png',dpi=600)
 plt.close(f)
 
 

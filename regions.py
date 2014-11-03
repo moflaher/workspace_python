@@ -309,9 +309,17 @@ def makeregions():
     tmpdic['passageP']='Beaufort Sea'
     allregions['beaufort3_southcoast']=tmpdic
 
+    tmpdic={}  
+    tmpdic['region']=np.array([-140,   -127,    68.5,    71])
+    tmpdic['passage']='beaufort3_southcoast_tight'
+    tmpdic['passageP']='Beaufort Sea'
+    allregions['beaufort3_southcoast_tight']=tmpdic
 
-
-
+    tmpdic={}  
+    tmpdic['region']=np.array([-138,   -132.5,    68.5,    70])
+    tmpdic['passage']='beaufort3_oilmap_1'
+    tmpdic['passageP']='Beaufort Sea'
+    allregions['beaufort3_oilmap_1']=tmpdic
 
     
     return allregions

@@ -16,87 +16,76 @@ from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 from mpl_toolkits.mplot3d.axes3d import Axes3D
-
+import h5py as h5
 
 
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
-regionname='mostchannels'
+name='try16'
+grid='beaufort3'
+regionname='beaufort3_southcoast'
 datatype='2d'
-lfolder='kit4_kelp_0.0'
-lname='kit4_kelp_0.0_0'
-spacing=10
+lname='southcoast_10pp_s0'
+spacing=1000
 
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/' + name +'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/' + lfolder + '/singles/'
+savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/singles/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-trigridxy = mplt.Triangulation(data['x'], data['y'],data['nv'])
+
 region=regions(regionname)
+region=regionll2xy(data,region)
 
 
-savelag=(sio.loadmat('/home/moflaher/workspace_matlab/lagtracker/savedir/'+lfolder+'/'+lname+'.mat',squeeze_me=True,struct_as_record=False))['savelag']
+if 'savelag' not in globals():
+    print "Loading savelag"
+    fileload=h5.File('savedir/'+grid+'/'+lname+'.mat')
+    savelag={}
+    for i in fileload['savelag'].keys():
+            if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+                continue
+            savelag[i]=fileload['savelag'][i].value.T
 
 
-
-#plt.triplot(trigridxy,lw=.3)
 whichtri=3151
 whichtri=-39
 whichtri=2936
 whichtri=5
 
-for whichtri in range(0,len(savelag.x),spacing):
+for whichtri in range(0,len(savelag['x']),spacing):
     region={}
-    region['region']=[np.nanmin(savelag.x[whichtri,:]), np.nanmax(savelag.x[whichtri,:]), np.nanmin(savelag.y[whichtri,:]), np.nanmax(savelag.y[whichtri,:])]
+    minmax=[np.nanmin(savelag['x'][whichtri,:]), np.nanmax(savelag['x'][whichtri,:]), np.nanmin(savelag['y'][whichtri,:]), np.nanmax(savelag['y'][whichtri,:])]
+    region['regionxy']=[minmax[0]-(minmax[1]-minmax[0])*2,minmax[1]+(minmax[1]-minmax[0])*2,minmax[2]-(minmax[3]-minmax[2])*2,minmax[3]+(minmax[3]-minmax[2])*2]
 
 
-    l=savelag.x.shape[1]
+    l=savelag['x'].shape[1]
 
 
 
     #f, ax = plt.subplots(nrows=1,ncols=2)
 
     f=plt.figure()    
-    ax0 = plt.subplot2grid((1,4),(0, 0),colspan=2)
-    ax1 = plt.subplot2grid((1,4),(0, 2),colspan=2)
+    ax = f.add_axes([.125,.1,.8,.8])
+   
+    ax.triplot(data['trigridxy'],lw=.5)
+    ax.plot(savelag['x'][whichtri,:],savelag['y'][whichtri,:],'r')
+    ax.plot(savelag['x'][whichtri,0],savelag['y'][whichtri,0],'b*',markersize=12)
+    ax.axis(region['regionxy'])
+    ax.set_xticklabels((ax.get_xticks())/1000)
+    ax.set_yticklabels((ax.get_yticks())/1000)
 
-
-    ax0.plot(savelag.time,savelag.z[whichtri,:],'b')
-    ax0.plot(savelag.time,-savelag.h[whichtri,:],'g')
-    ax0.set_xticklabels((ax0.get_xticks())/100000,rotation=90)
-
-
-
-    nidx=get_nodes_xy(data,region)
-
-    ax1tri=ax1.tripcolor(trigridxy,data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
-    plt.colorbar(ax1tri,ax=ax1)
-    ax1.plot(savelag.x[whichtri,:],savelag.y[whichtri,:],'k')
-    ax1.plot(savelag.x[whichtri,0],savelag.y[whichtri,0],'b*',markersize=12)
-    ax1.plot(savelag.x[whichtri,-1],savelag.y[whichtri,-1],'k*')
-    last=np.max(np.flatnonzero(~np.isnan(savelag.x[whichtri,:])))
-    tdiff=savelag.time[2]-savelag.time[1]
-    newx=savelag.x[whichtri,last]+savelag.u[whichtri,last]*tdiff
-    newy=savelag.y[whichtri,last]+savelag.v[whichtri,last]*tdiff
-    ax1.plot(newx,newy,'m*',markersize=16)
-    ax1.axis(region['region'])
-    ax1.set_xticklabels((ax1.get_xticks())/1000,rotation=90)
-    ax1.set_yticklabels((ax1.get_yticks())/1000)
-
-
-
+    ax.set_xlabel('x (km)')
+    ax.set_ylabel('y (km)')
     #f.show()
-    f.tight_layout(pad=0.4)
+
     f.savefig(savepath + grid + '_' +name+ '_'+lname+'_particle_path_'+("%05d"%whichtri)+'.png',dpi=300)
     plt.close(f)
 
