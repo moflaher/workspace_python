@@ -47,14 +47,15 @@ if 'savelag' not in globals():
             savelag[i]=fileload['savelag'][i].value.T
 
 
-cols=2
-rows=2
+cols=3
+rows=3
 
 nos=rows*cols
 subtimes=np.linspace(0,len(savelag['time'])-1,nos)
 
 region={}
-region['regiontmp']=[np.nanmin(savelag['x']),np.nanmax(savelag['x']),np.nanmin(savelag['y']),np.nanmax(savelag['y'])]
+tmp=[np.nanmin(savelag['x']),np.nanmax(savelag['x']),np.nanmin(savelag['y']),np.nanmax(savelag['y'])]
+region['regiontmp']=[tmp[0]-(tmp[1]-tmp[0]),tmp[1]+(tmp[1]-tmp[0]),tmp[2]-(tmp[3]-tmp[2]),tmp[3]+(tmp[3]-tmp[2])]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)
 ax=ax.flatten()
@@ -62,11 +63,11 @@ ax=ax.flatten()
 for i in range(0,len(ax)):
     print i
     ax[i].triplot(data['trigridxy'],lw=.5)
-    plotidx=np.where(np.isnan(savelag['x'][:,subtimes[i].astype(int)]) & ((savelag['x'][:,subtimes[i].astype(int)]-savelag['x'][:,subtimes[i].astype(int)])!=0))
-    plotidxb=np.zeros(shape=(savelag['x'].shape[0],), dtype=bool)
+    #plotidx=np.where(np.isnan(savelag['x'][:,subtimes[i].astype(int)]) & ((savelag['x'][:,subtimes[i].astype(int)]-savelag['x'][:,subtimes[i].astype(int)])!=0))
+    #plotidxb=np.zeros(shape=(savelag['x'].shape[0],), dtype=bool)
     #plotidxb[plotidx]=1
     #ax[i].plot(savelag['x'][plotidxb,daysi*i*lph],savelag['y'][plotidxb,daysi*i*lph],'g.')
-    ax[i].plot(savelag['x'][~plotidxb,subtimes[i].astype(int)],savelag['y'][~plotidxb,subtimes[i].astype(int)],'r.',markersize=2)
+    ax[i].plot(savelag['x'][:,subtimes[i].astype(int)],savelag['y'][:,subtimes[i].astype(int)],'r.',markersize=2)
     #ax[i].plot(savelag['x'][:,daysi*i*lph],savelag['y'][:,daysi*i*lph],'g.')
     
     #plotidx2=np.where(np.fabs(savelag.z[:,daysi*i*lph]-data['uvh'][trigridxy.get_trifinder().__call__(savelag['x'][:,daysi*i*lph],savelag['y'][:,daysi*i*lph])])<=1 )
@@ -92,8 +93,9 @@ for i in range(0,len(ax)):
 
   
 f.tight_layout(pad=1)
-f.show()  
-#f.savefig(savepath + lname+'_every_'+("%.1f"%daysi)+'days_at_' +("%d"%testi)+ '_rows_'+("%d"%rows)+'_cols_'+("%d"%cols)+'.png',dpi=1200)
+#f.show()  
+days=( ( ( ((savelag['time'][1]-savelag['time'][0])*subtimes[1].astype(int) )/3600)/24  ) )-(( ( ((savelag['time'][1]-savelag['time'][0])*subtimes[0].astype(int) )/3600)/24  ) )
+f.savefig(savepath + lname+'_every_'+("%d"%days)+'days_rows_'+("%d"%rows)+'_cols_'+("%d"%cols)+'.png',dpi=600)
 
 
 

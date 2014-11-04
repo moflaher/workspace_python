@@ -37,7 +37,7 @@ import sys
 
 
 
-infile='data/oil_locations_sdl091'
+infile='data/oil_locations_sdl050'
 
 tempdic={}
 sio.loadmat(infile+'.mat',mdict=tempdic)
