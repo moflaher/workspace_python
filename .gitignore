@@ -62,6 +62,10 @@ zips/
 misc/
 data/
 qstat_data/
+.ipynb_checkpoints/
+runs/
+savedir
+
 
 #other files that might contain information not to be public
 *.ele
