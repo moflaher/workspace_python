@@ -345,7 +345,16 @@ def regioner(data,region,subset=False):
 
 
 
+def interp_vel(data,locs,layer=None):
 
+    if layer==None:
+
+
+
+
+
+
+    return vel_at_locs
 
 
 

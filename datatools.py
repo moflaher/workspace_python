@@ -417,7 +417,7 @@ def closest_element(data, location):
     
     return idx[0]
 
-def interp_vel(XY, triInds, data, numjit=False):
+def interp_vel_old(XY, triInds, data, numjit=False):
     """Interpolates velocity data from the known locations to the xa, y
     coordinates given in the array XY.
 
@@ -537,11 +537,6 @@ def jit_interp_vel(XY, triInds, u, v, uvnodell, a1u, a2u, nbe, nv):
             VI[i,:] = np.nan
             i += 1
     return UI, VI
-
-
-def interp_el(XY, triInds,  data):
-    """Interpolates the elevation to the points XY"""
-    #name relevant variables
 
 
 def get_elements(data, region):
