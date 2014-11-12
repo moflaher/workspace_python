@@ -17,7 +17,7 @@ name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 grid='kit4'
 datatype='2d'
-regionname='kit4_kelp_tight6'
+regionname='kit4_kelp_tight4'
 starttime=384
 endtime=456
 
