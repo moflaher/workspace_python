@@ -45,7 +45,7 @@ def prettyplot_ll(axin,**kwargs):
                 axin.set_title(value)
             if (key=='setregion'):
                 axin.axis(value['region'])
-                axin.set_aspect(get_aspectratio(value))
+                axin.set_aspect(get_aspectratio(value),anchor='SW')
             if (key=='cblabel'):
                 cblabel=value    
             if (key=='cb'):
@@ -229,10 +229,22 @@ def plotgrid_ll(data,size,ll,nore):
         plt.show()
 
 
+def get_data_ratio(region):
+    """
+    Returns the aspect ratio of the raw data.
+
+    This method is intended to be overridden by new projection
+    types.
+    """
+
+    xsize = np.max(np.fabs(region['region'][1] - region['region'][0]), 1e-30)
+    ysize = np.max(np.fabs(region['region'][3] - region['region'][2]), 1e-30)
+
+    return ysize / xsize
 
 
-
-
-
+def ax_label_spacer(axin):
+    for label in axin.get_xticklabels()[::2] +axin.get_yticklabels()[::2]:
+        label.set_visible(False)
 
     
