@@ -253,11 +253,11 @@ def regionll2xy(data,region):
  
     """
 
-    left=np.argmin(np.fabs(data['uvnodell'][:,0]-region['region'][0]))
-    right=np.argmin(np.fabs(data['uvnodell'][:,0]-region['region'][1]))
+    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
+    right=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][1])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
     
-    top=np.argmin(np.fabs(data['uvnodell'][:,1]-region['region'][3]))
-    bottom=np.argmin(np.fabs(data['uvnodell'][:,1]-region['region'][2]))
+    top=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][3])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
+    bottom=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][2])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
 
     region['regionxy']=[data['uvnode'][left,0],data['uvnode'][right,0],data['uvnode'][bottom,1],data['uvnode'][top,1]]
 

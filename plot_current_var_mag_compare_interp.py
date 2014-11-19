@@ -21,7 +21,7 @@ grid='kit4'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-#regionlist=['kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_small']
 starttime=384
 
 cbfix=True
@@ -195,6 +195,9 @@ for regionname in regionlist:
 
     ax0.annotate("A",xy=(.025,1-(.05/dr)),xycoords='axes fraction')
     ax1.annotate("B",xy=(.025,1-(.05/dr)),xycoords='axes fraction')
+
+
+    #add_num_label(ax1,data,1000,74845,'e')
 
     #plotcoast(ax0,filename='pacific.nc',color='k')
     #plotcoast(ax1,filename='pacific.nc',color='k')

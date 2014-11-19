@@ -19,11 +19,12 @@ import h5py as h5
 
 
 # Define names and types of data
-name='try16'
-grid='beaufort3'
+name='kit4_kelp_20m_0.018'
+#name='kit4_45days_3'
+grid='kit4'
 datatype='2d'
-regionname='beaufort3_southcoast'
-lname='sdl095_s0'
+regionname='kit4_kelp_tight2_small'
+lname='kelp_kit4_kelp_tight2_small_southbox_s0'
 
 
 ### load the .nc file #####
@@ -39,7 +40,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 if 'savelag' not in globals():
     print "Loading savelag"
-    fileload=h5.File('savedir/'+grid+'/'+lname+'.mat')
+    fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
     savelag={}
     for i in fileload['savelag'].keys():
             if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
@@ -55,14 +56,15 @@ subtimes=np.linspace(0,len(savelag['time'])-1,nos)
 
 region={}
 tmp=[np.nanmin(savelag['x']),np.nanmax(savelag['x']),np.nanmin(savelag['y']),np.nanmax(savelag['y'])]
-region['regiontmp']=[tmp[0]-(tmp[1]-tmp[0]),tmp[1]+(tmp[1]-tmp[0]),tmp[2]-(tmp[3]-tmp[2]),tmp[3]+(tmp[3]-tmp[2])]
+regionscale=.1
+region['regiontmp']=[tmp[0]-(tmp[1]-tmp[0])*regionscale,tmp[1]+(tmp[1]-tmp[0])*regionscale,tmp[2]-(tmp[3]-tmp[2])*regionscale,tmp[3]+(tmp[3]-tmp[2])*regionscale]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)
 ax=ax.flatten()
 
 for i in range(0,len(ax)):
     print i
-    ax[i].triplot(data['trigridxy'],lw=.5)
+    ax[i].triplot(data['trigridxy'],lw=.25)
     #plotidx=np.where(np.isnan(savelag['x'][:,subtimes[i].astype(int)]) & ((savelag['x'][:,subtimes[i].astype(int)]-savelag['x'][:,subtimes[i].astype(int)])!=0))
     #plotidxb=np.zeros(shape=(savelag['x'].shape[0],), dtype=bool)
     #plotidxb[plotidx]=1
@@ -95,7 +97,7 @@ for i in range(0,len(ax)):
 f.tight_layout(pad=1)
 #f.show()  
 days=( ( ( ((savelag['time'][1]-savelag['time'][0])*subtimes[1].astype(int) )/3600)/24  ) )-(( ( ((savelag['time'][1]-savelag['time'][0])*subtimes[0].astype(int) )/3600)/24  ) )
-f.savefig(savepath + lname+'_every_'+("%d"%days)+'days_rows_'+("%d"%rows)+'_cols_'+("%d"%cols)+'.png',dpi=600)
+f.savefig(savepath +name+'_'+ lname+'_every_'+("%d"%days)+'days_rows_'+("%d"%rows)+'_cols_'+("%d"%cols)+'.png',dpi=600)
 
 
 

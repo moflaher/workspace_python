@@ -24,9 +24,9 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-regionname='kit4_kelp_tight2'
+regionname='kit4_kelp_tight2_small'
 datatype='2d'
-lname='kelpstart_in_kit4_kelp_tight2'
+lname='kelp_kit4_kelp_tight2_small_southbox_s0'
 
 
 ### load the .nc file #####
@@ -45,23 +45,21 @@ region=regionll2xy(data,region)
 
 if 'savelag1' not in globals():
     print "Loading savelag1"
-    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
+    fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
     savelag1={}
     for i in fileload['savelag'].keys():
-            savelag1[i]=fileload['savelag'][i].value.T
-    savelag1['u']=0
-    savelag1['v']=0
-    savelag1['w']=0
+        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+            continue
+        savelag1[i]=fileload['savelag'][i].value.T
 
 if 'savelag2' not in globals():
     print "Loading savelag2"
-    fileload=h5.File('/home/moflaher/workspace_matlab/lagtracker/savedir/'+name2+'/kit4_kelp_tight2_kelpstart_15mdeep_s0.mat')
+    fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
     savelag2={}
     for i in fileload['savelag'].keys():
-            savelag2[i]=fileload['savelag'][i].value.T
-    savelag2['u']=0
-    savelag2['v']=0
-    savelag2['w']=0
+        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+            continue
+        savelag2[i]=fileload['savelag'][i].value.T
 
 
 cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)

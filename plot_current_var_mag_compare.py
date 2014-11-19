@@ -74,11 +74,11 @@ if aspect>=1.1:
     finalspace=((ytarget*fa)/aspect/dr)
     if finalspace>.4:
         finalspace[0]=.4
-        ax0f=[.125,.25,finalspace[0],ytarget]
-        ax1f=[ax0f[0]+finalspace[0]+.025,.25,finalspace[0],ytarget]
+        ax0f=[.125,.275,finalspace[0],ytarget]
+        ax1f=[ax0f[0]+finalspace[0]+.025,.275,finalspace[0],ytarget]
     else:
-        ax0f=[.125,.25,1,ytarget]
-        ax1f=[ax0f[0]+finalspace[0]+.025,.25,1,ytarget]
+        ax0f=[.125,.275,1,ytarget]
+        ax1f=[ax0f[0]+finalspace[0]+.025,.275,1,ytarget]
 else:    
     finalspace=((((xtarget*fa)/aspect/dr)*aspect*dr)/fa)
     #ax1f=[.125,.1,.75,xtarget]
