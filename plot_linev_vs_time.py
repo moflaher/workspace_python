@@ -62,9 +62,12 @@ yim = np.linspace(0,H1, ngridy)
 xi = (np.zeros((len(yi),1))+line[0]).flatten()
 interpdataT=np.empty((ngridy,len(time)))
 interpdata2T=np.empty((ngridy,len(time)))
+interpdata2_orig=np.empty((ngridy,len(time)))
 for i in range(0,len(time)):
-    interpdataT[:,i]=mpl.mlab.griddata(data['nodell'][nidx,0],data['nodell'][nidx,1], data2['zeta'][starttime+time[i],nidx], xi, yi)[:,0]
-    interpdata2T[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data2['va'][starttime+time[i],eidx], xi, yi)[:,0]
+    print i
+    interpdataT[:,i]=mpl.mlab.griddata(data['nodell'][nidx,0],data['nodell'][nidx,1], data2['zeta'][starttime+time[i],nidx], xi, yi,interp='linear')[:,0]
+    interpdata2T[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data2['va'][starttime+time[i],eidx], xi, yi,interp='linear')[:,0]
+    interpdata2_orig[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data['va'][starttime+time[i],eidx], xi, yi,interp='linear')[:,0]
 print ('griddata interp: %f' % (timem.clock() - start))
 
 
@@ -78,7 +81,7 @@ print ('griddata interp: %f' % (timem.clock() - start))
 #interpFun1 = intp.griddata((data['uvnodell'][:,0],data['uvnodell'][:,1],time),data['va'][starttime:endtime,:].T,(xi, yi,time))
 #interpFun1 = intp.LinearNDInterpolator(data['uvnodell'],data['va'][384,:])
 
-f, ax = plt.subplots(nrows=2,ncols=1, sharex=True)
+f, ax = plt.subplots(nrows=3,ncols=1, sharex=True)
 
 
 
@@ -93,7 +96,7 @@ ax[0].set_ylabel(r'Distance (m)',fontsize=10)
 ax[0].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
 ax[0].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
-ax1cb=ax[1].pcolor(time,yim,interpdata2T,vmin=-.18,vmax=.18)
+ax1cb=ax[1].pcolor(time,yim,interpdata2_orig,vmin=-.25,vmax=.25)
 divider1 = make_axes_locatable(ax[1])
 cax1 = divider1.append_axes("right", "3%", pad="2%")
 cb2=plt.colorbar(ax1cb,cax=cax1)
@@ -105,16 +108,30 @@ ax[1].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
 ax[1].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
 
+ax2cb=ax[2].pcolor(time,yim,interpdata2T,vmin=-.18,vmax=.18)
+divider2 = make_axes_locatable(ax[2])
+cax2 = divider2.append_axes("right", "3%", pad="2%")
+cb3=plt.colorbar(ax2cb,cax=cax2)
+cb3.set_label(r'v-velocity (m s$^{-1}$)',fontsize=8)
+ax[2].axis([time.min(), time.max(),yim.min(),yim.max()])
+ax[2].set_ylabel(r'Distance (m)',fontsize=10)
+ax[2].set_xlabel(r'Time (h)',fontsize=10)
+ax[2].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
+ax[2].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
+
+
+
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax[0].yaxis.set_major_formatter(_formatter)
 ax[0].xaxis.set_major_formatter(_formatter)
 ax[1].yaxis.set_major_formatter(_formatter)
 ax[1].xaxis.set_major_formatter(_formatter)
-
+ax[2].yaxis.set_major_formatter(_formatter)
+ax[2].xaxis.set_major_formatter(_formatter)
 
 ax[0].annotate("A",xy=(.025,.9),xycoords='axes fraction')
 ax[1].annotate("B",xy=(.025,.9),xycoords='axes fraction')
-
+ax[2].annotate("C",xy=(.025,.9),xycoords='axes fraction')
 
 
 f.tight_layout(h_pad=.1)
