@@ -28,21 +28,19 @@ datatype='2d'
 regionA=regions('kit4')
 region1=regions('kelpchain')
 region2=regions('doubleisland')
-regionAf=[-.025,.1,.725,.75]
+regionAf=[.09,.1,.725,.75]
 cbarf=[.1,.95,.45,.025]
 region1f=[.565,.075,.375,.415]
 region2f=[.39,.55,.575,.32]
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/MB_3TB/'+ grid +'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data = loadnc('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moflaher/MB_3TB/'+ grid +'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-#cages=np.genfromtxt('/media/moe46/Hardy/spet_18_work/kit4_kelp_20m_0.018/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -222,22 +220,22 @@ rn=regions('kit4_kelp_tight2_small')
 plot_box(axsub1,rn,'k',1.5)
 axsub1.text(rn['center'][0],rn['center'][1],'R2',fontsize=12,rotation=0,color='k')
 
-rn=regions('kit4_kelp_tight6')
-plot_box(axsub1,rn,'k',1.5)
-axsub1.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='k')
+#rn=regions('kit4_kelp_tight6')
+#plot_box(axsub1,rn,'k',1.5)
+#axsub1.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='k')
 
 rn=regions('kit4_crossdouble')
 plot_box(axsub2,rn,'k',1.5)
-axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='k')
+axsub2.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='k')
 
 rn=regions('kit4_ftb')
 plot_box(axsub2,rn,'k',1.5)
-axsub2.text(rn['center'][0],rn['center'][1],'R5',fontsize=12,rotation=0,color='k')
+axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='k')
 
 
 
 
-#plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
+plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)
 
-#plt.close(f)
+plt.close(f)
 
