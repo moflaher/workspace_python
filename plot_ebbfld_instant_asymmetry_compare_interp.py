@@ -23,9 +23,9 @@ regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_ti
 regionlist=['kit4_kelp_tight2_small','kit4_ftb']
 datatype='2d'
 starttime=384
-cmin=-80
-cmax=80
-fmt=r'%d'
+cmin=-1
+cmax=1
+fmt=r'%1.1f'
 
 ABC=[.025,.9]
 
@@ -100,7 +100,7 @@ for regionname in regionlist:
     start = time.clock()
     xi = np.linspace(region['region'][0],region['region'][1], ngridx)
     yi = np.linspace(region['region'][2],region['region'][3], ngridy)
-    efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], efs*100, xi, yi)
+    efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], efs, xi, yi)
     tmpxy=np.meshgrid(xi,yi)
     xii=tmpxy[0]
     yii=tmpxy[1]
@@ -110,8 +110,8 @@ for regionname in regionlist:
 
     ax0=f.add_axes(ax0f)  
     axtri0=ax0.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,20,40,60,80])
-    Vneg=np.array([-80,-60,-40,-20])
+    Vpos=np.array([0,.2,.4,.6,.8])
+    Vneg=np.array([-.8,-.6,-.4,-.2])
     CS2=ax0.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
     ax0.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
     CS3=ax0.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
@@ -127,14 +127,14 @@ for regionname in regionlist:
     efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
     #print runstats(efs[eidx])
     start = time.clock()    
-    efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], efs*100, xi, yi)
+    efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], efs, xi, yi)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
     print ('griddata interp: %f' % (time.clock() - start))
 
     ax1=f.add_axes(ax1f)  
     axtri1=ax1.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,20,40,60,80])
-    Vneg=np.array([-80,-60,-40,-20])
+    Vpos=np.array([0,.2,.4,.6,.8])
+    Vneg=np.array([-.8,-.6,-.4,-.2])
     CS2=ax1.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
     ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
     CS3=ax1.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
@@ -156,26 +156,26 @@ for regionname in regionlist:
     ax1bb=ax1.get_axes().get_position().bounds
 
     if aspect>=1.1:
-        ax0ca=f.add_axes([ax0bb[0],ax0bb[1]-.125,ax0bb[2],0.025])
-        ax1ca=f.add_axes([ax1bb[0],ax1bb[1]-.125,ax1bb[2],0.025])
+        ax0ca=f.add_axes([ax0bb[0],ax0bb[1]-.125,ax1bb[2]+ax1bb[0]-ax0bb[0],0.025])
+        #ax1ca=f.add_axes([ax1bb[0],ax1bb[1]-.125,ax1bb[2],0.025])
         cb=plt.colorbar(axtri0,cax=ax0ca,orientation='horizontal')
         cb.set_label(r'Asymmetry',fontsize=6)
         for label in cb.ax.get_xticklabels():
             label.set_rotation(90)
 
-        cb2=plt.colorbar(axtri1,cax=ax1ca,orientation='horizontal')
-        cb2.set_label(r'Asymmetry',fontsize=6)
+        #cb2=plt.colorbar(axtri1,cax=ax1ca,orientation='horizontal')
+        #cb2.set_label(r'Asymmetry',fontsize=6)
         ax1.set_ylabel('')
-        for label in cb2.ax.get_xticklabels():
-            label.set_rotation(90)
+        #for label in cb2.ax.get_xticklabels():
+        #    label.set_rotation(90)
 
     else:
-        ax0ca=f.add_axes([ax0bb[0]+ax0bb[2]+.025,ax0bb[1],.025,ax0bb[3]])
-        ax1ca=f.add_axes([ax1bb[0]+ax1bb[2]+.025,ax1bb[1],.025,ax1bb[3]])
+        ax0ca=f.add_axes([ax0bb[0]+ax0bb[2]+.025,ax1bb[1],.025,ax0bb[1]+ax0bb[3]-ax1bb[1]])
+        #ax1ca=f.add_axes([ax1bb[0]+ax1bb[2]+.025,ax1bb[1],.025,ax1bb[3]])
         cb=plt.colorbar(axtri0,cax=ax0ca)
         cb.set_label(r'Asymmetry',fontsize=8)
-        cb2=plt.colorbar(axtri1,cax=ax1ca)
-        cb2.set_label(r'Asymmetry',fontsize=8)
+        #cb2=plt.colorbar(axtri1,cax=ax1ca)
+        #cb2.set_label(r'Asymmetry',fontsize=8)
 
     plotcoast(ax0,filename='pacific.nc',color='k')
     lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)

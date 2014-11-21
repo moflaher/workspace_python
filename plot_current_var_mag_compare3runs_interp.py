@@ -23,7 +23,7 @@ grid='kit4'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-regionlist=['kit4_kelp_tight2_small','kit4_ftb']
+regionlist=['kit4_kelp_tight2_small']
 starttime=384
 
 cbfix=True
@@ -162,7 +162,8 @@ for regionname in regionlist:
         ax2.clabel(CS4, fontsize=6, inline=1,zorder=30,fmt=fmt)
         CS5=ax2.contour(xi,yi,cvarm_diff2_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
         ax2.clabel(CS5, fontsize=6, inline=1,zorder=30,fmt=fmt)
-        line=[-129.48666,52.63,52.68]
+        #line=[-129.48666,52.62,52.68]
+        line=[-129.48833,52.62,52.68]
         ax0.plot([line[0],line[0]],[line[1],line[2]],'k',lw=2)
         ax1.plot([line[0],line[0]],[line[1],line[2]],'k',lw=2)
         ax2.plot([line[0],line[0]],[line[1],line[2]],'k',lw=2)

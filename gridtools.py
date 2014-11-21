@@ -345,17 +345,42 @@ def regioner(data,region,subset=False):
 
 
 
-def interp_vel(data,locs,layer=None):
+def interp_vel(data,loc,layer=None):
+    host=data['trigrid'].get_trifinder().__call__(loc[0],loc[1])
+    if host==-1:
+        print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        return
+
+    xi=loc[0]
+    yi=loc[1]
+    interp_x = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,0])
+    interp_y = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,1])
+    print loc
+    loc[0] = interp_x(xi, yi)
+    print loc
+    loc[1] = interp_y(xi, yi)
 
     if layer==None:
+        x0c=loc[0]-data['uvnode'][host,0];
+        y0c=loc[1]-data['uvnode'][host,0];  
+
+        dudx= data['a1u'][0,host]*data['ua'][:,host]+data['a1u'][1,host]*data['ua'][:,data['nbe'][host,0]]+data['a1u'][2,host]*data['ua'][:,data['nbe'][host,1]]+data['a1u'][3,host]*data['ua'][:,data['nbe'][host,2]];
+        dudy= data['a2u'][0,host]*data['ua'][:,host]+data['a2u'][1,host]*data['ua'][:,data['nbe'][host,0]]+data['a2u'][2,host]*data['ua'][:,data['nbe'][host,1]]+data['a2u'][3,host]*data['ua'][:,data['nbe'][host,2]];
+        dvdx= data['a1u'][0,host]*data['va'][:,host]+data['a1u'][1,host]*data['va'][:,data['nbe'][host,0]]+data['a1u'][2,host]*data['va'][:,data['nbe'][host,1]]+data['a1u'][3,host]*data['va'][:,data['nbe'][host,2]];
+        dvdy= data['a2u'][0,host]*data['va'][:,host]+data['a2u'][1,host]*data['va'][:,data['nbe'][host,0]]+data['a2u'][2,host]*data['va'][:,data['nbe'][host,1]]+data['a2u'][3,host]*data['va'][:,data['nbe'][host,2]];
+
+        ua= data['ua'][:,host] + dudx*x0c + dudy*y0c;
+        va= data['va'][:,host] + dvdx*x0c + dvdy*y0c;
+
+    else:
         print testing
+        
 
 
 
 
 
-
-    return vel_at_locs
+    return ua,va
 
 
 

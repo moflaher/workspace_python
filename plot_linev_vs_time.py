@@ -46,7 +46,7 @@ eidx=get_elements(data,region)
 
 
 spacing=1
-line=[-129.48666,52.63,52.68]
+line=[-129.48666,52.62,52.68]
 ngridy = 500
 eles=[77566,80168]
 
@@ -65,9 +65,9 @@ interpdata2T=np.empty((ngridy,len(time)))
 interpdata2_orig=np.empty((ngridy,len(time)))
 for i in range(0,len(time)):
     print i
-    interpdataT[:,i]=mpl.mlab.griddata(data['nodell'][nidx,0],data['nodell'][nidx,1], data2['zeta'][starttime+time[i],nidx], xi, yi,interp='linear')[:,0]
-    interpdata2T[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data2['va'][starttime+time[i],eidx], xi, yi,interp='linear')[:,0]
-    interpdata2_orig[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data['va'][starttime+time[i],eidx], xi, yi,interp='linear')[:,0]
+    interpdataT[:,i]=mpl.mlab.griddata(data['nodell'][nidx,0],data['nodell'][nidx,1], data2['zeta'][starttime+time[i],nidx], xi, yi)[:,0]
+    interpdata2T[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data2['va'][starttime+time[i],eidx], xi, yi)[:,0]
+    interpdata2_orig[:,i]=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], data['va'][starttime+time[i],eidx], xi, yi)[:,0]
 print ('griddata interp: %f' % (timem.clock() - start))
 
 
@@ -96,7 +96,7 @@ ax[0].set_ylabel(r'Distance (m)',fontsize=10)
 ax[0].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
 ax[0].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
-ax1cb=ax[1].pcolor(time,yim,interpdata2_orig,vmin=-.25,vmax=.25)
+ax1cb=ax[1].pcolor(time,yim,interpdata2_orig,vmin=-.36,vmax=.36)
 divider1 = make_axes_locatable(ax[1])
 cax1 = divider1.append_axes("right", "3%", pad="2%")
 cb2=plt.colorbar(ax1cb,cax=cax1)
