@@ -21,10 +21,10 @@ import scipy.io as sio
 name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 name_change2='kit4_kelp_20m_0.011'
-name_change3='kit4_kelp_20m_0.011'
+name_change3='kit4_kelp_20m_0.007'
 grid='kit4'
 datatype='2d'
-regionname='kit4_kelp_tight5'
+regionname='kit4_kelp_tight2'
 starttime=400
 endtime=520
 
@@ -39,6 +39,10 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
+cages=np.genfromtxt('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
+
+
 
 
 savepath='figures/png/' + grid + '_' + datatype + '/line_current_mag_vs_time/'
@@ -49,24 +53,61 @@ region=regions(regionname)
 nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
-kelp=False
+
 spacing=1
 #line=[-129.48666,52.62,52.68]
 #define line as line=[bottomx,topx,bottomy,topy]
 
 #kit4_kelp_tight2
-#line=[-129.48833,-129.48833,52.62,52.68]
-#kit4_kelp_tight5 a
-line=[-129.44,-129.40,52.56,52.60]
-line=[-129.35,-129.3,52.52,52.54]
-ngridy = 2000
-eles=[77566,80168]
+line=[-129.48833,-129.48833,52.62,52.68]
+#kit4_kelp_tight5 north
+#line=[-129.44,-129.40,52.56,52.60]
+#kit4_kelp_tight5 south
+#line=[-129.35,-129.3,52.52,52.54]
+#kit4_kelp_tight5 west
+#line=[-129.4225,-129.4225,52.53,52.56]
 
+ngridy = 2000
+
+
+
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages[np.in1d(cages,eidx)] ]
+tmparray=np.array(tmparray)
+
+def ccw(A,B,C):
+    return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+
+def intersect(a1, b1, a2, b2):
+    """Returns True if line segments a1b1 and a2b2 intersect."""
+    return ccw(a1, b1, a2) != ccw(a1, b1, b2) and ccw(a2, b2, a1) != ccw(a2, b2, b1)
+
+
+lineints=np.zeros((tmparray.shape[0],3))
+
+for i in range(0,tmparray.shape[0]):
+    lineints[i,0]=intersect((line[0],line[2]),(line[1],line[3]),(tmparray[i,-1,0],tmparray[i,-1,1]),(tmparray[i,0,0],tmparray[i,0,1]))
+    lineints[i,1]=intersect((line[0],line[2]),(line[1],line[3]),(tmparray[i,0,0],tmparray[i,0,1]),(tmparray[i,1,0],tmparray[i,1,1]))
+    lineints[i,2]=intersect((line[0],line[2]),(line[1],line[3]),(tmparray[i,1,0],tmparray[i,1,1]),(tmparray[i,2,0],tmparray[i,2,1]))
+
+idx=np.where(lineints==1)
+idxr=idx[0]
+idxc=idx[1]
+
+highest=0
+lowest=1000000
+for i in range(0,len(idxr)):
+    j=idxr[i]
+    k=idxc[i]
+    dist=np.sqrt((line[0]-(tmparray[j,-1+k,0]+tmparray[j,k,0])/2)**2+(line[2]-(tmparray[j,-1+k,1]+tmparray[j,k,1])/2)**2)
+    highest=np.max([highest,dist])
+    lowest=np.min([lowest,dist])
 
 H1=(sw.dist([line[2], line[3]],[line[0], line[1]],'km'))[0]*1000;
-if kelp==True:
-    linea=(sw.dist([data['uvnodell'][eles[0],1], line[2]],[line[0], line[0]],'km'))[0]*1000;
-    lineb=(sw.dist([data['uvnodell'][eles[1],1], line[2]],[line[0], line[0]],'km'))[0]*1000;
+H2=np.sqrt((line[0]-line[1])**2+(line[2]-line[3])**2)
+
+linea=(lowest/H2)*H1
+lineb=(highest/H2)*H1
+
 
 
 
@@ -127,9 +168,8 @@ ax.plot(yim,interpdata1,'k',label='No drag')
 ax.plot(yim,interpdata2,'r',label='Drag: 0.018')
 ax.plot(yim,interpdata3,'b',label='Drag: 0.011')
 ax.plot(yim,interpdata4,'g',label='Drag: 0.007')
-if kelp==True:
-    ax.axvline(lineb,color='k',linestyle='dashed')
-    ax.axvline(linea,color='k',linestyle='dashed')
+ax.axvline(lineb,color='k',linestyle='dashed')
+ax.axvline(linea,color='k',linestyle='dashed')
 
 ax.set_ylabel(r'Current variance magnitude (m s$^{-1}$)',fontsize=10)
 ax.set_xlabel(r'Distance (m)',fontsize=10)
@@ -163,9 +203,8 @@ tempdic['interp_007']=interpdata4
 tempdic['line']=line
 tempdic['yi']=yi
 tempdic['yi_meters']=yim
-if kelp==True:
-    tempdic['kelpedge_south']=lineb
-    tempdic['kelpedge_north']=linea
+tempdic['kelpedge_south']=lineb
+tempdic['kelpedge_north']=linea
 
 base_dir = os.path.dirname(__file__)
 sio.savemat(os.path.join(base_dir,'data', '4runs_current_mag_interp_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'.mat'),mdict=tempdic)
