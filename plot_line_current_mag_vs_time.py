@@ -21,10 +21,10 @@ import scipy.io as sio
 name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 name_change2='kit4_kelp_20m_0.011'
-name_change3='kit4_kelp_20m_0.007'
+name_change3='kit4_kelp_20m_0.011'
 grid='kit4'
 datatype='2d'
-regionname='kit4_kelp_tight2'
+regionname='kit4_kelp_tight5'
 starttime=400
 endtime=520
 
@@ -49,17 +49,24 @@ region=regions(regionname)
 nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
-
+kelp=False
 spacing=1
 #line=[-129.48666,52.62,52.68]
-line=[-129.48833,52.62,52.68]
+#define line as line=[bottomx,topx,bottomy,topy]
+
+#kit4_kelp_tight2
+#line=[-129.48833,-129.48833,52.62,52.68]
+#kit4_kelp_tight5 a
+line=[-129.44,-129.40,52.56,52.60]
+line=[-129.35,-129.3,52.52,52.54]
 ngridy = 2000
 eles=[77566,80168]
 
 
-H1=(sw.dist([line[2], line[1]],[line[0], line[0]],'km'))[0]*1000;
-linea=(sw.dist([data['uvnodell'][eles[0],1], line[1]],[line[0], line[0]],'km'))[0]*1000;
-lineb=(sw.dist([data['uvnodell'][eles[1],1], line[1]],[line[0], line[0]],'km'))[0]*1000;
+H1=(sw.dist([line[2], line[3]],[line[0], line[1]],'km'))[0]*1000;
+if kelp==True:
+    linea=(sw.dist([data['uvnodell'][eles[0],1], line[2]],[line[0], line[0]],'km'))[0]*1000;
+    lineb=(sw.dist([data['uvnodell'][eles[1],1], line[2]],[line[0], line[0]],'km'))[0]*1000;
 
 
 
@@ -87,19 +94,21 @@ cvarm_c3=np.sqrt(uvar_c3+vvar_c3)
 print ('calc current mag: %f' % (timem.clock() - start))
 
 start = timem.clock()
-time=np.arange(0,endtime-starttime,spacing)
-yi = np.linspace(line[1],line[2], ngridy)
+
+yi = np.linspace(line[2],line[3], ngridy)
 yim = np.linspace(0,H1, ngridy)
-xi = (np.zeros((len(yi),1))+line[0]).flatten()
+xi = np.linspace(line[0],line[1], ngridy)
+points=np.flipud(np.eye(2000,dtype=bool))
+
 interpdata1=np.empty((ngridy,))
 interpdata2=np.empty((ngridy,))
 interpdata3=np.empty((ngridy,))
 interpdata4=np.empty((ngridy,))
 
-interpdata1=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_o[eidx], xi, yi)[:,0]
-interpdata2=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c[eidx], xi, yi)[:,0]
-interpdata3=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c2[eidx], xi, yi)[:,0]
-interpdata4=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c3[eidx], xi, yi)[:,0]
+interpdata1=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_o[eidx], xi, yi)[points]
+interpdata2=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c[eidx], xi, yi)[points]
+interpdata3=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c2[eidx], xi, yi)[points]
+interpdata4=mpl.mlab.griddata(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1], cvarm_c3[eidx], xi, yi)[points]
 print ('griddata interp: %f' % (timem.clock() - start))
 
 
@@ -118,8 +127,9 @@ ax.plot(yim,interpdata1,'k',label='No drag')
 ax.plot(yim,interpdata2,'r',label='Drag: 0.018')
 ax.plot(yim,interpdata3,'b',label='Drag: 0.011')
 ax.plot(yim,interpdata4,'g',label='Drag: 0.007')
-ax.axvline(lineb,color='k',linestyle='dashed')
-ax.axvline(linea,color='k',linestyle='dashed')
+if kelp==True:
+    ax.axvline(lineb,color='k',linestyle='dashed')
+    ax.axvline(linea,color='k',linestyle='dashed')
 
 ax.set_ylabel(r'Current variance magnitude (m s$^{-1}$)',fontsize=10)
 ax.set_xlabel(r'Distance (m)',fontsize=10)
@@ -127,7 +137,22 @@ ax.legend()
 
 
 
-f.savefig(savepath + grid + '_4runs_line_current_mag_vs_time.png',dpi=300)
+f.savefig(savepath + grid + '_4runs_line_current_mag_vs_time_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'.png',dpi=300)
+plt.close(f)
+
+
+f = plt.figure()
+
+ax=f.add_axes([.125,.1,.775,.8])
+
+ax.triplot(data['trigrid'],lw=.5)
+ax.plot(xi,yi,'b.')
+prettyplot_ll(ax,setregion=region,grid=True)
+plotcoast(ax,filename='pacific.nc',color='r')
+
+
+
+f.savefig(savepath + grid + '_4runs_line_current_mag_vs_time_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'_location.png',dpi=300)
 plt.close(f)
 
 tempdic={}
@@ -138,11 +163,12 @@ tempdic['interp_007']=interpdata4
 tempdic['line']=line
 tempdic['yi']=yi
 tempdic['yi_meters']=yim
-tempdic['kelpedge_south']=lineb
-tempdic['kelpedge_north']=linea
+if kelp==True:
+    tempdic['kelpedge_south']=lineb
+    tempdic['kelpedge_north']=linea
 
 base_dir = os.path.dirname(__file__)
-sio.savemat(os.path.join(base_dir,'data', '4runs_current_mag_interp_newline.mat'),mdict=tempdic)
+sio.savemat(os.path.join(base_dir,'data', '4runs_current_mag_interp_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'.mat'),mdict=tempdic)
 
 
 
