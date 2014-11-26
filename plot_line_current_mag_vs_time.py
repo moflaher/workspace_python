@@ -58,15 +58,24 @@ spacing=1
 #line=[-129.48666,52.62,52.68]
 #define line as line=[bottomx,topx,bottomy,topy]
 
-#kit4_kelp_tight2
+#kit4_kelp_tight2 verical
 line=[-129.48833,-129.48833,52.62,52.68]
+#kit4_kelp_tight2 horiz1
+#line=[-129.53,-129.46,52.65,52.65]
+#kit4_kelp_tight2 horiz2
+#line=[-129.53,-129.46,52.655,52.655]
+
 #kit4_kelp_tight5 north
 #line=[-129.44,-129.40,52.56,52.60]
 #kit4_kelp_tight5 south
 #line=[-129.35,-129.3,52.52,52.54]
-#kit4_kelp_tight5 west
-#line=[-129.4225,-129.4225,52.53,52.56]
-
+#kit4_kelp_tight5 left horiz top
+#line=[-129.45,-129.375,52.575,52.575]
+#kit4_kelp_tight5 left horiz bottom
+#line=[-129.45,-129.375,52.54,52.54]
+#kit4_kelp_tight5 right horiz bottom
+#line=[-129.375,-129.3,52.5325,52.5325]
+print line
 ngridy = 2000
 
 
@@ -186,9 +195,15 @@ f = plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
 
 ax.triplot(data['trigrid'],lw=.5)
+
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+lseg0=PC(tmparray,facecolor = 'g',edgecolor='None')
+ax.add_collection(lseg0)
+
 ax.plot(xi,yi,'b.')
 prettyplot_ll(ax,setregion=region,grid=True)
 plotcoast(ax,filename='pacific.nc',color='r')
+
 
 
 
@@ -207,7 +222,7 @@ tempdic['kelpedge_south']=lineb
 tempdic['kelpedge_north']=linea
 
 base_dir = os.path.dirname(__file__)
-sio.savemat(os.path.join(base_dir,'data', '4runs_current_mag_interp_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'.mat'),mdict=tempdic)
+sio.savemat(os.path.join(base_dir,'data', grid + '_4runs_line_current_mag_vs_time_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'.mat'),mdict=tempdic)
 
 
 
