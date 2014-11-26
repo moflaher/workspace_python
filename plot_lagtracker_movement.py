@@ -19,12 +19,12 @@ import h5py as h5
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
+name='kit4_45days_3'
 #name='kit4_45days_3'
 grid='kit4'
 datatype='2d'
 regionname='kit4_kelp_tight2_small'
-lname='kelp_kit4_kelp_tight2_small_southbox_s0'
+lname='element_80185_s3'
 
 
 ### load the .nc file #####
@@ -56,7 +56,7 @@ subtimes=np.linspace(0,len(savelag['time'])-1,nos)
 
 region={}
 tmp=[np.nanmin(savelag['x']),np.nanmax(savelag['x']),np.nanmin(savelag['y']),np.nanmax(savelag['y'])]
-regionscale=.1
+regionscale=0
 region['regiontmp']=[tmp[0]-(tmp[1]-tmp[0])*regionscale,tmp[1]+(tmp[1]-tmp[0])*regionscale,tmp[2]-(tmp[3]-tmp[2])*regionscale,tmp[3]+(tmp[3]-tmp[2])*regionscale]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)

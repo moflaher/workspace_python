@@ -74,6 +74,8 @@ line=[-129.48833,-129.48833,52.62,52.68]
 #kit4_kelp_tight5 left horiz bottom
 #line=[-129.45,-129.375,52.54,52.54]
 #kit4_kelp_tight5 right horiz bottom
+#line=[-129.375,-129.3,52.53,52.53]
+#kit4_kelp_tight5 right horiz bottom a
 #line=[-129.375,-129.3,52.5325,52.5325]
 print line
 ngridy = 2000
@@ -148,7 +150,9 @@ start = timem.clock()
 yi = np.linspace(line[2],line[3], ngridy)
 yim = np.linspace(0,H1, ngridy)
 xi = np.linspace(line[0],line[1], ngridy)
-points=np.flipud(np.eye(2000,dtype=bool))
+#griddata seems to be swapping xi so that it goes high to low instead of low to high.
+#fliplr is to account for this.
+points=np.fliplr(np.flipud(np.eye(2000,dtype=bool)))
 
 interpdata1=np.empty((ngridy,))
 interpdata2=np.empty((ngridy,))

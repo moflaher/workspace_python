@@ -24,10 +24,12 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-regionname='kit4_kelp_tight2_small'
+regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
-lname='kelp_kit4_kelp_tight2_small_southbox_s0'
-
+lname='element_80185_s3'
+#averaging length (breaks code if zero). N=1 for original data
+N=150
+plotend=1
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name +'/output/',singlename=grid + '_0001.nc')
@@ -41,6 +43,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
 region=regions(regionname)
 region=regionll2xy(data,region)
+eidx=get_elements(data,region)
 
 
 if 'savelag1' not in globals():
@@ -66,6 +69,9 @@ cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skipro
 cages=(cages[:,0]-1).astype(int)
 
 
+#comment out this line for any kelp not just kelp in the start box
+cages=eidx[np.in1d(eidx,cages)]
+
 tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
 sidx=np.where((savelag1['x'][:,0]>region['regionxy'][0])&(savelag1['x'][:,0]<region['regionxy'][1])&(savelag1['y'][:,0]>region['regionxy'][2])&(savelag1['y'][:,0]<region['regionxy'][3]))[0]
 
@@ -74,7 +80,11 @@ host=data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,0],savelag1['
 
 cidx=np.in1d(host,cages)
 
-expand=15000
+npts=savelag1['x'].shape[0]
+timediff=savelag1['time'][2]-savelag1['time'][1]
+
+
+expand=0
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
 
 #computed values for each timestep, changed to check all places and reshape much faster
@@ -88,55 +98,49 @@ region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,re
 
 
 #find particles in kelp from region start
-numberin1=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,:],savelag1['y'][sidx,:]),cages).reshape(savelag1['x'][sidx,:].shape),axis=0)
-numberin2=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag2['x'][sidx,:],savelag2['y'][sidx,:]),cages).reshape(savelag2['x'][sidx,:].shape),axis=0)
+numberin1=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,:],savelag1['y'][sidx,:]),cages).reshape(savelag1['x'][sidx,:].shape),axis=0)/npts
+numberin2=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag2['x'][sidx,:],savelag2['y'][sidx,:]),cages).reshape(savelag2['x'][sidx,:].shape),axis=0)/npts
 
-f = plt.figure()
-ax=f.add_axes([.125,.1,.8,.8])
+f, (ax1,ax2) = plt.subplots(2, sharex=True, sharey=True)
 
-ax.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag')
-ax.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag')
-ax.set_xlim([-10,ax.get_xlim()[1]])
+ax1.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag')
+ax1.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag')
+ax1.set_xlim([-10,plotend*24])
 
-handles, labels = ax.get_legend_handles_labels()
-legend=ax.legend(handles, labels)
+handles, labels = ax1.get_legend_handles_labels()
+legend=ax1.legend(handles, labels)
 
-ax.set_ylabel(r'Number of particles in kelp',fontsize=8)
-ax.set_xlabel(r'Time (hour)',fontsize=8)
+ax1.set_ylabel(r'Proportion of particles in kelp',fontsize=8)
 
-for label in (ax.get_xticklabels() + ax.get_yticklabels()):
+
+for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
     label.set_fontsize(8)
+
+
+numberin1=np.convolve(numberin1,np.ones((N,))/N,mode='same')
+numberin2=np.convolve(numberin2,np.ones((N,))/N,mode='same')
+
+numberin1[0:np.ceil(N/2)]=np.nan
+numberin2[0:np.ceil(N/2)]=np.nan
+
+ax2.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag')
+ax2.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag')
+#ax2.set_xlim([-10,ax2.get_xlim()[1]])
+
+handles, labels = ax2.get_legend_handles_labels()
+legend=ax2.legend(handles, labels)
+
+ax2.set_ylabel(r'Proportion of particles in kelp',fontsize=8)
+ax2.set_xlabel(r'Time (hour)',fontsize=8)
+
+for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
+    label.set_fontsize(8)
+
+
+
 
 f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_compare_particles_inkelp_regionstart.png',dpi=150)
 plt.close(f)
-
-
-
-#find particles in kelp from kelp start
-numberin1=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx[cidx],:],savelag1['y'][sidx[cidx],:]),cages).reshape(savelag1['x'][sidx[cidx],:].shape),axis=0)
-numberin2=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag2['x'][sidx[cidx],:],savelag2['y'][sidx[cidx],:]),cages).reshape(savelag2['x'][sidx[cidx],:].shape),axis=0)
-
-f = plt.figure()
-ax=f.add_axes([.125,.1,.8,.8])
-
-ax.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag')
-ax.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag')
-ax.set_xlim([-10,ax.get_xlim()[1]])
-
-handles, labels = ax.get_legend_handles_labels()
-legend=ax.legend(handles, labels)
-
-ax.set_ylabel(r'Number of particles in kelp',fontsize=8)
-ax.set_xlabel(r'Time (hour)',fontsize=8)
-
-for label in (ax.get_xticklabels() + ax.get_yticklabels()):
-    label.set_fontsize(8)
-
-f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_compare_particles_inkelp_kelpstart.png',dpi=150)
-plt.close(f)
-
-
-
 
 
 

@@ -214,6 +214,12 @@ def makeregions():
     allregions['kit4_kelp_tight2_small']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-129.50, -129.47, 52.63, 52.67])
+    tmpdic['passage']='kit4_kelp_tight2_kelpfield'
+    tmpdic['passageP']='kit4_kelp_tight2_kelpfield'
+    allregions['kit4_kelp_tight2_kelpfield']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-129.52, -129.48, 52.64, 52.66])
     tmpdic['passage']='kit4_kelp_tight2_tiny_left'
     tmpdic['passageP']='kit4_kelp_tight2_tiny_left'
