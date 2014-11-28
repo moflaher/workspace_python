@@ -25,9 +25,9 @@ import time
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-regionname='kit4_kelp_tight2_kelpfield'
+regionname='kit4_ftb'
 datatype='2d'
-lname='element_80185_s3'
+lname='element_85847_s6'
 
 
 ### load the .nc file #####
@@ -70,7 +70,7 @@ cages=(cages[:,0]-1).astype(int)
 tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
 sidx=np.where((savelag1['x'][:,0]>region['regionxy'][0])&(savelag1['x'][:,0]<region['regionxy'][1])&(savelag1['y'][:,0]>region['regionxy'][2])&(savelag1['y'][:,0]<region['regionxy'][3]))
 
-expand=5000
+expand=2500
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
 
 #for i in range(0,len(savelag1['time']),4):

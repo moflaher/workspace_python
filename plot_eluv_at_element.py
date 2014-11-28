@@ -23,7 +23,7 @@ starttime=384
 endtime=432
 endtime=456
 elements=[77566,80184,80168,74835]
-elements=[74835]
+elements=[83637,85846]
 
 single=False
 
@@ -114,7 +114,7 @@ for i in range(0,len(elements)):
 
     f.subplots_adjust(hspace=.075)
 
-    #f.savefig(savepath + grid + '_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.png',dpi=300)
+    f.savefig(savepath + grid + '_'+name+'_'+name2+'_eluv_at_element_'+("%d"%elements[i])+'.png',dpi=300)
     plt.close(f)
 
 

@@ -24,14 +24,14 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-regionname='kit4_kelp_tight2_kelpfield'
+regionname='kit4_ftb'
 datatype='2d'
-lname='element_80185_s0'
-lname2='element_80185_s3'
-lname3='element_80185_s6'
+lname='element_83638_s0'
+lname2='element_83638_s3'
+lname3='element_83638_s6'
 #averaging length (breaks code if zero). N=1 for original data
 N=150
-plotend=2
+plotend=1
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name +'/output/',singlename=grid + '_0001.nc')
@@ -91,7 +91,7 @@ if 'savelag5' not in globals():
     for i in fileload['savelag'].keys():
         if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
             continue
-        savelag3[i]=fileload['savelag'][i].value.T
+        savelag5[i]=fileload['savelag'][i].value.T
 
 if 'savelag6' not in globals():
     print "Loading savelag6"
@@ -100,7 +100,7 @@ if 'savelag6' not in globals():
     for i in fileload['savelag'].keys():
         if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
             continue
-        savelag4[i]=fileload['savelag'][i].value.T
+        savelag6[i]=fileload['savelag'][i].value.T
 
 
 
@@ -126,7 +126,7 @@ numberin4=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag4['x'
 numberin5=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag5['x'][sidx,:],savelag5['y'][sidx,:]),cages).reshape(savelag5['x'][sidx,:].shape),axis=0)/npts
 numberin6=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag6['x'][sidx,:],savelag6['y'][sidx,:]),cages).reshape(savelag6['x'][sidx,:].shape),axis=0)/npts
 
-f, (ax0,ax1,ax2) = plt.subplots(3, sharex=True, sharey=True)
+f, (ax1,ax2) = plt.subplots(2, sharex=True, sharey=True)
 
 ax1.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag - Start t=0')
 ax1.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag - Start t=0')
@@ -134,7 +134,8 @@ ax1.plot((savelag3['time']-savelag3['time'].min())/3600,numberin3,'k--',label='N
 ax1.plot((savelag4['time']-savelag4['time'].min())/3600,numberin4,'r--',label='Drag - Start t=3')
 ax1.plot((savelag5['time']-savelag5['time'].min())/3600,numberin5,'k-.',label='No drag - Start t=6')
 ax1.plot((savelag6['time']-savelag6['time'].min())/3600,numberin6,'r-.',label='Drag - Start t=6')
-ax1.set_xlim([0,plotend*24])
+ax1.set_xlim([-1,plotend*24])
+ax1.set_ylim([-0.1,1.1])
 handles, labels = ax1.get_legend_handles_labels()
 legend=ax1.legend(handles, labels,prop={'size':8})
 ax1.set_ylabel(r'Ratio of particles',fontsize=8)
@@ -143,9 +144,9 @@ for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
 
 
 
-lname='element_80169_s0'
-lname2='element_80169_s3'
-lname2='element_80169_s6'
+lname='element_85847_s0'
+lname2='element_85847_s3'
+lname2='element_85847_s6'
 
 if True:
     print "Loading savelag1"
@@ -190,7 +191,7 @@ if True:
     for i in fileload['savelag'].keys():
         if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
             continue
-        savelag3[i]=fileload['savelag'][i].value.T
+        savelag5[i]=fileload['savelag'][i].value.T
 
 if True:
     print "Loading savelag6"
@@ -199,7 +200,7 @@ if True:
     for i in fileload['savelag'].keys():
         if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
             continue
-        savelag4[i]=fileload['savelag'][i].value.T
+        savelag6[i]=fileload['savelag'][i].value.T
 
 
 
@@ -217,7 +218,8 @@ ax2.plot((savelag3['time']-savelag3['time'].min())/3600,numberin3,'k--',label='N
 ax2.plot((savelag4['time']-savelag4['time'].min())/3600,numberin4,'r--',label='Drag - Start t=3')
 ax2.plot((savelag5['time']-savelag5['time'].min())/3600,numberin5,'k-.',label='No drag - Start t=6')
 ax2.plot((savelag6['time']-savelag6['time'].min())/3600,numberin6,'r-.',label='Drag - Start t=6')
-ax2.set_xlim([0,plotend*24])
+ax2.set_xlim([-1,plotend*24])
+ax2.set_ylim([-0.1,1.1])
 handles, labels = ax2.get_legend_handles_labels()
 legend=ax2.legend(handles, labels,prop={'size':8})
 ax2.set_ylabel(r'Ratio of particles',fontsize=8)
@@ -227,93 +229,12 @@ for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
 
 
 
-lname='element_77567_s0'
-lname2='element_77567_s3'
-lname2='element_77567_s6'
-
-if True:
-    print "Loading savelag1"
-    fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
-    savelag1={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag1[i]=fileload['savelag'][i].value.T
-
-if True:
-    print "Loading savelag2"
-    fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
-    savelag2={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag2[i]=fileload['savelag'][i].value.T
-
-if True:
-    print "Loading savelag3"
-    fileload=h5.File('savedir/'+name+'/'+lname2+'.mat')
-    savelag3={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag3[i]=fileload['savelag'][i].value.T
-
-if True:
-    print "Loading savelag4"
-    fileload=h5.File('savedir/'+name2+'/'+lname2+'.mat')
-    savelag4={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag4[i]=fileload['savelag'][i].value.T
-
-if True:
-    print "Loading savelag5"
-    fileload=h5.File('savedir/'+name+'/'+lname3+'.mat')
-    savelag5={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag3[i]=fileload['savelag'][i].value.T
-
-if True:
-    print "Loading savelag6"
-    fileload=h5.File('savedir/'+name2+'/'+lname3+'.mat')
-    savelag6={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag4[i]=fileload['savelag'][i].value.T
+ax1.annotate("A",xy=(.975,.125),xycoords='axes fraction')
+ax2.annotate("B",xy=(.975,.125),xycoords='axes fraction')
 
 
-
-#find particles in kelp from region start
-numberin1=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,:],savelag1['y'][sidx,:]),cages).reshape(savelag1['x'][sidx,:].shape),axis=0)/npts
-numberin2=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag2['x'][sidx,:],savelag2['y'][sidx,:]),cages).reshape(savelag2['x'][sidx,:].shape),axis=0)/npts
-numberin3=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag3['x'][sidx,:],savelag3['y'][sidx,:]),cages).reshape(savelag3['x'][sidx,:].shape),axis=0)/npts
-numberin4=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag4['x'][sidx,:],savelag4['y'][sidx,:]),cages).reshape(savelag4['x'][sidx,:].shape),axis=0)/npts
-numberin5=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag5['x'][sidx,:],savelag5['y'][sidx,:]),cages).reshape(savelag5['x'][sidx,:].shape),axis=0)/npts
-numberin6=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag6['x'][sidx,:],savelag6['y'][sidx,:]),cages).reshape(savelag6['x'][sidx,:].shape),axis=0)/npts
-
-ax0.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag - Start t=0')
-ax0.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag - Start t=0')
-ax0.plot((savelag3['time']-savelag3['time'].min())/3600,numberin3,'k--',label='No drag - Start t=3')
-ax0.plot((savelag4['time']-savelag4['time'].min())/3600,numberin4,'r--',label='Drag - Start t=3')
-ax0.plot((savelag5['time']-savelag5['time'].min())/3600,numberin5,'k-.',label='No drag - Start t=6')
-ax0.plot((savelag6['time']-savelag6['time'].min())/3600,numberin6,'r-.',label='Drag - Start t=6')
-ax0.set_xlim([0,plotend*24])
-handles, labels = ax0.get_legend_handles_labels()
-legend=ax0.legend(handles, labels,prop={'size':8})
-ax0.set_ylabel(r'Ratio of particles',fontsize=8)
-ax0.set_xlabel(r'Time (h)',fontsize=8)
-for label in (ax0.get_xticklabels() + ax0.get_yticklabels()):
-    label.set_fontsize(8)
-
-ax1.annotate("B",xy=(.975,.025),xycoords='axes fraction')
-ax2.annotate("C",xy=(.975,.025),xycoords='axes fraction')
-ax0.annotate("A",xy=(.975,.025),xycoords='axes fraction')
-
-f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_'+lname2+'_18runs.png',dpi=150)
+f.tight_layout(pad=0.2)
+f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_12runs.png',dpi=150)
 plt.close(f)
 
 

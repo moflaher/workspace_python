@@ -24,8 +24,8 @@ name2='kit4_kelp_20m_0.018'
 #name='kit4_45days_3'
 grid='kit4'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
-lname='element_80185_s3'
+regionname='kit4_ftb'
+lname='element_85847_s6'
 
 
 ### load the .nc file #####
@@ -68,7 +68,7 @@ rows=3
 nos=rows*cols
 subtimes=np.linspace(0,40*6,nos)
 
-expand=5000
+expand=2500
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)
