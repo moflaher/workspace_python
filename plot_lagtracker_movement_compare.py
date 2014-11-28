@@ -25,7 +25,7 @@ name2='kit4_kelp_20m_0.018'
 grid='kit4'
 datatype='2d'
 regionname='kit4_ftb'
-lname='element_85847_s6'
+lname='element_83638_s6'
 
 
 ### load the .nc file #####
@@ -76,11 +76,11 @@ ax=ax.flatten()
 
 for i in range(0,len(ax)):
     print i
-    ax[i].triplot(data['trigridxy'],lw=.25)
+    ax[i].triplot(data['trigridxy'],lw=.15)
     lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
     ax[i].add_collection(lseg1)
-    ax[i].scatter(savelag1['x'][:,subtimes[i].astype(int)],savelag1['y'][:,subtimes[i].astype(int)],color='k',label='No drag',s=4,zorder=10)
-    ax[i].scatter(savelag2['x'][:,subtimes[i].astype(int)],savelag2['y'][:,subtimes[i].astype(int)],color='r',label='Drag',s=4,zorder=15)
+    ax[i].scatter(savelag1['x'][:,subtimes[i].astype(int)],savelag1['y'][:,subtimes[i].astype(int)],color='k',label='No drag',s=.25,zorder=10)
+    ax[i].scatter(savelag2['x'][:,subtimes[i].astype(int)],savelag2['y'][:,subtimes[i].astype(int)],color='r',label='Drag',s=.25,zorder=15)
     ax[i].axis(region['regionxy'])
     ax[i].set_title('Hour '+ ("%.0f"% ( ( ((savelag1['time'][1]-savelag1['time'][0])*subtimes[i].astype(int) )/3600)  ) ))
     scaler=1000
