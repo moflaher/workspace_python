@@ -344,7 +344,7 @@ def regioner(data,region,subset=False):
 
 
 
-@profile
+
 def interp_vel(data,loc,layer=None):
     host=data['trigrid_finder'].__call__(loc[0],loc[1])
     if host==-1:
