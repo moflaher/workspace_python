@@ -362,7 +362,7 @@ def interp_vel(data,loc,layer=None):
 
     if layer==None:
         x0c=loc[0]-data['uvnode'][host,0];
-        y0c=loc[1]-data['uvnode'][host,0];  
+        y0c=loc[1]-data['uvnode'][host,1];  
         e0=data['nbe'][host,0]
         e1=data['nbe'][host,1]
         e2=data['nbe'][host,2]
