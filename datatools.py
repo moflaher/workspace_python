@@ -153,12 +153,10 @@ def loadnc(datadir, singlename=None):
                 data['lat'] = data['y']
             
     if data.has_key('nv'):
-        data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])
-        data['trigrid_finder']=data['trigrid'].get_trifinder()
+        data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
         data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
   
         
-
     return data
 
 
@@ -269,7 +267,7 @@ def load_timeslice(datadir, start, end, singlename=None,  dim = '2D'):
     return data
 
 
-def ncdatasort(data):
+def ncdatasort(data,trifinder=False):
     """From the nc data provided, common variables are produced.
 
     :Parameters: **data** -- a data dictionary of data from a .nc file
@@ -313,6 +311,9 @@ def ncdatasort(data):
     data['nodell'] = nodell
     data['nodexy'] = nodexy
     data['time']=data['time']+678576
+    if trifinder==True:
+        data['trigrid_finder']=data['trigrid'].get_trifinder()
+        data['trigridxy_finder']=data['trigridxy'].get_trifinder()
 
     return data
 
