@@ -344,33 +344,60 @@ def regioner(data,region,subset=False):
 
 
 
-
+@profile
 def interp_vel(data,loc,layer=None):
-    host=data['trigrid'].get_trifinder().__call__(loc[0],loc[1])
+    host=data['trigrid_finder'].__call__(loc[0],loc[1])
     if host==-1:
         print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
-        return
+        out=np.empty(shape=data['va'][:,0].shape)
+        out[:]=np.nan
+        return out,out
 
     xi=loc[0]
     yi=loc[1]
     interp_x = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,0])
     interp_y = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,1])
-    print loc
     loc[0] = interp_x(xi, yi)
-    print loc
     loc[1] = interp_y(xi, yi)
 
     if layer==None:
         x0c=loc[0]-data['uvnode'][host,0];
         y0c=loc[1]-data['uvnode'][host,0];  
+        e0=data['nbe'][host,0]
+        e1=data['nbe'][host,1]
+        e2=data['nbe'][host,2]
+        
+        u_e=data['ua'][:,host]
+        v_e=data['va'][:,host]
 
-        dudx= data['a1u'][0,host]*data['ua'][:,host]+data['a1u'][1,host]*data['ua'][:,data['nbe'][host,0]]+data['a1u'][2,host]*data['ua'][:,data['nbe'][host,1]]+data['a1u'][3,host]*data['ua'][:,data['nbe'][host,2]];
-        dudy= data['a2u'][0,host]*data['ua'][:,host]+data['a2u'][1,host]*data['ua'][:,data['nbe'][host,0]]+data['a2u'][2,host]*data['ua'][:,data['nbe'][host,1]]+data['a2u'][3,host]*data['ua'][:,data['nbe'][host,2]];
-        dvdx= data['a1u'][0,host]*data['va'][:,host]+data['a1u'][1,host]*data['va'][:,data['nbe'][host,0]]+data['a1u'][2,host]*data['va'][:,data['nbe'][host,1]]+data['a1u'][3,host]*data['va'][:,data['nbe'][host,2]];
-        dvdy= data['a2u'][0,host]*data['va'][:,host]+data['a2u'][1,host]*data['va'][:,data['nbe'][host,0]]+data['a2u'][2,host]*data['va'][:,data['nbe'][host,1]]+data['a2u'][3,host]*data['va'][:,data['nbe'][host,2]];
+        if e0==-1:
+            u_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_0=data['ua'][:,e0]
+            v_0=data['va'][:,e0]
 
-        ua= data['ua'][:,host] + dudx*x0c + dudy*y0c;
-        va= data['va'][:,host] + dvdx*x0c + dvdy*y0c;
+        if e1==-1:
+            u_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_1=data['ua'][:,e1]
+            v_1=data['va'][:,e1]
+
+        if e2==-1:
+            u_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_2=data['ua'][:,e2]
+            v_2=data['va'][:,e2]
+
+        dudx= data['a1u'][0,host]*u_e+data['a1u'][1,host]*u_0+data['a1u'][2,host]*u_1+data['a1u'][3,host]*u_2;
+        dudy= data['a2u'][0,host]*u_e+data['a2u'][1,host]*u_0+data['a2u'][2,host]*u_1+data['a2u'][3,host]*u_2;
+        dvdx= data['a1u'][0,host]*v_e+data['a1u'][1,host]*v_0+data['a1u'][2,host]*v_1+data['a1u'][3,host]*v_2;
+        dvdy= data['a2u'][0,host]*v_e+data['a2u'][1,host]*v_0+data['a2u'][2,host]*v_1+data['a2u'][3,host]*v_2;
+
+        ua= u_e + dudx*x0c + dudy*y0c;
+        va= v_e + dvdx*x0c + dvdy*y0c;
 
     else:
         print testing

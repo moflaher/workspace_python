@@ -154,6 +154,7 @@ def loadnc(datadir, singlename=None):
             
     if data.has_key('nv'):
         data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])
+        data['trigrid_finder']=data['trigrid'].get_trifinder()
         data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
   
         
