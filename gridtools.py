@@ -346,6 +346,7 @@ def regioner(data,region,subset=False):
 
 
 def interp_vel(data,loc,layer=None):
+    loc=np.array(loc)
     host=data['trigrid_finder'].__call__(loc[0],loc[1])
     if host==-1:
         print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
@@ -360,13 +361,14 @@ def interp_vel(data,loc,layer=None):
     loc[0] = interp_x(xi, yi)
     loc[1] = interp_y(xi, yi)
 
-    if layer==None:
-        x0c=loc[0]-data['uvnode'][host,0];
-        y0c=loc[1]-data['uvnode'][host,1];  
-        e0=data['nbe'][host,0]
-        e1=data['nbe'][host,1]
-        e2=data['nbe'][host,2]
-        
+    x0c=loc[0]-data['uvnode'][host,0];
+    y0c=loc[1]-data['uvnode'][host,1];  
+    e0=data['nbe'][host,0]
+    e1=data['nbe'][host,1]
+    e2=data['nbe'][host,2]
+
+
+    if (layer==None and loc.size==2):
         u_e=data['ua'][:,host]
         v_e=data['va'][:,host]
 
@@ -399,15 +401,120 @@ def interp_vel(data,loc,layer=None):
         ua= u_e + dudx*x0c + dudy*y0c;
         va= v_e + dvdx*x0c + dvdy*y0c;
 
-    else:
-        print testing
+        return ua,va
+
+    if (layer!=None and loc.size==2):        
+        u_e=data['u'][:,layer,host]
+        v_e=data['v'][:,layer,host]
+        w_e=data['ww'][:,layer,host]
+
+        if e0==-1:
+            u_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_0=data['u'][:,layer,e0]
+            v_0=data['v'][:,layer,e0]
+            w_0=data['ww'][:,layer,e0]
+
+        if e1==-1:
+            u_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_1=data['u'][:,layer,e1]
+            v_1=data['v'][:,layer,e1]
+            w_1=data['ww'][:,layer,e1]
+
+        if e2==-1:
+            u_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_2=data['u'][:,layer,e2]
+            v_2=data['v'][:,layer,e2]
+            w_2=data['ww'][:,layer,e2]
+
+        dudx= data['a1u'][0,host]*u_e+data['a1u'][1,host]*u_0+data['a1u'][2,host]*u_1+data['a1u'][3,host]*u_2;
+        dudy= data['a2u'][0,host]*u_e+data['a2u'][1,host]*u_0+data['a2u'][2,host]*u_1+data['a2u'][3,host]*u_2;
+        dvdx= data['a1u'][0,host]*v_e+data['a1u'][1,host]*v_0+data['a1u'][2,host]*v_1+data['a1u'][3,host]*v_2;
+        dvdy= data['a2u'][0,host]*v_e+data['a2u'][1,host]*v_0+data['a2u'][2,host]*v_1+data['a2u'][3,host]*v_2;
+        dwdx= data['a1u'][0,host]*w_e+data['a1u'][1,host]*w_0+data['a1u'][2,host]*w_1+data['a1u'][3,host]*w_2;
+        dwdy= data['a2u'][0,host]*w_e+data['a2u'][1,host]*w_0+data['a2u'][2,host]*w_1+data['a2u'][3,host]*w_2;
+
+        u= u_e + dudx*x0c + dudy*y0c;
+        v= v_e + dvdx*x0c + dvdy*y0c;
+        w= w_e + dwdx*x0c + dwdy*y0c;
+
         
+        return u,v,w
 
 
+    if (layer==None and loc.size==3): 
+        print "This code isn't finished"
+        return None
 
+        if (loc[2]>100000):
+            print "z-coordinate must be less than 100,000"
+            out=np.empty(shape=data['va'][:,0].shape)
+            out[:]=np.nan
+            return out,out,out
 
+        uvzeta=(data['zeta'][:,data['nv'][host,0]] + data['zeta'][:,data['nv'][host,1]] + data['zeta'][:,data['nv'][host,2]]) / 3.0
+        leveltime=np.vstack([-1*data['siglay'][:,0].reshape(-1,1)*(uvzeta+data['uvh'][host]).reshape(1,-1),100000+np.zeros((len(uvzeta),1)).T])
+    
+        deepidx=(leveltime>loc[2]).argmax(axis=0)
+        deepidx[deepidx==len(data['siglay'][:,0])]=len(data['siglay'][:,0])-1
 
-    return ua,va
+        test=np.zeros((1081,20),dtype=bool)
+        test[0:1081,deepidx]=1
+
+        u_e=data['u'][:,deepidx,host]
+        v_e=data['v'][:,deepidx,host]
+        w_e=data['ww'][:,deepidx,host]
+
+        if e0==-1:
+            u_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_0=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_0=data['u'][:,deepidx,e0]
+            v_0=data['v'][:,deepidx,e0]
+            w_0=data['ww'][:,deepidx,e0]
+
+        if e1==-1:
+            u_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_1=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_1=data['u'][:,deepidx,e1]
+            v_1=data['v'][:,deepidx,e1]
+            w_1=data['ww'][:,deepidx,e1]
+
+        if e2==-1:
+            u_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            v_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+            w_2=np.zeros(shape=u_e.shape,dtype=u_e.dtype)
+        else:
+            u_2=data['u'][:,deepidx,e2]
+            v_2=data['v'][:,deepidx,e2]
+            w_2=data['ww'][:,deepidx,e2]
+
+        dudx= data['a1u'][0,host]*u_e+data['a1u'][1,host]*u_0+data['a1u'][2,host]*u_1+data['a1u'][3,host]*u_2;
+        dudy= data['a2u'][0,host]*u_e+data['a2u'][1,host]*u_0+data['a2u'][2,host]*u_1+data['a2u'][3,host]*u_2;
+        dvdx= data['a1u'][0,host]*v_e+data['a1u'][1,host]*v_0+data['a1u'][2,host]*v_1+data['a1u'][3,host]*v_2;
+        dvdy= data['a2u'][0,host]*v_e+data['a2u'][1,host]*v_0+data['a2u'][2,host]*v_1+data['a2u'][3,host]*v_2;
+        dwdx= data['a1u'][0,host]*w_e+data['a1u'][1,host]*w_0+data['a1u'][2,host]*w_1+data['a1u'][3,host]*w_2;
+        dwdy= data['a2u'][0,host]*w_e+data['a2u'][1,host]*w_0+data['a2u'][2,host]*w_1+data['a2u'][3,host]*w_2;
+
+        u= u_e + dudx*x0c + dudy*y0c;
+        v= v_e + dvdx*x0c + dvdy*y0c;
+        w= w_e + dwdx*x0c + dwdy*y0c;
+
+        
+        return u,v,w        
+
+    
 
 
 
