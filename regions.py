@@ -287,6 +287,11 @@ def makeregions():
     tmpdic['passageP']='musq_cage_tight'
     allregions['musq_cage_tight']=tmpdic
 
+    tmpdic={}  
+    tmpdic['region']=np.array([-66.88,-66.815,45.025,45.075])
+    tmpdic['passage']='musq_cage_tight2'
+    tmpdic['passageP']='musq_cage_tight2'
+    allregions['musq_cage_tight2']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-71.5,   -57.5,    37.5,    46])

@@ -17,15 +17,15 @@ from t_predic import t_predic
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
-name2='kit4_45days_3'
-grid='kit4'
-regionname='doubleisland'
+name='sfm6_musq2_all_cages'
+name2='sfm6_musq2_no_cages'
+grid='sfm6_musq2'
+regionname='musq_cage_tight2'
 datatype='2d'
 starttime=384
 endtime=400
-offset=0
-cagecolor='r'
+offset=1008
+cagecolor='g'
 
 
 #kelp_tight2
@@ -39,8 +39,8 @@ region=regions(regionname)
 ### load the .nc file #####
 #data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 #data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('runs/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -50,7 +50,7 @@ savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage/' +
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 #cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=np.genfromtxt('/media/moe46/My Passport/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
 
@@ -64,13 +64,13 @@ ebb=np.argmax(np.sum(zeta_grad<0,axis=1))
 
 f=plt.figure()
 
-ax_fld=f.add_axes([.125,.1,.825,.85])
+ax_fld=f.add_axes([.125,.1,.8,.775])
 ax_fld.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_fld.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
-    ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_fld.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Drag')
+    ax_fld.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Drag')
     ax_fld.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+fld,eidx],data2['va'][starttime+offset+fld,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
 ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+fld,eidx],data['va'][starttime+fld,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
@@ -99,13 +99,13 @@ plt.close(f)
 
 
 f=plt.figure()
-ax_ebb=f.add_axes([.125,.1,.825,.85])
+ax_ebb=f.add_axes([.125,.1,.8,.775])
 ax_ebb.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_ebb.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
-    ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_ebb.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Drag')
+    ax_ebb.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Drag')
     ax_ebb.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data2['ua'][starttime+offset+ebb,eidx],data2['va'][starttime+offset+ebb,eidx],angles='xy',scale_units='xy',scale=200,zorder=10)
 ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],data['ua'][starttime+ebb,eidx],data['va'][starttime+ebb,eidx],angles='xy',scale_units='xy',scale=200,color='r',zorder=10)
@@ -151,13 +151,13 @@ for j in range(0,len(eidx)):
 
 
 f=plt.figure()
-ax_res=f.add_axes([.125,.1,.825,.85])
+ax_res=f.add_axes([.125,.1,.8,.775])
 ax_res.triplot(data['trigrid'],lw=.5)
 axsub1lw=1
 for i in cages:
     tnodes=data['nv'][i,:]    
-    ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Kelp')
-    ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Kelp')
+    ax_res.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],cagecolor,lw=axsub1lw,label='Drag')
+    ax_res.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],cagecolor,lw=axsub1lw,label='No Drag')
     ax_res.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],cagecolor,lw=axsub1lw)
 Q3=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=50,color='r',zorder=10)
 ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=50,zorder=10)
