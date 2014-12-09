@@ -15,16 +15,17 @@ from misctools import *
 from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+from matplotlib.collections import LineCollection as LC
 
 
 # Define names and types of data
-name='sfm6_musq2_no_cages'
+name='sfm6_musq2_old_cages'
 grid='sfm6_musq2'
-regionname='musq_cage_tight'
+regionname='musq_cage_tight2'
 datatype='2d'
 starttime=0
-spacing=150
-scaleset=75
+spacing=125
+scaleset=50
 #remember 0 is surface and 19/9 is bottom
 level=0
 
@@ -50,7 +51,15 @@ else:
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
+cages=np.genfromtxt('runs/'+grid+'/sfm6_musq2_all_cages/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
 
+
+
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+color='g'
+lw=1
+ls='solid'
 
 
 
@@ -59,8 +68,8 @@ zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
 
 
 #find biggest ebb and fld
-fld=np.argmax(np.sum(zeta_grad>1,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<-1,axis=1))
+fld=np.argmax(np.sum(zeta_grad,axis=1))
+ebb=np.argmin(np.sum(zeta_grad,axis=1))
 
 
 #plot ebb vectors
@@ -72,10 +81,12 @@ tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
 triax=plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+ax.add_collection(lseg1)
 prettyplot_ll(ax,setregion=region,cblabel=r'Depth (m)',cb=triax)
 ax_label_spacer(ax)
-Q=ax.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = ax.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
+Q=ax.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset,zorder=10)
+qk = ax.quiverkey(Q,  .2,1.05,0.5, r'0.5 ms$^{-1}$', labelpos='W')
 if datatype=='2d':
     plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '_with_bathy.png',dpi=600)
 else:
@@ -94,9 +105,11 @@ tspeed=np.sqrt(uplot**2+vplot**2)
 uplot[tspeed<=.01]=np.nan
 vplot[tspeed<=.01]=np.nan
 triax=plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+lseg2=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+ax.add_collection(lseg2)
 prettyplot_ll(ax,setregion=region,cblabel=r'Depth (m)',cb=triax)
-Q=ax.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset)
-qk = ax.quiverkey(Q,  .2,1.05,1.0, r'1.0 ms$^{-1}$', labelpos='W')
+Q=ax.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=scaleset,zorder=10)
+qk = ax.quiverkey(Q,  .2,1.05,0.5, r'0.5 ms$^{-1}$', labelpos='W')
 if datatype=='2d':
     plt.savefig(savepath + name + '_' + regionname +'_vector_fld_levelDA_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '_with_bathy.png',dpi=600)
 else:

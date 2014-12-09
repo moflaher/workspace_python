@@ -28,12 +28,12 @@ starttime=0
 offset=1008
 
 
-testing=True
+testing=False
 usemean=False
 
-kl=[.65,.025,.32,.125]
+kl=[.75,.025,.225,.125]
 scale1=100
-scale2=15
+scale2=50
 vectorspacing=50
 fldax_r=[.125,.1,.775,.8]
 ebbax_r=[.125,.1,.775,.8]
@@ -64,9 +64,9 @@ lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
-uv1=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)
@@ -116,9 +116,9 @@ prettyplot_ll(ax_fld,setregion=region)
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
 ax_fld.add_patch(rec)
-ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_fld.quiverkey(Q1,kl[0]+.05,kl[1]+.065,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_fld.quiverkey(Q2,kl[0]+.05,kl[1]+.03,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.075,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_fld.quiverkey(Q1,kl[0]+.1,kl[1]+.065,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_fld.quiverkey(Q2,kl[0]+.1,kl[1]+.03,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 plotcoast(ax_fld,color='k')
@@ -157,9 +157,9 @@ prettyplot_ll(ax_ebb,setregion=region)
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
 ax_ebb.add_patch(rec)
-ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_ebb.quiverkey(Q1,kl[0]+.05,kl[1]+.065,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_ebb.quiverkey(Q2,kl[0]+.05,kl[1]+.03,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.075,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_ebb.quiverkey(Q1,kl[0]+.05,kl[1]+.1,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_ebb.quiverkey(Q2,kl[0]+.05,kl[1]+.1,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 plotcoast(ax_ebb,color='k')
@@ -193,9 +193,9 @@ prettyplot_ll(ax_res,setregion=region)
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
 ax_res.add_patch(rec)
-ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.065,float(resscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.03,float(resscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.075,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_res.quiverkey(Q1,kl[0]+.1,kl[1]+.065,float(resscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_res.quiverkey(Q2,kl[0]+.1,kl[1]+.03,float(resscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 plotcoast(ax_res,color='k')
