@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seawater as sw
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.collections import LineCollection as LC
+from matplotlib.collections import PolyCollection as PC
 from datatools import *
 
 """
@@ -131,6 +132,8 @@ def plotcoast(axin,**kwargs):
     lw=1
     ls='solid'
     filename='mid_nwatl6b.nc'
+    fcolor='0.75'
+    ecolor='k'
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():            
@@ -141,7 +144,11 @@ def plotcoast(axin,**kwargs):
             if (key=='ls'):
                 ls=value    
             if (key=='filename'):
-                filename=value    
+                filename=value   
+            if (key=='fill'):
+                fill=value 
+            if (key=='fcolor'):
+                fcolor=value
 
     sl=loadnc("",singlename='data/shorelines/'+filename)
 
@@ -150,7 +157,15 @@ def plotcoast(axin,**kwargs):
     sl['start']=sl['start'][idx]
 
     tmparray=[list(zip(sl['lon'][sl['start'][i]:(sl['start'][i]+sl['count'][i])],sl['lat'][sl['start'][i]:(sl['start'][i]+sl['count'][i])])) for i in range(0,len(sl['start']))]
-    lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+
+    if fill==True:
+        lseg=PC(tmparray,facecolor = fcolor,edgecolor=ecolor)
+    else:
+        lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+
+
+
+    
 
     axin.add_collection(lseg)
 
