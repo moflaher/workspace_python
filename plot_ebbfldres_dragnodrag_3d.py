@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name='sfm6_musq2_all_cages'
 name2='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
-regionname='musq_4cage'
+regionname='musq_large'
 datatype='3d'
 starttime=0
 offset=1008
@@ -32,16 +32,16 @@ testing=False
 usemean=False
 
 kl=[.775,.025,.2,.14]
-scale1=100
-scale2=50
-vectorspacing=75
+scale1=35
+scale2=10
+vectorspacing=2000
 fldax_r=[.125,.1,.775,.8]
 ebbax_r=[.125,.1,.775,.8]
 resax_r=[.125,.1,.775,.8]
-ebbfldscale='0.25'
-resscale='0.1'
+ebbfldscale='1.0'
+resscale='0.25'
 ABC=[.05,.925]
-fcolor='g'
+fcolor='b'
 arrowshift1=.1
 
 

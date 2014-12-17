@@ -64,7 +64,7 @@ for i in range(starttime,endtime):
     
     # Plot speed difference
     f, (ax1, ax2,ax3) = plt.subplots(3, sharex=True, sharey=True)
-    ax1tri=ax1.tripcolor(data1['trigrid'],speed1,vmin=0,vmax=2)
+    ax1tri=ax1.tripcolor(data1['trigrid'],speed1,vmin=0,vmax=.4)
     ax1cb=plt.colorbar(ax1tri,ax=ax1)
     ax1cb.set_label(r'Speed (ms$^{-1}$)')
     ax1.yaxis.set_major_formatter(_formatter)
