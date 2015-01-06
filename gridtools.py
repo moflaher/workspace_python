@@ -515,20 +515,20 @@ def interp_vel(data,loc,layer=None):
         return u,v,w        
 
     
-def load_grdfiles(filename=None):
+def _load_grdfile(casename=None):
     """
-    Loads a FVCOM input files file and returns the data as a dictionary.
+    Loads an FVCOM grd input file and returns the data as a dictionary.
 
  
     """
     
-    if filename==None:
-        print 'loadnei requires a filename to load.'
+    if casename==None:
+        print '_load_grdfile requires a filename to load.'
         return
     try:
-        fp=open(filename+'_grd.dat','r')
+        fp=open(casename+'_grd.dat','r')
     except IOError:
-        print 'Can not find ' + filename
+        print  '_load_grdfiles: invalid case name.'
         return
 
     nodes_str=fp.readline().split('=')
@@ -536,8 +536,8 @@ def load_grdfiles(filename=None):
     nnodes=int(nodes_str[1])
     nele=int(elements_str[1])
     #llminmax=np.genfromtxt(StringIO(fp.readline()))
-    t_data1=np.genfromtxt(filename+'_grd.dat',skip_header=2, skip_footer=nnodes,dtype='int64')
-    t_data2=np.genfromtxt(filename+'_grd.dat',skip_header=2+nele,dtype='float64')
+    t_data1=np.genfromtxt(casename+'_grd.dat',skip_header=2, skip_footer=nnodes,dtype='int64')
+    t_data2=np.genfromtxt(casename+'_grd.dat',skip_header=2+nele,dtype='float64')
     fp.close()
 
     data={}
@@ -548,20 +548,179 @@ def load_grdfiles(filename=None):
     data['x']=t_data2[:,1]
     data['y']=t_data2[:,2]
     data['nv']=t_data1[:,1:4].astype(int)-1
-    data['h']=t_data2[:,3]
     data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
     
     return data
 
+def _load_depfile(casename=None):
+    """
+    Loads an FVCOM dep input file and returns the data as a dictionary.
+
+ 
+    """
+    
+    if casename==None:
+        print '_load_depfile requires a filename to load.'
+        return
+    try:
+        fp=open(casename+'_dep.dat','r')
+    except IOError:
+        print  '_load_depfile: invalid case name.'
+        return
+
+    dep_str=fp.readline().split('=')
+    dep_num=int(dep_str[1])
+    t_data1=np.genfromtxt(casename+'_spg.dat',skip_header=1)
+    fp.close()
+
+    data={}
+
+    data['dep_num']=dep_num
+    data['x']=t_data1[:,0]
+    data['y']=t_data1[:,1]
+    data['h']=t_data1[:,2]
+    data['nodexy']=t_data1[:,0:2]
+    
+    return data
+
+def _load_spgfile(casename=None):
+    """
+    Loads an FVCOM spg input file and returns the data as a dictionary.
+
+ 
+    """
+    
+    if casename==None:
+        print '_load_spgfile requires a filename to load.'
+        return
+    try:
+        fp=open(casename+'_spg.dat','r')
+    except IOError:
+        print  '_load_spgfile: invalid case name.'
+        return
+
+    spg_str=fp.readline().split('=')
+    spg_num=int(spg_str[1])
+    t_data1=np.genfromtxt(casename+'_spg.dat',skip_header=1)
+    fp.close()
+
+    data={}
+
+    data['spgf_num']=spg_num
+    data['spgf_nodes']=t_data1[:,0]
+    data['spgf_distance']=t_data1[:,1]
+    data['spgf_value']=t_data1[:,2]
+
+    
+    return data
 
 
+def _load_obcfile(casename=None):
+    """
+    Loads an FVCOM obc input file and returns the data as a dictionary.
+
+ 
+    """
+    
+    if casename==None:
+        print '_load_obcfile requires a filename to load.'
+        return
+    try:
+        fp=open(casename+'_obc.dat','r')
+    except IOError:
+        print  '_load_obcfile: invalid case name.'
+        return
+
+    obc_str=fp.readline().split('=')
+    obc_num=int(obc_str[1])
+    t_data1=np.genfromtxt(casename+'_obc.dat',skip_header=1)
+    fp.close()
+
+    data={}
+
+    data['obcf_num']=obc_num
+    data['obcf_numbers']=t_data1[:,0]
+    data['obcf_nodes']=t_data1[:,1]
+    data['obcf_value']=t_data1[:,2]
+
+    
+    return data
 
 
+def _load_llfiles(casename=None):
+    """
+    Loads an long/lat files and returns the data as a dictionary.
+ 
+    """
+    
+    if casename==None:
+        print '_load_llfiles requires a filename to load.'
+        return
+    try:
+        fp=open(casename+'_long.dat','r')
+    except IOError:
+        print  '_load_llfiles: long file is invalid.'
+        return
+
+    lon=np.genfromtxt(casename+'_long.dat')
+    fp.close()
+
+    try:
+        fp=open(casename+'_lat.dat','r')
+    except IOError:
+        print  '_load_llfiles: lat file is invalid.'
+        return
+
+    lat=np.genfromtxt(casename+'_lat.dat')
+    fp.close()
 
 
+    data={}
+
+    data['nodell']=np.vstack([lon,lat])
+    data['lat']=lat
+    data['lon']=lon
+    
+    return data
 
 
+def _load_nc(filename=None):
+    """
+        Loads an .nc  data file      
+    """
+
+    ncid = netcdf.netcdf_file(filename, 'r',mmap=True)
+    
+    data={}
+
+    for i in ncid.variables.keys():
+        data[i]=ncid.variables[i].data
+
+    return data
 
 
+def load_fvcom_files(casename=None,ncname=None,neifile=None):
+    """
+    Loads FVCOM input files and returns the data as a dictionary.
+ 
+    """
+
+    data=_load_grdfile(casename)
+
+    data.update(_load_depfile(casename))
+    
+    data.update(_load_spgfile(casename))
+
+    data.update(_load_obcfile(casename))
+
+    data.update(_load_llfiles(casename))
+
+    if ncname!=None:
+        data.update(_load_nc(ncname))
+
+    if neifile!=None:
+        data.update(loadnei(neifile))
+
+    return data
 
 
