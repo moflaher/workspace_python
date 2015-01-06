@@ -515,7 +515,43 @@ def interp_vel(data,loc,layer=None):
         return u,v,w        
 
     
+def load_grdfiles(filename=None):
+    """
+    Loads a FVCOM input files file and returns the data as a dictionary.
 
+ 
+    """
+    
+    if filename==None:
+        print 'loadnei requires a filename to load.'
+        return
+    try:
+        fp=open(filename+'_grd.dat','r')
+    except IOError:
+        print 'Can not find ' + filename
+        return
+
+    nodes_str=fp.readline().split('=')
+    elements_str=fp.readline().split('=')
+    nnodes=int(nodes_str[1])
+    nele=int(elements_str[1])
+    #llminmax=np.genfromtxt(StringIO(fp.readline()))
+    t_data1=np.genfromtxt(filename+'_grd.dat',skip_header=2, skip_footer=nnodes,dtype='int64')
+    t_data2=np.genfromtxt(filename+'_grd.dat',skip_header=2+nele,dtype='float64')
+    fp.close()
+
+    data={}
+
+    data['nnodes']=nnodes
+    data['nele']=nele
+    data['nodexy']=t_data2[:,1:3]
+    data['x']=t_data2[:,1]
+    data['y']=t_data2[:,2]
+    data['nv']=t_data1[:,1:4].astype(int)-1
+    data['h']=t_data2[:,3]
+    data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
+    
+    return data
 
 
 
