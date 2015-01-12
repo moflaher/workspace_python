@@ -522,6 +522,8 @@ def _load_grdfile(casename=None):
  
     """
     
+    data={}    
+
     if casename==None:
         print '_load_grdfile requires a filename to load.'
         return
@@ -529,7 +531,7 @@ def _load_grdfile(casename=None):
         fp=open(casename+'_grd.dat','r')
     except IOError:
         print  '_load_grdfiles: invalid case name.'
-        return
+        return data
 
     nodes_str=fp.readline().split('=')
     elements_str=fp.readline().split('=')
@@ -539,8 +541,6 @@ def _load_grdfile(casename=None):
     t_data1=np.genfromtxt(casename+'_grd.dat',skip_header=2, skip_footer=nnodes,dtype='int64')
     t_data2=np.genfromtxt(casename+'_grd.dat',skip_header=2+nele,dtype='float64')
     fp.close()
-
-    data={}
 
     data['nnodes']=nnodes
     data['nele']=nele
@@ -558,6 +558,8 @@ def _load_depfile(casename=None):
 
  
     """
+
+    data={}
     
     if casename==None:
         print '_load_depfile requires a filename to load.'
@@ -566,14 +568,12 @@ def _load_depfile(casename=None):
         fp=open(casename+'_dep.dat','r')
     except IOError:
         print  '_load_depfile: invalid case name.'
-        return
+        return data
 
     dep_str=fp.readline().split('=')
     dep_num=int(dep_str[1])
-    t_data1=np.genfromtxt(casename+'_spg.dat',skip_header=1)
+    t_data1=np.genfromtxt(casename+'_dep.dat',skip_header=1)
     fp.close()
-
-    data={}
 
     data['dep_num']=dep_num
     data['x']=t_data1[:,0]
@@ -589,6 +589,8 @@ def _load_spgfile(casename=None):
 
  
     """
+
+    data={}
     
     if casename==None:
         print '_load_spgfile requires a filename to load.'
@@ -597,14 +599,12 @@ def _load_spgfile(casename=None):
         fp=open(casename+'_spg.dat','r')
     except IOError:
         print  '_load_spgfile: invalid case name.'
-        return
+        return data
 
     spg_str=fp.readline().split('=')
     spg_num=int(spg_str[1])
     t_data1=np.genfromtxt(casename+'_spg.dat',skip_header=1)
     fp.close()
-
-    data={}
 
     data['spgf_num']=spg_num
     data['spgf_nodes']=t_data1[:,0]
@@ -620,8 +620,10 @@ def _load_obcfile(casename=None):
     Loads an FVCOM obc input file and returns the data as a dictionary.
 
  
-    """
-    
+    """    
+
+    data={}
+
     if casename==None:
         print '_load_obcfile requires a filename to load.'
         return
@@ -629,14 +631,12 @@ def _load_obcfile(casename=None):
         fp=open(casename+'_obc.dat','r')
     except IOError:
         print  '_load_obcfile: invalid case name.'
-        return
+        return data
 
     obc_str=fp.readline().split('=')
     obc_num=int(obc_str[1])
     t_data1=np.genfromtxt(casename+'_obc.dat',skip_header=1)
     fp.close()
-
-    data={}
 
     data['obcf_num']=obc_num
     data['obcf_numbers']=t_data1[:,0]
@@ -652,6 +652,8 @@ def _load_llfiles(casename=None):
     Loads an long/lat files and returns the data as a dictionary.
  
     """
+
+    data={}
     
     if casename==None:
         print '_load_llfiles requires a filename to load.'
@@ -660,7 +662,7 @@ def _load_llfiles(casename=None):
         fp=open(casename+'_long.dat','r')
     except IOError:
         print  '_load_llfiles: long file is invalid.'
-        return
+        return data
 
     lon=np.genfromtxt(casename+'_long.dat')
     fp.close()
@@ -669,15 +671,12 @@ def _load_llfiles(casename=None):
         fp=open(casename+'_lat.dat','r')
     except IOError:
         print  '_load_llfiles: lat file is invalid.'
-        return
+        return data
 
     lat=np.genfromtxt(casename+'_lat.dat')
     fp.close()
 
-
-    data={}
-
-    data['nodell']=np.vstack([lon,lat])
+    data['nodell']=np.vstack([lon,lat]).T
     data['lat']=lat
     data['lon']=lon
     
@@ -699,11 +698,14 @@ def _load_nc(filename=None):
     return data
 
 
-def load_fvcom_files(casename=None,ncname=None,neifile=None):
+def load_fvcom_files(filepath=None,casename=None,ncname=None,neifile=None):
     """
-    Loads FVCOM input files and returns the data as a dictionary.
+        Loads FVCOM input files and returns the data as a dictionary.
  
     """
+
+    currdir=os.getcwd()
+    os.chdir(filepath)
 
     data=_load_grdfile(casename)
 
@@ -721,6 +723,56 @@ def load_fvcom_files(casename=None,ncname=None,neifile=None):
     if neifile!=None:
         data.update(loadnei(neifile))
 
+    os.chdir(currdir)
+
     return data
+
+
+def save_spgfile(datain,filepath,casename=None):
+    """
+    Save an FVCOM spg input file.
+ 
+    """
+
+    data={}
+    
+    if casename==None:
+        print 'save_spgfile requires a filename to save.'
+        return
+    try:
+        fp=open(filepath + casename+'_spg.dat','w')
+    except IOError:
+        print  'save_spgfile: invalid case name.'
+        return data
+
+    fp.write('Sponge Node Number = %d\n' % datain['spgf_num'] )
+    for i in range(0,datain['spgf_num']):
+        fp.write('%d %f %f\n'% (datain['spgf_nodes'][i],datain['spgf_distance'][i],datain['spgf_value'][i]))
+    fp.close()
+
+
+
+def save_obcfile(datain,filepath,casename=None):
+    """
+    Save an FVCOM obc input file.
+ 
+    """
+
+    data={}
+    
+    if casename==None:
+        print 'save_obcfile requires a filename to save.'
+        return
+    try:
+        fp=open(filepath + casename+'_obc.dat','w')
+    except IOError:
+        print  'save_obcfile: invalid case name.'
+        return data
+
+    fp.write('OBC Node Number = %d\n' % datain['spgf_num'] )
+    for i in range(0,datain['obcf_num']):
+        fp.write('%d %d %d\n'% (datain['obcf_numbers'][i],datain['obcf_nodes'][i],datain['obcf_value'][i]))
+    fp.close()
+
 
 

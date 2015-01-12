@@ -13,25 +13,25 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_kelp_0.05'
-grid='kit4'
-regionname='doubleisland'
+name='kit4_kelp_test'
+grid='kit4_kelp'
+regionname='kit4'
 datatype='2d'
-starttime=384
-endtime=450
+starttime=0
+endtime=34
 cmin=0
-cmax=1
+cmax=.1
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
 region=regions(regionname)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + regionname + '_' +("%d" %cmin) + '_' + ("%d" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 
