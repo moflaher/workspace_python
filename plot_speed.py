@@ -15,12 +15,12 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_test'
 grid='kit4_kelp'
-regionname='kit4'
+regionname='kit4_kelp_tight2_small'
 datatype='2d'
-starttime=0
-endtime=34
+starttime=300
+endtime=400
 cmin=0
-cmax=.1
+cmax=.5
 
 
 ### load the .nc file #####
