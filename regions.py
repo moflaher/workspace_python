@@ -267,6 +267,11 @@ def makeregions():
     tmpdic['passageP']='kit4_kelp_tight6'
     allregions['kit4_kelp_tight6']=tmpdic
 
+    tmpdic={}  
+    tmpdic['region']=np.array([-129.526, -129.286, 52.4576, 52.7178])
+    tmpdic['passage']='kit4_4island'
+    tmpdic['passageP']='kit4_4island'
+    allregions['kit4_4island']=tmpdic
 
     #General regions
     tmpdic={}  

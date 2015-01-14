@@ -345,7 +345,7 @@ def regioner(data,region,subset=False):
 
 
 
-def interp_vel(data,loc,layer=None):
+def interp_vel(data,loc,layer=None,ll=False):
     loc=np.array(loc)
     host=data['trigrid_finder'].__call__(loc[0],loc[1])
     if host==-1:
@@ -354,15 +354,21 @@ def interp_vel(data,loc,layer=None):
         out[:]=np.nan
         return out,out
 
-    xi=loc[0]
-    yi=loc[1]
-    interp_x = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,0])
-    interp_y = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,1])
-    loc[0] = interp_x(xi, yi)
-    loc[1] = interp_y(xi, yi)
+    #this might not work for ll, depends if fvcom changes a1u from 1/m to 1/degree... but then things arent square so probably not, how does fvcom do the interpolation when run in spherical?
+    #would M.F. or F.D. know?
+    if ll==True:
+        x0c=loc[0]-data['uvnodell'][host,0]
+        y0c=loc[1]-data['uvnodell'][host,1]     
+    else:
+        xi=loc[0]
+        yi=loc[1]
+        interp_x = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,0])
+        interp_y = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,1])
+        loc[0] = interp_x(xi, yi)
+        loc[1] = interp_y(xi, yi)
+        x0c=loc[0]-data['uvnode'][host,0]
+        y0c=loc[1]-data['uvnode'][host,1] 
 
-    x0c=loc[0]-data['uvnode'][host,0];
-    y0c=loc[1]-data['uvnode'][host,1];  
     e0=data['nbe'][host,0]
     e1=data['nbe'][host,1]
     e2=data['nbe'][host,2]
