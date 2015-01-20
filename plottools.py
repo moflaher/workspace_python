@@ -96,8 +96,8 @@ def prettyplot_ll(axin,**kwargs):
 
 def get_aspectratio(region,LL=1):
     if (LL==0):
-        H=region['region'][3]-region['region'][2]
-        L=region['region'][1]-region['region'][0]
+        H=region['regionxy'][3]-region['regionxy'][2]
+        W=region['regionxy'][1]-region['regionxy'][0]
     else:
         H1=(sw.dist([region['region'][3], region['region'][2]],[region['region'][0], region['region'][0]],'km'))[0];
         H2=(sw.dist([region['region'][3], region['region'][2]],[region['region'][1], region['region'][1]],'km'))[0];
