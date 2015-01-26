@@ -20,110 +20,131 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_45days_3'
 grid='kit4'
-regionname='kit4_area4'
+regionname='kit4_area5'
 datatype='2d'
 starttime=384
-spacing=100
 interpheight=1
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
 
 region=regions(regionname)
-sidx=equal_vectors(data,region,spacing)
 nidx=get_nodes(data,region)
 
 savepath='figures/png/' + grid + '_' + datatype + '/currents_' + ("%d" %interpheight)+ 'm/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-base_dir = os.path.dirname(__file__)
-filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
-if (os.path.exists(os.path.join(base_dir,'data', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data', 'v' + filename))):
-    print 'Loading old interpolated currents'
-    newu=np.load(os.path.join(base_dir,'data', 'u' + filename))
-    newv=np.load(os.path.join(base_dir,'data', 'v' + filename))
-    print 'Loaded old interpolated currents'
-else:
-    print 'Interpolate currents first'
-    sys.exit(0)
+#base_dir = os.path.dirname(__file__)
+#filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
+#if (os.path.exists(os.path.join(base_dir,'data/old', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data/old', 'v' + filename))):
+#    print 'Loading old interpolated currents'
+#    newu=np.load(os.path.join(base_dir,'data/old', 'u' + filename))
+#    newv=np.load(os.path.join(base_dir,'data/old', 'v' + filename))
+#    print 'Loaded old interpolated currents'
+#else:
+#    print 'Interpolate currents first'
+#    sys.exit(0)
+
+
+
+testing=False
+
+kl=[.775,.025,.2,.07]
+scale1=10
+scale2=10
+vectorspacing=250
+ax_r=[.125,.1,.775,.8]
+ebbfldscale=r'0.1'
+resscale='0.25'
+ABC=[.05,.925]
+fcolor='b'
+arrowshift1=.13
 
 
 
 
 
 
-zeta_grad=np.gradient(data['zeta'][starttime:,:])[0]
 
 
-#find biggest ebb and fld
-fld=np.argmax(np.sum(zeta_grad>0,axis=1))
-ebb=np.argmax(np.sum(zeta_grad<0,axis=1))
-
-
-#plot ebb vectors
-plt.close()
-uplot=newu[ebb,sidx].copy()
-vplot=newv[ebb,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)
-qk = plt.quiverkey(Q,  .2,1.05,0.25, r'$0.25\ ms^{-1}$', labelpos='W')
-plt=prettyplot_ll(plt,setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_' +("%d" %interpheight)+ 'm_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '.png',dpi=1200)
-
-plt.close()
-uplot=newu[ebb,sidx].copy()
-vplot=newv[ebb,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
-cb=plt.colorbar()
-cb.set_label('(meter)')
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)
-qk = plt.quiverkey(Q,  .2,1.05,0.25, r'$0.25\ ms^{-1}$', labelpos='W')
-plt=prettyplot_ll(plt,setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_vector_ebb_' +("%d" %interpheight)+ 'm_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(ebb+starttime)) + '_with_bathy.png',dpi=1200)
+eidx=equal_vectors(data,region,vectorspacing)
 
 
 
-#plot fld vectors
-plt.close()
-uplot=newu[fld,sidx].copy()
-vplot=newv[fld,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)
-qk = plt.quiverkey(Q,  .2,1.05,0.25, r'$0.25\ ms^{-1}$', labelpos='W')
-plt=prettyplot_ll(plt,setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_vector_fld_' +("%d" %interpheight)+ 'm_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '.png',dpi=1200)
+zeta_grad=np.gradient(data['zeta'][starttime:,nidx])[0]
+fld=np.argmax(np.sum(zeta_grad,axis=1))
+ebb=np.argmin(np.sum(zeta_grad,axis=1))
 
-plt.close()
-uplot=newu[fld,sidx].copy()
-vplot=newv[fld,sidx].copy()
-tspeed=np.sqrt(uplot**2+vplot**2)
-uplot[tspeed<=.01]=np.nan
-vplot[tspeed<=.01]=np.nan
-plt.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
-cb=plt.colorbar()
-cb.set_label('(meter)')
-Q=plt.quiver(data['uvnodell'][sidx,0],data['uvnodell'][sidx,1],uplot,vplot,angles='xy',scale_units='xy',scale=10)
-qk = plt.quiverkey(Q,  .2,1.05,0.25, r'$0.25\ ms^{-1}$', labelpos='W')
-plt=prettyplot_ll(plt,setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_vector_fld_' +("%d" %interpheight)+ 'm_spacing_' + ("%d" %spacing) + 'm_at_time_' +("%d" %(fld+starttime)) + '_with_bathy.png',dpi=1200)
 
-#plot max speed
-plt.close()
-plt.tripcolor(data['trigrid'],np.max(np.sqrt(newu**2+newv**2),axis=0),vmin=1.15*np.min(np.max(np.sqrt(newu[:,sidx]**2+newv[:,sidx]**2),axis=0)),vmax=.85*np.max(np.max(np.sqrt(newu[:,sidx]**2+newv[:,sidx]**2),axis=0)))
-cb=plt.colorbar()
-cb.set_label(r'$(ms^{-1})$')
-plt=prettyplot_ll(plt,setregion=region,grid=True)
-plt.savefig(savepath + name + '_' + regionname +'_maxspeed_at_' + ("%d" %interpheight)+ 'm.png',dpi=1200)
+
+f=plt.figure()
+
+ax_fld=f.add_axes(ax_r)
+
+q2u1=newu[fld,eidx]
+q2v1=newv[fld,eidx]
+triax=ax_fld.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+Q2=ax_fld.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u1,q2v1,angles='xy',scale_units='xy',scale=scale1,color='k',zorder=10)
+prettyplot_ll(ax_fld,setregion=region,cb=triax,cblabel=r'Depth (m)')
+plt.draw()
+rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
+ax_fld.add_patch(rec)
+aqk2=ax_fld.quiverkey(Q2,kl[0]+arrowshift1,kl[1]+.03,float(ebbfldscale), ebbfldscale +r'm s$^{-1}$', labelpos='W',fontproperties={'size': 8})
+aqk2.set_zorder(30)
+
+plotcoast(ax_fld,filename='pacific.nc',color='k',fill=True)
+f.savefig(savepath + grid + '_'+ name+'_'+regionname+'_fld.png',dpi=600)
+plt.close(f)
+
+
+
+f=plt.figure()
+
+ax_ebb=f.add_axes(ax_r)
+
+q2u1=newu[ebb,eidx]
+q2v1=newv[ebb,eidx]
+triax=ax_ebb.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
+Q2=ax_ebb.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u1,q2v1,angles='xy',scale_units='xy',scale=scale1,color='k',zorder=10)
+prettyplot_ll(ax_ebb,setregion=region,cb=triax,cblabel=r'Depth (m)')
+plt.draw()
+rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
+ax_ebb.add_patch(rec)
+aqk2=ax_ebb.quiverkey(Q2,kl[0]+arrowshift1,kl[1]+.03,float(ebbfldscale), ebbfldscale +r'm s$^{-1}$', labelpos='W',fontproperties={'size': 8})
+aqk2.set_zorder(30)
+
+plotcoast(ax_ebb,filename='pacific.nc',color='k',fill=True)
+f.savefig(savepath + grid + '_'+ name+'_'+regionname+'_ebb.png',dpi=600)
+plt.close(f)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

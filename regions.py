@@ -166,6 +166,12 @@ def makeregions():
     allregions['kit4_area4']=tmpdic
 
     tmpdic={}  
+    tmpdic['region']=np.array([-128.9, -128.75, 53.525, 53.625])
+    tmpdic['passage']='kit4_area5'
+    tmpdic['passageP']='Area 5'
+    allregions['kit4_area5']=tmpdic
+
+    tmpdic={}  
     tmpdic['region']=np.array([-130, -128, 52, 54.1])
     tmpdic['passage']='mostchannels'
     tmpdic['passageP']='mostchannels'

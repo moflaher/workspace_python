@@ -20,7 +20,7 @@ starttime=384
 interpheight=1
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
@@ -55,10 +55,10 @@ rlhzero=np.hstack((rlh,np.zeros((data['nele'],1))))
 
 base_dir = os.path.dirname(__file__)
 filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
-if (os.path.exists(os.path.join(base_dir,'data', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data', 'v' + filename))):
+if (os.path.exists(os.path.join(base_dir,'data/old', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data/old', 'v' + filename))):
     print 'Loading old interpolated data'
-    newu=np.load(os.path.join(base_dir,'data', 'u' + filename))
-    newv=np.load(os.path.join(base_dir,'data', 'v' + filename))
+    newu=np.load(os.path.join(base_dir,'data/old', 'u' + filename))
+    newv=np.load(os.path.join(base_dir,'data/old', 'v' + filename))
 else:
     print 'Creating new interpolated data'
     newu=np.zeros((len(data['time'][starttime:]),data['nele']))
@@ -66,7 +66,7 @@ else:
     for i in range(0,data['nele']):
         print i
         newu[:,i],newv[:,i]=interzeta(rlhzero,interpheight,i)
-    np.save(os.path.join(base_dir,'data', 'u' + filename))
-    np.save(os.path.join(base_dir,'data', 'v' + filename))
+    np.save(os.path.join(base_dir,'data/old', 'u' + filename))
+    np.save(os.path.join(base_dir,'data/old', 'v' + filename))
 
 
