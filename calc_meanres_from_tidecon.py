@@ -16,8 +16,8 @@ from t_tide import t_tide
 from t_predic import t_predic
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
+name='kit4_kelp_nodrag'
+grid='kit4_kelp'
 datatype='2d'
 starttime=384
 

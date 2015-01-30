@@ -15,9 +15,9 @@ from matplotlib.collections import LineCollection as LC
 import time
 
 # Define names and types of data
-name='kit4_45days_3'
-name2='kit4_kelp_20m_0.018'
-grid='kit4'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_nodrag'
+grid='kit4_kelp'
 #regionname='kit4_kelp_tight2'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 #regionlist=['kit4_kelp_tight2_small','kit4_ftb']
@@ -37,13 +37,13 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+#cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=(cages[:,0]-1).astype(int)
 
-tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-color='g'
-lw=.5
-ls='solid'
+#tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+#color='g'
+#lw=.5
+#ls='solid'
 
 savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_instant_asymmetry_subplots_interp/'+name+'_'+name2+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -95,8 +95,8 @@ for regionname in regionlist:
     ve=data['va'][starttime+ebb,:]
     efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
     #print runstats(efs[eidx])
-    ngridx = 500
-    ngridy = 500
+    ngridx = 2000
+    ngridy = 2000
     start = time.clock()
     xi = np.linspace(region['region'][0],region['region'][1], ngridx)
     yi = np.linspace(region['region'][2],region['region'][3], ngridy)
@@ -110,8 +110,10 @@ for regionname in regionlist:
 
     ax0=f.add_axes(ax0f)  
     axtri0=ax0.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,.2,.4,.6,.8])
-    Vneg=np.array([-.8,-.6,-.4,-.2])
+    #Vpos=np.array([0,.2,.4,.6,.8])
+    Vpos=np.array([0,.4,.8])
+    #Vneg=np.array([-.8,-.6,-.4,-.2])
+    Vneg=np.array([-.8,-.4])
     CS2=ax0.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
     ax0.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
     CS3=ax0.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
@@ -133,8 +135,10 @@ for regionname in regionlist:
 
     ax1=f.add_axes(ax1f)  
     axtri1=ax1.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,.2,.4,.6,.8])
-    Vneg=np.array([-.8,-.6,-.4,-.2])
+    #Vpos=np.array([0,.2,.4,.6,.8])
+    Vpos=np.array([0,.4,.8])
+    #Vneg=np.array([-.8,-.6,-.4,-.2])
+    Vneg=np.array([-.8,-.4])
     CS2=ax1.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
     ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
     CS3=ax1.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
@@ -177,13 +181,13 @@ for regionname in regionlist:
         #cb2=plt.colorbar(axtri1,cax=ax1ca)
         #cb2.set_label(r'Asymmetry',fontsize=8)
 
-    plotcoast(ax0,filename='pacific.nc',color='k')
-    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax0.add_collection(lseg0)
+    plotcoast(ax0,filename='pacific.nc',color='k',fill=True)
+#    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#    ax0.add_collection(lseg0)
 
-    plotcoast(ax1,filename='pacific.nc',color='k')
-    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax1.add_collection(lseg1)
+    plotcoast(ax1,filename='pacific.nc',color='k',fill=True)
+#    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#    ax1.add_collection(lseg1)
 
     ax0.text(ABC[0],ABC[1],"A",transform=ax0.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
     ax1.text(ABC[0],ABC[1],"B",transform=ax1.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)

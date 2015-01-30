@@ -15,9 +15,9 @@ from matplotlib.collections import LineCollection as LC
 
 
 # Define names and types of data
-name='kit4_45days_3'
-name2='kit4_kelp_20m_0.018'
-grid='kit4'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_nodrag'
+grid='kit4_kelp'
 regionname='kit4_ftb'
 datatype='2d'
 starttime=384
@@ -38,14 +38,14 @@ data = ncdatasort(data)
 print 'done sort'
 
 
-cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+#cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=(cages[:,0]-1).astype(int)
 
 region=regions(regionname)
 nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
-tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+#tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
 color='g'
 lw=.5
 ls='solid'
@@ -84,8 +84,8 @@ fix_osw(ax1)
 ax1.set_aspect(get_aspectratio(region))
 ax1.xaxis.set_tick_params(labelbottom='off')
 plotcoast(ax1,filename='pacific.nc',color='k')
-lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-ax1.add_collection(lseg1)
+#lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#ax1.add_collection(lseg1)
 
 
 uf=data2['ua'][starttime+fld,:]
@@ -100,8 +100,8 @@ ax2.axis(region['region'])
 fix_osw(ax2)
 ax2.set_aspect(get_aspectratio(region))
 plotcoast(ax2,filename='pacific.nc',color='k')
-lseg2=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-ax2.add_collection(lseg2)
+#lseg2=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#ax2.add_collection(lseg2)
 
 plt.draw()
 

@@ -31,7 +31,7 @@ from gridtools import *
 from misctools import *
 import scipy as sp
 import matplotlib as mpl
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import sys
 
 import h5py as h5
@@ -59,44 +59,6 @@ print 'done sort'
 
 
 
-
-fileload=h5.File('data/kelp_data/latlon_WGS84.mat')
-fileload.keys()
-newkelp={}
-for i in fileload.keys():
-    newkelp[i]=fileload[i].value
-
-
-
-
-
-img=envi.open('data/kelp_data/NDVI_LatLong/NDVI_1999-2013_autumn-mean_LL.hdr','data/kelp_data/NDVI_LatLong/NDVI_1999-2013_autumn-mean_LL.img')
-
-
-A=np.squeeze(img[:,:]).T
-
-#newkelp['A']=np.flipud(newkelp['A'])
-A=np.fliplr(A)
-
-
-idx=A>=0.15
-lon=newkelp['lon'][idx]
-lat=newkelp['lat'][idx]
-
-
-plt.tripcolor(data['trigrid'],trihost)
-plt.colorbar()
-plt.grid()
-plt.scatter(lon+0.00044685879,lat+.00026957498,s=10,c=A[idx],edgecolor='None')
-plt.colorbar()
-plt.show()
-
-
-
-kelp=np.vstack([lon,lat]).T
-
-
-
 maxdepth=20
 mindepth=0
 
@@ -107,6 +69,60 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 region=regions(regionname)
 nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
+
+
+
+
+
+
+#ll=np.loadtxt('data/kelp_data/newkelp_ll.dat')
+#np.save('data/kelp_data/newkelp_ll.npy',ll)
+
+ll=np.load('data/kelp_data/newkelp_ll.npy')
+
+img=envi.open('data/kelp_data/NDVI_1999-2013_winter-mean.hdr','data/kelp_data/NDVI_1999-2013_winter-mean.img')
+
+img2=envi.open('data/kelp_data/NDVI_1999-2013_summer-mean.hdr','data/kelp_data/NDVI_1999-2013_summer-mean.img')
+A2=(np.squeeze(img2[:,:]).T)
+#indata = np.genfromtxt('data/kelp_data/NDVI_1999-2013_summer-mean_LL.txt',skip_header=5)
+#A=indata[:,2]
+
+A=(np.squeeze(img[:,:]).T)
+lonin=ll[:,0]
+latin=ll[:,1]
+
+lonin2=lonin.reshape(A.T.shape).T
+latin2=latin.reshape(A.T.shape).T
+
+#lonin2=indata[:,0]
+#latin2=indata[:,1]
+
+idx=A<-.15
+lon=lonin2[idx]
+lat=latin2[idx]
+Ain=A[idx]
+
+idx2=np.where((lon>region['region'][0]) & (lon<region['region'][1]) & (lat>region['region'][2]) & (lat<region['region'][3]) )
+
+lon2=lon[idx2]
+lat2=lat[idx2]
+A2=Ain[idx2]
+
+plt.triplot(data['trigrid'],lw=.25)
+#plt.colorbar()
+plt.grid()
+plt.scatter(lon2,lat2,s=10,c=A2,edgecolor='None')
+#plt.scatter(lon2+0.0004468575527881*2,lat2+0.0002695749834487/2,s=10,c=A2,edgecolor='None')
+#plt.scatter(lon,lat,s=10,edgecolor='None')
+plt.colorbar()
+plt.axis(region['region'])
+plt.show()
+kill
+
+kelp=np.vstack([lon,lat]).T
+
+
+
 
 
 host=data['trigrid_finder'].__call__(kelp[:,0],kelp[:,1])

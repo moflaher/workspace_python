@@ -19,9 +19,9 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
-name2='kit4_45days_3'
-grid='kit4'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_nodrag'
+grid='kit4_kelp'
 regionname='kit4_ftb'
 datatype='2d'
 starttime=384
@@ -54,20 +54,20 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+#cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+#cages=(cages[:,0]-1).astype(int)
 
 savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres_dragnodrag_subplot/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
-lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
-lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
-lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
+#tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+#lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
+#lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
+#lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
-uv1=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv_all.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)
@@ -90,7 +90,7 @@ else:
 f=plt.figure()
 
 ax_fld=f.add_axes(fldax_r)
-ax_fld.add_collection(lsegf)
+#ax_fld.add_collection(lsegf)
 
 if usemean==True:
     uatmp=data['ua'][starttime:,eidx].copy()
@@ -127,13 +127,13 @@ aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_fld.get_yticklabels()[::2]:
     label.set_visible(False)
-plotcoast(ax_fld,filename='pacific.nc',color='k')
+plotcoast(ax_fld,filename='pacific.nc',color='k',fill=True)
 ax_fld.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
 ax_fld.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
 
 
 ax_ebb=f.add_axes(ebbax_r)
-ax_ebb.add_collection(lsege)
+#ax_ebb.add_collection(lsege)
 if usemean==True:
     uatmp=data['ua'][starttime:,eidx].copy()
     uatmp[zeta_bool1]=np.nan
@@ -171,7 +171,7 @@ aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_ebb.get_yticklabels()[::2]:
     label.set_visible(False)
-plotcoast(ax_ebb,filename='pacific.nc',color='k')
+plotcoast(ax_ebb,filename='pacific.nc',color='k',fill=True)
 ax_ebb.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
 ax_ebb.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
 
@@ -190,7 +190,7 @@ if testing==False:
         resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
 ax_res=f.add_axes(resax_r)
-ax_res.add_collection(lsegr)
+#ax_res.add_collection(lsegr)
 Q1=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
 Q2=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)
 ax_res.axis(region['region'])
@@ -208,7 +208,7 @@ for label in ax_res.get_yticklabels()[::2]:
     label.set_visible(False)
 for label in ax_res.get_xticklabels()[::2]:
     label.set_visible(False)
-plotcoast(ax_res,filename='pacific.nc',color='k')
+plotcoast(ax_res,filename='pacific.nc',color='k',fill=True)
 ax_res.text(-129.745,53.125,r'Estevan Group',fontsize=7,rotation=0)
 ax_res.text(-129.821,53.18,r'Banks Island',fontsize=7,rotation=0)
 

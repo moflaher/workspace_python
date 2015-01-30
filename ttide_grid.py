@@ -16,8 +16,8 @@ from t_tide import t_tide
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
+name='kit4_kelp_nodrag'
+grid='kit4_kelp'
 datatype='2d'
 starttime=384
 endtime=1081
@@ -30,7 +30,7 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-data['time']=data['time']
+data['time']=data['time']+55480
 
 
 

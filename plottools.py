@@ -133,7 +133,7 @@ def plotcoast(axin,**kwargs):
     ls='solid'
     filename='mid_nwatl6b.nc'
     fcolor='0.75'
-    ecolor='k'
+    fill=False
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():            
@@ -159,7 +159,7 @@ def plotcoast(axin,**kwargs):
     tmparray=[list(zip(sl['lon'][sl['start'][i]:(sl['start'][i]+sl['count'][i])],sl['lat'][sl['start'][i]:(sl['start'][i]+sl['count'][i])])) for i in range(0,len(sl['start']))]
 
     if fill==True:
-        lseg=PC(tmparray,facecolor = fcolor,edgecolor=ecolor)
+        lseg=PC(tmparray,facecolor = fcolor,edgecolor=color)
     else:
         lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 
