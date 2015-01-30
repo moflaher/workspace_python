@@ -74,16 +74,15 @@ eidx=get_elements(data,region)
 
 
 
+ll=np.loadtxt('data/kelp_data/newkelp_ll_nad.dat')
+np.save('data/kelp_data/newkelp_ll_nad.npy',ll)
 
-#ll=np.loadtxt('data/kelp_data/newkelp_ll.dat')
-#np.save('data/kelp_data/newkelp_ll.npy',ll)
-
-ll=np.load('data/kelp_data/newkelp_ll.npy')
+ll=np.load('data/kelp_data/newkelp_ll_nad.npy')
 
 img=envi.open('data/kelp_data/NDVI_1999-2013_winter-mean.hdr','data/kelp_data/NDVI_1999-2013_winter-mean.img')
 
-img2=envi.open('data/kelp_data/NDVI_1999-2013_summer-mean.hdr','data/kelp_data/NDVI_1999-2013_summer-mean.img')
-A2=(np.squeeze(img2[:,:]).T)
+#img2=envi.open('data/kelp_data/NDVI_1999-2013_summer-mean.hdr','data/kelp_data/NDVI_1999-2013_summer-mean.img')
+#A2=(np.squeeze(img2[:,:]).T)
 #indata = np.genfromtxt('data/kelp_data/NDVI_1999-2013_summer-mean_LL.txt',skip_header=5)
 #A=indata[:,2]
 
@@ -108,13 +107,17 @@ lon2=lon[idx2]
 lat2=lat[idx2]
 A2=Ain[idx2]
 
+
+#bc=np.loadtxt('data/kelp_data/bc_coastline.txt')
+
 plt.triplot(data['trigrid'],lw=.25)
 #plt.colorbar()
 plt.grid()
-plt.scatter(lon2,lat2,s=10,c=A2,edgecolor='None')
+scax=plt.scatter(lon2,lat2,s=10,c=A2,edgecolor='None')
+#plt.scatter(bc[:,0],bc[:,1],s=20,c='y')
 #plt.scatter(lon2+0.0004468575527881*2,lat2+0.0002695749834487/2,s=10,c=A2,edgecolor='None')
 #plt.scatter(lon,lat,s=10,edgecolor='None')
-plt.colorbar()
+plt.colorbar(scax)
 plt.axis(region['region'])
 plt.show()
 kill

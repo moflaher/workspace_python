@@ -53,12 +53,12 @@ print 'done load'
 data = ncdatasort(data,trifinder=True)
 print 'done sort'
 
-kelp=np.genfromtxt('kelplocations.dat')
+kelp=np.genfromtxt('data/misc/kelplocations.dat')
 
 yd=.0004499640029
 xd=.0007168554972
-spacing=8
-multi=4
+spacing=10
+multi=1
 
 nkx=np.empty((len(kelp)*spacing**2,))
 nky=np.empty((len(kelp)*spacing**2,))
