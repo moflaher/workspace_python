@@ -31,14 +31,14 @@ cregion=regions('musq_cage_tight')
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/sfm6_musq2/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/sfm6_musq2/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('/media/moflaher/My Book/sfm6_musq2/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=np.genfromtxt('runs/sfm6_musq2/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
-oldcages=np.genfromtxt('/media/moflaher/My Book/sfm6_musq2/sfm6_musq2_old_cages/input/' +grid+ '_cage.dat',skiprows=1)
+oldcages=np.genfromtxt('runs/sfm6_musq2/sfm6_musq2_old_cages/input/' +grid+ '_cage.dat',skiprows=1)
 oldcages=(oldcages[:,0]-1).astype(int)
 
 
@@ -180,12 +180,12 @@ ax_cages.text(-66.85,45.055,'Frye Island',fontsize=14,rotation=75)
 
 
 
-
+plotcoast(ax_all,filename='mid_nwatl6b_test.nc',fill=True)
 
 #plt.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'b.',markersize=2)
 
 
 
-
-plt.savefig(savepath + grid + '_' +name+ '_gmt_clone_cage_outline.png',dpi=1200)
+f.show()
+#plt.savefig(savepath + grid + '_' +name+ '_gmt_clone_cage_outline.png',dpi=1200)
 

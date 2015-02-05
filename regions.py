@@ -67,6 +67,12 @@ def makeregions():
     tmpdic['passageP']='Digby Gut Upper'
     allregions['dg_upper']=tmpdic
 
+    tmpdic={}  
+    tmpdic['region']=np.array([-65.5, -63.25, 44, 46])
+    tmpdic['passage']='slr_upperbof'
+    tmpdic['passageP']='slr_upperbof'
+    allregions['slr_upperbof']=tmpdic
+
 
     #Kitimat regions
     tmpdic={}  
@@ -321,6 +327,12 @@ def makeregions():
     tmpdic['passage']='sfmwhole'
     tmpdic['passageP']='Scotia Fundy Maine'
     allregions['sfmwhole']=tmpdic
+
+    tmpdic={}  
+    tmpdic['region']=np.array([-71.5,   -57.5,    37.5,    46.5])
+    tmpdic['passage']='sfmwhole_l'
+    tmpdic['passageP']='Scotia Fundy Maine'
+    allregions['sfmwhole_l']=tmpdic
 
     tmpdic={}  
     tmpdic['region']=np.array([-67.6,   -63.4,    43.8,    46])
