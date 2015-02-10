@@ -18,13 +18,16 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import scipy.io as sio
 
 # Define names and types of data
-name_orig='kit4_45days_3'
-name_change='kit4_kelp_20m_0.018'
-name_change2='kit4_kelp_20m_0.011'
-name_change3='kit4_kelp_20m_0.007'
-grid='kit4'
+name_orig='kit4_kelp_nodrag'
+name_change='kit4_kelp_20m_drag_0.018'
+name_change2='kit4_kelp_20m_drag_0.018'
+name_change3='kit4_kelp_20m_drag_0.018'
+#name_change='kit4_kelp_20m_drag_0.018'
+#name_change2='kit4_kelp_20m_0.011'
+#name_change3='kit4_kelp_20m_0.007'
+grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2'
+regionname='kit4_kelp_tight5'
 starttime=400
 endtime=520
 
@@ -61,22 +64,22 @@ spacing=1
 #kit4_kelp_tight2 verical
 line=[-129.48833,-129.48833,52.62,52.68]
 #kit4_kelp_tight2 horiz1
-#line=[-129.53,-129.46,52.65,52.65]
+line=[-129.53,-129.46,52.65,52.65]
 #kit4_kelp_tight2 horiz2
-#line=[-129.53,-129.46,52.655,52.655]
+line=[-129.53,-129.46,52.655,52.655]
 
 #kit4_kelp_tight5 north
-#line=[-129.44,-129.40,52.56,52.60]
+line=[-129.44,-129.40,52.56,52.60]
 #kit4_kelp_tight5 south
-#line=[-129.35,-129.3,52.52,52.54]
+line=[-129.35,-129.3,52.52,52.54]
 #kit4_kelp_tight5 left horiz top
-#line=[-129.45,-129.375,52.575,52.575]
+line=[-129.45,-129.375,52.575,52.575]
 #kit4_kelp_tight5 left horiz bottom
-#line=[-129.45,-129.375,52.54,52.54]
+line=[-129.45,-129.375,52.54,52.54]
 #kit4_kelp_tight5 right horiz bottom
-#line=[-129.375,-129.3,52.53,52.53]
+line=[-129.375,-129.3,52.53,52.53]
 #kit4_kelp_tight5 right horiz bottom a
-#line=[-129.375,-129.3,52.5325,52.5325]
+line=[-129.375,-129.3,52.5325,52.5325]
 print line
 ngridy = 2000
 
@@ -198,27 +201,27 @@ f = plt.figure()
 
 ax=f.add_axes([.125,.1,.775,.8])
 
-ax.triplot(data['trigrid'],lw=.5)
-
+ax.triplot(data['trigrid'],lw=.05)
+ax.plot(xi,yi,'b.',lw=.25,zorder=1)
 tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
 lseg0=PC(tmparray,facecolor = 'g',edgecolor='None')
-ax.add_collection(lseg0)
+col=ax.add_collection(lseg0)
+col.set_zorder(2)
 
-ax.plot(xi,yi,'b.')
 prettyplot_ll(ax,setregion=region,grid=True)
 plotcoast(ax,filename='pacific.nc',color='r')
 
 
 
 
-f.savefig(savepath + grid + '_4runs_line_current_mag_vs_time_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'_location.png',dpi=300)
+f.savefig(savepath + grid + '_4runs_line_current_mag_vs_time_'+("%f"%line[0])+'_'+("%f"%line[1])+'_'+("%f"%line[2])+'_'+("%f"%line[3])+'_location.png',dpi=1200)
 plt.close(f)
 
 tempdic={}
 tempdic['interp_orig']=interpdata1
 tempdic['interp_018']=interpdata2
-tempdic['interp_011']=interpdata3
-tempdic['interp_007']=interpdata4
+#tempdic['interp_011']=interpdata3
+#tempdic['interp_007']=interpdata4
 tempdic['line']=line
 tempdic['yi']=yi
 tempdic['yi_meters']=yim

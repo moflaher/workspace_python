@@ -16,7 +16,7 @@ from t_tide import t_tide
 
 
 # Define names and types of data
-name='kit4_kelp_nodrag'
+name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
 starttime=384

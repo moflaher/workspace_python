@@ -60,12 +60,18 @@ cb=plt.colorbar(trip,cax=cax,orientation='horizontal')
 cb.set_label(r'Depth (m)')
 
 markers=np.genfromtxt('data/misc/slr_base/tide_station_ll.dat')
-ax_all.plot(markers[:,0],markers[:,1],'k.')
+ax_all.plot(markers[:,0],markers[:,1],'k*',markeredgecolor='w')
 #ax_all.grid()
 
 prettyplot_ll(ax_all)#,cb=trip,cblabel=r'Depth (m)')
 ax_all.axis(bregion['region'])
-
+for i,m in enumerate(markers):
+    if (i==16 or i==20):
+        ax_all.text(markers[i,0]+.15,markers[i,1]-.25,("%d"%(i+1)),fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+    elif(i==11):
+        ax_all.text(markers[i,0]+.15,markers[i,1]+.25,("%d"%(i+1)),fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+    else:
+        ax_all.text(markers[i,0]+.15,markers[i,1]-.02,("%d"%(i+1)),fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
 textcolor='w'
 
@@ -91,7 +97,10 @@ plotcoast(ax_all,filename='mid_nwatl6b.nc',fill=True,lw=.25)
 
 ax_upperbof=plt.axes([.53,.05,.4,.6])
 ax_upperbof.tripcolor(data['trigrid'],data['h'],vmax=250)
-ax_upperbof.plot(markers[:,0],markers[:,1],'k.')
+ax_upperbof.plot(markers[:,0],markers[:,1],'k*',markeredgecolor='w')
+midx=np.where((markers[:,0]>subregion['region'][0])&(markers[:,0]<subregion['region'][1])&(markers[:,1]>subregion['region'][2])&(markers[:,1]<subregion['region'][3]))[0]
+for i,m in enumerate(midx):
+    ax_upperbof.text(markers[midx[i],0]+.05,markers[midx[i],1]-.0075,("%d"%(midx[i]+1)),fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 prettyplot_ll(ax_upperbof,setregion=subregion)
 
 
@@ -127,7 +136,7 @@ axsub1bb=ax_upperbof.get_axes().get_position().bounds
 ax_all.annotate("",xy=(axsub1bb[0]+axsub1bb[2],axsub1bb[1]+axsub1bb[3]),xycoords='figure fraction',xytext=(region1['region'][1],region1['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][0],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 
-
+#ax_all.plot(markers[:,0],markers[:,1],'k.')
 
 #f.show()
 f.savefig(savepath + grid + '_' +name+ '_bof_sub.png',dpi=300)

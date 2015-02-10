@@ -19,8 +19,8 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='kit4_kelp_nodrag'
-name2='kit4_kelp_nodrag'
+name='kit4_kelp_20m_drag_0.018'
+name_orig='kit4_kelp_nodrag'
 grid='kit4_kelp'
 regionname='kit4_kelp_tight2_small'
 datatype='2d'
@@ -49,25 +49,25 @@ region=regions(regionname)
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data2 = loadnc('runs/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
+data2 = loadnc('runs/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-#cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-#cages=(cages[:,0]-1).astype(int)
+cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
 
 savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres_dragnodrag_subplot/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-#tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
-#lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
-#lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
-#lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
+lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
+lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
 uv1=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv_all.npy')
+uv2=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv_all.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)
@@ -234,9 +234,9 @@ for label in ax_res.get_yticklabels():
 
 
 if usemean==True:
-    f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_meanebb_meanfld_meanres.png',dpi=600)
+    f.savefig(savepath + grid + '_'+ name+'_'+ name_orig+'_'+regionname+'_meanebb_meanfld_meanres.png',dpi=600)
 else:
-    f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_ebb_fld_meanres.png',dpi=600)
+    f.savefig(savepath + grid + '_'+ name+'_'+ name_orig+'_'+regionname+'_ebb_fld_meanres.png',dpi=600)
 plt.close(f)
 
 

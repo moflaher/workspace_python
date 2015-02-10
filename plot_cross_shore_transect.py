@@ -16,8 +16,9 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_45days_3'
 grid='kit4'
 datatype='3d'
+starttime=384
+endtime=432
 regionname='kit4_area5'
-
 
 
 ### load the .nc file #####
@@ -25,6 +26,10 @@ data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data,trifinder=True)
 print 'done sort'
+
+
+region=regions(regionname)
+nidx=get_nodes(data,region)
 
 
 #kit4 line1
@@ -57,78 +62,64 @@ spv=np.array([-snv[1],snv[0]])
 #a2=A-a1
 
 
-savepath='data/cross_shore_transect/'
-if not os.path.exists(savepath): os.makedirs(savepath)
-
-
 xi=np.linspace(vectorstart[0],vectorend[0],50)
 yi=np.linspace(vectorstart[1],vectorend[1],50)
-
 us=data['u'].shape
 numlay=us[1]
 
 
+savepath='figures/timeseries/'+grid+'_'+datatype+'/cross_shore_transect/'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
+if not os.path.exists(savepath): os.makedirs(savepath)
 
-plotpath='figures/timeseries/'+grid+'_'+datatype+'/cross_shore_transect/'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
-if not os.path.exists(plotpath): os.makedirs(plotpath)
 
-region=regions(regionname)
-nidx=get_nodes(data,region)
+
+datapath='data/cross_shore_transect/'
+dataload=np.load(datapath+grid+'_'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'.npy')
+dataload=dataload[()]
+
+
 f=plt.figure()
+
 ax=f.add_axes([.125,.1,.775,.8])
 triax=ax.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
 ax.plot(xi,yi,'k',lw=3)   
 prettyplot_ll(ax,setregion=region,cb=triax,cblabel=r'Depth (m)') 
-f.savefig(plotpath + 'line_location.png',dpi=600)
+f.savefig(savepath + 'line_location.png',dpi=600)
 plt.close(f)
 
 
+interp_h=mpl.tri.LinearTriInterpolator(data['trigrid'], data['h'])
+new_h=interp_h(xi,yi)
+dist=(sw.dist([vectorstart[1], vectorend[1]],[vectorstart[0], vectorend[0]],'km'))[0]*1000;
+xi=np.linspace(0,dist,50)
+xxi,yyi=np.meshgrid(xi,range(0,20))
+yyi=new_h.reshape(-1,1)*data['siglay'][:,0].reshape(1,-1)
+yyi=yyi.T
 
 
-fillarray_u=np.empty((us[0],numlay,len(xi)))
-fillarray_v=np.empty((us[0],numlay,len(xi)))
-fillarray_w=np.empty((us[0],numlay,len(xi)))
-fillalong=np.empty((us[0],numlay,len(xi)))
-
-
-
-
-
-print 'interp uvw on path'
-
-for i in range(0,len(xi)):
-    print i
-    for j in range(0,numlay):
-        print j
-        fillarray_u[:,j,i],fillarray_v[:,j,i],fillarray_w[:,j,i]=interp_vel(data,[xi[i],yi[i]],layer=j)
-
-
-print 'Calc along path current'
-
-for i in range(0,len(xi)):
-    print i
-    for j in range(0,numlay):
-        print j
-        inner=np.inner(np.vstack([fillarray_u[:,j,i],fillarray_v[:,j,i]]).T,snv)
-        along=np.vstack([inner*snv[0],inner*snv[1]]).T
-        tmp=np.multiply(np.sign(np.arctan2(along[:,1],along[:,0])),np.linalg.norm(along,axis=1))
-        fillalong[:,j,i]=tmp
+for i in range(starttime,endtime-1):
+    for j in range(0,12):
+            f=plt.figure(figsize=(25,5))
+            ax=f.add_axes([.125,.1,.775,.8])
+            ax.plot(xi,new_h*-1,'k',lw=3)
+            interpfield_a=dataload['along'][i,:,:]*(1-(j/12))+dataload['along'][i+1,:,:]*(j/12)
+            interpfield_w=dataload['w'][i,:,:]*(1-(j/12))+dataload['w'][i,:,:]*(j/12)
+            
+            Q=ax.quiver(xxi,yyi,interpfield_a,interpfield_w,angles='xy',scale_units='xy',scale=.0015,color='b',width=0.001)
+            ax.quiverkey(Q,.48,.3,.2, r'0.2 m s$^{-1}$', labelpos='S',fontproperties={'size': 12})
+            ax.grid()
+            ax.set_ylabel(r'Depth (m)')
+            ax.set_xlabel(r'Distance (m)')
+            ax.axis([-250,5500,-200, 25])
+            
+            f.savefig(savepath + 'quiver_'+("%05f"%(i+(j/12)))+'.png',dpi=150)
+            plt.close(f)
 
 
 
 
 
 
-
-savedic={}
-
-savedic['u']=fillarray_u
-savedic['v']=fillarray_v
-savedic['w']=fillarray_w
-savedic['along']=fillalong
-
-
-np.save(savepath+grid+'_'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'.npy',savedic)
 
 
 

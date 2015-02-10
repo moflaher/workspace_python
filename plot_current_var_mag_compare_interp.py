@@ -17,7 +17,7 @@ mpl.rcParams['contour.negative_linestyle'] = 'solid'
 
 # Define names and types of data
 name_orig='kit4_kelp_nodrag'
-name_change='kit4_kelp_nodrag'
+name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
@@ -39,8 +39,8 @@ print 'done sort'
 
 
 
-#cages=np.genfromtxt('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat',skiprows=1)
-#cages=(cages[:,0]-1).astype(int)
+cages=np.genfromtxt('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
 
 
 for regionname in regionlist:
@@ -49,10 +49,10 @@ for regionname in regionlist:
     nidx=get_nodes(data,region)
     eidx=get_elements(data,region)
 
-#    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-#    color='g'
-#    lw=.5
-#    ls='solid'
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    color='g'
+    lw=.5
+    ls='solid'
 
 
 
@@ -74,8 +74,8 @@ for regionname in regionlist:
     print ('calc current mag: %f' % (time.clock() - start))
 
 
-    ngridx = 2000
-    ngridy = 2000
+    ngridx = 1000
+    ngridy = 1000
 
 
     start = time.clock()
