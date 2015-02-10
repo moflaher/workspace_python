@@ -65,9 +65,9 @@ lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
-uv1=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moe46/Desktop/school/workspace_python/data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv_all.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv_all.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)
@@ -90,7 +90,7 @@ else:
 f=plt.figure()
 
 ax_fld=f.add_axes(fldax_r)
-#ax_fld.add_collection(lsegf)
+ax_fld.add_collection(lsegf)
 
 if usemean==True:
     uatmp=data['ua'][starttime:,eidx].copy()
@@ -131,7 +131,7 @@ ax_fld.text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
 
 
 ax_ebb=f.add_axes(ebbax_r)
-#ax_ebb.add_collection(lsege)
+ax_ebb.add_collection(lsege)
 if usemean==True:
     uatmp=data['ua'][starttime:,eidx].copy()
     uatmp[zeta_bool1]=np.nan
@@ -187,7 +187,7 @@ if testing==False:
         resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
 ax_res=f.add_axes(resax_r)
-#ax_res.add_collection(lsegr)
+ax_res.add_collection(lsegr)
 Q1=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
 Q2=ax_res.quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)
 ax_res.axis(region['region'])

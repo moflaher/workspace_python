@@ -109,7 +109,7 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
 
     ax0=f.add_axes(ax0f)  
-    axtri0=ax0.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
+    axtri0=ax0.pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
     #Vpos=np.array([0,.2,.4,.6,.8])
     Vpos=np.array([0,.4,.8])
     #Vneg=np.array([-.8,-.6,-.4,-.2])
@@ -134,7 +134,7 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
 
     ax1=f.add_axes(ax1f)  
-    axtri1=ax1.pcolor(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
+    axtri1=ax1.pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
     #Vpos=np.array([0,.2,.4,.6,.8])
     Vpos=np.array([0,.4,.8])
     #Vneg=np.array([-.8,-.6,-.4,-.2])
@@ -182,12 +182,12 @@ for regionname in regionlist:
         #cb2.set_label(r'Asymmetry',fontsize=8)
 
     plotcoast(ax0,filename='pacific.nc',color='k',fill=True)
-#    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-#    ax0.add_collection(lseg0)
+    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax0.add_collection(lseg0)
 
     plotcoast(ax1,filename='pacific.nc',color='k',fill=True)
-#    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-#    ax1.add_collection(lseg1)
+    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax1.add_collection(lseg1)
 
     ax0.text(ABC[0],ABC[1],"A",transform=ax0.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
     ax1.text(ABC[0],ABC[1],"B",transform=ax1.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)

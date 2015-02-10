@@ -15,12 +15,13 @@ from misctools import *
 from plottools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-
+from matplotlib.collections import LineCollection as LC
+from matplotlib.collections import PolyCollection as PC
 
 
 
 # Define names and types of data
-name='kit4_kelp_nodrag'
+name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
 
@@ -40,8 +41,8 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-#cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-#cages=(cages[:,0]-1).astype(int)
+cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
+cages=(cages[:,0]-1).astype(int)
 
 
 
@@ -83,7 +84,7 @@ ax_all.xaxis.set_major_formatter(_formatter)
 
 #add bof subplot
 axsub1=f.add_axes(region1f)
-axsub1.triplot(data['trigrid'],color='black',lw=.2)
+axsub1.triplot(data['trigrid'],color='black',lw=.05)
 
 locations=[11974,11418]
 labelstr=['1','2']
@@ -97,12 +98,6 @@ fix_osw(axsub1)
 
 plotcoast(axsub1,filename='pacific.nc',color='0.75',fill=True)
 
-#axsub1lw=.4
-#for i in cages:
-#    tnodes=data['nv'][i,:]    
-#    axsub1.plot(data['nodell'][tnodes[[0,1]],0],data['nodell'][tnodes[[0,1]],1],'r',lw=axsub1lw,label='Mesh')
-#    axsub1.plot(data['nodell'][tnodes[[1,2]],0],data['nodell'][tnodes[[1,2]],1],'r',lw=axsub1lw,label='Cages')
-#    axsub1.plot(data['nodell'][tnodes[[0,2]],0],data['nodell'][tnodes[[0,2]],1],'r',lw=axsub1lw)
 
 
 #axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
@@ -130,7 +125,7 @@ axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor
 
 #add cage subplot
 axsub2=f.add_axes(region2f)
-axsub2.triplot(data['trigrid'],color='black',lw=.2)
+axsub2.triplot(data['trigrid'],color='black',lw=.1)
 
 locations=[119754,118418]
 labelstr=['1','2']
@@ -205,6 +200,17 @@ rn=regions('kit4_ftb')
 plot_box(axsub2,rn,'r',1.5)
 axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='r')
 
+
+
+#add kelp
+tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+lsega=PC(tmparray,facecolor = 'g',edgecolor='None')
+lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
+lseg2=PC(tmparray,facecolor = 'g',edgecolor='None')
+
+ax_all.add_collection(lsega)
+axsub1.add_collection(lseg1)
+axsub2.add_collection(lseg2)
 
 
 plt.savefig(savepath + grid + '_' +name+ '_kit4_kelp_map.png',dpi=600)

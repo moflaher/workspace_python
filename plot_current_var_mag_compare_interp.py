@@ -74,8 +74,8 @@ for regionname in regionlist:
     print ('calc current mag: %f' % (time.clock() - start))
 
 
-    ngridx = 1000
-    ngridy = 1000
+    ngridx = 2000
+    ngridy = 2000
 
 
     start = time.clock()
@@ -135,16 +135,18 @@ for regionname in regionlist:
         V=np.array([-80,-70,-60,-50,-40,-30,-20,-10,0,2,4,6,8,10,12,14,16,18,20])
         Vpos=np.array([0,2,4,6,8,10,12,14,16,18,20])
         Vneg=np.array([-80,-70,-60,-50,-40,-30,-20,-10])
+        Vpos=np.array([0,4,8,12,16,20])
+        Vneg=np.array([-80,-60,-40,-20])
         #V=np.array([-80,-60,-40,-20,0,5,10,15,20])
-        ax0cb=ax0.pcolor(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax1.pcolor(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
+        ax0cb=ax0.pcolormesh(xi,yi,cvarm_o_interp_mask)
+        ax1cb=ax1.pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
         CS2=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
         ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
         CS3=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
         ax1.clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
     else:
-        ax0cb=ax0.pcolor(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax1.pcolor(xi,yi,cvarm_diff_rel_interp_mask)
+        ax0cb=ax0.pcolormesh(xi,yi,cvarm_o_interp_mask)
+        ax1cb=ax1.pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
         CS2=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
         ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
 
@@ -192,10 +194,10 @@ for regionname in regionlist:
 
 
 
-#    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-#    ax0.add_collection(lseg0)
-#    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-#    ax1.add_collection(lseg1)
+    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax0.add_collection(lseg0)
+    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax1.add_collection(lseg1)
 
 
     ax0.annotate("A",xy=(.025,1-(.05/dr)),xycoords='axes fraction')
