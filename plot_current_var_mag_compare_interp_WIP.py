@@ -121,17 +121,13 @@ for regionname in regionlist:
 
 
 
-    ppll_sub(ax,setregion=region)
-    cb=plt.colorbar(ax0cb,ax=ax[0])
-    cb.set_label(r'Current variance magnitude (m s$^{-1}$)',fontsize=6)
-    cb2=plt.colorbar(ax1cb,ax=ax[1])
-    cb2.set_label(r'Relative difference (%)',fontsize=6)    
+    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],cbsize=6)
 
     ABC=['A','B','C']
     figW, figH = f.get_size_inches()
     for i,axi in enumerate(ax):
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
-        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/figH/figW),xycoords='axes fraction')
+        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/(figH/figW)),xycoords='axes fraction')
     lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
     ax[1].add_collection(lseg_t)
 

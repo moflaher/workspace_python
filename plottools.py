@@ -377,16 +377,31 @@ def ppll_sub(axin,**kwargs):
     
     if (cblabel != None):
         plt.draw()
-        axstart=axin[0].get_axes().get_position().bounds
-        axend=axin[-1].get_axes().get_position().bounds
-        if (aspect>=1/fa):
-            #add color at current axis bottom
-            ax0ca=f.add_axes([axstart[0],axstart[1]-.125,axend[2]+axend[0]-axstart[0],0.025])
-            cb=plt.colorbar(colorax,cax=ax0ca,orientation='horizontal')
-            cb.set_label(cblabel,fontsize=cbsize)
+        if len(colorax)==len(axin):
+            if (aspect>=1/fa):
+                for i,ax in enumerate(axin):
+                    axbb=ax.get_axes().get_position().bounds
+                    axca=f.add_axes([axbb[0],axbb[1]-.125,axbb[2],0.025])
+                    cb=plt.colorbar(colorax[i],cax=axca,orientation='horizontal')
+                    cb.set_label(cblabel[i],fontsize=cbsize)
+            else:
+                for i,ax in enumerate(axin):
+                    axbb=ax.get_axes().get_position().bounds
+                    axca=f.add_axes([axbb[0]+axbb[2]+.025,axbb[1],.025,axbb[3]])
+                    cb=plt.colorbar(colorax[i],cax=axca)
+                    cb.set_label(cblabel[i],fontsize=cbsize)                
+
         else:
-            ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
-            cb=plt.colorbar(colorax,cax=ax0ca)
-            cb.set_label(cblabel,fontsize=cbsize)
+            axstart=axin[0].get_axes().get_position().bounds
+            axend=axin[-1].get_axes().get_position().bounds
+            if (aspect>=1/fa):
+                #add color at current axis bottom
+                ax0ca=f.add_axes([axstart[0],axstart[1]-.125,axend[2]+axend[0]-axstart[0],0.025])
+                cb=plt.colorbar(colorax,cax=ax0ca,orientation='horizontal')
+                cb.set_label(cblabel,fontsize=cbsize)
+            else:
+                ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
+                cb=plt.colorbar(colorax,cax=ax0ca)
+                cb.set_label(cblabel,fontsize=cbsize)
 
 
