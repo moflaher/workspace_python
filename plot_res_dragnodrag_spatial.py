@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name='sfm6_musq2_all_cages'
 name2='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
-regionname='musq_cage_tight2'
+regionname='musq_large'
 datatype='2d'
 starttime=0
 offset=1008
@@ -145,5 +145,23 @@ prettyplot_ll(ax_res,setregion=region,cb=triax,cblabel=r'Residual Speed (m s$^{-
 plotcoast(ax_res,color='k',fill=True)
 
 f.savefig(savepath + grid + '_'+ name2+'_'+regionname+'_meanres.png',dpi=600)
+plt.close(f)
+
+
+
+f=plt.figure()
+ax_res=f.add_axes(resax_r)
+ax_res.add_collection(lsegr)
+
+pspeed=np.zeros(shape=data['ua'][0,:].shape)
+pspeed[eidx]=np.divide(rspeed-rspeed2,rspeed2+.02)*100
+#pspeed[eidx[rspeed2<.01]]=0#np.divide(rspeed[rspeed2<.01]-rspeed2[rspeed2<.01],rspeed2[rspeed2<.01])*100
+
+triax=ax_res.tripcolor(data['trigrid'],pspeed,vmin=-100,vmax=100)
+
+prettyplot_ll(ax_res,setregion=region,cb=triax,cblabel=r'Residual Speed Relative Difference (m s$^{-1}$)')
+plotcoast(ax_res,color='k',fill=True)
+
+f.savefig(savepath + grid + '_'+ name+'_'+ name2+'_'+regionname+'_meanres_rel_diff.png',dpi=600)
 plt.close(f)
 

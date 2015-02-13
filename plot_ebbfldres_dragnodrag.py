@@ -186,10 +186,14 @@ if testing==False:
     for j in range(0,len(eidx)):
         print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
         i=eidx[j]    
-        resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
-        resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
-        resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
-        resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
+        tp1=t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])
+        resu[j,:]=data['ua'][starttime:,i]-np.real(tp1).flatten()
+        resv[j,:]=data['va'][starttime:,i]-np.imag(tp1).flatten()
+        tp2=t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])
+        resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(tp2).flatten()
+        resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(tp2).flatten()
+
+
 
 ax_res=f.add_axes(resax_r)
 ax_res.add_collection(lsegr)

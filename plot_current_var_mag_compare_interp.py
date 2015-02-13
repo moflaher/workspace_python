@@ -51,7 +51,7 @@ for regionname in regionlist:
 
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
     color='g'
-    lw=.5
+    lw=.1
     ls='solid'
 
 
@@ -194,8 +194,8 @@ for regionname in regionlist:
 
 
 
-    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax0.add_collection(lseg0)
+    #lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    #ax0.add_collection(lseg0)
     lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
     ax1.add_collection(lseg1)
 

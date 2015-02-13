@@ -19,15 +19,13 @@ name='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 #regionname='kit4_kelp_tight2'
-regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-#regionlist=['kit4_kelp_tight2_small','kit4_ftb']
+regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6','kit4_kelp_tight2_kelpfield']
+#regionlist=['kit4_kelp_tight2_kelpfield']
 datatype='2d'
 starttime=384
 cmin=-1
 cmax=1
 fmt=r'%1.1f'
-
-ABC=[.025,.9]
 
 
 ### load the .nc file #####
@@ -42,7 +40,7 @@ cages=(cages[:,0]-1).astype(int)
 
 tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
 color='g'
-lw=.5
+lw=.1
 ls='solid'
 
 savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_instant_asymmetry_subplots_interp/'+name+'_'+name_change+'/'
@@ -53,6 +51,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 for regionname in regionlist:
     print 'plotting ' + regionname
+
     region=regions(regionname)
     nidx=get_nodes(data,region)
     eidx=get_elements(data,region)
@@ -62,32 +61,7 @@ for regionname in regionlist:
     ebb=np.argmin(np.sum(zeta_grad,axis=1))
 
         
-    f=plt.figure()
-
-    xtarget=.4
-    ytarget=.675
-    aspect=get_aspectratio(region)
-    dr=get_data_ratio(region)
-    figW, figH = f.get_size_inches()
-    fa = figH / figW
-
-    if aspect>=1.1:    
-        finalspace=((ytarget*fa)/aspect/dr)
-        if finalspace>.4:
-            finalspace[0]=.4
-            ax0f=[.125,.275,finalspace[0],ytarget]
-            ax1f=[ax0f[0]+finalspace[0]+.025,.275,finalspace[0],ytarget]
-        else:
-            ax0f=[.125,.275,1,ytarget]
-            ax1f=[ax0f[0]+finalspace[0]+.025,.275,1,ytarget]
-    else:    
-        finalspace=((((xtarget*fa)/aspect/dr)*aspect*dr)/fa)
-        #ax1f=[.125,.1,.75,xtarget]
-        #ax0f=[.125,ax1f[1]+finalspace[0]+.05,.75,xtarget]
-        #finalspace=((ytarget*fa)/aspect/dr)
-        ax1f=[.125,.1,1,xtarget]
-        ax0f=[.125,ax1f[1]+finalspace[0]+.025,1,xtarget]
-
+    f,ax=place_axes(region,2,cb=True)  
 
     uf=data['ua'][starttime+fld,:]
     ue=data['ua'][starttime+ebb,:]
@@ -107,17 +81,14 @@ for regionname in regionlist:
     host=data['trigrid'].get_trifinder().__call__(xii,yii)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
     print ('griddata interp: %f' % (time.clock() - start))
-
-    ax0=f.add_axes(ax0f)  
-    axtri0=ax0.pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    #Vpos=np.array([0,.2,.4,.6,.8])
+ 
+    axtri=ax[0].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
     Vpos=np.array([0,.4,.8])
-    #Vneg=np.array([-.8,-.6,-.4,-.2])
     Vneg=np.array([-.8,-.4])
-    CS2=ax0.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
-    ax0.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
-    CS3=ax0.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
-    ax0.clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
+    CS2=ax[0].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+    ax[0].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+    CS3=ax[0].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+    ax[0].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
 
 
 
@@ -127,70 +98,29 @@ for regionname in regionlist:
     vf=data2['va'][starttime+fld,:]
     ve=data2['va'][starttime+ebb,:]
     efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
-    #print runstats(efs[eidx])
     start = time.clock()    
     efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], efs, xi, yi)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
     print ('griddata interp: %f' % (time.clock() - start))
-
-    ax1=f.add_axes(ax1f)  
-    axtri1=ax1.pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    #Vpos=np.array([0,.2,.4,.6,.8])
+ 
+    axtri=ax[1].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
     Vpos=np.array([0,.4,.8])
-    #Vneg=np.array([-.8,-.6,-.4,-.2])
     Vneg=np.array([-.8,-.4])
-    CS2=ax1.contour(xi,yi,efs_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
-    ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
-    CS3=ax1.contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
-    ax1.clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
+    CS2=ax[1].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+    ax[1].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+    CS3=ax[1].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+    ax[1].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
 
-    prettyplot_ll(ax0,setregion=region)
-    prettyplot_ll(ax1,setregion=region)
-    ax_label_spacer(ax0)
-    ax_label_spacer(ax1)
 
-    if aspect>=1.1:
-        ax1.yaxis.set_tick_params(labelleft='off')
-    else:
-        ax0.xaxis.set_tick_params(labelleft='off')
-        ax0.set_xlabel('')
+    ppll_sub(ax,setregion=region,cb=axtri,cblabel='Asymmetry')    
+    ABC=['A','B','C']
+    figW, figH = f.get_size_inches()
+    for i,axi in enumerate(ax):
+        plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
+        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        ax[i].add_collection(lseg_t)
+        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/(figH/figW)),xycoords='axes fraction')
 
-    plt.draw()
-    ax0bb=ax0.get_axes().get_position().bounds
-    ax1bb=ax1.get_axes().get_position().bounds
-
-    if aspect>=1.1:
-        ax0ca=f.add_axes([ax0bb[0],ax0bb[1]-.125,ax1bb[2]+ax1bb[0]-ax0bb[0],0.025])
-        #ax1ca=f.add_axes([ax1bb[0],ax1bb[1]-.125,ax1bb[2],0.025])
-        cb=plt.colorbar(axtri0,cax=ax0ca,orientation='horizontal')
-        cb.set_label(r'Asymmetry',fontsize=6)
-        for label in cb.ax.get_xticklabels():
-            label.set_rotation(90)
-
-        #cb2=plt.colorbar(axtri1,cax=ax1ca,orientation='horizontal')
-        #cb2.set_label(r'Asymmetry',fontsize=6)
-        ax1.set_ylabel('')
-        #for label in cb2.ax.get_xticklabels():
-        #    label.set_rotation(90)
-
-    else:
-        ax0ca=f.add_axes([ax0bb[0]+ax0bb[2]+.025,ax1bb[1],.025,ax0bb[1]+ax0bb[3]-ax1bb[1]])
-        #ax1ca=f.add_axes([ax1bb[0]+ax1bb[2]+.025,ax1bb[1],.025,ax1bb[3]])
-        cb=plt.colorbar(axtri0,cax=ax0ca)
-        cb.set_label(r'Asymmetry',fontsize=8)
-        #cb2=plt.colorbar(axtri1,cax=ax1ca)
-        #cb2.set_label(r'Asymmetry',fontsize=8)
-
-    plotcoast(ax0,filename='pacific.nc',color='k',fill=True)
-    lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax0.add_collection(lseg0)
-
-    plotcoast(ax1,filename='pacific.nc',color='k',fill=True)
-    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax1.add_collection(lseg1)
-
-    ax0.text(ABC[0],ABC[1],"A",transform=ax0.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
-    ax1.text(ABC[0],ABC[1],"B",transform=ax1.transAxes)#,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3},zorder=31)
 
     f.savefig(savepath + grid + '_'+name+'_'+name_change+'_' + regionname +'_ebbfld_asymmetry.png',dpi=600)
     plt.close('all')
