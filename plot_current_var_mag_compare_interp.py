@@ -44,6 +44,7 @@ cages=(cages[:,0]-1).astype(int)
 
 
 for regionname in regionlist:
+    print 'plotting region: ' +regionname
 
     region=regions(regionname)
     nidx=get_nodes(data,region)
@@ -56,7 +57,7 @@ for regionname in regionlist:
 
 
 
-    savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot_interp/' + name_orig + '_' + name_change + '/'
+    savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot_interp2/' + name_orig + '_' + name_change + '/'
     if not os.path.exists(savepath): os.makedirs(savepath)
 
     start = time.clock()
@@ -95,39 +96,7 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
 
 
-
-    f=plt.figure()
-
-    xtarget=.4
-    ytarget=.675
-
-    aspect=get_aspectratio(region)
-    dr=get_data_ratio(region)
-    figW, figH = f.get_size_inches()
-    fa = figH / figW
-
-    if aspect>=1.1:    
-        finalspace=((ytarget*fa)/aspect/dr)
-        if finalspace>.4:
-            finalspace[0]=.4
-            ax0f=[.125,.275,finalspace[0],ytarget]
-            ax1f=[ax0f[0]+finalspace[0]+.025,.275,finalspace[0],ytarget]
-        else:
-            ax0f=[.125,.275,1,ytarget]
-            ax1f=[ax0f[0]+finalspace[0]+.025,.275,1,ytarget]
-    else:    
-        finalspace=((((xtarget*fa)/aspect/dr)*aspect*dr)/fa)
-        #ax1f=[.125,.1,.75,xtarget]
-        #ax0f=[.125,ax1f[1]+finalspace[0]+.05,.75,xtarget]
-        #finalspace=((ytarget*fa)/aspect/dr)
-        ax1f=[.125,.1,1,xtarget]
-        ax0f=[.125,ax1f[1]+finalspace[0]+.025,1,xtarget]
-
-
-
-
-    ax0=f.add_axes(ax0f)
-    ax1=f.add_axes(ax1f)
+    f,ax=place_axes(region,2,cb=True)  
 
     fmt=r'%d'
 
@@ -138,76 +107,29 @@ for regionname in regionlist:
         Vpos=np.array([0,4,8,12,16,20])
         Vneg=np.array([-80,-60,-40,-20])
         #V=np.array([-80,-60,-40,-20,0,5,10,15,20])
-        ax0cb=ax0.pcolormesh(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax1.pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
-        CS2=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
-        ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
-        CS3=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
-        ax1.clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
+        ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
+        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
+        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
+        ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
+        CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
+        ax[1].clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
     else:
-        ax0cb=ax0.pcolormesh(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax1.pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
-        CS2=ax1.contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
-        ax1.clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
-
-
-    prettyplot_ll(ax0,setregion=region)
-    prettyplot_ll(ax1,setregion=region)
-    ax_label_spacer(ax0)
-    ax_label_spacer(ax1)
-
-
-    if aspect>=1.1:
-        ax1.yaxis.set_tick_params(labelleft='off')
-    else:
-        ax0.xaxis.set_tick_params(labelleft='off')
-        ax0.set_xlabel('')
-
-    plt.draw()
-    ax0bb=ax0.get_axes().get_position().bounds
-    ax1bb=ax1.get_axes().get_position().bounds
-
-    if aspect>=1.1:
-        ax0ca=f.add_axes([ax0bb[0],ax0bb[1]-.125,ax0bb[2],0.025])
-        ax1ca=f.add_axes([ax1bb[0],ax1bb[1]-.125,ax1bb[2],0.025])
-        cb=plt.colorbar(ax0cb,cax=ax0ca,orientation='horizontal')
-        cb.set_label(r'Current variance magnitude (m s$^{-1}$)',fontsize=6)
-        for label in cb.ax.get_xticklabels():
-            label.set_rotation(90)
-
-        cb2=plt.colorbar(ax1cb,cax=ax1ca,orientation='horizontal')
-        cb2.set_label(r'Relative difference (%)',fontsize=6)
-        ax1.set_ylabel('')
-        for label in cb2.ax.get_xticklabels():
-            label.set_rotation(90)
-
-    else:
-        ax0ca=f.add_axes([ax0bb[0]+ax0bb[2]+.025,ax0bb[1],.025,ax0bb[3]])
-        ax1ca=f.add_axes([ax1bb[0]+ax1bb[2]+.025,ax1bb[1],.025,ax1bb[3]])
-        cb=plt.colorbar(ax0cb,cax=ax0ca)
-        cb.set_label(r'Current variance magnitude (m s$^{-1}$)',fontsize=8)
-        cb2=plt.colorbar(ax1cb,cax=ax1ca)
-        cb2.set_label(r'Relative difference (%)',fontsize=8)
-
-    plotcoast(ax0,filename='pacific.nc',color='k',fill=True)
-    plotcoast(ax1,filename='pacific.nc',color='k',fill=True)
+        ax0cb=[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
+        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
+        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
+        ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
 
 
 
-    #lseg0=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    #ax0.add_collection(lseg0)
-    lseg1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax1.add_collection(lseg1)
+    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],cbsize=6)
 
-
-    ax0.annotate("A",xy=(.025,1-(.05/dr)),xycoords='axes fraction')
-    ax1.annotate("B",xy=(.025,1-(.05/dr)),xycoords='axes fraction')
-
-
-    #add_num_label(ax1,data,1000,74845,'e')
-
-    #plotcoast(ax0,filename='pacific.nc',color='k')
-    #plotcoast(ax1,filename='pacific.nc',color='k')
+    ABC=['A','B','C']
+    figW, figH = f.get_size_inches()
+    for i,axi in enumerate(ax):
+        plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
+        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/(figH/figW)),xycoords='axes fraction')
+    lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax[1].add_collection(lseg_t)
 
     f.savefig(savepath + grid + '_' + regionname+'_current_variance_magnitude_diff_relative_subplot_contour.png',dpi=600)
     plt.close(f)

@@ -93,6 +93,8 @@ def loadnei(neifilename=None):
     neifile['bcode']=t_data[:,3]
     neifile['h']=t_data[:,4]
     neifile['neighbours']=t_data[:,5:]
+    neifile['lon']=t_data[:,1]
+    neifile['lat']=t_data[:,2]
     
     return neifile
 
