@@ -15,10 +15,10 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionname='kit4_kelp_tight2_small'
+regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
-starttime=100
-endtime=133
+starttime=400
+endtime=450
 cmin=0
 cmax=1
 
@@ -39,7 +39,7 @@ plt.close()
 for i in range(starttime,endtime):
     print i
     f=plt.figure()
-    ax=plt.axes([.1,.1,.7,.85])
+    ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
     f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)

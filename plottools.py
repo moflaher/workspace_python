@@ -268,9 +268,9 @@ def place_axes(region,numplots,cb=False):
     """For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
     :Parameters:
-    	**region** -- The region being plotted, needed for aspect ratio
+    	region -- The region being plotted, needed for aspect ratio
 
-    	**numplots** -- The number of axes being define   
+    	numplots -- The number of axes being define   
     """
 
     #note to check region orientations this function uses aspect*fa. It is possible it may need to use dr as well. If weird axes orientation are return check into the effect of dr.
@@ -403,5 +403,40 @@ def ppll_sub(axin,**kwargs):
                 ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
                 cb=plt.colorbar(colorax,cax=ax0ca)
                 cb.set_label(cblabel,fontsize=cbsize)
+
+
+
+
+def ll_dist(region,dist):
+    """Given a region and a distance in meters returns longitude interval approximately equalivent to the distance.
+
+    :Parameters:
+    	region -- The region being plotted, needed for average latitude
+
+    	dist -- The distance in meters to match
+    """
+    lat=region['region'][2:4].mean()
+    kmlat=sw.dist([lat, lat],[0, 1],'km')[0]*1000
+    
+    return dist/kmlat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

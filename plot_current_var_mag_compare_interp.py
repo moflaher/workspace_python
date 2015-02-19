@@ -57,7 +57,7 @@ for regionname in regionlist:
 
 
 
-    savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot_interp2/' + name_orig + '_' + name_change + '/'
+    savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot_interp/' + name_orig + '_' + name_change + '/'
     if not os.path.exists(savepath): os.makedirs(savepath)
 
     start = time.clock()
@@ -109,9 +109,9 @@ for regionname in regionlist:
         #V=np.array([-80,-60,-40,-20,0,5,10,15,20])
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
-        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='w',zorder=30,linestyles='dashed')
+        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
         ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
-        CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid')
+        CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
         ax[1].clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
     else:
         ax0cb=[0].pcolormesh(xi,yi,cvarm_o_interp_mask)

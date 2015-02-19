@@ -53,6 +53,8 @@ def makeregions():
     tl=np.vstack([tl,        [[-129.47, -129.28, 52.48, 52.62],'kit4_kelp_tight5','kit4_kelp_tight5']])
     tl=np.vstack([tl,        [[-129.43, -129.29, 52.725, 52.88],'kit4_kelp_tight6','kit4_kelp_tight6']])
     tl=np.vstack([tl,        [[-129.526, -129.286, 52.4576, 52.7178],'kit4_4island','kit4_4island']])
+    tl=np.vstack([tl,        [[-129.6, -129.1, 52.45, 52.825],'kelpchain','kelpchain']])
+    tl=np.vstack([tl,        [[-128.9, -128.75, 53.525, 53.625],'kit4_area5','Area 5']])
 
     # arctic
     tl=np.vstack([tl,        [[-152.51,   -106.04,    68.65,    79.34],'beaufort3','Beaufort Sea']])

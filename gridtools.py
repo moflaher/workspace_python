@@ -347,7 +347,7 @@ def regioner(data,region,subset=False):
 
 
 
-def interp_vel(data,loc,layer=None,ll=False):
+def interp_vel(data,loc,layer=None,ll=True):
     loc=np.array(loc)
     host=data['trigrid_finder'].__call__(loc[0],loc[1])
     if host==-1:
@@ -356,18 +356,17 @@ def interp_vel(data,loc,layer=None,ll=False):
         out[:]=np.nan
         return out,out
 
-    #this might not work for ll, depends if fvcom changes a1u from 1/m to 1/degree... but then things arent square so probably not, how does fvcom do the interpolation when run in spherical?
-    #would M.F. or F.D. know?
+    #code for ll adapted from mod_utils.F
     if ll==True:
-        x0c=loc[0]-data['uvnodell'][host,0]
-        y0c=loc[1]-data['uvnodell'][host,1]     
-    else:
-        xi=loc[0]
-        yi=loc[1]
-        interp_x = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,0])
-        interp_y = mpl.tri.LinearTriInterpolator(data['trigrid'], data['nodexy'][:,1])
-        loc[0] = interp_x(xi, yi)
-        loc[1] = interp_y(xi, yi)
+        TPI=111194.92664455874
+        y0c = TPI * (loc[1] - data['uvnodell'][host,1])
+        dx_sph = loc[0] - data['uvnodell'][host,0]
+        if (dx_sph > 180.0):
+            dx_sph=dx_sph-360.0
+        elif (dx_sph < -180.0):
+            dx_sph =dx_sph+360.0
+        x0c = TPI * np.cos(np.deg2rad(loc[1] + data['uvnodell'][host,1])*0.5) * dx_sph
+    else:       
         x0c=loc[0]-data['uvnode'][host,0]
         y0c=loc[1]-data['uvnode'][host,1] 
 

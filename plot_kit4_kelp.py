@@ -98,6 +98,8 @@ fix_osw(axsub1)
 
 plotcoast(axsub1,filename='pacific.nc',color='0.75',fill=True)
 
+arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
+axsub1.annotate(r'5 km',xy=(region1['region'][0]+.02,region1['region'][2]+.02),xycoords='data',xytext=(region1['region'][0]+ll_dist(region1,5000),region1['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
 
 
 #axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
@@ -136,6 +138,9 @@ axsub2.set_aspect(get_aspectratio(region2))
 fix_osw(axsub2)
 
 plotcoast(axsub2,filename='pacific.nc',color='0.75',fill=True)
+
+arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
+axsub2.annotate(r'5 km',xy=(region2['region'][0]+.02,region2['region'][2]+.02),xycoords='data',xytext=(region2['region'][0]+ll_dist(region2,5000),region2['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
 
 axsub2.yaxis.set_tick_params(labelright='on',labelleft='off')
 

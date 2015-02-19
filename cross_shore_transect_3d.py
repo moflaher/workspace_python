@@ -27,12 +27,15 @@ data = ncdatasort(data,trifinder=True)
 print 'done sort'
 
 
+
 #kit4 line1
 #vectorstart=np.array([-128.865,53.565])
 #vectorend=np.array([-128.84,53.61])
 #kit4 line2
 vectorstart=np.array([-128.84,53.61])
 vectorend=np.array([-128.79,53.565])
+
+
 vectorx=np.array([vectorstart[0],vectorend[0]])
 vectory=np.array([vectorstart[1],vectorend[1]])
 snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
