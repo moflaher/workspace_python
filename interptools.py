@@ -39,13 +39,51 @@ Functions
 """
 
 def interpE_at_loc(data,varname,loc,layer=None,ll=True):
+    """Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
+    Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
+    
+    data - data dictionary from loadnc
+    varname - element data variable name. (2d or 3d)
+    loc - location
+
+    Optional:
+    layer - default None. Specify which layer of 3d data to use
+    ll - default True. Is point lon/lat or xy.    
+    """   
+
+
+###############################################################################
+# Error and corner case checking
+    if ll==True:
+        trifinder='trigrid_finder'
+        trigrid='trigrid'
+    else:
+        trifinder='trigridxy_finder'
+        trigrid='trigridxy'
+
+    if (data.has_key(trifinder)==False and data.has_key(trigrid)):
+        print 'No trifinder initialized. Initializing now.'
+        data[trifinder]=data[trigrid].get_trifinder()
+    elif data.has_key(trigrid)==False:
+        print 'No trifinder or trigrid to initialize it.'
+        return
+
+    if ((len(data[varname].shape)>2) and (layer==None)):
+        print '3d variable specified without layer. Returning surface layer.'
+        layer=0
+    elif ((len(data[varname].shape)==2) and (layer!=None)):
+        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        layer=None
+
     loc=np.array(loc)
-    host=data['trigrid_finder'].__call__(loc[0],loc[1])
+    host=data[trifinder].__call__(loc[0],loc[1])
     if host==-1:
         print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
-        out=np.empty(shape=data['va'][:,0].shape)
+        out=np.empty(shape=(data[varname][:,layer,host]).squeeze().shape)
         out[:]=np.nan
-        return out,out
+        return out
+###############################################################################
+
 
     #code for ll adapted from mod_utils.F
     if ll==True:
@@ -61,60 +99,124 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
         x0c=loc[0]-data['uvnode'][host,0]
         y0c=loc[1]-data['uvnode'][host,1] 
 
+
     e0=data['nbe'][host,0]
     e1=data['nbe'][host,1]
     e2=data['nbe'][host,2]
+      
+    var_e=(data[varname][:,layer,host]).squeeze()
+    if e0==-1:
+        var_0=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
+    else:
+        var_0=(data[varname][:,layer,e0]).squeeze()
+    if e1==-1:
+        var_1=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
+    else:
+        var_1=(data[varname][:,layer,e1]).squeeze()
+    if e2==-1:
+        var_2=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
+    else:
+        var_2=(data[varname][:,layer,e2]).squeeze()
 
-    if (layer==None and loc.size==2):
-        var_e=data[varname][:,host]  
+    dvardx= data['a1u'][0,host]*var_e+data['a1u'][1,host]*var_0+data['a1u'][2,host]*var_1+data['a1u'][3,host]*var_2
+    dvardy= data['a2u'][0,host]*var_e+data['a2u'][1,host]*var_0+data['a2u'][2,host]*var_1+data['a2u'][3,host]*var_2
+    var= var_e + dvardx*x0c + dvardy*y0c
 
-        if e0==-1:
-            var_0=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_0=data[varname][:,e0]
-
-        if e1==-1:
-            var_1=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_1=data[varname][:,e1]
-
-        if e2==-1:
-            var_2=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_2=data[varname][:,e2]
-
-
-
-    if (layer!=None and loc.size==2):        
-        var_e=data[varname][:,layer,host]
-
-        if e0==-1:
-            var_0=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_0=data[varname][:,layer,e0]
-
-        if e1==-1:
-            var_1=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_1=data[varname][:,layer,e1]
-
-        if e2==-1:
-            var_2=np.zeros(shape=var_e.shape,dtype=var_e.dtype)
-        else:
-            var_2=data[varname][:,layer,e2]
-
-
-
-    dvardx= data['a1u'][0,host]*var_e+data['a1u'][1,host]*var_0+data['a1u'][2,host]*var_1+data['a1u'][3,host]*var_2;
-    dvardy= data['a2u'][0,host]*var_e+data['a2u'][1,host]*var_0+data['a2u'][2,host]*var_1+data['a2u'][3,host]*var_2;
-
-    var= var_e + dvardx*x0c + dvardy*y0c;
         
     return var
 
 
    
+
+
+def interpN_at_loc(data,varname,loc,layer=None,ll=True):
+    """Interpolate nodal data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
+    Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
     
+    data - data dictionary from loadnc
+    varname - nodal data variable name. (1d or 2d or 3d)
+    loc - location
+
+    Optional:
+    layer - default None. Specify which layer of 3d data to use
+    ll - default True. Is point lon/lat or xy.    
+    """   
+
+
+###############################################################################
+# Error and corner case checking
+    if ll==True:
+        trifinder='trigrid_finder'
+        trigrid='trigrid'
+    else:
+        trifinder='trigridxy_finder'
+        trigrid='trigridxy'
+
+    if (data.has_key(trifinder)==False and data.has_key(trigrid)):
+        print 'No trifinder initialized. Initializing now.'
+        data[trifinder]=data[trigrid].get_trifinder()
+    elif data.has_key(trigrid)==False:
+        print 'No trifinder or trigrid to initialize it.'
+        return
+
+    if ((len(data[varname].shape)>2) and (layer==None)):
+        print '3d variable specified without layer. Returning surface layer.'
+        layer=0
+    elif ((len(data[varname].shape)==2) and (layer!=None)):
+        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        layer=None
+
+    loc=np.array(loc)
+    host=data[trifinder].__call__(loc[0],loc[1])
+    if host==-1:
+        print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        if len(data[varname].shape)==1:
+            out=np.nan
+        else:
+            out=np.empty(shape=(data[varname][:,layer,host]).squeeze().shape)
+            out[:]=np.nan
+        return out
+###############################################################################
+
+
+    #code for ll adapted from mod_utils.F
+    if ll==True:
+        TPI=111194.92664455874
+        y0c = TPI * (loc[1] - data['uvnodell'][host,1])
+        dx_sph = loc[0] - data['uvnodell'][host,0]
+        if (dx_sph > 180.0):
+            dx_sph=dx_sph-360.0
+        elif (dx_sph < -180.0):
+            dx_sph =dx_sph+360.0
+        x0c = TPI * np.cos(np.deg2rad(loc[1] + data['uvnodell'][host,1])*0.5) * dx_sph
+    else:       
+        x0c=loc[0]-data['uvnode'][host,0]
+        y0c=loc[1]-data['uvnode'][host,1] 
+
+
+    n0=data['nv'][host,0]
+    n1=data['nv'][host,1]
+    n2=data['nv'][host,2]
+      
+
+#To deal with 1d data, should be a better way to handle this....
+    if len(data[varname].shape)==1:
+        nvar0=data[varname][n0]
+        nvar1=data[varname][n1]
+        nvar2=data[varname][n2]
+    else:
+        nvar0=(data[varname][:,layer,n0]).squeeze()
+        nvar1=(data[varname][:,layer,n1]).squeeze()
+        nvar2=(data[varname][:,layer,n2]).squeeze()
+
+    var_0=data['aw0'][0,host]*nvar0+data['aw0'][1,host]*nvar1+data['aw0'][2,host]*nvar2
+    var_x=data['awx'][0,host]*nvar0+data['awx'][1,host]*nvar1+data['awx'][2,host]*nvar2
+    var_y=data['awy'][0,host]*nvar0+data['awy'][1,host]*nvar1+data['awy'][2,host]*nvar2
+
+    var= var_0 + var_x*x0c + var_y*y0c
+        
+    return var
+
 
 
 

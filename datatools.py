@@ -314,11 +314,11 @@ def ncdatasort(data,trifinder=False):
     if data.has_key('time'):
         data['time']=data['time']+678576
 
-    if ~data.has_key('trigrid'):
+    if data.has_key('trigrid')==False:
         if (data.has_key('nv') and data.has_key('lat') and data.has_key('lon')):
             data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])  
     
-    if ~data.has_key('trigridxy'):
+    if data.has_key('trigridxy')==False:
         if (data.has_key('nv') and data.has_key('x') and data.has_key('y')):
             data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])  
 
