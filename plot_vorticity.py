@@ -13,31 +13,35 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_kelp_0.05'
-grid='kit4'
-regionname='gilisland'
+name='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
-starttime=384
+regionname='kit4_kelp_tight2_kelpfield'
+starttime=400
 endtime=450
-cmin=-.01
-cmax=.01
-
-
+cmin=-.025
+cmax=.025
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/kit4_runs/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-
-region=regions(regionname)
+cages=None
+with open('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat') as f_in:
+    cages=np.genfromtxt(f_in,skiprows=1)
+    if len(cages)>0:
+        cages=(cages[:,0]-1).astype(int)
+    else:
+        cages=None
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/curl/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
-plt.close()
 
+
+region=regions(regionname)
 
 
 
@@ -54,8 +58,10 @@ for i in range(starttime,endtime):
     #print np.max(dvdx-dudy)
     #print np.std(dvdx-dudy)
     f=plt.figure()
-    ax=plt.axes([.1,.1,.7,.85])
+    ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],dvdx-dudy,vmin=cmin,vmax=cmax)
+    if cages!=None:   
+        ax.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'w.',markersize=1) 
     prettyplot_ll(ax,setregion=region,cblabel='Curl',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_curl_' + ("%04d" %(i)) + '.png',dpi=600)
     plt.close(f)
