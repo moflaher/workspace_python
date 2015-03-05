@@ -10,11 +10,15 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
+sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
+from t_tide import t_tide
+from t_predic import t_predic
 from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
+name='kit4_kelp_nodrag'
 grid='kit4_kelp'
 regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
@@ -44,23 +48,37 @@ with open('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat') as f_in:
 
 
 region=regions(regionname)
+eidx=get_elements(data,region)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/residual/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 
+uv=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
+uv=uv[()]
+
+resu=np.zeros((data['nele'],len(data['time'][starttime:(endtime+1)])))
+resv=np.zeros((data['nele'],len(data['time'][starttime:(endtime+1)])))
+for j in range(0,len(eidx)):
+    print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
+    i=eidx[j]    
+    tp=t_predic(data['time'][starttime:(endtime+1)],uv['nameu'],uv['freq'],uv['tidecon'][i,:,:])
+    resu[i,:]=data['ua'][starttime:(endtime+1),i]-np.real(tp).flatten()
+    resv[i,:]=data['va'][starttime:(endtime+1),i]-np.imag(tp).flatten()
+
+
 # Plot mesh
-for i in range(starttime,endtime):
+for i,timei in enumerate(range(starttime,endtime)):
     print i
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
+    triax=ax.tripcolor(data['trigrid'],np.sqrt(resu[:,i]**2+resv[:,i]**2),vmin=cmin,vmax=cmax)
     plotcoast(ax,filename='pacific.nc',color='k',fill=True)
     if cages!=None:   
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         ax.add_collection(lseg_t) 
-    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
-    f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)
+    prettyplot_ll(ax,setregion=region,cblabel=r'Residual (ms$^{-1}$)',cb=triax,grid=True)
+    f.savefig(savepath + grid + '_' + regionname +'_residual_' + ("%04d" %(timei)) + '.png',dpi=300)
     plt.close(f)
 
 

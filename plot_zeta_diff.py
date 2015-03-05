@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-
+from matplotlib.collections import LineCollection as LC
+from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
 name1='kit4_kelp_nodrag'
