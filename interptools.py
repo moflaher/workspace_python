@@ -39,14 +39,16 @@ Functions
 """
 
 def interpE_at_loc(data,varname,loc,layer=None,ll=True):
-    """Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
+    """
+    Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
     Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
     
+    :Parameters:
     data - data dictionary from loadnc
     varname - element data variable name. (2d or 3d)
     loc - location
 
-    Optional:
+    :Optional:
     layer - default None. Specify which layer of 3d data to use
     ll - default True. Is point lon/lat or xy.    
     """   
@@ -130,7 +132,8 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
 
 
 def interpN_at_loc(data,varname,loc,layer=None,ll=True):
-    """Interpolate nodal data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
+    """
+    Interpolate nodal data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
     Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
     
     data - data dictionary from loadnc
@@ -200,6 +203,7 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
       
 
 #To deal with 1d data, should be a better way to handle this....
+#This can all be vectorized, checkout robies code could make a factor of 2 difference.
     if len(data[varname].shape)==1:
         nvar0=data[varname][n0]
         nvar1=data[varname][n1]

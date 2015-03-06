@@ -16,15 +16,12 @@ Absolutely Necessary:
 
 * Numpy
 * SciPy
-* Matplotlib version 1.3.0
+* Matplotlib
 * Numexpr
 
 Optional, but recommended:
 
 * Numba
-
-.. Note:: A convenient package that is both easy to install and contains nearly all the required packages for the python code herein is Anaconda (available here http://www.continuum.io/downloads).  Note that if you choose to use  Anaconda, it is necessary to install matplotlib v1.3.0  manually, as Anaconda comes with an older version.
-
 
 Functions
 =========
@@ -47,7 +44,8 @@ import os
 
 
 def loadnc(datadir, singlename=None):
-    """Loads a .nc  data file
+    """
+    Loads a .nc  data file
 
     :Parameters:
     	**datadir** -- The path to the directory where the data is stored.
@@ -161,7 +159,8 @@ def loadnc(datadir, singlename=None):
 
 
 def load_timeslice(datadir, start, end, singlename=None,  dim = '2D'):
-    """Loads a timeslice of data from a .nc file for the time series between start
+    """
+    Loads a timeslice of data from a .nc file for the time series between start
     and end, which are provided as indices.
 
     :Parameters:
@@ -268,11 +267,10 @@ def load_timeslice(datadir, start, end, singlename=None,  dim = '2D'):
 
 
 def ncdatasort(data,trifinder=False):
-    """From the nc data provided, common variables are produced.
+    """
+    From the nc data provided, common variables are produced.
 
     :Parameters: **data** -- a data dictionary of data from a .nc file
-
-	|
 
     :Returns: **data** -- Python data dictionary updated to include uvnode and uvnodell
     """
@@ -329,7 +327,8 @@ def ncdatasort(data,trifinder=False):
     return data
 
 def node_finder(XY, neiDir, grdDir):
-    """Given an array of long\lat points, find the nearest node
+    """
+    Given an array of long\lat points, find the nearest node
     to each, and return that node's index.  Reads long/lat from
     a .nei file
     """
@@ -410,8 +409,8 @@ def tri_finder(XY, data, nodes=False):
     return indices
 
 def closest_node(data, location):
-    """Given a long\lat point, find the nearest node
-    to each, and return that node's index.  
+    """
+    Given a long\lat point, find the nearest node, and return that node's index.  
     """
 
 	#argsort array to return index that would sort locations
@@ -421,8 +420,8 @@ def closest_node(data, location):
 
 
 def closest_element(data, location):
-    """Given a long\lat point, find the nearest element
-    to each, and return that elements's index.  
+    """
+    Given a long\lat point, find the nearest element, and return that elements's index.  
     """
 
 	#argsort array to return index that would sort locations
@@ -553,7 +552,8 @@ def jit_interp_vel(XY, triInds, u, v, uvnodell, a1u, a2u, nbe, nv):
 
 
 def get_elements(data, region):
-    """Takes uvnodes and a  region (specified by the corners of a
+    """
+    Takes uvnodes and a  region (specified by the corners of a
     rectangle) and determines the elements of uvnode that lie within the
     region
     """
@@ -562,7 +562,8 @@ def get_elements(data, region):
     return elements
 
 def get_elements_xy(data, region):
-    """Takes uvnodes and a  region (specified by the corners of a
+    """
+    Takes uvnodes and a  region (specified by the corners of a
     rectangle) and determines the elements of uvnode that lie within the
     region
     """
@@ -571,7 +572,8 @@ def get_elements_xy(data, region):
     return elements
 
 def get_nodes(data, region):
-    """Takes nodexy and a region (specified by the corners of a rectangle)
+    """
+    Takes nodexy and a region (specified by the corners of a rectangle)
     and determines the nodes that lie in the region
     """
    
@@ -579,7 +581,8 @@ def get_nodes(data, region):
     return nodes
 
 def get_nodes_xy(data, region):
-    """Takes nodexy and a region (specified by the corners of a rectangle)
+    """
+    Takes nodexy and a region (specified by the corners of a rectangle)
     and determines the nodes that lie in the region
     """
    

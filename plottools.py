@@ -27,13 +27,27 @@ Optional, but recommended:
 
 
 Functions
-=========
-prettyplotll -   sets axis labels and stuff for long lat plots.
-            
+=========            
 """
 
 
 def prettyplot_ll(axin,**kwargs):
+    """
+    Formats an axes.    
+    NOTE*: This code is dirty and old. It should be updated at some point....
+
+
+    :Parameters:
+        axin - a plt axes
+    :Optional:
+        grid - True/False to enable grid (default False)
+        setregion - Which region to zoom in on and set the aspect ratio. (default N/A)
+        cb - The colorbar value.
+        cblabel - The colorbar label. Must specify cb if cblabel is specified.
+        title -  Adds a title to the axes.
+
+ 
+    """
 
     cblabel=None
     skinny=False
@@ -95,6 +109,17 @@ def prettyplot_ll(axin,**kwargs):
 
 
 def get_aspectratio(region,LL=1):
+    """
+    Takes a region and returns the average aspect ratio of the data.
+
+
+    :Parameters:
+        region - a region as defined in regions.py
+    :Optional:
+        LL - if LL is 0 then uses an xy region instead of a region.
+
+ 
+    """
     if (LL==0):
         H=region['regionxy'][3]-region['regionxy'][2]
         W=region['regionxy'][1]-region['regionxy'][0]
@@ -111,7 +136,17 @@ def get_aspectratio(region,LL=1):
     return H/W
 
 
-def plot_box(axin,region,color,lw=1):
+def plot_box(axin,region,color='k',lw=1):
+    """
+    Plots a box defined by a region on an axes.
+
+    :Parameters:
+        axin - a plt axes to plot on.
+        region - a region as defined in regions.py
+    :Optional:
+        color - the color on the box (default black).
+        lw - the width of the box's lines (default 1). 
+    """
     axin.plot([region['region'][0],region['region'][0]],[region['region'][2],region['region'][3]],color,lw=lw)
     axin.plot([region['region'][1],region['region'][1]],[region['region'][2],region['region'][3]],color,lw=lw)
     axin.plot([region['region'][0],region['region'][1]],[region['region'][2],region['region'][2]],color,lw=lw)
@@ -119,6 +154,12 @@ def plot_box(axin,region,color,lw=1):
 
 
 def fix_osw(axin):
+    """
+    Reformats an ax. Disables offset, and reverses x-axis.
+
+    :Parameters:
+        axin - a plt ax to modify.
+    """
     _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
@@ -127,7 +168,21 @@ def fix_osw(axin):
 
 
 def plotcoast(axin,**kwargs):
-    
+    """
+    Plots the coastline on an ax.
+
+    :Parameters:
+        axin - a plt axes to plot on.
+    :Optional:
+        filename - which coastline file to use. Use nc coastline format from xscan. (default mid_nwatl6b.nc)
+        color - the color on the coastline (default black).
+        lw - the width of the coastline's lines (default 1).
+        ls - the style of the coastline's lines (default 1).
+        fill - True/False to fill in the coastline (default False)
+        fcolor - the color used to fill the coastline (default 0.75, dark gray)
+    """ 
+
+   
     color='k'
     lw=1
     ls='solid'
@@ -246,10 +301,10 @@ def plotgrid_ll(data,size,ll,nore):
 
 def get_data_ratio(region):
     """
-    Returns the aspect ratio of the raw data.
-
-    This method is intended to be overridden by new projection
-    types.
+    Returns the aspect ratio of the region data.
+    
+    :Parameters:
+        region - a region as defined in regions.py
     """
 
     xsize = np.max(np.fabs(region['region'][1] - region['region'][0]), 1e-30)
@@ -259,22 +314,29 @@ def get_data_ratio(region):
 
 
 def ax_label_spacer(axin):
+    """
+    Removes every second x and y ticklabel.
+    
+    :Parameters:
+        axin - a plt axes.
+    """
     for label in axin.get_xticklabels()[::2] +axin.get_yticklabels()[::2]:
         label.set_visible(False)
 
 
 
 def place_axes(region,numplots,cb=False):
-    """For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
+    """
+    For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
     :Parameters:
-    	region -- The region being plotted, needed for aspect ratio
-
-    	numplots -- The number of axes being define   
+    	region - The region being plotted, needed for aspect ratio
+    	numplots - The number of axes being define   
+    :Optional:
+        cb - True/False option for colorbar (default False)
     """
 
     #note to check region orientations this function uses aspect*fa. It is possible it may need to use dr as well. If weird axes orientation are return check into the effect of dr.
-
     f=plt.figure()
     axarr = np.empty(numplots, dtype=object)
 
@@ -321,7 +383,19 @@ def place_axes(region,numplots,cb=False):
     
 
 def ppll_sub(axin,**kwargs):
+    """
+    Formats ax from place_axes. Looks similar to prettyplot_ll, but corrects for subplots.
+    NOTE: If cblabel is specified then cb must be specified as well. len(cb)==len(cblabel) for code to function.
 
+    :Parameters:
+    	axin - The axes to be modified.
+    :Optional:
+        grid - True/False to enable grid (default False)
+        setregion - Which region to zoom in on and set the aspect ratio. (default N/A)
+        cb - The colorbar value/s. If len(cb)==1 the colorbar will be used for all axes. Otherwise one colorbar per axes.       
+        cblabel - The label or labels for the colorbar/s
+        cbsize -  The size of the text in the colorbar labels.
+    """
     cblabel=None
     axspacer=True
     cbsize=12
@@ -408,12 +482,13 @@ def ppll_sub(axin,**kwargs):
 
 
 def ll_dist(region,dist):
-    """Given a region and a distance in meters returns longitude interval approximately equalivent to the distance.
+    """
+    Given a region and a distance in meters returns longitude interval approximately equalivent to the distance.
+    NOTE: Clearly this is crude, hacky, and inaccurate over large areas. However, over small areas the error is small.
 
     :Parameters:
-    	region -- The region being plotted, needed for average latitude
-
-    	dist -- The distance in meters to match
+    	region - The region being plotted, needed for average latitude.
+    	dist - The distance in meters to match.
     """
     lat=region['region'][2:4].mean()
     kmlat=sw.dist([lat, lat],[0, 1],'km')[0]*1000
