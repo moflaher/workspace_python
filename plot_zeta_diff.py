@@ -14,15 +14,15 @@ from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name1='kit4_kelp_nodrag'
-name2='kit4_kelp_20m_drag_0.018'
-grid='kit4_kelp'
-regionname='kit4_kelp_tight2_kelpfield'
+name1='voucher_2d_test'
+name2='voucher_2d_test_wd'
+grid='voucher'
+regionname='mp'
 datatype='2d'
-starttime=400
-endtime=450
-cmin=-0.02
-cmax=0.02
+starttime=1390
+endtime=1441
+cmin=-0.5
+cmax=0.5
 
 
 ### load the .nc file #####
@@ -35,13 +35,19 @@ print 'done sort'
 
 
 cages=None
-with open('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat') as f_in:
-    cages=np.genfromtxt(f_in,skiprows=1)
-    if len(cages)>0:
-        cages=(cages[:,0]-1).astype(int)
-    else:
-        cages=None
-
+try:
+    with open('runs/'+grid+'/' +name1+ '/input/' +grid+ '_cage.dat') as f_in:
+        cages=np.genfromtxt(f_in,skiprows=1)
+        if len(cages)>0:
+            cages=(cages[:,0]-1).astype(int)
+            tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+            color='g'
+            lw=.2
+            ls='solid'
+        else:
+            cages=None
+except:
+    cages=None
 
 
 region=regions(regionname)

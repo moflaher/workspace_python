@@ -27,14 +27,13 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=None
-with open('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat') as f_in:
-    cages=np.genfromtxt(f_in,skiprows=1)
-    if len(cages)>0:
-        cages=(cages[:,0]-1).astype(int)
-    else:
-        cages=None
 
+cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
+if cages!=None:
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    color='g'
+    lw=.2
+    ls='solid'
 
 savepath='figures/png/' + grid + '_' + datatype + '/curl/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -70,7 +69,8 @@ for regionname in regionlist:
     prettyplot_ll(ax,setregion=region,cblabel='Mean Curl',cb=triax)
     plotcoast(ax,filename='pacific.nc',color='k',fill=True)
     if cages!=None:   
-        ax.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'w.',markersize=1) 
+        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        ax.add_collection(lseg_t)
     f.savefig(savepath + grid + '_' +name + '_'+ regionname +'_curl_mean.png',dpi=600)
     plt.close(f)
 

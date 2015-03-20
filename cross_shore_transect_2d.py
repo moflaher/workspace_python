@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -13,7 +14,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import seawater as sw
 
 # Define names and types of data
-name='kit4_kelp_nodrag'
+name='kit4_kelp_20m_drag_0.007'
 grid='kit4_kelp'
 datatype='2d'
 
@@ -25,14 +26,12 @@ data = ncdatasort(data,trifinder=True)
 print 'done sort'
 
 
-cages=None
-with open('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat') as f_in:
-    cages=np.genfromtxt(f_in,skiprows=1)
-    if len(cages)>0:
-        cages=(cages[:,0]-1).astype(int)
-    else:
-        cages=None
-
+cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
+if cages!=None:
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    color='g'
+    lw=.2
+    ls='solid'
 
 vectorstart=np.array([-129.496,52.644])
 vectorend=np.array([-129.5,52.649])
@@ -41,8 +40,9 @@ vectory=np.array([vectorstart[1],vectorend[1]])
 snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
 spv=np.array([-snv[1],snv[0]])
 
-xi=np.linspace(vectorstart[0],vectorend[0],50)
-yi=np.linspace(vectorstart[1],vectorend[1],50)
+npt=50
+xi=np.linspace(vectorstart[0],vectorend[0],npt)
+yi=np.linspace(vectorstart[1],vectorend[1],npt)
 us=data['u'].shape
 
 
@@ -75,7 +75,9 @@ ax=f.add_axes([.125,.1,.775,.8])
 triax=ax.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
 ax.plot(xi,yi,'k',lw=3)  
 if cages!=None:   
-    ax.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'w.',markersize=2) 
+    lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    coast=ax.add_collection(lseg_t)
+    coast.set_zorder(30)
 prettyplot_ll(ax,setregion=region,cb=triax,cblabel=r'Depth (m)') 
 f.savefig(plotpath + name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%len(xi))+'_line_location.png',dpi=600)
 plt.close(f)
@@ -88,6 +90,8 @@ fillarray_v=np.empty((us[0],len(xi)))
 fillalong=np.empty((us[0],len(xi)))
 fillcross=np.empty((us[0],len(xi)))
 dist=np.empty((len(xi),))
+h=np.empty((len(xi),))
+
 
 
 
@@ -97,6 +101,7 @@ print 'interp uvw on path'
 for i in range(0,len(xi)):
     print i
     fillarray_u[:,i],fillarray_v[:,i]=interp_vel(data,[xi[i],yi[i]])
+    h[i]=ipt.interpN_at_loc(data,'h',[xi[i],yi[i]])
 
 
 print 'Calc along path current'
@@ -114,6 +119,12 @@ for i in range(0,len(xi)):
     dist[i]=(sw.dist([vectorstart[1], yi[i]],[vectorstart[0], xi[i]],'km'))[0]*1000;
     
 
+if cages!=None:
+    incage=np.zeros((len(xi),))
+    host=data['trigrid'].get_trifinder().__call__(xi,yi)
+    incage[np.in1d(host,cages)]=1
+
+
 
 
 savedic={}
@@ -123,6 +134,11 @@ savedic['v']=fillarray_v
 savedic['along']=fillalong
 savedic['cross']=fillcross
 savedic['distance']=dist
+savedic['h']=h
+savedic['lon']=xi
+savedic['lat']=yi
+if cages!=None:
+    savedic['incage']=incage
 
 np.save(savepath+grid+'_'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%len(xi))+'_2d.npy',savedic)
 

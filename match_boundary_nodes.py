@@ -17,26 +17,26 @@ import netCDF4 as n4
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
-grid='kit4'
+name='westport'
+grid='dngrid'
 datatype='2d'
 
-### load the .nc file #####
+###load old grid stuff
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
-indata=load_fvcom_files('runs/'+grid+'/'+name+'/input','kit4','kit4_non_julian_obc.nc')
+indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,'dngrid_el_obc.nc')
 
 
 
-# Define names and types of data
-name2='kit4_kelp_clean'
-grid2='kit4_kelp'
+###load new grid stuff
+name2='voucher_2d_clean'
+grid2='voucher'
 datatype='2d'
 
 
-indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input','kit4_kelp')
+indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input','voucher')
 
 
 newbnodes=np.empty((len(indata['spgf_nodes']),1),dtype=int)
@@ -55,10 +55,12 @@ indata['obcf_nodes']=newbnodes+1
 
 
 
-save_spgfile(indata,'data/grid_stuff/','kit4_kelp')
-save_obcfile(indata,'data/grid_stuff/','kit4_kelp')
+save_spgfile(indata,'data/grid_stuff/','voucher')
+save_obcfile(indata,'data/grid_stuff/','voucher')
 
-ncid = n4.Dataset('data/grid_stuff/kit4_kelp_non_julian_obc.nc', 'r+',format='NETCDF3_CLASSIC')
+
+#new ncfile name
+ncid = n4.Dataset('data/grid_stuff/voucher_el_obc.nc', 'r+',format='NETCDF3_CLASSIC')
 ncid.variables['obc_nodes'][:]=newbnodes+1
 ncid.close()
 

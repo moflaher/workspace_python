@@ -18,17 +18,17 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='norun'
-grid='voucher'
+name='test_interp_bathymetry'
+grid='smallcape_force'
 #regionlist=regions()
-regionlist=['gp','pp','dg','mp','sfmwhole']
+regionlist=['gp','pp','dg','mp','sfmwhole','bof']
 datatype='2d'
 
 
 
 ### load the mesh files #####
-data=load_fvcom_files('/home/moe46/Desktop/school/grids/voucher/mp_double/makerun_tmp','voucher')
-data.update(loadnei('/home/moe46/Desktop/school/grids/voucher/mp_double/makerun_tmp/voucher.nei'))
+data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
+data.update(loadnei('runs/'+grid+'/'+name+'/input/smallcape_force_40_15_interp_hack_save.nei'))
 data=ncdatasort(data)
 
 savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/'

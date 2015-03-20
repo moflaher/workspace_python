@@ -747,4 +747,20 @@ def save_obcfile(datain,filepath,casename=None):
     fp.close()
 
 
+def loadcage(filepath):
+
+    cages=None
+    try:
+        with open(filepath) as f_in:
+            cages=np.genfromtxt(f_in,skiprows=1)
+            if len(cages)>0:
+                cages=(cages[:,0]-1).astype(int)
+            else:
+                cages=None
+    except:
+        cages=None
+
+    return cages
+
+
 

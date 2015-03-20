@@ -16,8 +16,8 @@ from matplotlib.collections import PolyCollection as PC
 # Define names and types of data
 name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
+regionname='kit4_kelp_tight2_kelpfield'
 starttime=400
 endtime=450
 cmin=0
@@ -30,17 +30,13 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=None
-with open('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat') as f_in:
-    cages=np.genfromtxt(f_in,skiprows=1)
-    if len(cages)>0:
-        cages=(cages[:,0]-1).astype(int)
-        tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-        color='g'
-        lw=.2
-        ls='solid'
-    else:
-        cages=None
+
+cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
+if cages!=None:
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    color='g'
+    lw=.2
+    ls='solid'
 
 
 region=regions(regionname)
