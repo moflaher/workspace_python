@@ -266,7 +266,7 @@ def load_timeslice(datadir, start, end, singlename=None,  dim = '2D'):
     return data
 
 
-def ncdatasort(data,trifinder=False):
+def ncdatasort(data,trifinder=False,uvhset=True):
     """
     From the nc data provided, common variables are produced.
 
@@ -299,11 +299,12 @@ def ncdatasort(data,trifinder=False):
     uvnodell = np.empty((len(nv[:,0]),2))
     uvnodell[:,0] = (lon[nv[:,0]] + lon[nv[:,1]] + lon[nv[:,2]]) / 3.0
     uvnodell[:,1] = (lat[nv[:,0]] + lat[nv[:,1]] + lat[nv[:,2]]) / 3.0
-    
-    uvh= np.empty((len(nv[:,0]),1))   
-    uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
+   
+    if (uvhset==True):
+        uvh= np.empty((len(nv[:,0]),1))   
+        uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
+        data['uvh']=uvh
 
-    data['uvh']=uvh
     data['uvnode'] = uvnode
     data['uvnodell'] = uvnodell
     data['nodell'] = nodell

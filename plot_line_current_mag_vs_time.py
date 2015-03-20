@@ -20,8 +20,8 @@ import scipy.io as sio
 # Define names and types of data
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
-name_change2='kit4_kelp_20m_drag_0.018'
-name_change3='kit4_kelp_20m_drag_0.018'
+name_change2='kit4_kelp_20m_drag_0.011'
+name_change3='kit4_kelp_20m_drag_0.007'
 #name_change='kit4_kelp_20m_drag_0.018'
 #name_change2='kit4_kelp_20m_0.011'
 #name_change3='kit4_kelp_20m_0.007'

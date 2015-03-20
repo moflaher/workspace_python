@@ -14,12 +14,12 @@ from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
+name='kit4_kelp_20m_drag_0.018_2d_5min'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
-starttime=400
-endtime=450
+regionname='kit4_kelp_tight5'
+starttime=4800
+endtime=5200
 cmin=0
 cmax=1
 
@@ -27,7 +27,7 @@ cmax=1
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
-data = ncdatasort(data)
+data = ncdatasort(data,trifinder=False,uvhset=False)
 print 'done sort'
 
 
