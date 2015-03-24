@@ -19,16 +19,16 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-name2='sfm6_musq2_no_cages'
-grid='sfm6_musq2'
-regionname='musq_large'
+name_orig='kit4_kelp_nodrag'
+name_change='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
-starttime=0
-offset=1008
+regionname='kit4_kelp_tight5'
+starttime=384
+offset=0
 
 
-testing=False
+testing=True
 usemean=False
 
 kl=[.775,.025,.2,.14]

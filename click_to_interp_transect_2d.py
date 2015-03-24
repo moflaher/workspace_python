@@ -21,7 +21,7 @@ name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
+regionname='kit4_kelp_tight5'
 starttime=384
 
 
@@ -68,8 +68,9 @@ vec=f.ginput(n=2,timeout=-1)
 plt.close(f)
 
 
-ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.018',region,vec,50)
-ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.007',region,vec,50)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.018',region,vec,200)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.007',region,vec,200)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_nodrag',region,vec,200)
 
 
 
