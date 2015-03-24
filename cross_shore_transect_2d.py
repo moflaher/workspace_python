@@ -14,7 +14,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import seawater as sw
 
 # Define names and types of data
-namelist=['kit4_kelp_20m_drag_0.018','kit4_kelp_nodrag','kit4_kelp_20m_drag_0.007','kit4_kelp_20m_drag_0.011']
+namelist=['kit4_kelp_20m_drag_0.018','kit4_kelp_20m_drag_0.007']
 
 
 for name in namelist:
@@ -42,12 +42,18 @@ for name in namelist:
     #kit4_kelp_tight2_kelpfield 2
     vectorstart=np.array([-129.5,52.645])
     vectorend=np.array([-129.495,52.6475])
-    #kit4_kelp_tight5 1
-    vectorstart=np.array([-129.37,52.545])
-    vectorend=np.array([-129.355,52.545])
-    #kit4_kelp_tight5 2
-    vectorstart=np.array([-129.385,52.5325])
-    vectorend=np.array([-129.37,52.5325])
+    #kit4_kelp_tight2_kelpfield 3
+    vectorstart=np.array([-129.494,52.6625])
+    vectorend=np.array([-129.489,52.66])
+#    #kit4_kelp_tight5 1
+#    vectorstart=np.array([-129.37,52.545])
+#    vectorend=np.array([-129.355,52.545])
+#    #kit4_kelp_tight5 2
+#    vectorstart=np.array([-129.385,52.5325])
+#    vectorend=np.array([-129.37,52.5325])
+#    #kit4_kelp_tight5 3
+#    vectorstart=np.array([-129.4,52.59])
+#    vectorend=np.array([-129.425,52.59])
     vectorx=np.array([vectorstart[0],vectorend[0]])
     vectory=np.array([vectorstart[1],vectorend[1]])
     snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
