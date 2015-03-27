@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
 datatype='2d'
 starttime=384
 offset=0
@@ -58,7 +58,7 @@ uv2=uv2[()]
 for regionname in regionlist:
 
     region=regions(regionname)
-    vectorspacing=2000*np.diff(region['region'][0:2])
+    vectorspacing=200#2000*np.diff(region['region'][0:2])
     nidx=get_nodes(data,region)
     eidx=equal_vectors(data,region,vectorspacing)
 
@@ -101,9 +101,9 @@ for regionname in regionlist:
         q2u2=data2['ua'][starttime+offset+fld,eidx]
         q2v2=data2['va'][starttime+offset+fld,eidx]
 
-    ebbfld=np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
+    ebbfld=.2#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
     ebbfldscale=('%.1f'%ebbfld)
-    scale1=np.sqrt(ebbfld*(vectorspacing*2)**2)
+    scale1=50#np.sqrt(ebbfld*(vectorspacing*2)**2)
 
     Q1=ax[0].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u1,q2v1,angles='xy',scale_units='xy',scale=scale1,zorder=10)
     Q2=ax[0].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u2,q2v2,angles='xy',scale_units='xy',scale=scale1,color='r',zorder=10)
@@ -179,9 +179,9 @@ for regionname in regionlist:
             resu2[j,:]=data2['ua'][(starttime+offset):,i]-np.real(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
             resv2[j,:]=data2['va'][(starttime+offset):,i]-np.imag(t_predic(data2['time'][(starttime+offset):],uv2['nameu'],uv2['freq'],uv2['tidecon'][i,:,:])).flatten()
 
-    res=np.linalg.norm(np.vstack([resu,resv]),axis=0).mean()
-    resscale=('%.1f'%res)
-    scale2=res*vectorspacing*2
+    res=.05#np.linalg.norm(np.vstack([resu,resv]),axis=0).mean()
+    resscale=('%.2f'%res)
+    scale2=15#res*vectorspacing*2
 
     Q1=ax[2].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
     Q2=ax[2].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)

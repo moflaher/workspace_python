@@ -22,6 +22,7 @@ datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['kit4_kelp_tight2_small','kit4_ftb','kit4_kelp_tight2_kelpfield']
+regionlist=['kit4_kelp_tight5']
 starttime=384
 cmin=-1
 cmax=1
