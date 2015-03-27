@@ -325,7 +325,7 @@ def ax_label_spacer(axin):
 
 
 
-def place_axes(region,numplots,cb=False):
+def place_axes(region,numplots,cb=False,rotation=False):
     """
     For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
@@ -352,6 +352,10 @@ def place_axes(region,numplots,cb=False):
     start=.1
     if cb==True:
         start=start+.125
+    #quick fix for pushing xlabel off the plot when rotating xticklabels
+    #works for my use case probably not all
+    if rotation==True:
+        start=start+.1
 
     spaceper=(space-.025*numplots)/numplots
 
@@ -399,6 +403,8 @@ def ppll_sub(axin,**kwargs):
     cblabel=None
     axspacer=True
     cbsize=12
+    rotation=0
+    ft=12
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -415,6 +421,11 @@ def ppll_sub(axin,**kwargs):
                 colorax=value    
             if (key=='cbsize'):
                 cbsize=value 
+                colorax=value    
+            if (key=='rotation'):
+                rotation=value 
+            if (key=='fontsize'):
+                ft=value 
                
     f=axin[0].get_figure()
     figW, figH = f.get_size_inches()
@@ -445,7 +456,7 @@ def ppll_sub(axin,**kwargs):
     for ax in axin:
         ax.yaxis.set_major_formatter(_formatter)
         ax.xaxis.set_major_formatter(_formatter)
-        ax.set_xticklabels(-1*(ax.get_xticks()))
+        ax.set_xticklabels(-1*(ax.get_xticks()),rotation=rotation,fontsize=ft)
     
 
     
@@ -497,13 +508,19 @@ def ll_dist(region,dist):
 
 
 
+def bboxer(bbc,bbin):
+    bb=np.array(bbc)
 
+    bb[0]=np.min([bbc[0],bbin[0]])    
+    bb[1]=np.min([bbc[1],bbin[1]])  
+    bb[2]=np.max([bbc[2]+bbc[0],bbin[2]+bbin[0]])  
+    bb[3]=np.max([bbc[3]+bbc[1],bbin[3]+bbin[1]])  
 
+    bb[2]=bb[2]-bb[0]    
+    bb[3]=bb[3]-bb[1]  
 
-
-
-
-
+    return bb
+    
 
 
 

@@ -22,7 +22,7 @@ grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-#regionlist=['kit4_kelp_tight2_small','kit4_ftb']
+regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
 starttime=384
 
 cbfix=True
@@ -39,8 +39,12 @@ print 'done sort'
 
 
 
-cages=np.genfromtxt('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+cages=loadcage('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat')
+if np.shape(cages)!=():
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    color='g'
+    lw=.1
+    ls='solid'
 
 
 for regionname in regionlist:
@@ -49,12 +53,6 @@ for regionname in regionlist:
     region=regions(regionname)
     nidx=get_nodes(data,region)
     eidx=get_elements(data,region)
-
-    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-    color='g'
-    lw=.1
-    ls='solid'
-
 
 
     savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot_interp/' + name_orig + '_' + name_change + '/'
@@ -114,7 +112,7 @@ for regionname in regionlist:
         CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
         ax[1].clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
     else:
-        ax0cb=[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
+        ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
         CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
         ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)

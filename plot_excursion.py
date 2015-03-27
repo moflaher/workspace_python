@@ -14,12 +14,12 @@ import scipy.signal as spsig
 
 
 # Define names and types of data
-name='kit4_kelp_nokelp'
+name='kit4_kelp_20m_drag_0.018_2d_5min'
 grid='kit4_kelp'
-regionname='kit4'
+regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
-starttime=384
-endtime=456
+starttime=4608
+endtime=12961
 
 
 
@@ -44,6 +44,7 @@ maxspeed=np.zeros((len(data['nv']),))
 maxpeak=np.zeros((len(data['nv']),))
 
 for i in range(0,len(eidx)):
+    print ("%d"%i)+"              "+("%f"%(i/len(eidx)*100)) 
     j=eidx[i]
     uvel[j,:]=(data['zeta'][starttime:endtime,data['nv'][j,0]] + data['zeta'][starttime:endtime,data['nv'][j,1]] + data['zeta'][starttime:endtime,data['nv'][j,2]]) / 3.0
     maxspeed[j]=np.sqrt(data['ua'][starttime:endtime,j]**2+data['va'][starttime:endtime,j]**2).max()
@@ -55,7 +56,7 @@ for i in range(0,len(eidx)):
 
 
 te=np.zeros((len(data['nv']),))
-te=np.multiply(maxspeed,maxpeak*3600)/np.pi/1000
+te=np.multiply(maxspeed,maxpeak*300)/np.pi/1000
 clims=np.percentile(te[eidx],[1,99])
 
 

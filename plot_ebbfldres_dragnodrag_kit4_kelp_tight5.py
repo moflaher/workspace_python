@@ -19,9 +19,9 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='kit4_kelp_20m_0.018'
-name2='kit4_45days_3'
-grid='kit4'
+name='kit4_kelp_20m_drag_0.018'
+name2='kit4_kelp_nodrag'
+grid='kit4_kelp'
 regionname='kit4_kelp_tight5'
 datatype='2d'
 starttime=384
@@ -32,16 +32,16 @@ offset=0
 testing=False
 usemean=True
 
-kl=[.625,.025,.345,.125]
-scale1=50
+kl=[.625,.025,.345,.16]
+scale1=35
 scale2=15
-vectorspacing=50
+vectorspacing=400
 fldax_r=[.1,.1,.275,.8]
 ebbax_r=[.385,.1,.275,.8]
 resax_r=[.67,.1,.275,.8]
 ebbfldscale='0.3'
 resscale='0.05'
-ABC=[.05,.925]
+ABC=[.025,.915]
 
 
 
@@ -65,9 +65,9 @@ lsegf=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsege=PC(tmparray,facecolor = 'g',edgecolor='None')
 lsegr=PC(tmparray,facecolor = 'g',edgecolor='None')
 
-uv1=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
 uv1=uv1[()]
-uv2=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv_all.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)
@@ -119,9 +119,9 @@ ax_fld.set_aspect(get_aspectratio(region))
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
 ax_fld.add_patch(rec)
-ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_fld.quiverkey(Q1,kl[0]+.075,kl[1]+.065,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_fld.quiverkey(Q2,kl[0]+.075,kl[1]+.03,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_fld.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_fld.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_fld.get_xticklabels()[::2]:
@@ -162,9 +162,9 @@ ax_ebb.yaxis.set_tick_params(labelleft='off')
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
 ax_ebb.add_patch(rec)
-ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_ebb.quiverkey(Q1,kl[0]+.075,kl[1]+.065,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_ebb.quiverkey(Q2,kl[0]+.075,kl[1]+.03,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_ebb.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_ebb.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_ebb.get_xticklabels()[::2]:
@@ -197,9 +197,9 @@ ax_res.yaxis.set_tick_params(labelleft='off')
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
 ax_res.add_patch(rec)
-ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.09),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.065,float(resscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.03,float(resscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
+aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.075,float(resscale), r'No drag', labelpos='E',fontproperties={'size': 8})
+aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.035,float(resscale), r'Drag', labelpos='E',fontproperties={'size': 8})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_res.get_yticklabels()[::2]:

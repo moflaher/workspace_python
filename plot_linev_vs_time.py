@@ -17,9 +17,9 @@ from scipy import interpolate as intp
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Define names and types of data
-name_orig='kit4_45days_3'
-name_change='kit4_kelp_20m_0.018'
-grid='kit4'
+name_orig='kit4_kelp_nodrag'
+name_change='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
 regionname='kit4_kelp_tight2'
 starttime=400
@@ -93,8 +93,8 @@ cb1=plt.colorbar(ax0cb,cax=cax0)
 cb1.set_label(r'Elevation (m)',fontsize=8)
 ax[0].axis([time.min(), time.max(),yim.min(),yim.max()])
 ax[0].set_ylabel(r'Distance (m)',fontsize=10)
-ax[0].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
-ax[0].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
+#ax[0].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
+#ax[0].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
 ax1cb=ax[1].pcolor(time,yim,interpdata2_orig,vmin=-.36,vmax=.36)
 divider1 = make_axes_locatable(ax[1])
@@ -103,9 +103,9 @@ cb2=plt.colorbar(ax1cb,cax=cax1)
 cb2.set_label(r'v-velocity (m s$^{-1}$)',fontsize=8)
 ax[1].axis([time.min(), time.max(),yim.min(),yim.max()])
 ax[1].set_ylabel(r'Distance (m)',fontsize=10)
-ax[1].set_xlabel(r'Time (h)',fontsize=10)
-ax[1].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
-ax[1].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
+#ax[1].set_xlabel(r'Time (h)',fontsize=10)
+#ax[1].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
+#ax[1].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
 
 ax2cb=ax[2].pcolor(time,yim,interpdata2T,vmin=-.18,vmax=.18)
@@ -116,8 +116,8 @@ cb3.set_label(r'v-velocity (m s$^{-1}$)',fontsize=8)
 ax[2].axis([time.min(), time.max(),yim.min(),yim.max()])
 ax[2].set_ylabel(r'Distance (m)',fontsize=10)
 ax[2].set_xlabel(r'Time (h)',fontsize=10)
-ax[2].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
-ax[2].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
+#ax[2].plot(time,np.zeros(shape=time.shape)+linea,'k',lw=.5,ls='--')
+#ax[2].plot(time,np.zeros(shape=time.shape)+lineb,'k',lw=.5,ls='--')
 
 
 
