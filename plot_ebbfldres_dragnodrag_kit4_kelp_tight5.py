@@ -32,7 +32,7 @@ offset=0
 testing=False
 usemean=True
 
-kl=[.625,.025,.345,.16]
+kl=[.625,.825,.345,.16]
 scale1=35
 scale2=15
 vectorspacing=400

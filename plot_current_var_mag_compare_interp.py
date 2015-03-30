@@ -22,7 +22,7 @@ grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_ftb']
 starttime=384
 
 cbfix=True
@@ -108,9 +108,9 @@ for regionname in regionlist:
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
         CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
-        ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
+        ax[1].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
         CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
-        ax[1].clabel(CS3, fontsize=6, inline=1,zorder=30,fmt=fmt)
+        ax[1].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
     else:
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
@@ -119,7 +119,7 @@ for regionname in regionlist:
 
 
 
-    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],cbsize=6)
+    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],fontsize=10,cblabelsize=6,cbticksize=8)
 
     ABC=['A','B','C']
     figW, figH = f.get_size_inches()

@@ -51,6 +51,7 @@ def prettyplot_ll(axin,**kwargs):
 
     cblabel=None
     skinny=False
+    fontsize=12
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -65,6 +66,8 @@ def prettyplot_ll(axin,**kwargs):
                 cblabel=value    
             if (key=='cb'):
                 colorax=value    
+            if (key=='fontsize'):
+                fontsize=value 
                
 
 
@@ -74,6 +77,11 @@ def prettyplot_ll(axin,**kwargs):
     axin.set_xticklabels(-1*(axin.get_xticks()))
     axin.set_xlabel(r'Longitude ($^{\circ}$W)')
     axin.set_ylabel(r'Latitude ($^{\circ}$N)')
+
+
+    for label in axin.get_xticklabels() +axin.get_yticklabels():
+        label.set_fontsize(fontsize)
+
 
     aspect=axin.get_aspect()
     if (aspect!='auto'):
@@ -398,13 +406,14 @@ def ppll_sub(axin,**kwargs):
         setregion - Which region to zoom in on and set the aspect ratio. (default N/A)
         cb - The colorbar value/s. If len(cb)==1 the colorbar will be used for all axes. Otherwise one colorbar per axes.       
         cblabel - The label or labels for the colorbar/s
-        cbsize -  The size of the text in the colorbar labels.
+        cblabelsize -  The size of the text in the colorbar labels.
     """
     cblabel=None
     axspacer=True
-    cbsize=12
+    cblabelsize=6
     rotation=0
-    ft=12
+    fontsize=10
+    cbticksize=8
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -419,13 +428,14 @@ def ppll_sub(axin,**kwargs):
                 cblabel=value    
             if (key=='cb'):
                 colorax=value    
-            if (key=='cbsize'):
-                cbsize=value 
-                colorax=value    
+            if (key=='cblabelsize'):
+                cblabelsize=value     
+            if (key=='cbticksize'):
+                cbticksize=value     
             if (key=='rotation'):
                 rotation=value 
             if (key=='fontsize'):
-                ft=value 
+                fontsize=value 
                
     f=axin[0].get_figure()
     figW, figH = f.get_size_inches()
@@ -456,25 +466,30 @@ def ppll_sub(axin,**kwargs):
     for ax in axin:
         ax.yaxis.set_major_formatter(_formatter)
         ax.xaxis.set_major_formatter(_formatter)
-        ax.set_xticklabels(-1*(ax.get_xticks()),rotation=rotation,fontsize=ft)
+        ax.set_xticklabels(-1*(ax.get_xticks()),rotation=rotation)
+        for label in ax.get_xticklabels() +ax.get_yticklabels():
+            label.set_fontsize(fontsize)
     
-
-    
+   
     if (cblabel != None):
         plt.draw()
-        if len(colorax)==len(axin):
+        if np.shape(colorax)==np.shape(axin):
             if (aspect>=1/fa):
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
                     axca=f.add_axes([axbb[0],axbb[1]-.125,axbb[2],0.025])
                     cb=plt.colorbar(colorax[i],cax=axca,orientation='horizontal')
-                    cb.set_label(cblabel[i],fontsize=cbsize)
+                    cb.set_label(cblabel[i],fontsize=cblabelsize)
+                    for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
+                        tick.set_fontsize(cbticksize)
             else:
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
                     axca=f.add_axes([axbb[0]+axbb[2]+.025,axbb[1],.025,axbb[3]])
                     cb=plt.colorbar(colorax[i],cax=axca)
-                    cb.set_label(cblabel[i],fontsize=cbsize)                
+                    cb.set_label(cblabel[i],fontsize=cblabelsize)     
+                    for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
+                        tick.set_fontsize(cbticksize)           
 
         else:
             axstart=axin[0].get_axes().get_position().bounds
@@ -483,11 +498,15 @@ def ppll_sub(axin,**kwargs):
                 #add color at current axis bottom
                 ax0ca=f.add_axes([axstart[0],axstart[1]-.125,axend[2]+axend[0]-axstart[0],0.025])
                 cb=plt.colorbar(colorax,cax=ax0ca,orientation='horizontal')
-                cb.set_label(cblabel,fontsize=cbsize)
+                cb.set_label(cblabel,fontsize=cblabelsize)
+                for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
+                    tick.set_fontsize(cbticksize)
             else:
                 ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
                 cb=plt.colorbar(colorax,cax=ax0ca)
-                cb.set_label(cblabel,fontsize=cbsize)
+                cb.set_label(cblabel,fontsize=cblabelsize)
+                for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
+                    tick.set_fontsize(cbticksize)
 
 
 

@@ -28,7 +28,7 @@ starttime=384
 offset=0
 
 
-testing=True
+testing=False
 usemean=True
 
 kl=[.6,.025]
@@ -78,9 +78,9 @@ for regionname in regionlist:
 
 
 
-    f,ax=place_axes(region,3)
+    f,ax=place_axes(region,3,rotation=True)
     r=f.canvas.get_renderer()
-    ppll_sub(ax,setregion=region)
+    ppll_sub(ax,setregion=region,rotation=-45)
 
     if usemean==True:
         uatmp=data['ua'][starttime:,eidx].copy()

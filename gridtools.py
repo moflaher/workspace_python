@@ -763,4 +763,111 @@ def loadcage(filepath):
     return cages
 
 
+def load_nodfile(filename=None,h=False):
+    """
+    Loads an nod file the data as a dictionary.
+ 
+    """
+
+    data={}
+    
+    if filename==None:
+        print 'load_nodfile requires a filename to load.'
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print  'load_nodfile: invalid filename.'
+        return data
+
+    t_data1=np.genfromtxt(filename)
+    fp.close()
+
+    data['node_num']=t_data1[:,0]
+    data['x']=t_data1[:,1]
+    data['y']=t_data1[:,2]
+    if h==True:
+        data['h']=t_data1[:,3]
+    else:
+        data['h']=np.zeros((len(data['x']),))
+    
+    return data
+
+def load_elefile(filename=None):
+    """
+    Loads an ele file the data as a dictionary.
+ 
+    """
+
+    data={}
+    
+    if filename==None:
+        print 'load_elefile requires a filename to load.'
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print  'load_elefile: invalid filename.'
+        return data
+
+    t_data1=np.genfromtxt(filename)
+    fp.close()
+
+    data['ele_num']=t_data1[:,0]
+    data['nv']=t_data1[:,1:4]
+    
+    return data
+
+
+
+def save_grdfile(grddata,depdata,outname,is31=True):
+    """
+    Save an FVCOM grd input file.
+ 
+    """
+    
+    if outname==None:
+        print 'save_grdfile requires a filename to save.'
+        return
+    try:
+        fp=open(outname,'w')
+    except IOError:
+        print  'save_grdfile: invalid filename.'
+        return data
+    if is31:
+        fp.write('Node Number = %d\n' % len(depdata['node_num']) )
+        fp.write('Cell Number = %d\n' % len(grddata['nv']) )
+    for i in range(0,len(grddata['nv'])):
+        fp.write('%d %d %d %d %d\n'% (grddata['ele_num'][i],grddata['nv'][i,0],grddata['nv'][i,1],grddata['nv'][i,2],0))
+
+    for i in range(0,len(depdata['node_num'])):
+        fp.write('%d %f %f %f\n'% (depdata['node_num'][i],depdata['x'][i],depdata['y'][i],depdata['h'][i]))
+    fp.close()
+
+   
+    return 
+
+def save_depfile(depdata,outname,is31=True):
+    """
+    Save an FVCOM dep input file.
+ 
+    """
+  
+
+    if outname==None:
+        print 'save_depfile requires a filename to save.'
+        return
+    try:
+        fp=open(outname,'w')
+    except IOError:
+        print  'save_depfile: invalid filename.'
+        return data
+    if is31:
+        fp.write('Node Number = %d\n' % len(depdata['node_num']) )
+    for i in range(0,len(depdata['node_num'])):
+        fp.write('%f %f %f\n'% (depdata['x'][i],depdata['y'][i],depdata['h'][i]))
+    fp.close()
+
+   
+    return 
 

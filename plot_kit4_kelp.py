@@ -121,7 +121,7 @@ for label in axsub1.get_yticklabels():
     label.set_fontsize(8)
 
 axsub1.text(-129.2725,52.775,'Aristazabal',fontsize=6,rotation=-45)
-axsub1.text(-129.2725,52.77,'Island',fontsize=6,rotation=-45)
+axsub1.text(-129.2725,52.755,'Island',fontsize=6,rotation=-45)
 axsub1.text(-129.39,52.675,'Moore Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub1.text(-129.53,52.78,'Rennison Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub1.text(-129.53,52.5,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None','alpha':1, 'pad':3})
