@@ -35,3 +35,14 @@ def runstats(datain=None):
         stdval=np.std(datain)
 
         return maxval,minval,meanval,stdval
+
+
+
+def ne_fv(casename,h=False,is31=False):
+    
+    depdata=load_nodfile(casename+'.nod',h)
+    grddata=load_elefile(casename+'.ele')
+    save_grdfile(grddata,depdata,casename+'_grd.dat',is31)
+    save_depfile(depdata,casename+'_dep.dat',is31)
+
+
