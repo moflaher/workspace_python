@@ -22,7 +22,7 @@ grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_ftb']
+regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
 starttime=384
 
 cbfix=True
@@ -81,6 +81,7 @@ for regionname in regionlist:
     xi = np.linspace(region['region'][0],region['region'][1], ngridx)
     yi = np.linspace(region['region'][2],region['region'][3], ngridy)
     cvarm_o_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], cvarm_o, xi, yi)
+    cvarm_c_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], cvarm_c, xi, yi)
     cvarm_diff_rel_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], cvarm_diff_rel, xi, yi)
 
     tmpxy=np.meshgrid(xi,yi)
@@ -89,12 +90,13 @@ for regionname in regionlist:
     host=data['trigrid'].get_trifinder().__call__(xii,yii)
 
     cvarm_o_interp_mask = np.ma.masked_where(host==-1,cvarm_o_interp)
+    cvarm_c_interp_mask = np.ma.masked_where(host==-1,cvarm_c_interp)
     cvarm_diff_rel_interp_mask = np.ma.masked_where(host==-1,cvarm_diff_rel_interp)
 
     print ('griddata interp: %f' % (time.clock() - start))
 
 
-    f,ax=place_axes(region,2,cb=True)  
+    f,ax=place_axes(region,3,cb=True)  
 
     fmt=r'%d'
 
@@ -103,31 +105,38 @@ for regionname in regionlist:
         Vpos=np.array([0,2,4,6,8,10,12,14,16,18,20])
         Vneg=np.array([-80,-70,-60,-50,-40,-30,-20,-10])
         Vpos=np.array([0,4,8,12,16,20])
-        Vneg=np.array([-80,-60,-40,-20])
+        Vneg=np.array([-60,-30,0])
         #V=np.array([-80,-60,-40,-20,0,5,10,15,20])
-        ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-80,vmax=40)
-        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
-        ax[1].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
-        CS3=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
-        ax[1].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
+        ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask,vmin=0,vmax=.5)
+        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_c_interp_mask,vmin=0,vmax=.5)
+        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-100,vmax=30)
+        #CS2=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+        #ax[2].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+        #CS3=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+        #ax[2].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
     else:
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask)
-        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
-        CS2=ax[1].contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
-        ax[1].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
+        ax1cb=ax[1].pcolormesh(xi,yi,cvarm_c_interp_mask)
+        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask)
+        #CS2=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
+        #ax[2].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
 
 
 
-    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],fontsize=10,cblabelsize=6,cbticksize=8)
+    ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb,ax2cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
 
     ABC=['A','B','C']
     figW, figH = f.get_size_inches()
+    plt.draw()
     for i,axi in enumerate(ax):
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
-        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/(figH/figW)),xycoords='axes fraction')
-    lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax[1].add_collection(lseg_t)
+        axbb=ax[i].get_axes().get_position().bounds
+        ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+#    lseg_t1=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#    ax[1].add_collection(lseg_t1)
+#    lseg_t2=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#    ax[2].add_collection(lseg_t2)
+
 
     f.savefig(savepath + grid + '_' + regionname+'_current_variance_magnitude_diff_relative_subplot_contour.png',dpi=600)
     plt.close(f)

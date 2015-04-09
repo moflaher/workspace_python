@@ -21,20 +21,21 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='kit4_45days_3'
-name2='kit4_kelp_20m_0.018'
-grid='kit4'
-regionname='kit4_kelp_tight2_kelpfield'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
+regionname='kit4_kelp_tight5'
 datatype='2d'
-lname='element_80185_s3'
+lname='kit4_kelp_tight5_6elements_200x200_1000pp_s0'
 #averaging length (breaks code if zero). N=1 for original data
-N=150
+#plotend is the number of days?
+N=1
 plotend=1
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name +'/output/',singlename=grid + '_0001.nc')
 print 'done load'
-data = ncdatasort(data)
+data = ncdatasort(data,trifinder=True)
 print 'done sort'
 
 savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/particles_inkelp/' + name + '_'+name2+'/'
@@ -65,8 +66,7 @@ if 'savelag2' not in globals():
         savelag2[i]=fileload['savelag'][i].value.T
 
 
-cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+cages=loadcage('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat')
 
 
 #comment out this line for any kelp not just kelp in the start box
@@ -76,7 +76,7 @@ tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['
 sidx=np.where((savelag1['x'][:,0]>region['regionxy'][0])&(savelag1['x'][:,0]<region['regionxy'][1])&(savelag1['y'][:,0]>region['regionxy'][2])&(savelag1['y'][:,0]<region['regionxy'][3]))[0]
 
 
-host=data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,0],savelag1['y'][sidx,0])
+host=data['trigridxy_finder'].__call__(savelag1['x'][sidx,0],savelag1['y'][sidx,0])
 
 cidx=np.in1d(host,cages)
 
@@ -98,14 +98,14 @@ region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,re
 
 
 #find particles in kelp from region start
-numberin1=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag1['x'][sidx,:],savelag1['y'][sidx,:]),cages).reshape(savelag1['x'][sidx,:].shape),axis=0)/npts
-numberin2=np.sum(np.in1d(data['trigridxy'].get_trifinder().__call__(savelag2['x'][sidx,:],savelag2['y'][sidx,:]),cages).reshape(savelag2['x'][sidx,:].shape),axis=0)/npts
+numberin1=np.sum(np.in1d(data['trigridxy_finder'].__call__(savelag1['x'][sidx,:],savelag1['y'][sidx,:]),cages).reshape(savelag1['x'][sidx,:].shape),axis=0)/npts
+numberin2=np.sum(np.in1d(data['trigridxy_finder'].__call__(savelag2['x'][sidx,:],savelag2['y'][sidx,:]),cages).reshape(savelag2['x'][sidx,:].shape),axis=0)/npts
 
 f, (ax1,ax2) = plt.subplots(2, sharex=True, sharey=True)
 
 ax1.plot((savelag1['time']-savelag1['time'].min())/3600,numberin1,'k',label='No drag')
 ax1.plot((savelag2['time']-savelag2['time'].min())/3600,numberin2,'r',label='Drag')
-ax1.set_xlim([-10,plotend*24])
+ax1.set_xlim([plotend*24*-.1,plotend*24])
 
 handles, labels = ax1.get_legend_handles_labels()
 legend=ax1.legend(handles, labels)

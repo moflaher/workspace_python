@@ -21,7 +21,7 @@ name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight5'
+regionname='kit4_kelp_tight2_kelpfield'
 starttime=384
 
 

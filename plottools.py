@@ -6,7 +6,11 @@ import seawater as sw
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
-from datatools import *
+import gridtools as gt
+import datatools as dt
+import misctools as mt
+import projtools as pjt
+
 
 """
 Front Matter
@@ -115,6 +119,19 @@ def prettyplot_ll(axin,**kwargs):
 
 
 
+def get_data_ratio(region):
+    """
+    Returns the aspect ratio of the region data.
+    
+    :Parameters:
+        region - a region as defined in regions.py
+    """
+
+    xsize = np.max(np.fabs(region['region'][1] - region['region'][0]), 1e-30)
+    ysize = np.max(np.fabs(region['region'][3] - region['region'][2]), 1e-30)
+
+    return ysize / xsize
+
 
 def get_aspectratio(region,LL=1):
     """
@@ -213,7 +230,7 @@ def plotcoast(axin,**kwargs):
             if (key=='fcolor'):
                 fcolor=value
 
-    sl=loadnc("",singlename='data/shorelines/'+filename)
+    sl=dt.loadnc("",singlename='data/shorelines/'+filename)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]
@@ -222,15 +239,15 @@ def plotcoast(axin,**kwargs):
     tmparray=[list(zip(sl['lon'][sl['start'][i]:(sl['start'][i]+sl['count'][i])],sl['lat'][sl['start'][i]:(sl['start'][i]+sl['count'][i])])) for i in range(0,len(sl['start']))]
 
     if fill==True:
-        lseg=PC(tmparray,facecolor = fcolor,edgecolor=color,linewidths=lw)
+        coastseg=PC(tmparray,facecolor = fcolor,edgecolor=color,linewidths=lw)
     else:
-        lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        coastseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 
 
 
     
 
-    axin.add_collection(lseg)
+    axin.add_collection(coastseg)
 
 
 
@@ -240,7 +257,7 @@ def plotgrid_num(data,size,num,nore):
     if nore=='n':
         region={}
         region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
-        idx=get_nodes_xy(data,region)
+        idx=dt.get_nodes_xy(data,region)
         plt.triplot(data['trigridxy'],lw=.5)
         for i in idx:
             plt.text(data['nodexy'][i,0],data['nodexy'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
@@ -251,7 +268,7 @@ def plotgrid_num(data,size,num,nore):
     if nore=='e':
         region={}
         region['region']=[data['uvnode'][num,0]-size,data['uvnode'][num,0]+size,data['uvnode'][num,1]-size,data['uvnode'][num,1]+size]
-        idx=get_elements_xy(data,region)
+        idx=dt.get_elements_xy(data,region)
         plt.triplot(data['trigridxy'],lw=.5)
         for i in idx:
             plt.text(data['uvnode'][i,0],data['uvnode'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
@@ -266,14 +283,14 @@ def add_num_label(axin,data,size,num,nore):
     if nore=='n':
         region={}
         region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
-        idx=get_nodes_xy(data,region)
+        idx=dt.get_nodes_xy(data,region)
         for i in idx:
             axin.text(data['nodell'][i,0],data['nodell'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
        
     if nore=='e':
         region={}
         region['region']=[data['uvnode'][num,0]-size,data['uvnode'][num,0]+size,data['uvnode'][num,1]-size,data['uvnode'][num,1]+size]
-        idx=get_elements_xy(data,region)
+        idx=dt.get_elements_xy(data,region)
         for i in idx:
             axin.text(data['uvnodell'][i,0],data['uvnodell'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
         
@@ -282,10 +299,10 @@ def add_num_label(axin,data,size,num,nore):
 def plotgrid_ll(data,size,ll,nore):
 
     if nore=='n':
-        num=closest_node(data,ll)
+        num=dt.closest_node(data,ll)
         region={}
         region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
-        idx=get_nodes_xy(data,region)
+        idx=dt.get_nodes_xy(data,region)
         plt.triplot(data['trigridxy'],lw=.5)
         for i in idx:
             plt.text(data['nodexy'][i,0],data['nodexy'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
@@ -294,10 +311,10 @@ def plotgrid_ll(data,size,ll,nore):
         plt.axis(region2['region'])
         plt.show()
     if nore=='e':
-        num=closest_element(data,ll)
+        num=dt.closest_element(data,ll)
         region={}
         region['region']=[data['uvnode'][num,0]-size,data['uvnode'][num,0]+size,data['uvnode'][num,1]-size,data['uvnode'][num,1]+size]
-        idx=get_elements_xy(data,region)
+        idx=dt.get_elements_xy(data,region)
         plt.triplot(data['trigridxy'],lw=.5)
         for i in idx:
             plt.text(data['uvnode'][i,0],data['uvnode'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
@@ -307,18 +324,6 @@ def plotgrid_ll(data,size,ll,nore):
         plt.show()
 
 
-def get_data_ratio(region):
-    """
-    Returns the aspect ratio of the region data.
-    
-    :Parameters:
-        region - a region as defined in regions.py
-    """
-
-    xsize = np.max(np.fabs(region['region'][1] - region['region'][0]), 1e-30)
-    ysize = np.max(np.fabs(region['region'][3] - region['region'][2]), 1e-30)
-
-    return ysize / xsize
 
 
 def ax_label_spacer(axin):
@@ -406,7 +411,11 @@ def ppll_sub(axin,**kwargs):
         setregion - Which region to zoom in on and set the aspect ratio. (default N/A)
         cb - The colorbar value/s. If len(cb)==1 the colorbar will be used for all axes. Otherwise one colorbar per axes.       
         cblabel - The label or labels for the colorbar/s
-        cblabelsize -  The size of the text in the colorbar labels.
+        cblabelsize -  The fontsize of the colorbar labels.
+        cbticksize -  The fontsize of the colorbar ticks.
+        fontsize -  The fontsize of the x and y ticks.
+        llfontsize -  The fontsize of the x and y axis labels.
+        
     """
     cblabel=None
     axspacer=True
@@ -414,6 +423,8 @@ def ppll_sub(axin,**kwargs):
     rotation=0
     fontsize=10
     cbticksize=8
+    llfontsize=12
+    cbtickrotation=0
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -436,6 +447,10 @@ def ppll_sub(axin,**kwargs):
                 rotation=value 
             if (key=='fontsize'):
                 fontsize=value 
+            if (key=='llfontsize'):
+                llfontsize=value 
+            if (key=='cbtickrotation'):
+                cbtickrotation=value 
                
     f=axin[0].get_figure()
     figW, figH = f.get_size_inches()
@@ -444,16 +459,16 @@ def ppll_sub(axin,**kwargs):
     aspect=axin[0].get_aspect()
     if (aspect>=1/fa):
         for ax in axin:
-            ax.set_xlabel(r'Longitude ($^{\circ}$W)')
+            ax.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=llfontsize)
             ax.yaxis.set_tick_params(labelleft='off')
         axin[0].yaxis.set_tick_params(labelleft='on')
-        axin[0].set_ylabel(r'Latitude ($^{\circ}$N)')
+        axin[0].set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=llfontsize)
     else:
         for ax in axin:
-            ax.set_ylabel(r'Latitude ($^{\circ}$N)')
+            ax.set_ylabel(r'Latitude ($^{\circ}$N)',fontsize=llfontsize)
             ax.xaxis.set_tick_params(labelbottom='off')
         axin[-1].xaxis.set_tick_params(labelbottom='on')
-        axin[-1].set_xlabel(r'Longitude ($^{\circ}$W)')
+        axin[-1].set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=llfontsize)
     
 
     if axspacer==True:
@@ -482,6 +497,7 @@ def ppll_sub(axin,**kwargs):
                     cb.set_label(cblabel[i],fontsize=cblabelsize)
                     for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
                         tick.set_fontsize(cbticksize)
+                        tick.set_rotation(cbtickrotation)
             else:
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
@@ -509,24 +525,6 @@ def ppll_sub(axin,**kwargs):
                     tick.set_fontsize(cbticksize)
 
 
-
-
-def ll_dist(region,dist):
-    """
-    Given a region and a distance in meters returns longitude interval approximately equalivent to the distance.
-    NOTE: Clearly this is crude, hacky, and inaccurate over large areas. However, over small areas the error is small.
-
-    :Parameters:
-    	region - The region being plotted, needed for average latitude.
-    	dist - The distance in meters to match.
-    """
-    lat=region['region'][2:4].mean()
-    kmlat=sw.dist([lat, lat],[0, 1],'km')[0]*1000
-    
-    return dist/kmlat
-
-
-
 def bboxer(bbc,bbin):
     bb=np.array(bbc)
 
@@ -541,11 +539,32 @@ def bboxer(bbc,bbin):
     return bb
     
 
+def meter_box(axin,loc,dist,color='k',lw=1):
+    """
+    Given axes and location in lon/lat and a distance (1d or 2d) in meters plots a box around that location.
+    NOTE: This uses my hacky ll_dist, so will be correct over small region but not as accurate over large regions.
 
+    :Parameters:
+        axin -  The axes to plot the box on.
+    	loc - The center of the box being plotted.
+    	dist - The distance in meters around the box to plot.
+    """
+    dist=np.atleast_1d(np.array(dist))
+    loc=np.array(loc)
+    tr={}
+    tr['region']=np.array([loc[0],loc[0],loc[1],loc[1]])
+    lon_space=pjt.ll_dist(tr,dist[0])
+    if len(dist)==2:
+        lat_space=dist[1]/111120    
+    else:
+        lat_space=dist[0]/111120  
 
+    tr['region'][0]=tr['region'][0]-lon_space
+    tr['region'][1]=tr['region'][1]+lon_space
+    tr['region'][2]=tr['region'][2]-lat_space
+    tr['region'][3]=tr['region'][3]+lat_space
 
-
-
+    plot_box(axin,tr,color=color,lw=lw)
 
 
 

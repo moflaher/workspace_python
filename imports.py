@@ -19,6 +19,16 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
+
+
+#import my tools again but as something, this is mostly to beable to easily check for function names
+import gridtools as gt
+import datatools as dt
+import misctools as mt
+import plottools as pt
+import interptools as ipt
+import projtools as pjt

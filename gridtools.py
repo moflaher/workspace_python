@@ -8,8 +8,10 @@ import matplotlib.pyplot as plt
 import os as os
 from StringIO import StringIO
 
-from datatools import *
-from regions import makeregions
+import datatools as dt
+import misctools as mt
+import plottools as pt
+
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
 
@@ -24,41 +26,8 @@ Author: Mitchell O'Flaherty-Sproul
 
 A bunch of functions dealing with finite element grids.
 
-Requirements
-===================================
-Absolutely Necessary:
-
-
-Optional, but recommended:
-
-
-Functions
-=========
-regions -   given no input regions returns a list of regions, given a valid location it returns long/lat of the region and the passage name in file format and title format.
-            
+           
 """
-
-
-
-def regions(regionname=None):
-    """Returns region locations and full names
-
-    :Parameters:
-    	regionname
-
- 
-    """
-
-    allregions=makeregions()
-
-    if regionname==None:
-        print 'Valid regions are'
-        return allregions.keys()        
-    else:
-        tmpregion=allregions[regionname]
-        tmpregion['center']=[(tmpregion['region'][0]+tmpregion['region'][1])/2,(tmpregion['region'][2]+tmpregion['region'][3])/2]
-        return tmpregion
-
 
 def loadnei(neifilename=None):
     """
@@ -241,39 +210,16 @@ def equal_vectors(data,region,spacing):
     xytrigrid = mplt.Triangulation(data['x'], data['y'],data['nv'])
     host=xytrigrid.get_trifinder().__call__(xv.reshape(-1,1),yv.reshape(-1,1))
 
-    idx=get_elements(data,region)
+    idx=dt.get_elements(data,region)
 
     common=np.in1d(host,idx)
 
     return np.unique(host[common].flatten())
 
 
-
-def regionll2xy(data,region):
-    """
-    Take an FVCOM data dictionary, a region dictionary and return a region dictionary with regionxy added which best approximates the ll region in xy.
- 
-    """
-
-    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
-    right=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][1])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
-    
-    top=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][3])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
-    bottom=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][2])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
-
-    region['regionxy']=[data['uvnode'][left,0],data['uvnode'][right,0],data['uvnode'][bottom,1],data['uvnode'][top,1]]
-
-
-    return region
-
-
-
-
-
-
 def regioner(data,region,subset=False):
     
-    nidx=get_nodes(data,region)
+    nidx=dt.get_nodes(data,region)
 
     idx0=np.in1d(data['nv'][:,0],nidx)
     idx1=np.in1d(data['nv'][:,1],nidx)
@@ -310,8 +256,6 @@ def regioner(data,region,subset=False):
     return data
 
 
-
-
 def interp_vel(data,loc,layer=None,ll=True):
     loc=np.array(loc)
     host=data['trigrid_finder'].__call__(loc[0],loc[1])
@@ -323,14 +267,7 @@ def interp_vel(data,loc,layer=None,ll=True):
 
     #code for ll adapted from mod_utils.F
     if ll==True:
-        TPI=111194.92664455874
-        y0c = TPI * (loc[1] - data['uvnodell'][host,1])
-        dx_sph = loc[0] - data['uvnodell'][host,0]
-        if (dx_sph > 180.0):
-            dx_sph=dx_sph-360.0
-        elif (dx_sph < -180.0):
-            dx_sph =dx_sph+360.0
-        x0c = TPI * np.cos(np.deg2rad(loc[1] + data['uvnodell'][host,1])*0.5) * dx_sph
+        x0c,y0c=ll2m(data['uvnodell'][host,:],loc)
     else:       
         x0c=loc[0]-data['uvnode'][host,0]
         y0c=loc[1]-data['uvnode'][host,1] 

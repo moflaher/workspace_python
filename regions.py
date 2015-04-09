@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Front Matter
-=============Created on Thursday June 12, 2014Author: Mitchell O'Flaherty-SproulA set of predefined regions to select from based on name.Requirements
-===================================
-Absolutely Necessary:
-Optional, but recommended:
-Functions
-=========
-makeregions - function creates all the regions and returns a dictionary containing them.
+=============
+
+Created in 2014
+
+Author: Mitchell O'Flaherty-Sproul
+
+A set of predefined regions to select from based on name.
+
 
 """
 import numpy as np
@@ -52,7 +53,10 @@ def makeregions():
     tl=np.vstack([tl,        [[-129.5, -129.44, 53.04, 53.08],'kit4_kelp_tight3','kit4_kelp_tight3']])
     tl=np.vstack([tl,        [[-129.61, -129.5, 52.96, 53.02],'kit4_kelp_tight4','kit4_kelp_tight4']])
     tl=np.vstack([tl,        [[-129.47, -129.28, 52.48, 52.62],'kit4_kelp_tight5','kit4_kelp_tight5']])
+    tl=np.vstack([tl,        [[-129.36849, -129.3585, 52.54049, 52.5505],'kit4_kelp_tight5_A2','kit4_kelp_tight5_A2']])
+    tl=np.vstack([tl,        [[-129.4187, -129.40769, 52.56615, 52.578849],'kit4_kelp_tight5_A6','kit4_kelp_tight5_A6']])
     tl=np.vstack([tl,        [[-129.43, -129.29, 52.725, 52.88],'kit4_kelp_tight6','kit4_kelp_tight6']])
+    tl=np.vstack([tl,        [[-129.47, -129.28, 52.452, 52.648],'kit4_kelp_tight5_tall','kit4_kelp_tight5_tall']])
     tl=np.vstack([tl,        [[-129.526, -129.286, 52.4576, 52.7178],'kit4_4island','kit4_4island']])
     tl=np.vstack([tl,        [[-129.6, -129.1, 52.45, 52.825],'kelpchain','kelpchain']])
     tl=np.vstack([tl,        [[-128.9, -128.75, 53.525, 53.625],'kit4_area5','Area 5']])

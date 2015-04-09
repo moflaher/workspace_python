@@ -167,7 +167,7 @@ axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
 axsub2.text(-129.775,53.20,'Banks Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub2.text(-129.715,53.16,'Otter Passage',fontsize=5,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
-plot_box(axsub1,region3,'g',1.5)
+
 
 
 
@@ -245,18 +245,19 @@ aa=axsub1.text(rn['center'][0],rn['center'][1],'R1',fontsize=12,rotation=0,color
 rn=regions('kit4_kelp_tight2_small')
 plot_box(axsub1,rn,'r',1.5)
 axsub1.text(rn['center'][0],rn['center'][1],'R2',fontsize=12,rotation=0,color='r')
+plot_box(axsub1,region3,'g',1.5)
 
 #rn=regions('kit4_kelp_tight6')
 #plot_box(axsub1,rn,'k',1.5)
 #axsub1.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='k')
 
-rn=regions('kit4_crossdouble')
-plot_box(axsub2,rn,'r',1.5)
-axsub2.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='r')
+#rn=regions('kit4_crossdouble')
+#plot_box(axsub2,rn,'r',1.5)
+#axsub2.text(rn['center'][0],rn['center'][1],'R3',fontsize=12,rotation=0,color='r')
 
-rn=regions('kit4_ftb')
-plot_box(axsub2,rn,'r',1.5)
-axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='r')
+#rn=regions('kit4_ftb')
+#plot_box(axsub2,rn,'r',1.5)
+#axsub2.text(rn['center'][0],rn['center'][1],'R4',fontsize=12,rotation=0,color='r')
 
 
 ###############################################################################

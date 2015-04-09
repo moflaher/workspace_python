@@ -19,13 +19,13 @@ import h5py as h5
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name='kit4_45days_3'
-name2='kit4_kelp_20m_0.018'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_20m_drag_0.018'
 #name='kit4_45days_3'
-grid='kit4'
+grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_ftb'
-lname='element_83638_s6'
+regionname='kit4_kelp_tight5'
+lname='kit4_kelp_tight5_6elements_200x200_1000pp_s0'
 
 
 ### load the .nc file #####
@@ -34,9 +34,13 @@ print 'done load'
 data = ncdatasort(data)
 print 'done sort'
 
-cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
-tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+cages=loadcage('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat')
+if np.shape(cages)!=():
+    tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+    color='g'
+    lw=.1
+    ls='solid'
+
 
 region=regions(regionname)
 region=regionll2xy(data,region)
@@ -66,7 +70,7 @@ cols=3
 rows=3
 
 nos=rows*cols
-subtimes=np.linspace(0,40*6,nos)
+subtimes=np.linspace(0,5760,nos)
 
 expand=2500
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
@@ -76,10 +80,10 @@ ax=ax.flatten()
 
 for i in range(0,len(ax)):
     print i
-    ax[i].triplot(data['trigridxy'],lw=.15)
+    ax[i].triplot(data['trigridxy'],lw=.05)
     lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
     ax[i].add_collection(lseg1)
-    ax[i].scatter(savelag1['x'][:,subtimes[i].astype(int)],savelag1['y'][:,subtimes[i].astype(int)],color='k',label='No drag',s=.25,zorder=10)
+    ax[i].scatter(savelag1['x'][:,subtimes[i].astype(int)],savelag1['y'][:,subtimes[i].astype(int)],color='b',label='No drag',s=.25,zorder=10)
     ax[i].scatter(savelag2['x'][:,subtimes[i].astype(int)],savelag2['y'][:,subtimes[i].astype(int)],color='r',label='Drag',s=.25,zorder=15)
     ax[i].axis(region['regionxy'])
     ax[i].set_title('Hour '+ ("%.0f"% ( ( ((savelag1['time'][1]-savelag1['time'][0])*subtimes[i].astype(int) )/3600)  ) ))

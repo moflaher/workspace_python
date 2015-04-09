@@ -32,7 +32,7 @@ offset=0
 testing=False
 usemean=True
 
-kl=[.625,.825,.345,.16]
+kl=[.695,.825,.285,.16]
 scale1=35
 scale2=15
 vectorspacing=400
@@ -42,8 +42,7 @@ resax_r=[.67,.1,.275,.8]
 ebbfldscale='0.3'
 resscale='0.05'
 ABC=[.025,.915]
-
-
+fontsize=6
 
 region=regions(regionname)
 
@@ -119,9 +118,9 @@ ax_fld.set_aspect(get_aspectratio(region))
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_fld.transAxes,fc='w',zorder=20)
 ax_fld.add_patch(rec)
-ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_fld.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_fld.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_fld.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=fontsize)
+aqk1=ax_fld.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': fontsize})
+aqk2=ax_fld.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': fontsize})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_fld.get_xticklabels()[::2]:
@@ -162,9 +161,9 @@ ax_ebb.yaxis.set_tick_params(labelleft='off')
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_ebb.transAxes,fc='w',zorder=20)
 ax_ebb.add_patch(rec)
-ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_ebb.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_ebb.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_ebb.annotate(r''+ebbfldscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=fontsize)
+aqk1=ax_ebb.quiverkey(Q1,kl[0]+.075,kl[1]+.075,float(ebbfldscale), r'No drag', labelpos='E',fontproperties={'size': fontsize})
+aqk2=ax_ebb.quiverkey(Q2,kl[0]+.075,kl[1]+.035,float(ebbfldscale), r'Drag', labelpos='E',fontproperties={'size': fontsize})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_ebb.get_xticklabels()[::2]:
@@ -197,9 +196,9 @@ ax_res.yaxis.set_tick_params(labelleft='off')
 plt.draw()
 rec=mpl.patches.Rectangle((kl[0],kl[1]),kl[2],kl[3],transform=ax_res.transAxes,fc='w',zorder=20)
 ax_res.add_patch(rec)
-ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=8)
-aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.075,float(resscale), r'No drag', labelpos='E',fontproperties={'size': 8})
-aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.035,float(resscale), r'Drag', labelpos='E',fontproperties={'size': 8})
+ax_res.annotate(r''+resscale+' m s$^{-1}$',xy=(kl[0]+.035,kl[1]+.105),xycoords='axes fraction',zorder=30,fontsize=fontsize)
+aqk1=ax_res.quiverkey(Q1,kl[0]+.05,kl[1]+.075,float(resscale), r'No drag', labelpos='E',fontproperties={'size': fontsize})
+aqk2=ax_res.quiverkey(Q2,kl[0]+.05,kl[1]+.035,float(resscale), r'Drag', labelpos='E',fontproperties={'size': fontsize})
 aqk1.set_zorder(30)
 aqk2.set_zorder(30)
 for label in ax_res.get_yticklabels()[::2]:

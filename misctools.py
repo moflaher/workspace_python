@@ -7,10 +7,9 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 from StringIO import StringIO
-
-from datatools import *
-from gridtools import *
-from regions import makeregions
+import gridtools as gt
+import datatools as dt
+import plottools as pt
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 
 
@@ -40,9 +39,9 @@ def runstats(datain=None):
 
 def ne_fv(casename,h=False,is31=False):
     
-    depdata=load_nodfile(casename+'.nod',h)
-    grddata=load_elefile(casename+'.ele')
-    save_grdfile(grddata,depdata,casename+'_grd.dat',is31)
-    save_depfile(depdata,casename+'_dep.dat',is31)
+    depdata=gt.load_nodfile(casename+'.nod',h)
+    grddata=gt.load_elefile(casename+'.ele')
+    gt.save_grdfile(grddata,depdata,casename+'_grd.dat',is31)
+    gt.save_depfile(depdata,casename+'_dep.dat',is31)
 
 
