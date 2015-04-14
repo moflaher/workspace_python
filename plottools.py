@@ -361,6 +361,7 @@ def place_axes(region,numplots,cb=False,rotation=False):
     space=.8
     if aspect*fa>=1:
         space=.775    
+        rotation=True
 
     start=.1
     if cb==True:
@@ -370,7 +371,9 @@ def place_axes(region,numplots,cb=False,rotation=False):
     if rotation==True:
         start=start+.1
 
-    spaceper=(space-.025*numplots)/numplots
+    axisgap=.01
+
+    spaceper=(space-axisgap*numplots)/numplots
 
 
     axf=np.zeros((numplots,4))
@@ -380,7 +383,7 @@ def place_axes(region,numplots,cb=False,rotation=False):
         ytarget=np.min([1-.1-start,spaceper*dr*aspect/fa])
         axf[0,:]=[.125,start,1,ytarget]
         for i in range(1,numplots):
-            axf[i,:]=[.125+(.025+xtarget)*i,start,1,ytarget]
+            axf[i,:]=[.125+(axisgap+xtarget)*i,start,1,ytarget]
          
 
     else:
@@ -388,7 +391,7 @@ def place_axes(region,numplots,cb=False,rotation=False):
         xtarget=np.min([1-.125-start,spaceper*fa/aspect/dr])    
         axf[0,:]=[.125,.1,xtarget,1]
         for i in range(1,numplots):
-            axf[i,:]=[.125,.1+(.025+ytarget)*i,xtarget,1]
+            axf[i,:]=[.125,.1+(axisgap+ytarget)*i,xtarget,1]
 
         axf=np.flipud(axf)
 
@@ -458,6 +461,7 @@ def ppll_sub(axin,**kwargs):
 
     aspect=axin[0].get_aspect()
     if (aspect>=1/fa):
+        rotation=-45
         for ax in axin:
             ax.set_xlabel(r'Longitude ($^{\circ}$W)',fontsize=llfontsize)
             ax.yaxis.set_tick_params(labelleft='off')
@@ -492,12 +496,13 @@ def ppll_sub(axin,**kwargs):
             if (aspect>=1/fa):
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
-                    axca=f.add_axes([axbb[0],axbb[1]-.125,axbb[2],0.025])
+                    axca=f.add_axes([axbb[0],axbb[1]-.15,axbb[2],0.025])
                     cb=plt.colorbar(colorax[i],cax=axca,orientation='horizontal')
                     cb.set_label(cblabel[i],fontsize=cblabelsize)
                     for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
                         tick.set_fontsize(cbticksize)
                         tick.set_rotation(cbtickrotation)
+                    cb.ax.get_xticklabels()[-1].set_visible(False) 
             else:
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
@@ -505,7 +510,8 @@ def ppll_sub(axin,**kwargs):
                     cb=plt.colorbar(colorax[i],cax=axca)
                     cb.set_label(cblabel[i],fontsize=cblabelsize)     
                     for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
-                        tick.set_fontsize(cbticksize)           
+                        tick.set_fontsize(cbticksize)        
+                    cb.ax.get_yticklabels()[-1].set_visible(False)  
 
         else:
             axstart=axin[0].get_axes().get_position().bounds
@@ -517,6 +523,7 @@ def ppll_sub(axin,**kwargs):
                 cb.set_label(cblabel,fontsize=cblabelsize)
                 for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
                     tick.set_fontsize(cbticksize)
+
             else:
                 ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
                 cb=plt.colorbar(colorax,cax=ax0ca)

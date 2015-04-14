@@ -119,36 +119,7 @@ def loadnc(datadir, singlename=None):
                 print "No long/lat files found. Long/lat set to x/y"
                 data['lon'] = data['x']
                 data['lat'] = data['y']
-    else: 
-        long_matches = []
-        lat_matches = []
 
-        if glob.glob(datadir + "*_long.dat"):
-            long_matches.append(glob.glob(datadir + "*_long.dat")[0])
-        if glob.glob(datadir + "*_lat.dat"):
-            lat_matches.append(glob.glob(datadir + "*_lat.dat")[0])
-        if glob.glob(datadir + "../*_long.dat"):
-            long_matches.append(glob.glob(datadir + "../*_long.dat")[0])
-        if glob.glob(datadir + "../*_lat.dat"):
-            lat_matches.append(glob.glob(datadir + "../*_lat.dat")[0])
-        if glob.glob(datadir + "../../*_long.dat"):
-            long_matches.append(glob.glob(datadir + "../../*_long.dat")[0])
-        if glob.glob(datadir + "../../*_lat.dat"):
-            lat_matches.append(glob.glob(datadir + "../../*_lat.dat")[0])
-        if glob.glob(datadir + "../input/*_long.dat"):
-            long_matches.append(glob.glob(datadir + "../input/*_long.dat")[0])
-        if glob.glob(datadir + "../input/*_lat.dat"):
-            lat_matches.append(glob.glob(datadir + "../input/*_lat.dat")[0])
-
-                #let's make sure that long/lat files were found.
-        if (len(long_matches) > 0 and len(lat_matches) > 0):
-            data['lon'] = np.loadtxt(long_matches[0])
-            data['lat'] = np.loadtxt(lat_matches[0])        
-        else:
-            if (data.has_key('x') and data.has_key('y')):
-                print "No long/lat files found. Long/lat set to x/y"
-                data['lon'] = data['x']
-                data['lat'] = data['y']
             
     if data.has_key('nv'):
         data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   

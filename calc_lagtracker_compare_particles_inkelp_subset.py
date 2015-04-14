@@ -13,6 +13,7 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import h5py as h5
@@ -41,7 +42,7 @@ if np.shape(lcages)!=():
 
 
 for i in range(0,24,3):
-    lname='kit4_kelp_tight5_6elements_200x200_1000pp_s' + ("%d"%i)
+    lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s' + ("%d"%i)
 
 
 
@@ -68,10 +69,13 @@ for i in range(0,24,3):
         print "Subset " +("%d"%sub)
         print
 
-        if sub>2:
-            regionname='kit4_kelp_tight5_A2'
-        else:
-            regionname='kit4_kelp_tight5_A6'
+        regionname='kit4_kelpfield'
+
+#        if sub>2:
+#            regionname='kit4_kelp_tight5_A2'
+#        else:
+#            regionname='kit4_kelp_tight5_A6'
+
 
         region=regions(regionname)
         region=regionll2xy(data,region)

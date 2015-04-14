@@ -41,7 +41,7 @@ if np.shape(cages)!=():
 
 
 for i in range(0,24,3):
-    lname='kit4_kelp_tight5_6elements_200x200_1000pp_s' + ("%d"%i)
+    lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s' + ("%d"%i)
 
 
 

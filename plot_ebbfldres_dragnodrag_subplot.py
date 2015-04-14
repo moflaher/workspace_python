@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from projtools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -22,7 +23,7 @@ from matplotlib.collections import PolyCollection as PC
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionlist=['kit4_kelp_tight5']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
 datatype='2d'
 starttime=384
 offset=0
@@ -32,6 +33,7 @@ testing=False
 usemean=True
 
 kl=[.675,.79]
+kl=[.725,.025]
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
@@ -59,6 +61,7 @@ for regionname in regionlist:
 
     region=regions(regionname)
     vectorspacing=400#2000*np.diff(region['region'][0:2])
+    vectorspacing=125#2000*np.diff(region['region'][0:2])
     nidx=get_nodes(data,region)
     eidx=equal_vectors(data,region,vectorspacing)
 
@@ -102,8 +105,10 @@ for regionname in regionlist:
         q2v2=data2['va'][starttime+offset+fld,eidx]
 
     ebbfld=.3#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
+    ebbfld=.2#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
     ebbfldscale=('%.1f'%ebbfld)
     scale1=35#np.sqrt(ebbfld*(vectorspacing*2)**2)
+    scale1=75#np.sqrt(ebbfld*(vectorspacing*2)**2)
 
     Q1=ax[0].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u1,q2v1,angles='xy',scale_units='xy',scale=scale1,zorder=10)
     Q2=ax[0].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],q2u2,q2v2,angles='xy',scale_units='xy',scale=scale1,color='r',zorder=10)
@@ -182,6 +187,7 @@ for regionname in regionlist:
     res=.05#np.linalg.norm(np.vstack([resu,resv]),axis=0).mean()
     resscale=('%.2f'%res)
     scale2=15#res*vectorspacing*2
+    scale2=25#res*vectorspacing*2
 
     Q1=ax[2].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu2,axis=1),np.mean(resv2,axis=1),angles='xy',scale_units='xy',scale=scale2,zorder=10)
     Q2=ax[2].quiver(data['uvnodell'][eidx,0],data['uvnodell'][eidx,1],np.mean(resu,axis=1),np.mean(resv,axis=1),angles='xy',scale_units='xy',scale=scale2,color='r',zorder=10)

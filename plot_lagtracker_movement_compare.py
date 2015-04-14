@@ -24,8 +24,8 @@ name2='kit4_kelp_20m_drag_0.018'
 #name='kit4_45days_3'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight5'
-lname='kit4_kelp_tight5_6elements_200x200_1000pp_s0'
+regionname='kit4_kelp_tight2_kelpfield'
+lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s0'
 
 
 ### load the .nc file #####

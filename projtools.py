@@ -66,7 +66,7 @@ def regionll2xy(data,region):
         xn,yn=ll2m(data['uvnodell'][ehost,:],region['region'][[0,2]])
 
 
-    region['regionxy']=region['centerxy']+[xn,xp,yn,yp]       
+    region['regionxy']=[region['centerxy'][0],region['centerxy'][0],region['centerxy'][1],region['centerxy'][1]]+[xn,xp,yn,yp]       
 
 #old code leave this in till the new code above is tested
 #    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
