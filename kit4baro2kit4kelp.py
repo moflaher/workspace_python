@@ -37,14 +37,26 @@ data_new = ncdatasort(data_new)
 print 'done sort'
 
 
-indata2=load_fvcom_files('runs/'+grid_new+'/'+name_new+'/input','kit4_kelp')
+indata_new=load_fvcom_files('runs/'+grid_new+'/'+name_new+'/input','kit4_kelp')
 
 
-filepath='data/misc/baroclinic/kit4-spring/'
+filepath='data/misc/baroclinic/kit4-spring-convert/'
+indata_old=load_fvcom_files(filepath,'kit4')
 
-kill
+
+#new ncfile name
+ncid = n4.Dataset(filepath+'kit4-spring-its.nc', 'r+',format='NETCDF3_CLASSIC')
+ncid.variables['node']=len(data_new['nodell'][:,0])
+
 nn_h=interp.NearestNDInterpolator((data['nodell'][:,0],data['nodell'][:,1]), data['h'])
-new_h2=nn_h.__call__(indata2['nodell'][:,0],indata2['nodell'][:,1])
+new_h2=nn_h.__call__(indata_new['nodell'][:,0],indata_new['nodell'][:,1])
+
+
+ncid.close()
+
+
+
+
 
 
 

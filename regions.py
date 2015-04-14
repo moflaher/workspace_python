@@ -48,6 +48,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-129.52, -129.41, 52.6, 52.7],'kit4_kelp_tight2_small','kit4_kelp_tight2_small']])
     tl=np.vstack([tl,        [[-129.505, -129.46, 52.63, 52.67],'kit4_kelp_tight2_kelpfield','kit4_kelp_tight2_kelpfield']])
     tl=np.vstack([tl,        [[-129.505, -129.475, 52.635, 52.665],'kit4_kelpfield','kit4_kelpfield']])
+    tl=np.vstack([tl,        [[-129.5, -129.4775, 52.6375, 52.6625],'kit4_kelpfield_oil','kit4_kelpfield_oil']])
     tl=np.vstack([tl,        [[-129.54, -129.39, 52.95, 53.04],'kit4_crossdouble','kit4_crossdouble']])
     tl=np.vstack([tl,        [[-129.825, -129.675, 53.1, 53.19],'kit4_ftb','kit4_ftb']])
     tl=np.vstack([tl,        [[-129.5, -129.44, 53.04, 53.08],'kit4_kelp_tight3','kit4_kelp_tight3']])

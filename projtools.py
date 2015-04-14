@@ -66,7 +66,7 @@ def regionll2xy(data,region):
         xn,yn=ll2m(data['uvnodell'][ehost,:],region['region'][[0,2]])
 
 
-    region['regionxy']=[region['centerxy'][0],region['centerxy'][0],region['centerxy'][1],region['centerxy'][1]]+[xn,xp,yn,yp]       
+    region['regionxy']=[region['centerxy'][0]+xn,region['centerxy'][0]+xp,region['centerxy'][1]+yn,region['centerxy'][1]+yp]      
 
 #old code leave this in till the new code above is tested
 #    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
@@ -145,5 +145,18 @@ def expand_region(region,dist):
 #    region['y_edist']=y_dist
 
     return region
+
+def region2path(region):
+
+    region['path']=[[region['region'][0],region['region'][2]],[region['region'][0],region['region'][3]],[region['region'][1],region['region'][3]],[region['region'][1],region['region'][2]]]
+    
+    try:
+        region['pathxy']=[[region['regionxy'][0],region['regionxy'][2]],[region['regionxy'][0],region['regionxy'][3]],[region['regionxy'][1],region['regionxy'][3]],[region['regionxy'][1],region['regionxy'][2]]]
+    except KeyError:
+        print "No regionxy. pathxy could not be added."
+    
+    return region
+
+
 
 

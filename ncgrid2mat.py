@@ -37,18 +37,18 @@ import sys
 
 
 # Define names and types of data
-name='kit4_45days_3'
-grid='kit4'
+name='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
 starttime=384
 interpheight=1
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
-base_dir = os.path.dirname(__file__)
+
 
 tempdic={}
 
@@ -65,7 +65,7 @@ tempdic['siglev']=data['siglev'][:,0]
 
 
 
-sio.savemat(os.path.join(base_dir,'data', grid +'_basic.mat'),mdict=tempdic)
+sio.savemat('data/ncgrid2mat/'+grid +'_basic.mat',mdict=tempdic)
 
 
 
@@ -74,25 +74,8 @@ tempdic['va']=data['va'][384:,:]
 tempdic['time']=data['time'][384:]
 tempdic['zeta']=data['zeta'][384:,:]
 
-sio.savemat(os.path.join(base_dir,'data',grid+'_currents.mat'),mdict=tempdic)
+sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
-
-
-
-
-filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
-if (os.path.exists(os.path.join(base_dir,'data', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data', 'v' + filename))):
-    print 'Loading old interpolated currents'
-    tempdic['u_interp']=np.load(os.path.join(base_dir,'data', 'u' + filename))
-    tempdic['v_interp']=np.load(os.path.join(base_dir,'data', 'v' + filename))
-    print 'Loaded old interpolated currents'
-else:
-    print 'Interpolate currents first'
-    sys.exit(0)
-
-tempdic['comments']='The *_interp data is interpolated to ' + ("%d"%interpheight) + 'm.'
-
-sio.savemat(os.path.join(base_dir,'data',grid+'_currents_and_interp.mat'),mdict=tempdic)
 
 
 
