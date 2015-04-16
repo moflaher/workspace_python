@@ -369,7 +369,7 @@ def place_axes(region,numplots,cb=False,rotation=False):
     #quick fix for pushing xlabel off the plot when rotating xticklabels
     #works for my use case probably not all
     if rotation==True:
-        start=start+.1
+        start=start+.125
 
     axisgap=.01
 
@@ -518,7 +518,7 @@ def ppll_sub(axin,**kwargs):
             axend=axin[-1].get_axes().get_position().bounds
             if (aspect>=1/fa):
                 #add color at current axis bottom
-                ax0ca=f.add_axes([axstart[0],axstart[1]-.125,axend[2]+axend[0]-axstart[0],0.025])
+                ax0ca=f.add_axes([axstart[0],axstart[1]-.15,axend[2]+axend[0]-axstart[0],0.025])
                 cb=plt.colorbar(colorax,cax=ax0ca,orientation='horizontal')
                 cb.set_label(cblabel,fontsize=cblabelsize)
                 for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
