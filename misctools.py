@@ -51,7 +51,8 @@ def dic_shape(indic):
 
 
 
-
+def speeder(ua,va):
+    return np.sqrt(ua**2+va**2)
 
 
 

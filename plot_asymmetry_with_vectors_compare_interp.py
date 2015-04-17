@@ -32,7 +32,7 @@ fontsize=6
 cmin=-1
 cmax=1
 
-testing=False
+
 usemean=True
 
 kl=[.815,.815]
@@ -47,25 +47,22 @@ print 'done sort'
 
 cages=loadcage('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat')
 if np.shape(cages)!=():
-    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
     color='g'
+    lw=.1
+    ls='solid'
 
 savepath='figures/png/' + grid + '_' + datatype + '/asymmetry_compare_interp_with_vectors/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-uv1=np.load('data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv_all.npy')
-uv1=uv1[()]
-uv2=np.load('data/ttide/'+grid+'_'+name_change+'_'+datatype+'_uv_all.npy')
-uv2=uv2[()]
-
 
 for regionname in regionlist:
 
 
-    vectorspacing=800#2000*np.diff(region['region'][0:2])
-    ebbfld=.3#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
-    scale1=35#np.sqrt(ebbfld*(vectorspacing*2)**2)
+    vectorspacing=400#2000*np.diff(region['region'][0:2])
+    ebbfld=.2#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
+    scale1=60#np.sqrt(ebbfld*(vectorspacing*2)**2)
 
 
 #    vectorspacing=250#2000*np.diff(region['region'][0:2])
@@ -110,11 +107,11 @@ for regionname in regionlist:
         vf1=np.nanmean(tmp,axis=0)
 
         tmp=data2['ua'][starttime:,eidx].copy()
-        tmp[~zeta_bool1]=np.nan
+        tmp[~zeta_bool2]=np.nan
         uf2=np.nanmean(tmp,axis=0)
 
         tmp=data2['va'][starttime:,eidx].copy()
-        tmp[~zeta_bool1]=np.nan
+        tmp[~zeta_bool2]=np.nan
         vf2=np.nanmean(tmp,axis=0)
 
         tmp=data['ua'][starttime:,eidx].copy()
@@ -126,11 +123,11 @@ for regionname in regionlist:
         ve1=np.nanmean(tmp,axis=0)
 
         tmp=data2['ua'][starttime:,eidx].copy()
-        tmp[zeta_bool1]=np.nan
+        tmp[zeta_bool2]=np.nan
         ue2=np.nanmean(tmp,axis=0)
 
         tmp=data2['va'][starttime:,eidx].copy()
-        tmp[zeta_bool1]=np.nan
+        tmp[zeta_bool2]=np.nan
         ve2=np.nanmean(tmp,axis=0)
     else:
         uf1=data['ua'][starttime+offset+fld,eidx]
@@ -231,9 +228,9 @@ for regionname in regionlist:
     ax[1].add_patch(rec)
 
 
+    lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    ax[1].add_collection(lseg)
 
-
-    lseg=np.empty((2,),dtype=object)
     ABC=['A','B','C']
     plt.draw()
     for i,axi in enumerate(ax):
@@ -241,14 +238,13 @@ for regionname in regionlist:
         axbb=ax[i].get_axes().get_position().bounds
         t=ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
         t.set_zorder(100)
-        lseg[i]=PC(tmparray,facecolor = 'g',edgecolor='None')
-        ax[i].add_collection(lseg[i])
+
         #ax[i].text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
 
     if usemean==True:
-        f.savefig(savepath + grid + '_'+ name_orig+'_'+ name_change+'_'+regionname+'_meanebb_meanfld_meanres.png',dpi=600)
+        f.savefig(savepath + grid + '_'+ name_orig+'_'+ name_change+'_'+regionname+'_meanasymmetry_meanvector.png',dpi=600)
     else:
-        f.savefig(savepath + grid + '_'+ name_orig+'_'+ name_change+'_'+regionname+'_ebb_fld_meanres.png',dpi=600)
+        f.savefig(savepath + grid + '_'+ name_orig+'_'+ name_change+'_'+regionname+'_instantasymmetry_instantvector.png',dpi=600)
     plt.close(f)
 
 
