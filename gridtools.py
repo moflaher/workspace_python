@@ -808,3 +808,78 @@ def save_depfile(depdata,outname,is31=True):
    
     return 
 
+def load_rivfile(filename=None):
+    """
+    Loads an FVCOM riv input file and returns the data as a dictionary.
+
+ 
+    """    
+
+    data={}
+
+    if filename==None:
+        print 'load_rivfile requires a filename to load.'
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print  'load_rivfile: invalid filename.'
+        return data
+    
+    data['RIVER_NAME']=''
+    data['RIVER_GRID_LOCATION']=0
+    data['RIVER_VERTICAL_DISTRIBUTION']=''
+
+
+    for line in fp:
+        if line.strip().startswith('RIVER_NAME'):
+            data['RIVER_NAME']=np.append(data['RIVER_NAME'],line[line.find('"')+1:line.rfind('"')])
+        if line.strip().startswith('RIVER_GRID_LOCATION'):
+            data['RIVER_GRID_LOCATION']=np.append(data['RIVER_GRID_LOCATION'],int(line[line.find('=')+1:line.rfind(',')]))
+        if line.strip().startswith('RIVER_VERTICAL_DISTRIBUTION'):
+            data['RIVER_VERTICAL_DISTRIBUTION']=np.append(data['RIVER_VERTICAL_DISTRIBUTION'],line[line.find('"')+1:line.rfind('"')])
+
+    data['RIVER_NAME']=np.delete(data['RIVER_NAME'],0)
+    data['RIVER_GRID_LOCATION']=np.delete(data['RIVER_GRID_LOCATION'],0)
+    data['RIVER_VERTICAL_DISTRIBUTION']=np.delete(data['RIVER_VERTICAL_DISTRIBUTION'],0)
+
+    
+    return data
+
+
+def save_rivfile(rivdata,filename=None):
+    """
+    Saves an FVCOM riv input file.
+
+ 
+    """    
+
+    data={}
+
+    if filename==None:
+        print 'save_rivfile requires a filename to save.'
+        return
+    try:
+        fp=open(filename,'w')
+    except IOError:
+        print  'save_rivfile: invalid filename.'
+        return data
+    
+    for i in range(len(rivdata['RIVER_NAME'])):
+        block='''&NML_RIVER
+   RIVER_NAME          = "{0}",
+   RIVER_GRID_LOCATION = {1},
+   RIVER_VERTICAL_DISTRIBUTION = "{2}" / '''.format(rivdata['RIVER_NAME'][i],rivdata['RIVER_GRID_LOCATION'][i],rivdata['RIVER_VERTICAL_DISTRIBUTION'][i])
+    
+
+        print >> fp, block
+
+
+
+
+
+
+
+
+
+
