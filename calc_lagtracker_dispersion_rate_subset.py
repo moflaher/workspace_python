@@ -68,12 +68,28 @@ for i in range(0,24,3):
         print "Subset " +("%d"%sub)
         print
 
-        savedic['sigma_nodrag']=np.sqrt(np.nanvar(savelag1['x'][(subset*sub):(subset*(sub+1)),:],axis=0,ddof=1)+np.nanvar(savelag1['y'][(subset*sub):(subset*(sub+1)),:],axis=0,ddof=1))
+        x1=savelag1['x'][(subset*sub):(subset*(sub+1)),:]
+        y1=savelag1['y'][(subset*sub):(subset*(sub+1)),:]
+        x2=savelag2['x'][(subset*sub):(subset*(sub+1)),:]
+        y2=savelag2['y'][(subset*sub):(subset*(sub+1)),:]
+
+
+        savedic['sigma_nodrag']=np.sqrt(np.nanvar(x1,axis=0,ddof=1)+np.nanvar(y1,axis=0,ddof=1))
         savedic['dis_rate_nodrag']=np.diff(savedic['sigma_nodrag'])/60
-        savedic['sigma_drag']=np.sqrt(np.nanvar(savelag2['x'][(subset*sub):(subset*(sub+1)),:],axis=0,ddof=1)+np.nanvar(savelag2['y'][(subset*sub):(subset*(sub+1)),:],axis=0,ddof=1))
+        savedic['sigma_drag']=np.sqrt(np.nanvar(x2,axis=0,ddof=1)+np.nanvar(y2,axis=0,ddof=1))
         savedic['dis_rate_drag']=np.diff(savedic['sigma_drag'])/60
         savedic['time']=savelag1['time']
 
+        savedic['sigma_xx_nodrag']=np.sqrt(np.nanvar(x1,axis=0,ddof=1))
+        savedic['sigma_xx_drag']=np.sqrt(np.nanvar(x2,axis=0,ddof=1))
+
+        savedic['sigma_yy_nodrag']=np.sqrt(np.nanvar(y1,axis=0,ddof=1))
+        savedic['sigma_yy_drag']=np.sqrt(np.nanvar(y2,axis=0,ddof=1))
+
+    
+
+        savedic['sigma_xy_nodrag']=np.nanmean((x1-np.nanmean(x1,axis=0))*(y1-np.nanmean(y1,axis=0)),axis=0)
+        savedic['sigma_xy_drag']=np.nanmean((x2-np.nanmean(x2,axis=0))*(y2-np.nanmean(y2,axis=0)),axis=0)
         
         sio.savemat('data/dis_rate/'+name+'_'+name2+'_'+lname+'_sigma_and_disrate_'+("%05d"%(subset*sub))+'_'+("%05d"%(subset*(sub+1)))+'.mat',mdict=savedic)
         
