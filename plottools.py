@@ -118,7 +118,6 @@ def prettyplot_ll(axin,**kwargs):
             cb.set_label(cblabel,fontsize=10)
 
 
-
 def get_data_ratio(region):
     """
     Returns the aspect ratio of the region data.
@@ -191,7 +190,6 @@ def fix_osw(axin):
     axin.set_xticklabels(-1*(axin.get_xticks()))
 
 
-
 def plotcoast(axin,**kwargs):
     """
     Plots the coastline on an ax.
@@ -250,10 +248,7 @@ def plotcoast(axin,**kwargs):
     axin.add_collection(coastseg)
 
 
-
-
 def plotgrid_num(data,size,num,nore):
-
     if nore=='n':
         region={}
         region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
@@ -279,7 +274,6 @@ def plotgrid_num(data,size,num,nore):
 
 
 def add_num_label(axin,data,size,num,nore):
-
     if nore=='n':
         region={}
         region['region']=[data['nodexy'][num,0]-size,data['nodexy'][num,0]+size,data['nodexy'][num,1]-size,data['nodexy'][num,1]+size]
@@ -295,9 +289,7 @@ def add_num_label(axin,data,size,num,nore):
             axin.text(data['uvnodell'][i,0],data['uvnodell'][i,1],("%d"%i),fontsize=10,bbox={'facecolor':'white', 'alpha':.7, 'pad':3})
         
 
-
 def plotgrid_ll(data,size,ll,nore):
-
     if nore=='n':
         num=dt.closest_node(data,ll)
         region={}
@@ -324,8 +316,6 @@ def plotgrid_ll(data,size,ll,nore):
         plt.show()
 
 
-
-
 def ax_label_spacer(axin):
     """
     Removes every second x and y ticklabel.
@@ -335,7 +325,6 @@ def ax_label_spacer(axin):
     """
     for label in axin.get_xticklabels()[::2] +axin.get_yticklabels()[::2]:
         label.set_visible(False)
-
 
 
 def place_axes(region,numplots,cb=False,rotation=False):
@@ -401,7 +390,6 @@ def place_axes(region,numplots,cb=False,rotation=False):
     return f,axarr
 
     
-
 def ppll_sub(axin,**kwargs):
     """
     Formats ax from place_axes. Looks similar to prettyplot_ll, but corrects for subplots.

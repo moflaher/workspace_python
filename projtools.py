@@ -27,7 +27,6 @@ A bunch of functions dealing regions and projections.
 
 """
 def ll2m(locs,loce):
-
     TPI=111194.92664455874
     y0c = TPI * (loce[1] - locs[1])
     dx_sph = loce[0] - locs[0]
@@ -39,11 +38,12 @@ def ll2m(locs,loce):
 
     return x0c,y0c
 
-def mdist(locs,loce):
 
+def mdist(locs,loce):
     dist=np.linalg.norm( ll2m(locs,loce) )
 
     return dist
+
 
 def regionll2xy(data,region):
     """
@@ -68,17 +68,17 @@ def regionll2xy(data,region):
 
     region['regionxy']=[region['centerxy'][0]+xn,region['centerxy'][0]+xp,region['centerxy'][1]+yn,region['centerxy'][1]+yp]      
 
-#old code leave this in till the new code above is tested
-#    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
-#    right=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][1])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
-#    
-#    top=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][3])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
-#    bottom=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][2])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
+    #old code leave this in till the new code above is tested
+    #    left=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][0])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
+    #    right=np.argmin(np.sqrt((data['uvnodell'][:,0]-region['region'][1])**2+(data['uvnodell'][:,1]-(region['region'][2]+region['region'][3])*.5)**2))
+    #    
+    #    top=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][3])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
+    #    bottom=np.argmin(np.sqrt((data['uvnodell'][:,1]-region['region'][2])**2+(data['uvnodell'][:,0]-(region['region'][0]+region['region'][1])*.5)**2))
 
-#    region['regionxy']=[data['uvnode'][left,0],data['uvnode'][right,0],data['uvnode'][bottom,1],data['uvnode'][top,1]]
-
+    #    region['regionxy']=[data['uvnode'][left,0],data['uvnode'][right,0],data['uvnode'][bottom,1],data['uvnode'][top,1]]
 
     return region
+
 
 def regions(regionname=None):
     """Returns region locations and full names
@@ -117,6 +117,7 @@ def ll_dist(region,dist):
     
     return dist/mlat
 
+
 def expand_region(region,dist):
     """
     Given a region expands the region by a distance (1d or 2d) in meters.
@@ -140,14 +141,14 @@ def expand_region(region,dist):
     region['lon_edist']=lon_space
     region['lat_edist']=lat_space
 
-#    region['regionxy']=region['regionxy']+[-dist[0],+dist[0],-y_dist,+y_dist]
-#    region['x_edist']=dist[0]
-#    region['y_edist']=y_dist
+    #    region['regionxy']=region['regionxy']+[-dist[0],+dist[0],-y_dist,+y_dist]
+    #    region['x_edist']=dist[0]
+    #    region['y_edist']=y_dist
 
     return region
 
-def region2path(region):
 
+def region2path(region):
     region['path']=[[region['region'][0],region['region'][2]],[region['region'][0],region['region'][3]],[region['region'][1],region['region'][3]],[region['region'][1],region['region'][2]]]
     
     try:

@@ -13,6 +13,7 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 from matplotlib.collections import LineCollection as LC
@@ -28,13 +29,13 @@ datatype='2d'
 
 regionA=regions('kit4')
 region1=regions('kelpchain')
-region2=regions('doubleisland')
+region2=regions('kit4_kelp_tight5')
 region3=regions('kit4_kelpfield')
 regionAf=[.09,.1,.725,.75]
 cbarf=[.1,.95,.45,.025]
-region1f=[.405,.06,.375,.415]
-region2f=[.315,.55,.575,.32]
-region3f=[.6815,.0115,.275,.55]
+region1f=[.325,.44,.375,.415]
+region2f=[.415,.035,.575,.39]
+region3f=[.685,.445,.275,.5]
 
 
 ### load the .nc file #####
@@ -70,20 +71,21 @@ cb.set_label(r'Depth (m)')
 for label in cb.ax.get_xticklabels()[::2]:
     label.set_visible(False)
 plot_box(ax_all,region1,'g',1.5)
-plot_box(ax_all,region2,'g',1.5)
+#plot_box(ax_all,region2,'g',1.5)
+_formatter = mpl.ticker.FormatStrFormatter("%3.0f")
+ax_all.xaxis.set_major_formatter(_formatter)
 prettyplot_ll(ax_all,setregion=regionA)
 
 
 #ax_all.text(-129.1,54.1,'Kitimat',fontsize=8)
-ax_all.text(-129.24,53.58,'Douglas',fontsize=4,rotation=90)
-ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
+#ax_all.text(-129.24,53.58,'Douglas',fontsize=4,rotation=90)
+#ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
 #ax_all.text(-128.25,53,'British Columbia',fontsize=8)
 #ax_all.text(-127.9,52.88,'Canada',fontsize=8)
 ax_all.text(-131.3,53.1,'Hecate Strait',fontsize=8,rotation=-55)
 
 
-_formatter = mpl.ticker.FormatStrFormatter("%3.0f")
-ax_all.xaxis.set_major_formatter(_formatter)
+
 
 
 ###############################################################################
@@ -108,11 +110,11 @@ arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="ang
 axsub1.annotate(r'5 km',xy=(region1['region'][0]+.02,region1['region'][2]+.02),xycoords='data',xytext=(region1['region'][0]+ll_dist(region1,5000)+.02,region1['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
 
 
-#axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
-axsub1.yaxis.set_tick_params(labelright='on',labelleft='off')
+axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
+#axsub1.yaxis.set_tick_params(labelright='on',labelleft='off')
 for label in axsub1.get_xticklabels()[::2]:
     label.set_visible(False)
-for label in axsub1.get_yticklabels()[::2]:
+for label in axsub1.get_yticklabels()[1::2]:
     label.set_visible(False)
 
 for label in axsub1.get_xticklabels():
@@ -148,7 +150,7 @@ fix_osw(axsub2)
 plotcoast(axsub2,filename='pacific.nc',color='0.75',fill=True)
 
 arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
-axsub2.annotate(r'5 km',xy=(region2['region'][0]+.02,region2['region'][2]+.02),xycoords='data',xytext=(region2['region'][0]+ll_dist(region2,5000)+.02,region2['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
+axsub2.annotate(r'1 km',xy=(region2['region'][0]+.02,region2['region'][2]+.02),xycoords='data',xytext=(region2['region'][0]+ll_dist(region2,1000)+.02,region2['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
 
 axsub2.yaxis.set_tick_params(labelright='on',labelleft='off')
 
@@ -161,11 +163,11 @@ for label in axsub2.get_xticklabels():
 for label in axsub2.get_yticklabels():
     label.set_fontsize(8)
 
-axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
-axsub2.text(-129.6,53.1175,'Estevan Sound',fontsize=8,rotation=-40)
-axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
-axsub2.text(-129.775,53.20,'Banks Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
-axsub2.text(-129.715,53.16,'Otter Passage',fontsize=5,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+#axsub2.text(-129.5,53.125,'Campania Island',fontsize=8,rotation=-40)
+#axsub2.text(-129.6,53.1175,'Estevan Sound',fontsize=8,rotation=-40)
+#axsub2.text(-129.715,53.11,'Estevan Group',fontsize=8,rotation=-40)
+#axsub2.text(-129.775,53.20,'Banks Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+#axsub2.text(-129.715,53.16,'Otter Passage',fontsize=5,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
 
 
@@ -219,8 +221,8 @@ ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]+axsub1bb[3]),xycoords='figure fra
 ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][0],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 
 axsub2bb=axsub2.get_axes().get_position().bounds
-ax_all.annotate("",xy=(axsub2bb[0],axsub2bb[1]+axsub2bb[3]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
-ax_all.annotate("",xy=(axsub2bb[0],axsub2bb[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
+axsub1.annotate("",xy=(axsub2bb[0]+axsub2bb[2],axsub2bb[1]+axsub2bb[3]),xycoords='figure fraction',xytext=(region2['region'][1],region2['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
+axsub1.annotate("",xy=(axsub2bb[0],axsub2bb[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 
 axsub3bb=axsub3.get_axes().get_position().bounds
 tmp=axsub1.annotate("",xy=(axsub3bb[0],axsub3bb[1]+axsub3bb[3]),xycoords='figure fraction',xytext=(region3['region'][0],region3['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
@@ -230,8 +232,8 @@ tmp.set_zorder(40)
 
 
 ax_all.annotate("A",xy=(.025,.95),xycoords='axes fraction')
-axsub1.annotate("C",xy=(.025,.925),xycoords='axes fraction')
-axsub2.annotate("B",xy=(.025,.9),xycoords='axes fraction')
+axsub1.annotate("B",xy=(.025,.925),xycoords='axes fraction')
+axsub2.annotate("C",xy=(.025,.9),xycoords='axes fraction')
 axsub3.annotate("D",xy=(.025,.925),xycoords='axes fraction')
 
 
@@ -239,11 +241,12 @@ axsub3.annotate("D",xy=(.025,.925),xycoords='axes fraction')
 #add region boxes
 ###############################################################################
 rn=regions('kit4_kelp_tight5')
-plot_box(axsub1,rn,'r',1.5)
+plot_box(axsub1,rn,'g',1.5)
+#plot_box(ax_all,region2,'g',1.5)
 aa=axsub1.text(rn['center'][0],rn['center'][1],'R1',fontsize=12,rotation=0,color='r')
 
 rn=regions('kit4_kelp_tight2_small')
-plot_box(axsub1,rn,'r',1.5)
+plot_box(axsub1,rn,'g',1.5)
 axsub1.text(rn['center'][0],rn['center'][1],'R2',fontsize=12,rotation=0,color='r')
 plot_box(axsub1,region3,'g',1.5)
 

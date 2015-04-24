@@ -31,9 +31,7 @@ A bunch of functions dealing with finite element grids.
 
 def loadnei(neifilename=None):
     """
-    Loads a .nei file and returns the data as a dictionary.
-
- 
+    Loads a .nei file and returns the data as a dictionary. 
     """
     
     if neifilename==None:
@@ -71,9 +69,7 @@ def loadnei(neifilename=None):
 def find_land_nodes(neifile=None):
     """
     Given an neifile dictionary from loadnei. 
-    This fuction returns a list of nodes which are constructed from only boundary nodes.
-
- 
+    This fuction returns a list of nodes which are constructed from only boundary nodes. 
     """
 
     if neifile==None:
@@ -122,11 +118,10 @@ def savenei(neifilename=None,neifile=None):
     
     fp.close()
 
+
 def max_element_side_ll(data=None,elenum=None):
     """
-    Given data and an element number returns the length of the longest side in ll.
-
- 
+    Given data and an element number returns the length of the longest side in ll. 
     """
     if data==None:
         print 'Need proper data structure'
@@ -144,9 +139,7 @@ def max_element_side_ll(data=None,elenum=None):
 
 def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
     """
-    Saves a fvcom cage file.
-
- 
+    Saves a fvcom cage file. 
     """
     #Check for filename and open, catch expection if it can't create file.
     if filename==None:
@@ -191,9 +184,7 @@ def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
 def equal_vectors(data,region,spacing):
     """
     Take an FVCOM data dictionary, a region dictionary and a spacing in meters.
-    Returns: The element idx that best approximates the given spacing in the region.
-
- 
+    Returns: The element idx that best approximates the given spacing in the region. 
     """
 
     centerele=np.argsort((data['uvnodell'][:,1]-(region['region'][3]+region['region'][2])/2)**2+(data['uvnodell'][:,0]-(region['region'][1]+region['region'][0])/2)**2)
@@ -217,8 +208,7 @@ def equal_vectors(data,region,spacing):
     return np.unique(host[common].flatten())
 
 
-def regioner(data,region,subset=False):
-    
+def regioner(data,region,subset=False):    
     nidx=dt.get_nodes(data,region)
 
     idx0=np.in1d(data['nv'][:,0],nidx)
@@ -426,9 +416,7 @@ def interp_vel(data,loc,layer=None,ll=True):
     
 def _load_grdfile(casename=None):
     """
-    Loads an FVCOM grd input file and returns the data as a dictionary.
-
- 
+    Loads an FVCOM grd input file and returns the data as a dictionary. 
     """
     
     data={}    
@@ -461,11 +449,10 @@ def _load_grdfile(casename=None):
     
     return data
 
+
 def _load_depfile(casename=None):
     """
-    Loads an FVCOM dep input file and returns the data as a dictionary.
-
- 
+    Loads an FVCOM dep input file and returns the data as a dictionary. 
     """
 
     data={}
@@ -492,11 +479,10 @@ def _load_depfile(casename=None):
     
     return data
 
+
 def _load_spgfile(casename=None):
     """
-    Loads an FVCOM spg input file and returns the data as a dictionary.
-
- 
+    Loads an FVCOM spg input file and returns the data as a dictionary. 
     """
 
     data={}
@@ -526,9 +512,7 @@ def _load_spgfile(casename=None):
 
 def _load_obcfile(casename=None):
     """
-    Loads an FVCOM obc input file and returns the data as a dictionary.
-
- 
+    Loads an FVCOM obc input file and returns the data as a dictionary. 
     """    
 
     data={}
@@ -558,8 +542,7 @@ def _load_obcfile(casename=None):
 
 def _load_llfiles(casename=None):
     """
-    Loads an long/lat files and returns the data as a dictionary.
- 
+    Loads an long/lat files and returns the data as a dictionary. 
     """
 
     data={}
@@ -594,7 +577,7 @@ def _load_llfiles(casename=None):
 
 def _load_nc(filename=None):
     """
-        Loads an .nc  data file      
+    Loads an .nc  data file      
     """
 
     ncid = netcdf.netcdf_file(filename, 'r',mmap=True)
@@ -609,8 +592,7 @@ def _load_nc(filename=None):
 
 def load_fvcom_files(filepath=None,casename=None,ncname=None,neifile=None):
     """
-        Loads FVCOM input files and returns the data as a dictionary.
- 
+    Loads FVCOM input files and returns the data as a dictionary. 
     """
 
     currdir=os.getcwd()
@@ -639,8 +621,7 @@ def load_fvcom_files(filepath=None,casename=None,ncname=None,neifile=None):
 
 def save_spgfile(datain,filepath,casename=None):
     """
-    Save an FVCOM spg input file.
- 
+    Save an FVCOM spg input file. 
     """
 
     data={}
@@ -660,11 +641,9 @@ def save_spgfile(datain,filepath,casename=None):
     fp.close()
 
 
-
 def save_obcfile(datain,filepath,casename=None):
     """
-    Save an FVCOM obc input file.
- 
+    Save an FVCOM obc input file. 
     """
 
     data={}
@@ -685,7 +664,6 @@ def save_obcfile(datain,filepath,casename=None):
 
 
 def loadcage(filepath):
-
     cages=None
     try:
         with open(filepath) as f_in:
@@ -702,8 +680,7 @@ def loadcage(filepath):
 
 def load_nodfile(filename=None,h=False):
     """
-    Loads an nod file the data as a dictionary.
- 
+    Loads an nod file the data as a dictionary. 
     """
 
     data={}
@@ -730,10 +707,10 @@ def load_nodfile(filename=None,h=False):
     
     return data
 
+
 def load_elefile(filename=None):
     """
-    Loads an ele file the data as a dictionary.
- 
+    Loads an ele file the data as a dictionary. 
     """
 
     data={}
@@ -756,11 +733,9 @@ def load_elefile(filename=None):
     return data
 
 
-
 def save_grdfile(grddata,depdata,outname,is31=True):
     """
-    Save an FVCOM grd input file.
- 
+    Save an FVCOM grd input file. 
     """
     
     if outname==None:
@@ -784,10 +759,10 @@ def save_grdfile(grddata,depdata,outname,is31=True):
    
     return 
 
+
 def save_depfile(depdata,outname,is31=True):
     """
-    Save an FVCOM dep input file.
- 
+    Save an FVCOM dep input file. 
     """
   
 
@@ -808,11 +783,10 @@ def save_depfile(depdata,outname,is31=True):
    
     return 
 
+
 def load_rivfile(filename=None):
     """
-    Loads an FVCOM riv input file and returns the data as a dictionary.
-
- 
+    Loads an FVCOM riv input file and returns the data as a dictionary. 
     """    
 
     data={}
@@ -849,9 +823,7 @@ def load_rivfile(filename=None):
 
 def save_rivfile(rivdata,filename=None):
     """
-    Saves an FVCOM riv input file.
-
- 
+    Saves an FVCOM riv input file. 
     """    
 
     data={}
@@ -867,10 +839,9 @@ def save_rivfile(rivdata,filename=None):
     
     for i in range(len(rivdata['RIVER_NAME'])):
         block='''&NML_RIVER
-   RIVER_NAME          = "{0}",
-   RIVER_GRID_LOCATION = {1},
-   RIVER_VERTICAL_DISTRIBUTION = "{2}" / '''.format(rivdata['RIVER_NAME'][i],rivdata['RIVER_GRID_LOCATION'][i],rivdata['RIVER_VERTICAL_DISTRIBUTION'][i])
-    
+        RIVER_NAME          = "{0}",
+        RIVER_GRID_LOCATION = {1},
+        RIVER_VERTICAL_DISTRIBUTION = "{2}" / '''.format(rivdata['RIVER_NAME'][i],rivdata['RIVER_GRID_LOCATION'][i],rivdata['RIVER_VERTICAL_DISTRIBUTION'][i])    
 
         print >> fp, block
 

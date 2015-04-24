@@ -191,26 +191,47 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     return data
 
 
-def closest_node(data, location):
+def closest_node(data, locations):
     """
-    Given a long\lat point, find the nearest node, and return that node's index.  
+    Given long\lat points, find the nearest nodes, and return the node indexs.  
     """
 
-	#argsort array to return index that would sort locations
-    idx=np.argmin((data['nodell'][:,0]-location[0])**2+(data['nodell'][:,1]-location[1])**2)
+    #make the locations at least 2d so that the code works for a single location
+    locations=np.atleast_2d(locations)
+
+
+    #this is just a list comprehension of 
+    #idx=np.argmin((data['nodell'][:,0]-location[0])**2+(data['nodell'][:,1]-location[1])**2)
+    idx=np.array([np.argmin((data['nodell'][:,0]-locations[i,0])**2+(data['nodell'][:,1]-locations[i,1])**2) for i in range(len(locations))])
+
+    #if locations only had one point return the value instead of array of the value.
+    #this is so that the multipoint function acts like the only one when given a single point
+    if idx.size==1:
+        idx=idx[0]
     
     return idx
 
 
-def closest_element(data, location):
+def closest_element(data, locations):
     """
-    Given a long\lat point, find the nearest element, and return that elements's index.  
+    Given long\lat points, find the nearest elements, and return the element indexs.  
     """
 
-	#argsort array to return index that would sort locations
-    idx=np.argmin((data['uvnodell'][:,0]-location[0])**2+(data['uvnodell'][:,1]-location[1])**2)
+    #make the locations at least 2d so that the code works for a single location
+    locations=np.atleast_2d(locations)
+
+
+    #this is just a list comprehension of 
+    #idx=np.argmin((data['uvnodell'][:,0]-location[0])**2+(data['uvnodell'][:,1]-location[1])**2)
+    idx=np.array([np.argmin((data['uvnodell'][:,0]-locations[i,0])**2+(data['uvnodell'][:,1]-locations[i,1])**2) for i in range(len(locations))])
+
+    #if locations only had one point return the value instead of array of the value.
+    #this is so that the multipoint function acts like the only one when given a single point
+    if idx.size==1:
+        idx=idx[0]
     
     return idx
+
 
 def get_elements(data, region):
     """
@@ -222,6 +243,7 @@ def get_elements(data, region):
 
     return elements
 
+
 def get_elements_xy(data, region):
     """
     Takes uvnodes and a  region (specified by the corners of a
@@ -232,6 +254,7 @@ def get_elements_xy(data, region):
 
     return elements
 
+
 def get_nodes(data, region):
     """
     Takes nodexy and a region (specified by the corners of a rectangle)
@@ -240,6 +263,7 @@ def get_nodes(data, region):
    
     nodes = np.where((data['nodell'][:,0] >= region['region'][0]) & (data['nodell'][:,0] <= region['region'][1]) & (data['nodell'][:,1] >= region['region'][2]) & (data['nodell'][:,1] <= region['region'][3]))[0]
     return nodes
+
 
 def get_nodes_xy(data, region):
     """
@@ -270,6 +294,7 @@ def calc_speed(data):
     #calculate the speed at each point.
     data['speed'] = ne.evaluate("sqrt(ua*ua + va*va)")
     return data
+
 
 def calc_energy(data):
     """Calculate the energy of the entire system.
@@ -306,6 +331,7 @@ def calc_energy(data):
     data['ek'] = ek
     return data
 
+
 def size_check(datadir):
 	"""Used in ncMerger.  Determines the total number of time series for a
 	number of .nc files in a directory
@@ -326,6 +352,7 @@ def size_check(datadir):
 		ncid.close()
 	return nele, node, timeDim
 
+
 def time_sorter(datadir):
 	"""Used in ncMerger.  Sorts the output of glob (which has no inherent
 	order) so that the files can be loaded chronologically.
@@ -344,6 +371,7 @@ def time_sorter(datadir):
 		ncid.close()
 	ordered_time = first_time.argsort()
 	return ordered_time
+
 
 def nan_index(data, dim='2D'):
 	"""Used in ncMerger. Determines, for a given data set, what time series
@@ -384,8 +412,7 @@ def nan_index(data, dim='2D'):
 	return nanInd, nanFrac
 
 
-def merge_nc(datadir, savedir, clean_nans = False, intelligent=False, \
-dim='2D'):
+def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
     """Merge data for all .nc files in a particular directory.  Assumes
     that all the data has the same nele, node (i.e. is for the same grid)
 
@@ -654,6 +681,7 @@ dim='2D'):
             data['v'] = V
             data['ww'] = WW
     return data
+
 
 
 

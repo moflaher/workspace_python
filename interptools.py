@@ -45,8 +45,8 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
     """   
 
 
-###############################################################################
-# Error and corner case checking
+    ###############################################################################
+    # Error and corner case checking
     if ll==True:
         trifinder='trigrid_finder'
         trigrid='trigrid'
@@ -75,7 +75,7 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
         out=np.empty(shape=(data[varname][:,layer,host]).squeeze().shape)
         out[:]=np.nan
         return out
-###############################################################################
+    ###############################################################################
 
 
     #code for ll adapted from mod_utils.F
@@ -112,9 +112,6 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
     return var
 
 
-   
-
-
 def interpN_at_loc(data,varname,loc,layer=None,ll=True):
     """
     Interpolate nodal data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
@@ -123,15 +120,15 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
     data - data dictionary from loadnc
     varname - nodal data variable name. (1d or 2d or 3d)
     loc - location
-
+    
     Optional:
     layer - default None. Specify which layer of 3d data to use
     ll - default True. Is point lon/lat or xy.    
     """   
 
 
-###############################################################################
-# Error and corner case checking
+    ###############################################################################
+    # Error and corner case checking
     if ll==True:
         trifinder='trigrid_finder'
         trigrid='trigrid'
@@ -163,7 +160,7 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
             out=np.empty(shape=(data[varname][:,layer,host]).squeeze().shape)
             out[:]=np.nan
         return out
-###############################################################################
+    ###############################################################################
 
 
     #code for ll adapted from mod_utils.F
@@ -179,8 +176,8 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
     n2=data['nv'][host,2]
       
 
-#To deal with 1d data, should be a better way to handle this....
-#This can all be vectorized, checkout robies code could make a factor of 2 difference.
+    #To deal with 1d data, should be a better way to handle this....
+    #This can all be vectorized, checkout robies code could make a factor of 2 difference.
     if len(data[varname].shape)==1:
         nvar0=data[varname][n0]
         nvar1=data[varname][n1]
@@ -200,7 +197,6 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
 
 
 def cross_shore_transect_2d(grid,name,region,vec,npt):
-
     data = dt.loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
     print 'done load'
     data = dt.ncdatasort(data,trifinder=True)

@@ -28,17 +28,16 @@ def runstats(datain=None):
     if datain==None:
         print 'Need to pass in data array'  
     else:
-        maxval=np.max(datain)
-        minval=np.min(datain)
-        meanval=np.mean(datain)
-        stdval=np.std(datain)
+        maxval=np.nanmax(datain)
+        minval=np.nanmin(datain)
+        meanval=np.nanmean(datain)
+        stdval=np.nanstd(datain)
+        np.sum(np.isnan(datain))
 
-        return maxval,minval,meanval,stdval
+        return maxval,minval,meanval,stdval,np.sum(np.isnan(datain))/np.size(datain)
 
 
-
-def ne_fv(casename,h=False,is31=False):
-    
+def ne_fv(casename,h=False,is31=False):    
     depdata=gt.load_nodfile(casename+'.nod',h)
     grddata=gt.load_elefile(casename+'.ele')
     gt.save_grdfile(grddata,depdata,casename+'_grd.dat',is31)
@@ -50,17 +49,8 @@ def dic_shape(indic):
     print df
 
 
-
 def speeder(ua,va):
     return np.sqrt(ua**2+va**2)
-
-
-
-
-
-
-
-
 
 
 
