@@ -94,21 +94,13 @@ ax_all.text(-131.3,53.1,'Hecate Strait',fontsize=8,rotation=-55)
 axsub1=f.add_axes(region1f)
 axsub1.triplot(data['trigrid'],color='black',lw=.075)
 
-locations=[11974,11418]
-labelstr=['1','2']
-arrows=[(.8,.65),(.85,.55)]
-#for j in range(0,len(locations)):
-#    axsub1.annotate(labelstr[j],xy=(data['uvnodell'][locations[j],0],data['uvnodell'][locations[j],1]),xycoords='data',xytext=arrows[j], textcoords='axes fraction',arrowprops=dict(width=2,facecolor='w',shrink=0))
-
 axsub1.axis(region1['region'])
 axsub1.set_aspect(get_aspectratio(region1))
 fix_osw(axsub1)
 
 plotcoast(axsub1,filename='pacific.nc',color='0.75',fill=True)
 
-arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
-axsub1.annotate(r'5 km',xy=(region1['region'][0]+.02,region1['region'][2]+.02),xycoords='data',xytext=(region1['region'][0]+ll_dist(region1,5000)+.02,region1['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
-
+scalebar(axsub1,region1,5000,fontsize=6,label='5 km')
 
 axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
 #axsub1.yaxis.set_tick_params(labelright='on',labelleft='off')
@@ -139,9 +131,8 @@ axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor
 axsub2=f.add_axes(region2f)
 axsub2.triplot(data['trigrid'],color='black',lw=.1)
 
-locations=[119754,118418]
-labelstr=['1','2']
-arrows=[(.45,.365),(.85,.325)]
+axsub2.plot([-129.422344,-129.415837],[52.511620,52.520465],'r',lw=3)
+axsub2.plot([-129.382917,-129.403779],[52.520149,52.520465],'r',lw=3)
 
 axsub2.axis(region2['region'])
 axsub2.set_aspect(get_aspectratio(region2))
@@ -149,8 +140,7 @@ fix_osw(axsub2)
 
 plotcoast(axsub2,filename='pacific.nc',color='0.75',fill=True)
 
-arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
-axsub2.annotate(r'1 km',xy=(region2['region'][0]+.02,region2['region'][2]+.02),xycoords='data',xytext=(region2['region'][0]+ll_dist(region2,1000)+.02,region2['region'][2]+.02), textcoords='data',fontsize=6,arrowprops=arrow)
+scalebar(axsub2,region2,2000,fontsize=6,label='2 km')
 
 axsub2.yaxis.set_tick_params(labelright='on',labelleft='off')
 
@@ -179,9 +169,20 @@ for label in axsub2.get_yticklabels():
 axsub3=f.add_axes(region3f)
 axsub3.triplot(data['trigrid'],color='black',lw=.1)
 
-#locations=[119754,118418]
-#labelstr=['1','2']
-#arrows=[(.45,.365),(.85,.325)]
+
+
+#lons=np.array([-129.4885,-129.4875,-129.489])
+#lats=np.array([52.664,52.651,52.638])
+lons=np.array([-129.4875,-129.489])
+lats=np.array([52.651,52.638])
+
+for i in range(len(lats)):
+    meter_box(axsub3,[lons[i],lats[i]],100,lw=2,color='r')
+
+locx=[-129.49535,-129.4875]#,-129.475]
+locy=[52.6485,52.65]#,52.65]
+
+axsub3.plot(locx,locy,'*r',markersize=10)
 
 axsub3.axis(region3['region'])
 axsub3.set_aspect(get_aspectratio(region3))
@@ -189,8 +190,7 @@ fix_osw(axsub3)
 
 plotcoast(axsub3,filename='pacific.nc',color='0.75',fill=True)
 
-arrow=dict(arrowstyle='|-|,widthA=.25,widthB=.25',color='k',connectionstyle="angle,rad=0")
-axsub3.annotate(r'200 m',xy=(region3['region'][0]+.002,region3['region'][2]+.002),xycoords='data',xytext=(region3['region'][0]+ll_dist(region3,200)+.002,region3['region'][2]+.002), textcoords='data',fontsize=6,arrowprops=arrow)
+scalebar(axsub3,region3,300,fontsize=6,label='300 m')
 
 axsub3.yaxis.set_tick_params(labelright='on',labelleft='off')
 axsub3.xaxis.set_tick_params(labeltop='on',labelbottom='off')
@@ -231,10 +231,16 @@ tmp=axsub1.annotate("",xy=(axsub3bb[0],axsub3bb[1]),xycoords='figure fraction',x
 tmp.set_zorder(40)
 
 
-ax_all.annotate("A",xy=(.025,.95),xycoords='axes fraction')
-axsub1.annotate("B",xy=(.025,.925),xycoords='axes fraction')
-axsub2.annotate("C",xy=(.025,.9),xycoords='axes fraction')
-axsub3.annotate("D",xy=(.025,.925),xycoords='axes fraction')
+
+axes_label(ax_all,"A")
+axes_label(axsub1,"B")
+axes_label(axsub2,"C")
+axes_label(axsub3,"D")
+
+#ax_all.annotate("A",xy=(.025,.95),xycoords='axes fraction')
+#axsub1.annotate("B",xy=(.025,.925),xycoords='axes fraction')
+#axsub2.annotate("C",xy=(.025,.9),xycoords='axes fraction')
+#axsub3.annotate("D",xy=(.025,.925),xycoords='axes fraction')
 
 
 ###############################################################################

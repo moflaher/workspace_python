@@ -562,6 +562,66 @@ def meter_box(axin,loc,dist,color='k',lw=1):
     plot_box(axin,tr,color=color,lw=lw)
 
 
+def axes_label(axin,label,loc=0):
+    plt.draw()
+
+    if loc==0:
+        axbb=axin.get_axes().get_position().bounds
+        t=axin.annotate(label,xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+        t.set_zorder(100)
+
+
+def scalebar(axin,region,dist,**kwargs):
+    """
+    Given axes, region, and distance plots a scalebar. 
+    NOTE: Must be called AFTER prettyplot_ll or ppll_sub as the aspect ratio must be set first.
+
+    :Parameters:
+        axin -  The axes to plot the box on.
+    	region - The region being plotted.
+    	dist - The distance in meters of the scalebar.
+
+        **loc -  Where to place the scalebar (only one option for now, lower left).
+        **fontsize - Text fontsize (default - 8).
+        **color - Color of scalebar and text (default - 'k').
+        **label - Override label.
+    """
+
+    fontsize=8
+    loc=0
+    color='k'
+    lw=1
+    if dist<1000:
+        label=("%d"%dist)+' m'
+    else:
+        label=("%.1f"%(dist/1000))+' km'
+
+    if kwargs is not None:
+        for key, value in kwargs.iteritems():
+            if (key=='fontsize'):
+                fontsize=value 
+            if (key=='loc'):
+                loc=value
+            if (key=='color'):
+                color=value 
+            if (key=='label'):
+                label=value 
+            if (key=='lw'):
+                lw=value
+
+    plt.draw()
+    ftrans=axin.get_figure().transFigure
+    dinv=axin.transData.inverted()
+
+    if loc==0:
+        lldist=pjt.ll_dist(region,dist)
+
+        axbb=axin.get_axes().get_position().bounds
+        t=axin.annotate(label,xy=(axbb[0]+.02,axbb[1]+.0275),xycoords='figure fraction',fontsize=fontsize,color=color)
+        t.set_zorder(100)
+        
+        xtmp,ytmp=dinv.transform(ftrans.transform((axbb[0]+.02,axbb[1]+.02)))
+        axin.plot([xtmp,xtmp+lldist],[ytmp,ytmp],color=color)
 
 
 

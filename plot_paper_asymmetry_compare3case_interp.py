@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from projtools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -21,7 +22,7 @@ grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-regionlist=['kit4_kelp_tight2_small','kit4_ftb','kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
 #regionlist=['kit4_kelp_tight5']
 starttime=384
 cmin=-1
@@ -134,12 +135,12 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
 
     axtri=ax[0].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,.4,.8])
-    Vneg=np.array([-.8,-.4])
-    CS2=ax[0].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
-    ax[0].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
-    CS3=ax[0].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
-    ax[0].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    Vpos=np.array([0,.4,.8])
+#    Vneg=np.array([-.8,-.4])
+#    CS2=ax[0].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[0].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    CS3=ax[0].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[0].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
 
 
    
@@ -149,12 +150,12 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
  
     axtri=ax[1].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,.4,.8])
-    Vneg=np.array([-.8,-.4])
-    CS2=ax[1].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
-    ax[1].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
-    CS3=ax[1].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
-    ax[1].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    Vpos=np.array([0,.4,.8])
+#    Vneg=np.array([-.8,-.4])
+#    CS2=ax[1].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[1].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    CS3=ax[1].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[1].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
 
 
 
@@ -164,12 +165,12 @@ for regionname in regionlist:
     print ('griddata interp: %f' % (time.clock() - start))
 
     axtri=ax[2].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
-    Vpos=np.array([0,.4,.8])
-    Vneg=np.array([-.8,-.4])
-    CS2=ax[2].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
-    ax[2].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
-    CS3=ax[2].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
-    ax[2].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    Vpos=np.array([0,.4,.8])
+#    Vneg=np.array([-.8,-.4])
+#    CS2=ax[2].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[2].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
+#    CS3=ax[2].contour(xi,yi,efs_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
+#    ax[2].clabel(CS3, fontsize=4, inline=1,zorder=30,fmt=fmt)
 
 
 
@@ -184,7 +185,8 @@ for regionname in regionlist:
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         ax[i].add_collection(lseg_t)
-        ax[i].annotate(ABC[i],xy=(.025,1-.05/get_data_ratio(region)/figH/figW),xycoords='axes fraction')
+        axes_label(ax[i],ABC[i])
+
 
 
 

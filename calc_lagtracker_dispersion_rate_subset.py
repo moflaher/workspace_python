@@ -40,8 +40,8 @@ if np.shape(cages)!=():
 
 
 
-for i in range(0,24,3):
-    lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s' + ("%d"%i)
+for i in range(0,6,1):
+    lname='kit4_kelp_tight5_1elements_250x150_1000pp_s' + ("%d"%i)
 
 
 
@@ -88,8 +88,8 @@ for i in range(0,24,3):
 
     
 
-        savedic['sigma_xy_nodrag']=np.nanmean((x1-np.nanmean(x1,axis=0))*(y1-np.nanmean(y1,axis=0)),axis=0)
-        savedic['sigma_xy_drag']=np.nanmean((x2-np.nanmean(x2,axis=0))*(y2-np.nanmean(y2,axis=0)),axis=0)
+        savedic['sigma_xy_nodrag']=np.sqrt(np.nanmean((x1-np.nanmean(x1,axis=0))*(y1-np.nanmean(y1,axis=0)),axis=0))
+        savedic['sigma_xy_drag']=np.sqrt(np.nanmean((x2-np.nanmean(x2,axis=0))*(y2-np.nanmean(y2,axis=0)),axis=0))
         
         sio.savemat('data/dis_rate/'+name+'_'+name2+'_'+lname+'_sigma_and_disrate_'+("%05d"%(subset*sub))+'_'+("%05d"%(subset*(sub+1)))+'.mat',mdict=savedic)
         

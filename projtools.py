@@ -111,9 +111,9 @@ def ll_dist(region,dist):
     """
     lat=region['region'][2:4].mean()
     mlat=sw.dist([lat, lat],[0, 1],'km')[0]*1000
-    print mlat
-    mtest=ll2m([0,lat],[1,lat])[0]
-    print mtest
+#    print mlat
+#    mtest=ll2m([0,lat],[1,lat])[0]
+#    print mtest
     
     return dist/mlat
 
@@ -157,6 +157,22 @@ def region2path(region):
         print "No regionxy. pathxy could not be added."
     
     return region
+
+def regionarea(region):
+    return mdist(region['region'][[0,2]],region['region'][[0,3]])*mdist(region['region'][[0,2]],region['region'][[1,2]])
+
+
+def smallestregion(data,host):
+    minarea=10000000000
+    for regionname in regions():
+        region=regions(regionname)
+        eidx=dt.get_elements(data,region)
+        if ((np.sum(np.in1d(host,eidx))==len(host)) and (regionarea(region)<minarea)):
+            minarea=regionarea(region)
+            bestregion=regionname
+
+    return bestregion
+
 
 
 

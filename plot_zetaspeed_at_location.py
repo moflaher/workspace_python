@@ -24,8 +24,8 @@ datatype='2d'
 starttime=384
 endtime=432
 endtime=456
-locx=[-129.4875,-129.475]
-locy=[52.65,52.65]
+locx=[-129.49535,-129.4875]#,-129.475]
+locy=[52.6485,52.65]#,52.65]
 ABC=[.02,.87]
 ABC_text=['A','B']
 
@@ -99,6 +99,20 @@ for i in range(len(locx)):
     f.savefig(savepath + grid + '_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.png',dpi=300)
     plt.close(f)
 
+
+
+#Plot mesh
+f=plt.figure()
+ax=plt.axes([.125,.1,.775,.8])
+ax.triplot(data['trigrid'],lw=.1)
+ax.plot(locx,locy,'*',markersize=12)
+
+regionname=smallestregion(data,closest_element(data,np.vstack([locx,locy]).T))
+region=regions(regionname)
+
+prettyplot_ll(ax,setregion=region,grid=True,title=regionname)
+f.savefig(savepath + grid + '_' + regionname +'_locations.png',dpi=300)
+plt.close(f)
 
 
 

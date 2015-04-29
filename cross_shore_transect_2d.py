@@ -75,8 +75,6 @@ for name in namelist:
 
     host=data['trigrid_finder'].__call__(vectorx,vectory)
 
-    def regionarea(region):
-        return (region['region'][1]-region['region'][0])*(region['region'][3]-region['region'][2])
 
     minarea=1000000000
     for regionname in regions():
