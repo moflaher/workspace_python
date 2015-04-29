@@ -25,8 +25,8 @@ name2='kit4_kelp_20m_drag_0.018'
 #name='kit4_45days_3'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
-lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s0'
+regionname='kit4_kelp_tight5'
+lname='kit4_kelp_tight5_1elements_250x150_1000pp_s0'
 starttime=384
 
 
@@ -44,9 +44,7 @@ if np.shape(cages)!=():
     ls='solid'
 
 
-region=regions(regionname)
-region=expand_region(region,2500)
-region=regionll2xy(data,region)
+
 
 
 
@@ -72,6 +70,11 @@ if 'savelag2' not in globals():
             continue
         savelag2[i]=fileload['savelag'][i].value.T
 
+
+
+
+
+
 cols=3
 rows=3
 
@@ -79,11 +82,22 @@ nos=rows*cols
 timestep=(savelag1['time'][1]-savelag1['time'][0]).astype(int)
 num_hours=2
 subtimes=np.linspace(0,num_hours*timestep*(nos),nos+1)
+
+x=savelag1['x'][:,:subtimes[-1]]
+y=savelag1['x'][:,:subtimes[-1]]
+
+
+region=regions(regionname)
+region=expand_region(region,0)
+region=regionll2xy(data,region)
+
+
 eidx=equal_vectors(data,region,200)
 scale1=.001
-
-
 subset=1000
+
+
+
 
 
 for sub in range(int(savelag1['x'].shape[0]/subset)):

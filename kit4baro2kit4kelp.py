@@ -46,20 +46,21 @@ filepath='data/misc/baroclinic/kit4-spring-convert/'
 indata_old=load_fvcom_files(filepath,'kit4')
 
 
-
+#have to remove the while you are writting to other wise its messed up...........
+#add an os.system(rm filename) here
 #new ncfile name
 ncid = n4.Dataset(filepath+'kit4-spring-its.nc', 'r',format='NETCDF3_CLASSIC')
 g = n4.Dataset(filepath+'kit4_kelp-spring-its.nc', 'w',format='NETCDF3_CLASSIC')
 
-newtsl=np.empty((1,ncid.variables['tsl'].shape[1],len(data_new['nodell'][:,0])))
+newtsl=np.empty((ncid.variables['tsl'].shape[1],len(data_new['nodell'][:,0])))
 for level in range(ncid.variables['tsl'].shape[1]):
     nn_tsl=interp.NearestNDInterpolator((data_old['nodell'][:,0],data_old['nodell'][:,1]), np.squeeze(ncid.variables['tsl'][0,level,:]))
-    newtsl[0,level,:]=nn_tsl.__call__(indata_new['nodell'][:,0],indata_new['nodell'][:,1])
+    newtsl[level,:]=nn_tsl.__call__(indata_new['nodell'][:,0],indata_new['nodell'][:,1])
 
-newssl=np.empty((1,ncid.variables['ssl'].shape[1],len(data_new['nodell'][:,0])))
+newssl=np.empty((ncid.variables['ssl'].shape[1],len(data_new['nodell'][:,0])))
 for level in range(ncid.variables['ssl'].shape[1]):
     nn_ssl=interp.NearestNDInterpolator((data_old['nodell'][:,0],data_old['nodell'][:,1]), np.squeeze(ncid.variables['ssl'][0,level,:]))
-    newssl[0,level,:]=nn_ssl.__call__(indata_new['nodell'][:,0],indata_new['nodell'][:,1])
+    newssl[level,:]=nn_ssl.__call__(indata_new['nodell'][:,0],indata_new['nodell'][:,1])
 
 
 
@@ -74,6 +75,8 @@ for dimname,dim in ncid.dimensions.iteritems():
        # you should add your own conditions here before the creation of the dimension.
         if dimname=='node':
             g.createDimension(dimname,len(data_new['nodell'][:,0]))
+        elif dimname=='time':
+            g.createDimension(dimname,None)
         else:
             g.createDimension(dimname,len(dim))
 
@@ -81,15 +84,16 @@ for dimname,dim in ncid.dimensions.iteritems():
 for varname,ncvar in ncid.variables.iteritems():
         #if you want to make changes in the variables of the new file
         # you should add your own conditions here before the creation of the variable.
+
         var = g.createVariable(varname,ncvar.dtype,ncvar.dimensions)
         #Proceed to copy the variable attributes
         for attname in ncvar.ncattrs():  
            setattr(var,attname,getattr(ncvar,attname))
         #Finally copy the variable data to the new created variable
         if varname=='tsl':
-            g.variables['tsl'][:]=newtsl
+            g.variables['tsl'][0,:,:]=newtsl
         elif varname=='ssl':
-            g.variables['ssl'][:]=newssl
+            g.variables['ssl'][0,:,:]=newssl
         else:
             var[:] = ncvar[:]
 
@@ -98,6 +102,9 @@ ncid.close()
 g.close()
 
 
+
+#do I also have to remove the next two files?
+#or does the copy overwrite so it is ok?
 #new ncfile name
 os.system('cp '+ filepath+'kit4-spring-tsobc.nc '+filepath+'kit4_kelp-spring-tsobc.nc')
 ncid = n4.Dataset(filepath+'kit4_kelp-spring-tsobc.nc', 'r+',format='NETCDF3_CLASSIC')
@@ -113,13 +120,16 @@ ncid.close()
 
 
 rivdata=load_rivfile(filepath+'kit4-kitimat_riv.nml')
-rivdata['RIVER_GRID_LOCATION']=closest_node(data_new,data_old['nodell'][rivdata['RIVER_GRID_LOCATION'],:])
+rivdata['RIVER_GRID_LOCATION']=closest_node(data_new,data_old['nodell'][rivdata['RIVER_GRID_LOCATION']-1,:])+1
 save_rivfile(rivdata,filepath+'kit4_kelp-kitimat_riv.nml')
 
 
 
+
+#have to remove the while you are writting to other wise its messed up...........
+#add an os.system(rm filename) here
 #new ncfile name
-ncid = n4.Dataset(filepath+'hfx-201405-06-SW_LR.nc', 'r',format='NETCDF4_CLASSIC')
+ncid = n4.Dataset(filepath+'hfx-201405-06-SW_LR.nc', 'r',format='NETCDF3_CLASSIC')
 g = n4.Dataset(filepath+'kit4_kelp_hfx-201405-06-SW_LR.nc', 'w',format='NETCDF4_CLASSIC')
 
 
@@ -148,7 +158,9 @@ for dimname,dim in ncid.dimensions.iteritems():
         if dimname=='node':
             g.createDimension(dimname,len(data_new['nodell'][:,0]))
         elif dimname=='nele':
-            g.createDimension(dimname,len(data_new['uvnodell'][:,0]))        
+            g.createDimension(dimname,len(data_new['uvnodell'][:,0]))      
+        elif dimname=='time':
+            g.createDimension(dimname,None)  
         else:
             g.createDimension(dimname,len(dim))
 

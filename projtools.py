@@ -50,6 +50,11 @@ def regionll2xy(data,region):
     Take an FVCOM data dictionary, a region dictionary and return a region dictionary with regionxy added which best approximates the ll region in xy.
  
     """
+    try:
+        np.shape(region['center'])
+    except KeyError:
+        region['center']=[(region['region'][0]+region['region'][1])/2,(region['region'][2]+region['region'][3])/2]
+
     ehost=dt.closest_element(data,region['center'])
     nhost=dt.closest_node(data,region['center'])
 

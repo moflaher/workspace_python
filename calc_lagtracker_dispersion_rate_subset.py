@@ -40,7 +40,7 @@ if np.shape(cages)!=():
 
 
 
-for i in range(0,6,1):
+for i in range(10,24,1):
     lname='kit4_kelp_tight5_1elements_250x150_1000pp_s' + ("%d"%i)
 
 
@@ -73,6 +73,8 @@ for i in range(0,6,1):
         x2=savelag2['x'][(subset*sub):(subset*(sub+1)),:]
         y2=savelag2['y'][(subset*sub):(subset*(sub+1)),:]
 
+        ddof=x1.shape[0]/(x1.shape[0]-1)
+
 
         savedic['sigma_nodrag']=np.sqrt(np.nanvar(x1,axis=0,ddof=1)+np.nanvar(y1,axis=0,ddof=1))
         savedic['dis_rate_nodrag']=np.diff(savedic['sigma_nodrag'])/60
@@ -90,6 +92,10 @@ for i in range(0,6,1):
 
         savedic['sigma_xy_nodrag']=np.sqrt(np.nanmean((x1-np.nanmean(x1,axis=0))*(y1-np.nanmean(y1,axis=0)),axis=0))
         savedic['sigma_xy_drag']=np.sqrt(np.nanmean((x2-np.nanmean(x2,axis=0))*(y2-np.nanmean(y2,axis=0)),axis=0))
+    
+
+        savedic['sigma_xy0_nodrag']=np.sqrt(np.nanmean(((x1.T-x1[:,0])*(y1.T-y1[:,0])).T,axis=0)*ddof)
+        savedic['sigma_xy0_drag']=np.sqrt(np.nanmean(((x2.T-x2[:,0])*(y2.T-y2[:,0])).T,axis=0)*ddof)
         
         sio.savemat('data/dis_rate/'+name+'_'+name2+'_'+lname+'_sigma_and_disrate_'+("%05d"%(subset*sub))+'_'+("%05d"%(subset*(sub+1)))+'.mat',mdict=savedic)
         
