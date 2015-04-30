@@ -123,32 +123,49 @@ def ll_dist(region,dist):
     return dist/mlat
 
 
-def expand_region(region,dist):
+def expand_region(region,dist=0,shift=0):
     """
-    Given a region expands the region by a distance (1d or 2d) in meters.
-    Also saves how much it was expand by.
+    Given a region expands and/or shifts the region by a distance (1d or 2d) in meters.
+    Also saves how much it was expanded or shifted by.
      
 
     :Parameters:
         region -  The region to expand.
-    	dist - The distance in meters around the box to plot.
+    	dist - The distance in meters the expand the region.
+        shift - The distance in meters to move the region.
     """
-    dist=np.atleast_1d(np.array(dist))
-    lon_space=ll_dist(region,dist[0])
-    if len(dist)==2:
-        lat_space=dist[1]/111120 
-        y_dist=dist[1]   
-    else:
-        lat_space=dist[0]/111120  
-        y_dist=dist[0]   
+    if dist!=0:
+        dist=np.atleast_1d(np.array(dist))
+        lon_space=ll_dist(region,dist[0])
+        if len(dist)==2:
+            lat_space=dist[1]/111120 
+            y_dist=dist[1]   
+        else:
+            lat_space=dist[0]/111120  
+            y_dist=dist[0]   
 
-    region['region']=region['region']+[-lon_space,+lon_space,-lat_space,+lat_space]
-    region['lon_edist']=lon_space
-    region['lat_edist']=lat_space
+        region['region']=region['region']+[-lon_space,+lon_space,-lat_space,+lat_space]
+        region['lon_edist']=lon_space
+        region['lat_edist']=lat_space
 
-    #    region['regionxy']=region['regionxy']+[-dist[0],+dist[0],-y_dist,+y_dist]
-    #    region['x_edist']=dist[0]
-    #    region['y_edist']=y_dist
+
+    if shift!=0:
+        shift=np.atleast_1d(np.array(shift))
+        lon_space=ll_dist(region,shift[0])
+        if len(dist)==2:
+            lat_space=shift[1]/111120 
+            y_dist=shift[1]   
+        else:
+            lat_space=shift[0]/111120  
+            y_dist=shift[0]   
+
+        region['region']=region['region']+[+lon_space,+lon_space,+lat_space,+lat_space]
+        region['lon_sdist']=lon_space
+        region['lat_sdist']=lat_space
+
+        #    region['regionxy']=region['regionxy']+[-dist[0],+dist[0],-y_dist,+y_dist]
+        #    region['x_edist']=dist[0]
+        #    region['y_edist']=y_dist
 
     return region
 

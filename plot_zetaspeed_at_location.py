@@ -96,6 +96,22 @@ for i in range(len(locx)):
 
     f.subplots_adjust(hspace=.075)
 
+
+
+    tempdic={}
+    tempdic['elevation_nodrag']=uvzeta1
+    tempdic['elevation_drag']=uvzeta2
+    tempdic['ua_nodrag']=data['ua'][starttime:endtime,element]
+    tempdic['ua_drag']=data2['ua'][starttime:endtime,element]
+    tempdic['va_nodrag']=data['va'][starttime:endtime,element]
+    tempdic['va_drag']=data2['va'][starttime:endtime,element]
+    tempdic['speed_nodrag']=speeder(data['ua'][starttime:endtime,element],data['va'][starttime:endtime,element])
+    tempdic['speed_drag']=speeder(data2['ua'][starttime:endtime,element],data2['va'][starttime:endtime,element])
+    tempdic['time']=data2['time'][starttime:endtime]
+
+    sio.savemat('data/zetaspeed_at_location/'+grid+'_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.mat',mdict=tempdic)
+
+
     f.savefig(savepath + grid + '_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.png',dpi=300)
     plt.close(f)
 

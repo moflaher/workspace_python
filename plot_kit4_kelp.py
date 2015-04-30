@@ -131,8 +131,18 @@ axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor
 axsub2=f.add_axes(region2f)
 axsub2.triplot(data['trigrid'],color='black',lw=.1)
 
+axsub2.text(-129.4275,52.5175,'1',fontsize=8,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub2.plot([-129.422344,-129.415837],[52.511620,52.520465],'r',lw=3)
+axsub2.text(-129.39,52.525,'2',fontsize=8,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub2.plot([-129.382917,-129.403779],[52.520149,52.520465],'r',lw=3)
+
+lons=np.array([-129.44])
+lats=np.array([52.5475])
+
+savedic={}
+savedic['elements']=np.empty(shape=lats.shape)
+for i in range(len(lats)):
+    meter_box(axsub2,[lons[i],lats[i]],[250,150],lw=2,color='r')
 
 axsub2.axis(region2['region'])
 axsub2.set_aspect(get_aspectratio(region2))
@@ -173,14 +183,14 @@ axsub3.triplot(data['trigrid'],color='black',lw=.1)
 
 #lons=np.array([-129.4885,-129.4875,-129.489])
 #lats=np.array([52.664,52.651,52.638])
-lons=np.array([-129.4875,-129.489])
-lats=np.array([52.651,52.638])
+lons=np.array([-129.4875])#,-129.489])
+lats=np.array([52.651])#,52.638])
 
 for i in range(len(lats)):
     meter_box(axsub3,[lons[i],lats[i]],100,lw=2,color='r')
 
-locx=[-129.49535,-129.4875]#,-129.475]
-locy=[52.6485,52.65]#,52.65]
+locx=[-129.4875,-129.49535,]#,-129.475]
+locy=[52.65,52.6485,]#,52.65]
 
 axsub3.plot(locx,locy,'*r',markersize=10)
 
