@@ -562,8 +562,20 @@ def meter_box(axin,loc,dist,color='k',lw=1):
     plot_box(axin,tr,color=color,lw=lw)
 
 
-def axes_label(axin,label,loc=0):
-    plt.draw()
+def axes_label(axin,label,**kwargs):
+    loc=0
+    drawn=False
+
+    if kwargs is not None:
+        for key, value in kwargs.iteritems():
+            if (key=='loc'):
+                loc=value           
+            if (key=='drawn'):
+                drawn=value
+
+
+    if drawn==False:
+        plt.draw()
 
     if loc==0:
         axbb=axin.get_axes().get_position().bounds
@@ -595,6 +607,7 @@ def scalebar(axin,region,dist,**kwargs):
         label=("%d"%dist)+' m'
     else:
         label=("%.1f"%(dist/1000))+' km'
+    drawn=False
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -608,8 +621,13 @@ def scalebar(axin,region,dist,**kwargs):
                 label=value 
             if (key=='lw'):
                 lw=value
+            if (key=='drawn'):
+                drawn=value
 
-    plt.draw()
+    if drawn==False:
+        plt.draw()
+
+
     ftrans=axin.get_figure().transFigure
     dinv=axin.transData.inverted()
 

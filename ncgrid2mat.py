@@ -48,7 +48,7 @@ data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
-
+kill
 
 tempdic={}
 

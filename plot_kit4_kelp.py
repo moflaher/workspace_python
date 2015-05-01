@@ -32,10 +32,10 @@ region1=regions('kelpchain')
 region2=regions('kit4_kelp_tight5')
 region3=regions('kit4_kelpfield')
 regionAf=[.09,.1,.725,.75]
-cbarf=[.1,.95,.45,.025]
-region1f=[.325,.44,.375,.415]
-region2f=[.415,.035,.575,.39]
-region3f=[.685,.445,.275,.5]
+cbarf=[.885,.1,.025,.8]
+region1f=[.225,.55,.325,.415]
+region2f=[.36,.035,.575,.39]
+region3f=[.56,.4575,.275,.5]
 
 
 ### load the .nc file #####
@@ -66,7 +66,7 @@ ax_all=plt.axes(regionAf)
 cax=f.add_axes(cbarf)
 maxh=500
 trip=ax_all.tripcolor(data['trigrid'],data['h'],vmax=maxh)
-cb=plt.colorbar(trip,cax=cax,orientation='horizontal')
+cb=plt.colorbar(trip,cax=cax,orientation='vertical')
 cb.set_label(r'Depth (m)')
 for label in cb.ax.get_xticklabels()[::2]:
     label.set_visible(False)
@@ -77,7 +77,8 @@ ax_all.xaxis.set_major_formatter(_formatter)
 prettyplot_ll(ax_all,setregion=regionA)
 
 
-#ax_all.text(-129.1,54.1,'Kitimat',fontsize=8)
+a=ax_all.text(-128.5,53.905,'Kitimat',fontsize=8)
+a.set_zorder(100)
 #ax_all.text(-129.24,53.58,'Douglas',fontsize=4,rotation=90)
 #ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
 #ax_all.text(-128.25,53,'British Columbia',fontsize=8)
@@ -99,8 +100,6 @@ axsub1.set_aspect(get_aspectratio(region1))
 fix_osw(axsub1)
 
 plotcoast(axsub1,filename='pacific.nc',color='0.75',fill=True)
-
-scalebar(axsub1,region1,5000,fontsize=6,label='5 km')
 
 axsub1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
 #axsub1.yaxis.set_tick_params(labelright='on',labelleft='off')
@@ -150,8 +149,6 @@ fix_osw(axsub2)
 
 plotcoast(axsub2,filename='pacific.nc',color='0.75',fill=True)
 
-scalebar(axsub2,region2,2000,fontsize=6,label='2 km')
-
 axsub2.yaxis.set_tick_params(labelright='on',labelleft='off')
 
 for label in axsub2.get_xticklabels()[::2]:
@@ -179,8 +176,6 @@ for label in axsub2.get_yticklabels():
 axsub3=f.add_axes(region3f)
 axsub3.triplot(data['trigrid'],color='black',lw=.1)
 
-
-
 #lons=np.array([-129.4885,-129.4875,-129.489])
 #lats=np.array([52.664,52.651,52.638])
 lons=np.array([-129.4875])#,-129.489])
@@ -189,8 +184,8 @@ lats=np.array([52.651])#,52.638])
 for i in range(len(lats)):
     meter_box(axsub3,[lons[i],lats[i]],100,lw=2,color='r')
 
-locx=[-129.4875,-129.49535,]#,-129.475]
-locy=[52.65,52.6485,]#,52.65]
+locx=[-129.4875,-129.49535]#,-129.475]
+locy=[52.65,52.6485]#,52.65]
 
 axsub3.plot(locx,locy,'*r',markersize=10)
 
@@ -199,8 +194,6 @@ axsub3.set_aspect(get_aspectratio(region3))
 fix_osw(axsub3)
 
 plotcoast(axsub3,filename='pacific.nc',color='0.75',fill=True)
-
-scalebar(axsub3,region3,300,fontsize=6,label='300 m')
 
 axsub3.yaxis.set_tick_params(labelright='on',labelleft='off')
 axsub3.xaxis.set_tick_params(labeltop='on',labelbottom='off')
@@ -227,7 +220,7 @@ axsub3.yaxis.set_major_formatter(_formatter2)
 plt.draw()
 
 axsub1bb=axsub1.get_axes().get_position().bounds
-ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]+axsub1bb[3]),xycoords='figure fraction',xytext=(region1['region'][0],region1['region'][3]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
+ax_all.annotate("",xy=(axsub1bb[1]-.00525,axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][1],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][0],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 
 axsub2bb=axsub2.get_axes().get_position().bounds
@@ -241,16 +234,13 @@ tmp=axsub1.annotate("",xy=(axsub3bb[0],axsub3bb[1]),xycoords='figure fraction',x
 tmp.set_zorder(40)
 
 
-
-axes_label(ax_all,"A")
-axes_label(axsub1,"B")
-axes_label(axsub2,"C")
-axes_label(axsub3,"D")
-
-#ax_all.annotate("A",xy=(.025,.95),xycoords='axes fraction')
-#axsub1.annotate("B",xy=(.025,.925),xycoords='axes fraction')
-#axsub2.annotate("C",xy=(.025,.9),xycoords='axes fraction')
-#axsub3.annotate("D",xy=(.025,.925),xycoords='axes fraction')
+scalebar(axsub1,region1,5000,fontsize=6,label='5 km',drawn=True)
+scalebar(axsub2,region2,2000,fontsize=6,label='2 km',drawn=True)
+scalebar(axsub3,region3,300,fontsize=6,label='300 m',drawn=True)
+axes_label(ax_all,"A",drawn=True)
+axes_label(axsub1,"B",drawn=True)
+axes_label(axsub2,"C",drawn=True)
+axes_label(axsub3,"D",drawn=True)
 
 
 ###############################################################################
