@@ -5,6 +5,7 @@ from datatools import *
 from gridtools import *
 from plottools import *
 from projtools import *
+from misctools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -23,8 +24,7 @@ global region
 global tmparray
 global savepath
 global data
-global cmin
-global cmax
+
 
 
 
@@ -35,8 +35,6 @@ regionname='kit4'
 datatype='2d'
 starttime=0
 endtime=20
-cmin=0
-cmax=5
 
 
 ### load the .nc file #####
@@ -56,26 +54,38 @@ if cages!=None:
 
 region=regions(regionname)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
-if not os.path.exists(savepath): os.makedirs(savepath)
+savepath_t='figures/timeseries/' + grid + '_' + datatype + '/temp/' + name + '_' + regionname + '/'
+if not os.path.exists(savepath_t): os.makedirs(savepath_t)
+savepath_s='figures/timeseries/' + grid + '_' + datatype + '/sal/' + name + '_' + regionname + '/'
+if not os.path.exists(savepath_s): os.makedirs(savepath_s)
 
 
-def speed_plot(i):
+def ts_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
+    triax=ax.tripcolor(data['trigrid'],data['temp'][i,0,:])
 #    plotcoast(ax,color='k',fill=True)
 #    if cages!=None:   
 #        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 #        ax.add_collection(lseg_t) 
-    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
-    f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    prettyplot_ll(ax,setregion=region,cblabel=r'Temp (degree)',cb=triax,grid=True)
+    f.savefig(savepath_t + grid + '_' + regionname +'_temp_' + ("%04d" %(i)) + '.png',dpi=150)
+    plt.close(f)
+
+    f=plt.figure()
+    ax=plt.axes([.125,.1,.775,.8])
+    triax=ax.tripcolor(data['trigrid'],data['salinity'][i,0,:])
+#    plotcoast(ax,color='k',fill=True)
+#    if cages!=None:   
+#        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#        ax.add_collection(lseg_t) 
+    prettyplot_ll(ax,setregion=region,cblabel=r'Salinity',cb=triax,grid=True)
+    f.savefig(savepath_s + grid + '_' + regionname +'_sal_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
-
 pool = multiprocessing.Pool()
-pool.map(speed_plot,range(starttime,endtime))
+pool.map(ts_plot,range(starttime,endtime))
 
 
 

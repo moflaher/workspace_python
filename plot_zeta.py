@@ -4,12 +4,23 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from projtools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+import multiprocessing
+
+global name
+global grid
+global regionname
+global region
+global tmparray
+global savepath
+global data
+global nidx
 
 
 
@@ -17,9 +28,9 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight5'
-starttime=400
-endtime=450
+regionname='kit4'
+starttime=0
+endtime=20
 
 
 ### load the .nc file #####
@@ -43,21 +54,24 @@ savepath='figures/timeseries/' + grid + '_' + datatype + '/zeta/' + name + '_' +
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-# Plot mesh
-for i in range(starttime,endtime):
-    print i
+def zeta_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     nidxh=data['zeta'][i,nidx]
-    her=nidxh[nidxh!=0]
-    triax=ax.tripcolor(data['trigrid'],data['zeta'][i,:],vmin=her.min(),vmax=her.max())
-    if cages!=None:   
-        ax.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'w.',markersize=1) 
+    her=np.percentile(nidxh,[2,98])
+    triax=ax.tripcolor(data['trigrid'],data['zeta'][i,:],vmin=her[0],vmax=her[1])
+#    plotcoast(ax,color='k',fill=True)
+#    if cages!=None:   
+#        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#        ax.add_collection(lseg_t) 
     prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
-    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=300)
+    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
+
+pool = multiprocessing.Pool()
+pool.map(zeta_plot,range(starttime,endtime))
 
 
 
