@@ -92,7 +92,7 @@ for i in range(5,6,1):
 
 
         #for i in range(0,len(savelag1['time']),4):
-        for i in range(3,7201,4):
+        for i in range(0,3700,2):
             print ("%d"%i)+"              "+("%f"%(i/len(savelag1['time'])*100)) 
             f = plt.figure()
             ax=f.add_axes([.125,.1,.775,.8])
@@ -112,7 +112,7 @@ for i in range(5,6,1):
             legend=ax.legend(handles[0:2], labels[0:2],prop={'size':10},loc=4,numpoints=1)
             legend.set_zorder(25)
 
-            tstr=time.strftime("%H:%M", time.gmtime(savelag1['time'][i]-savelag1['time'][0]))
+            tstr=time.strftime("%d-%H:%M", time.gmtime(savelag1['time'][i]-savelag1['time'][0]))
             ax.annotate(("Time: %s"%tstr),xy=(.025,.95),xycoords='axes fraction',bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
             f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_timestep_'+("%05d"%i)+'.png',dpi=150)

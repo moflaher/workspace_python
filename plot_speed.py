@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from projtools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -14,14 +15,14 @@ from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018_2d_5min'
-grid='kit4_kelp'
+name='test_interp_bathymetry'
+grid='smallcape_force'
+regionname='blackrock'
 datatype='2d'
-regionname='kit4_kelp_tight5'
-starttime=4800
-endtime=5200
+starttime=370
+endtime=450
 cmin=0
-cmax=1
+cmax=3
 
 
 ### load the .nc file #####
@@ -51,12 +52,12 @@ for i in range(starttime,endtime):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
-    plotcoast(ax,filename='pacific.nc',color='k',fill=True)
-    if cages!=None:   
-        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-        ax.add_collection(lseg_t) 
+#    plotcoast(ax,filename='mid_nwatl6b.nc',color='k',fill=True)
+#    if cages!=None:   
+#        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+#        ax.add_collection(lseg_t) 
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
-    f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)
+    f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 

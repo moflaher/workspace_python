@@ -14,6 +14,7 @@ import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import scipy.io as sio
 import scipy.fftpack as fftp
+import pandas as pd
 
 
 # Define names and types of data
@@ -110,6 +111,10 @@ for i in range(len(locx)):
     tempdic['time']=data2['time'][starttime:endtime]
 
     sio.savemat('data/zetaspeed_at_location/'+grid+'_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.mat',mdict=tempdic)
+    
+    df=pd.DataFrame(tempdic)
+    df.to_csv('data/zetaspeed_at_location/'+grid+'_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.csv')
+
 
 
     f.savefig(savepath + grid + '_'+name_orig+'_'+name_change+'_zetaspeed_at_location_'+("%f"%locx[i])+'_'+("%f"%locy[i])+'.png',dpi=300)
