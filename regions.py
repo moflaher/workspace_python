@@ -28,7 +28,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-64.52, -64.3, 45.3, 45.4],'mp','Minas Passage']])
     tl=np.vstack([tl,        [[-64.45, -64.375, 45.35, 45.39],'blackrock','Black Rock']])
     tl=np.vstack([tl,        [[-64.42, -64.38, 45.35, 45.38],'blackrock_fld','Black Rock']])
-    tl=np.vstack([tl,        [[-64.435, -64.405, 45.36, 45.38],'blackrock_ebb','Black Rock']])
+    tl=np.vstack([tl,        [[-64.43, -64.4085, 45.361, 45.372],'blackrock_ebb','Black Rock']])
 
     #fishcage and slr
     tl=np.vstack([tl,        [[-65.5, -63.25, 44, 46],'slr_upperbof','slr_upperbof']])
