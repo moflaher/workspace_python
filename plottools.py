@@ -410,7 +410,7 @@ def ppll_sub(axin,**kwargs):
     """
     cblabel=None
     axspacer=True
-    cblabelsize=6
+    cblabelsize=8
     rotation=0
     fontsize=10
     cbticksize=8

@@ -24,7 +24,7 @@ import time
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionlist=['kit4_kelp_tight5']#'kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']
+regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']
 datatype='2d'
 starttime=384
 offset=0
@@ -36,7 +36,7 @@ cmax=1
 usemean=True
 
 kl=[.815,.815]
-#kl=[.8,.025]
+kl=[.8,.025]
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
@@ -65,9 +65,9 @@ for regionname in regionlist:
     scale1=60#np.sqrt(ebbfld*(vectorspacing*2)**2)
 
 
-#    vectorspacing=250#2000*np.diff(region['region'][0:2])
-#    ebbfld=.2#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
-#    scale1=75#np.sqrt(ebbfld*(vectorspacing*2)**2)
+    vectorspacing=100#2000*np.diff(region['region'][0:2])
+    ebbfld=.2#np.ceil(10*np.linalg.norm(np.vstack([q2u1,q2v1]),axis=0).mean())/10
+    scale1=200#np.sqrt(ebbfld*(vectorspacing*2)**2)
 
     ebbfldscale=('%.1f'%ebbfld)
 

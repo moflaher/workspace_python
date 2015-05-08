@@ -25,8 +25,8 @@ global nidx
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
-grid='kit4_kelp'
+name='kit4_baroclinic'
+grid='kit4'
 datatype='2d'
 regionname='kit4'
 starttime=0
