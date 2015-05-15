@@ -26,6 +26,25 @@ Author: Mitchell O'Flaherty-Sproul
 A bunch of functions dealing regions and projections.
 
 """
+def gridproj(grid):
+
+    try:
+        import pyproj as pyp
+    except ImportError:
+        print "pyproj is not installed, please install pyproj."
+        return
+
+    projstr={}
+    projstr['kit4_kelp']='lcc +lon_0=-129.4954 +lat_0=53.55285 +lat_1=52.36906 +lat_2=54.73664'
+    projstr['smallcape_force']='lcc +lon_0=-64.55880 +lat_0=41.84493 +lat_1=39.72147 +lat_2=43.96838'
+    projstr['voucher']='lcc +lon_0=-64.55880 +lat_0=41.84492 +lat_1=39.72147 +lat_2=43.96838'
+    projstr['dngrid']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
+    projstr['dn_coarse']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
+
+    return pyp.Proj(proj=projstr[grid])
+
+
+
 def ll2m(locs,loce):
     TPI=111194.92664455874
     y0c = TPI * (loce[1] - locs[1])
