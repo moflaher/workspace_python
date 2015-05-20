@@ -37,7 +37,7 @@ import sys
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
+name='kit4_kelp_nodrag'
 grid='kit4_kelp'
 datatype='2d'
 starttime=384
@@ -48,7 +48,6 @@ data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
-kill
 
 tempdic={}
 
@@ -61,21 +60,18 @@ tempdic['h']=data['h']
 tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
 tempdic['siglay']=data['siglay'][:,0]
 tempdic['siglev']=data['siglev'][:,0]
-
-
-
-
 sio.savemat('data/ncgrid2mat/'+grid +'_basic.mat',mdict=tempdic)
 
 
-
-tempdic['ua']=data['ua'][384:,:]
-tempdic['va']=data['va'][384:,:]
+#empdic['ua']=data['ua'][384:,:]
+#tempdic['va']=data['va'][384:,:]
 tempdic['time']=data['time'][384:]
-tempdic['zeta']=data['zeta'][384:,:]
+#tempdic['zeta']=data['zeta'][384:,:]
+#sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
-sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
+tempdic['ww']=data['ww'][384:456,:,:]
+sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_vertical_currents.mat',mdict=tempdic)
 
 
 
