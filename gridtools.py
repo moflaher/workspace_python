@@ -815,7 +815,32 @@ def save_nodfile(segfile,filename=None):
     return 
 
 
+def save_llz(data,filename=None):
+    """
+    Saves a llz array as a file.
 
+ 
+    """
+    
+    if filename==None:
+        print 'save_llz requires a filename to save.'
+        return
+    try:
+        fp=open(filename,'w')
+    except IOError:
+        print 'Can''t make ' + filename
+        return
+
+
+
+ 
+   
+
+    for i in range(len(data)):
+        fp.write('%f %f %f\n' % (data[i,0],data[i,1],data[i,2] ) )
+
+    
+    fp.close()
 
 
 

@@ -653,3 +653,60 @@ def scalebar(axin,region,dist,**kwargs):
 
 
 
+def plot_llz(data,show=True,crange=None,s=10,region=None):
+
+
+    f=plt.figure()
+    ax=f.add_axes([.125,.1,.775,.8])
+
+
+
+    if isinstance(data,dict):
+        if data.has_key('h'):  
+            if crange==None:  
+                vmin=data['h'].min()
+                vmax=data['h'].max()  
+            else:
+                vmin=crange[0]
+                vmax=crange[1]     
+            if data.has_key('nodell'):
+                px,py,ph=data['nodell'][:,0],data['nodell'][:,1],data['h']
+            elif (data.has_key('lon') and data.has_key('lat')):
+                px,py,ph=data['lon'],data['lat'],data['h']
+            elif (data.has_key('x') and data.has_key('y')):
+                px,py,ph=data['x'],data['y'],data['h']
+    else:
+        if crange==None:  
+            vmin=data[:,2].min()
+            vmax=data[:,2].max()
+        else:
+            vmin=crange[0]
+            vmax=crange[1]
+        px,py,ph=data[:,0],data[:,1],data[:,2]
+
+
+    scb=ax.scatter(px,py,c=ph,edgecolor='None',s=s,vmin=vmin,vmax=vmax)   
+
+    if region==None:
+        region={}
+        region['region']=np.array([np.min(px),np.max(px),np.min(py),np.max(py)])
+    
+    prettyplot_ll(ax,setregion=region,cb=scb,cblabel='')
+  
+    if show==True:
+        f.show()
+    else:
+        return f,ax
+
+
+
+
+
+
+
+        
+
+
+
+
+
