@@ -15,6 +15,7 @@ import interptools as ipt
 
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
+import collections
 
 
 """
@@ -698,8 +699,120 @@ def save_rivfile(rivdata,filename=None):
         print >> fp, block
 
 
+def load_segfile(filename=None):
+    """
+    Loads an seg file the data as a dictionary. 
+    """
+
+    data={}
+    
+    if filename==None:
+        print 'load_segfile requires a filename to load.'
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print  'load_segfile: invalid filename.'
+        return data
+
+    data=collections.OrderedDict()
+
+    for line in fp:
+        llist=line.split()
+        if len(llist)==2:
+            cnt=0
+            currentseg=llist[0]
+            data[currentseg]=np.empty((int(llist[1]),2))
+        else:
+            data[currentseg][cnt,:]=llist[1:3]
+            cnt+=1
+
+    fp.close()
+
+    return data
 
 
+
+def find_outside_seg(segfile=None,swap=True):
+    """
+    Takes a segfile dict and finds which segment is the outside.
+    
+    swap - swaps the outside segment with the first segment (default=True)
+    """
+
+
+    
+    if segfile==None:
+        print 'find_outside_seg needs a segfile dict'
+        return
+
+    lonmin=10000000
+    lonmax=-10000000
+    latmin=10000000
+    latmax=-10000000
+    for key in segfile.keys():
+        if lonmax<np.max(segfile[key][:,0]):
+            lonmax=np.max(segfile[key][:,0])
+            lonmaxkey=key
+        if lonmin>np.min(segfile[key][:,0]):
+            lonmin=np.min(segfile[key][:,0])
+            lonminkey=key
+        if latmax<np.max(segfile[key][:,1]):
+            latmax=np.max(segfile[key][:,1])
+            latmaxkey=key
+        if latmin>np.min(segfile[key][:,1]):
+            latmin=np.min(segfile[key][:,1])
+            latminkey=key
+
+    if swap==True:
+        if lonmaxkey==lonminkey==latmaxkey==latminkey:
+            print 'Swapping ' +lonmaxkey+ ' and 1'
+            segfile['1'],segfile[lonmaxkey]=segfile[lonmaxkey],segfile['1']
+        else:
+            print 'Could not find single outside segment'            
+
+        return segfile
+    else:
+        if lonmaxkey==lonminkey==latmaxkey==latminkey:
+            print lonmaxkey+ ' is the outside segment'
+        else:
+            print 'Could not find single outside segment'  
+        return  
+
+
+
+
+def save_nodfile(segfile,filename=None):
+    """
+    Save a nod file from a seg dict. 
+    """
+    
+    if filename==None:
+        print 'save_nodfile requires a filename to save.'
+        return
+    try:
+        fp=open(filename,'w')
+    except IOError:
+        print  'save_nodfile: invalid filename.'
+        return data
+
+    dictlen=0
+    for key in segfile.keys():
+        dictlen+=len(segfile[key])
+
+
+    fp.write('%d\n' % dictlen )
+    fp.write('%d\n' % len(segfile.keys()) )
+
+    for key in segfile.keys():
+        fp.write('%d\n'% len(segfile[key]))
+        for i in range(len(segfile[key])):
+            fp.write('%f %f %f\n'% (segfile[key][i,0],segfile[key][i,1],0.0))
+
+    fp.close()
+
+   
+    return 
 
 
 

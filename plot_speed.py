@@ -29,12 +29,12 @@ global cmax
 
 
 # Define names and types of data
-name='kit4_kelp_baroclinic_2'
-grid='kit4_kelp'
-regionname='kit4'
+name='test_interp_bathymetry'
+grid='smallcape_force'
 datatype='2d'
+regionname='mp'
 starttime=0
-endtime=20
+endtime=100
 cmin=0
 cmax=5
 
@@ -61,6 +61,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 def speed_plot(i):
+    print i
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
@@ -74,7 +75,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool()
+pool = multiprocessing.Pool(8)
 pool.map(speed_plot,range(starttime,endtime))
 
 
