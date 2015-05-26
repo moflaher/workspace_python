@@ -19,6 +19,7 @@ import matplotlib.path as path
 
 # Define names and types of data
 filename='data/bathy_mod/vh_depth.dat'
+averaged=100
 
 data=np.genfromtxt(filename)
 
@@ -35,12 +36,36 @@ vec=f.ginput(n=-1,timeout=-1)
 plt.close(f)
 
 
+#turn selected points into path
 p=path.Path(vec)
 
-idx=p.contains_points(np.array([data[:,0],data[:,1]]).T)
+#find points inside path
+idx_vec=p.contains_points(np.array([data[:,0],data[:,1]]).T)
+idx_d=np.argwhere(data[:,2]<averaged)
+idx_vec_f=np.flatnonzero(idx_vec)
+ind_b=np.in1d(idx_vec_f,idx_d)
+idx=idx_vec_f[ind_b]
 
-data[idx,2]=(data[idx,2]+100)/2
+data[idx,2]=(data[idx,2]+averaged)/2
+save_llz(data,'data/bathy_mod/vh_depth_avg_'+str(averaged)+'_1.dat')
 
 
-save_llz(data,'data/bathy_mod/vh_depth_modify1.dat')
+idx_d=np.argwhere(data[:,2]<averaged)
+ind_b=np.in1d(idx_vec_f,idx_d)
+idx=idx_vec_f[ind_b]
+
+data[idx,2]=(data[idx,2]+averaged)/2
+save_llz(data,'data/bathy_mod/vh_depth_avg_'+str(averaged)+'_2.dat')
+
+
+
+
+
+
+
+
+
+
+
+
 
