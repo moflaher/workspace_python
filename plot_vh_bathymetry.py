@@ -16,7 +16,7 @@ import pyproj as pyp
 
 
 
-p=pyp.Proj('+proj=utm +zone=9')
+p=pyp.Proj('+proj=utm +zone=10')
 
 
 
@@ -54,7 +54,34 @@ plt.colorbar(sax)
 fix_osw(ax)
 
 
-#f.savefig('figures/png/misc/vh_bathymetry.png',dpi=600)
+f.savefig('figures/png/misc/vh_bathymetry.png',dpi=600)
+
+
+
+
+if True:
+    allpts=np.vstack([ASB,BSB,AMB,BMB])
+
+    fp=open('data/misc/vh_bathymetry/vh_fr_all.dat','w')
+    for i in range(len(allpts)):
+        fp.write('%f %f %f\n'% (allpts[i,0],allpts[i,1],allpts[i,2]))
+
+    fp.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

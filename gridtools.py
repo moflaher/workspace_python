@@ -77,12 +77,13 @@ def find_land_nodes(neifile=None):
     if neifile==None:
         print 'find_land_nodes requires a neifile dictionary.'
         return
-
-    idx=np.where(neifile['bcode']!=0)[0]
-    idx2=np.where(neifile['neighbours'][idx]!=0)
-    y=np.histogram(idx[idx2[0]],bins=neifile['nnodes'])
-
-    nodes=np.where(y[0]==2)[0]+1
+    #the numbers of the boundary nodes
+    nn=neifile['nodenumber'][neifile['bcode']!=0]
+    #take the neighbour list for the boundary nodes
+    #for each node count the number of non-zero neighbours
+    #where there are only two neighbours give the idx
+    #and convert that to the true nodenumber
+    nodes=nn[np.where(np.sum(neifile['neighbours'][neifile['bcode']!=0,:]!=0,axis=1)==2)[0]]  
 
     return nodes
 

@@ -126,7 +126,7 @@ for regionname in regionlist:
 
     ppll_sub(ax,setregion=region,cb=[ax0cb,ax1cb,ax2cb],cblabel=[r'Current variance magnitude (m s$^{-1}$)',r'Current variance magnitude (m s$^{-1}$)',r'Relative difference (%)'],llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
 
-    ABC=['A','B','C']
+    ABC=['D','E','F']
     figW, figH = f.get_size_inches()
     plt.draw()
     for i,axi in enumerate(ax):
