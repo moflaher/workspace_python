@@ -72,6 +72,10 @@ def makeregions():
     tl=np.vstack([tl,        [[-140,   -127,    68.5,    71],'beaufort3_southcoast_tight','Beaufort Sea']])
     tl=np.vstack([tl,        [[-138,   -132.5,    68.5,    70],'beaufort3_oilmap_1','Beaufort Sea']])
 
+    #vhfr
+    tl=np.vstack([tl,        [[-124,   -121.95,    48.5,    50],'vhfr_whole','Complete Domain for vhfr grids']])
+    tl=np.vstack([tl,        [[-123.96833,   -122,    48.797548,   49.69656],'vhfr_tight','Complete Domain for vhfr grids']])
+
 
     allregions={}  
 

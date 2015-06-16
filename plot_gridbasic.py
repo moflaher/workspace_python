@@ -13,22 +13,22 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
-from regions import makeregions
+from projtools import *
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='test_interp_bathymetry'
-grid='smallcape_force'
+name='vhfr_low_test_0'
+grid='vhfr_low'
 #regionlist=regions()
-regionlist=['gp','pp','dg','mp','sfmwhole','bof']
+regionlist=['vhfr_whole']
 datatype='2d'
 
 
 
 ### load the mesh files #####
 data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
-data.update(loadnei('runs/'+grid+'/'+name+'/input/smallcape_force_40_15_interp_hack_save.nei'))
+data.update(loadnei('runs/'+grid+'/'+name+'/input/vhfr_low.nei'))
 data=ncdatasort(data)
 
 savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/'
@@ -63,6 +63,14 @@ for regionname in regionlist:
     triax=ax.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=data['h'][nidx].max())
     prettyplot_ll(ax,setregion=region,grid=True,cblabel='Depth (m)',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_depth.png',dpi=600)
+    plt.close(f)
+
+    # Plot depth shallow
+    f=plt.figure()
+    ax=plt.axes([.125,.1,.775,.8])
+    triax=ax.tripcolor(data['trigrid'],data['h'],vmin=data['h'][nidx].min(),vmax=10)
+    prettyplot_ll(ax,setregion=region,grid=True,cblabel='Depth (m)',cb=triax)
+    f.savefig(savepath + grid + '_' + regionname +'_depth_shallow.png',dpi=1200)
     plt.close(f)
 
 

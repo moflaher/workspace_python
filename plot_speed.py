@@ -29,15 +29,14 @@ global cmax
 
 
 # Define names and types of data
-name='test_interp_bathymetry'
-grid='smallcape_force'
+name='vhfr_low_fricspg'
+grid='vhfr_low'
 datatype='2d'
-regionname='mp'
+regionname='vhfr_whole'
 starttime=0
-endtime=100
+endtime=5000
 cmin=0
-cmax=5
-
+cmax=3
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
@@ -75,7 +74,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(8)
+pool = multiprocessing.Pool(4)
 pool.map(speed_plot,range(starttime,endtime))
 
 

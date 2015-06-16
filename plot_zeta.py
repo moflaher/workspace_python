@@ -25,12 +25,12 @@ global nidx
 
 
 # Define names and types of data
-name='kit4_baroclinic'
-grid='kit4'
+name='vhfr_low_test_0'
+grid='vhfr_low'
 datatype='2d'
-regionname='kit4'
+regionname='vhfr_whole'
 starttime=0
-endtime=20
+endtime=100
 
 
 ### load the .nc file #####
@@ -58,14 +58,14 @@ def zeta_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     nidxh=data['zeta'][i,nidx]
-    her=np.percentile(nidxh,[2,98])
+    her=np.percentile(nidxh,[20,80])
     triax=ax.tripcolor(data['trigrid'],data['zeta'][i,:],vmin=her[0],vmax=her[1])
 #    plotcoast(ax,color='k',fill=True)
 #    if cages!=None:   
 #        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 #        ax.add_collection(lseg_t) 
     prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
-    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=600)
     plt.close(f)
 
 
