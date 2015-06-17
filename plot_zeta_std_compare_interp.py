@@ -110,7 +110,7 @@ for regionname in regionlist:
         clims1=np.percentile(cvarm_c_interp_mask,[1,99])
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask,vmin=clims0[0],vmax=clims0[1])
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_c_interp_mask,vmin=clims1[0],vmax=clims1[1])
-        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-.25,vmax=.25)
+        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=-.25,vmax=.25,cmap=mpl.cm.seismic)
         #CS2=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
         #ax[2].clabel(CS2, fontsize=4, inline=1,zorder=30,fmt=fmt)
         #CS3=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,Vneg,colors='w',zorder=30,linestyles='solid',linewidths=.5)
@@ -121,7 +121,7 @@ for regionname in regionlist:
         clims2=np.percentile(cvarm_diff_rel_interp_mask,[1,99])
         ax0cb=ax[0].pcolormesh(xi,yi,cvarm_o_interp_mask,vmin=clims0[0],vmax=clims0[1])
         ax1cb=ax[1].pcolormesh(xi,yi,cvarm_c_interp_mask,vmin=clims1[0],vmax=clims1[1])
-        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=clims2[0],vmax=clims2[1])
+        ax2cb=ax[2].pcolormesh(xi,yi,cvarm_diff_rel_interp_mask,vmin=clims2[0],vmax=clims2[1],cmap=mpl.cm.seismic)
         #CS2=ax[2].contour(xi,yi,cvarm_diff_rel_interp_mask,colors='w',zorder=30,linestyles='dashed')
         #ax[2].clabel(CS2, fontsize=6, inline=1,zorder=30,fmt=fmt)
 

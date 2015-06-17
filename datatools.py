@@ -85,7 +85,7 @@ def loadnc(datadir, singlename=None):
         data['node'] = ncid.dimensions['node']
 
    
-    ncid.close()
+    #ncid.close()
     #Now we get the long/lat data.  Note that this method will search
     #for long/lat files in the datadir and up to two levels above
     #the datadir.
