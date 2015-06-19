@@ -534,7 +534,7 @@ def bboxer(bbc,bbin):
     return bb
     
 
-def meter_box(axin,loc,dist,color='k',lw=1):
+def meter_box(axin,loc,dist,color='k',lw=1,retbox=False):
     """
     Given axes and location in lon/lat and a distance (1d or 2d) in meters plots a box around that location.
     NOTE: This uses my hacky ll_dist, so will be correct over small region but not as accurate over large regions.
@@ -560,6 +560,9 @@ def meter_box(axin,loc,dist,color='k',lw=1):
     tr['region'][3]=tr['region'][3]+lat_space
 
     plot_box(axin,tr,color=color,lw=lw)
+    
+    if retbox==True:
+		return tr['region']
 
 
 def axes_label(axin,label,**kwargs):
