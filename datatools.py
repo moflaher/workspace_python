@@ -683,6 +683,16 @@ def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
     return data
 
 
-
+def npydic2mat(path, filename):
+    """
+    Takes an npy file that holds a dictionary and saves it as a mat file in the same location.
+    """
+    
+    print('Loading npy file')
+    indata=np.load(path+filename)
+    indata=indata[()]    
+    print('Saving Mat-File')
+    sio.savemat(path+filename[:-3]+'mat',mdict=indata)
+    print('Mat-File saved')
 
 

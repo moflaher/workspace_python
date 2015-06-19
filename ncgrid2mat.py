@@ -37,10 +37,10 @@ import sys
 
 
 # Define names and types of data
-name='kit4_kelp_nodrag'
-grid='kit4_kelp'
+name='sfm6_musq2_no_cages'
+grid='sfm6_musq2'
 datatype='2d'
-starttime=384
+starttime=1008
 interpheight=1
 
 ### load the .nc file #####
@@ -48,6 +48,8 @@ data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
+#added this much time to make the time start at the forcing start
+data['time']=data['time']+55055
 
 tempdic={}
 
@@ -56,6 +58,10 @@ tempdic['lon']=data['lon']
 tempdic['lat']=data['lat']
 tempdic['lonc']=data['uvnodell'][:,0]
 tempdic['latc']=data['uvnodell'][:,1]
+tempdic['x']=data['x']
+tempdic['y']=data['y']
+tempdic['xc']=data['uvnode'][:,0]
+tempdic['yc']=data['uvnode'][:,1]
 tempdic['h']=data['h']
 tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
 tempdic['siglay']=data['siglay'][:,0]
@@ -63,15 +69,32 @@ tempdic['siglev']=data['siglev'][:,0]
 sio.savemat('data/ncgrid2mat/'+grid +'_basic.mat',mdict=tempdic)
 
 
-#empdic['ua']=data['ua'][384:,:]
-#tempdic['va']=data['va'][384:,:]
-tempdic['time']=data['time'][384:]
-#tempdic['zeta']=data['zeta'][384:,:]
-#sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
+tempdic['ua']=data['ua'][starttime:,:]
+tempdic['va']=data['va'][starttime:,:]
+tempdic['time']=data['time'][starttime:]
+tempdic['zeta']=data['zeta'][starttime:,:]
+sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
+tempdic={}
+tempdic['trigrid']=data['nv']+1
+tempdic['lon']=data['lon']
+tempdic['lat']=data['lat']
+tempdic['lonc']=data['uvnodell'][:,0]
+tempdic['latc']=data['uvnodell'][:,1]
+tempdic['x']=data['x']
+tempdic['y']=data['y']
+tempdic['xc']=data['uvnode'][:,0]
+tempdic['yc']=data['uvnode'][:,1]
+tempdic['h']=data['h']
+tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
+tempdic['siglay']=data['siglay'][:,0]
+tempdic['siglev']=data['siglev'][:,0]
 
-tempdic['ww']=data['ww'][384:456,:,:]
-sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_vertical_currents.mat',mdict=tempdic)
+tempdic['u_0']=data['u'][starttime:(starttime+30),0,:]
+tempdic['u_19']=data['u'][starttime:(starttime+30),19,:]
+tempdic['v_0']=data['v'][starttime:(starttime+30),0,:]
+tempdic['v_19']=data['v'][starttime:(starttime+30),19,:]
+sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_uv_currents.mat',mdict=tempdic)
 
 
 
