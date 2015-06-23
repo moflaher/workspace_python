@@ -196,6 +196,83 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
     return var
 
 
+def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
+    #"""
+    #Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
+    #Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
+    
+    #:Parameters:
+    #data - data dictionary from loadnc
+    #varname - element data variable name. (2d or 3d)
+    #loc - location
+
+    #:Optional:
+    #layer - default None. Specify which layer of 3d data to use
+    #ll - default True. Is point lon/lat or xy.    
+    #"""   
+
+
+    ###############################################################################
+    # Error and corner case checking
+    if ll==True:
+        trifinder='trigrid_finder'
+        trigrid='trigrid'
+    else:
+        trifinder='trigridxy_finder'
+        trigrid='trigridxy'
+
+    if (data.has_key(trifinder)==False and data.has_key(trigrid)):
+        print 'No trifinder initialized. Initializing now.'
+        data[trifinder]=data[trigrid].get_trifinder()
+    elif data.has_key(trigrid)==False:
+        print 'No trifinder or trigrid to initialize it.'
+        return
+
+    if ((len(data[varname].shape)>2) and (layer==None)):
+        print '3d variable specified without layer. Returning surface layer.'
+        layer=0
+    elif ((len(data[varname].shape)==2) and (layer!=None)):
+        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        layer=None
+
+    locs=np.atleast_2d(locs)
+    hosts=data[trifinder].__call__(locs[:,0],locs[:,1])
+    #if host==-1:
+        #print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        #out=np.empty(shape=(data[varname][timein,layer,host]).squeeze().shape)
+        #out[:]=np.nan
+        #return out
+    ###############################################################################
+
+
+    #code for ll adapted from mod_utils.F
+    if ll==True:
+        x0c,y0c=pjt.ll2m(data['uvnodell'][hosts,:],locs)
+    else:       
+        x0c=locs[:,0]-data['uvnode'][hosts,0]
+        y0c=locs[:,1]-data['uvnode'][hosts,1] 
+
+
+    e0=data['nbe'][hosts,0]
+    e1=data['nbe'][hosts,1]
+    e2=data['nbe'][hosts,2]
+      
+    var_e=(data[varname][timein,layer,hosts])    
+    var_0=(data[varname][timein,layer,e0])
+    var_1=(data[varname][timein,layer,e1])
+    var_2=(data[varname][timein,layer,e2])    
+    var_0[e0==-1]=0
+    var_1[e1==-1]=0
+    var_2[e2==-1]=0        
+
+    dvardx= data['a1u'][0,hosts]*var_e+data['a1u'][1,hosts]*var_0+data['a1u'][2,hosts]*var_1+data['a1u'][3,hosts]*var_2
+    dvardy= data['a2u'][0,hosts]*var_e+data['a2u'][1,hosts]*var_0+data['a2u'][2,hosts]*var_1+data['a2u'][3,hosts]*var_2
+    var= var_e + dvardx*x0c + dvardy*y0c
+        
+    return var
+
+
+
 def cross_shore_transect_2d(grid,name,region,vec,npt):
     data = dt.loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
     print 'done load'
