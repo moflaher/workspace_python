@@ -874,17 +874,22 @@ def doubleres_nei(neifile):
     nnf['lon']=nnf['nodell'][:,0]
     nnf['lat']=nnf['nodell'][:,1]
     
-    parents=copy.deepcopy(nnf['neighbours'])
-    parents[0:neifile['nnodes'],:]=0
+    parents=copy.deepcopy(nnf['neighbours'][neifile['nnodes']:,:])
     for node in range(neifile['nnodes'],nnf['nnodes']):
         p0=nnf['neighbours'][node,0]
         p1=nnf['neighbours'][node,1]
         n0=neifile['neighbours'][p0-1,np.nonzero(neifile['neighbours'][p0-1,:])][0]
         n1=neifile['neighbours'][p1-1,np.nonzero(neifile['neighbours'][p1-1,:])][0]
         common=n0[np.in1d(n0,n1)]
+        #for i,p in enumerate(common):
+            #nnf['neighbours'][node,(2*i)+2]=np.argwhere(((parents==p).sum(axis=1)+(parents==p0).sum(axis=1))==2)+1
+            #nnf['neighbours'][node,(2*i)+3]=np.argwhere(((parents==p).sum(axis=1)+(parents==p1).sum(axis=1))==2)+1
         for i,p in enumerate(common):
-            nnf['neighbours'][node,(2*i)+2]=np.argwhere(((parents==p).sum(axis=1)+(parents==p0).sum(axis=1))==2)+1
-            nnf['neighbours'][node,(2*i)+3]=np.argwhere(((parents==p).sum(axis=1)+(parents==p1).sum(axis=1))==2)+1
+            pb=parents==p
+            pb0=parents==p0
+            pb1=parents==p1            
+            nnf['neighbours'][node,(2*i)+2]=np.argwhere((pb+pb0).sum(axis=1)==2)+1+neifile['nnodes']
+            nnf['neighbours'][node,(2*i)+3]=np.argwhere((pb+pb1).sum(axis=1)==2)+1+neifile['nnodes']
     
     return nnf
 
