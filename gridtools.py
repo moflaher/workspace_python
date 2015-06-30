@@ -844,4 +844,49 @@ def save_llz(data,filename=None):
     fp.close()
 
 
+def doubleres_nei(neifile):
+    
+    import copy
+    
+    #newneifile
+    nnf=copy.deepcopy(neifile)
+    #newnodenumber
+    nnn=neifile['nnodes']
+    
+    for node in range(neifile['nnodes']):
+        neighbours=(neifile['neighbours'][node,(neifile['neighbours'][node,:]>0) & (neifile['neighbours'][node,:]>(node+1))])-1
+        for i,neighbour in enumerate(neighbours):
+            nnn+=1
+            nnf['nodell']=np.vstack([nnf['nodell'],(neifile['nodell'][node,:]+neifile['nodell'][neighbour,:])/2])
+            nnf['h']=np.append(nnf['h'],(neifile['h'][node]+neifile['h'][neighbour])/2)
+            if neifile['bcode'][node]==neifile['bcode'][neighbour]:
+                nnf['bcode']=np.append(nnf['bcode'],neifile['bcode'][node])
+            else:
+                nnf['bcode']=np.append(nnf['bcode'],0)
+            nnf['neighbours'][node,neifile['neighbours'][node,:]==(neighbour+1)]=nnn
+            nnf['neighbours'][neighbour,neifile['neighbours'][neighbour,:]==(node+1)]=nnn
+            nnf['neighbours']=np.vstack([nnf['neighbours'],np.zeros((1,neifile['maxnei']))])
+            nnf['neighbours'][nnn-1,0]=node+1
+            nnf['neighbours'][nnn-1,1]=neighbour+1
+            nnf['nodenumber']=np.append(nnf['nodenumber'],nnn)
+              
+    nnf['nnodes']=len(nnf['nodenumber'])
+    nnf['lon']=nnf['nodell'][:,0]
+    nnf['lat']=nnf['nodell'][:,1]
+    
+    parents=copy.deepcopy(nnf['neighbours'])
+    parents[0:neifile['nnodes'],:]=0
+    for node in range(neifile['nnodes'],nnf['nnodes']):
+        p0=nnf['neighbours'][node,0]
+        p1=nnf['neighbours'][node,1]
+        n0=neifile['neighbours'][p0-1,np.nonzero(neifile['neighbours'][p0-1,:])][0]
+        n1=neifile['neighbours'][p1-1,np.nonzero(neifile['neighbours'][p1-1,:])][0]
+        common=n0[np.in1d(n0,n1)]
+        for i,p in enumerate(common):
+            nnf['neighbours'][node,(2*i)+2]=np.argwhere(((parents==p).sum(axis=1)+(parents==p0).sum(axis=1))==2)+1
+            nnf['neighbours'][node,(2*i)+3]=np.argwhere(((parents==p).sum(axis=1)+(parents==p1).sum(axis=1))==2)+1
+    
+    return nnf
+
+
 
