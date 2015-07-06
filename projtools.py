@@ -40,6 +40,12 @@ def gridproj(grid):
     projstr['voucher']='lcc +lon_0=-64.55880 +lat_0=41.84492 +lat_1=39.72147 +lat_2=43.96838'
     projstr['dngrid']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
     projstr['dn_coarse']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
+    
+    
+    projstr['acadia_force']='lcc +lon_0=-64.55880 +lat_0=41.84493 +lat_1=39.72147 +lat_2=43.96838'
+    projstr['acadia_BoF']='lcc +lon_0=-64.55880 +lat_0=41.84492 +lat_1=39.72147 +lat_2=43.96838'
+    projstr['acadia_dn']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
+
 
     return pyp.Proj(proj=projstr[grid])
 

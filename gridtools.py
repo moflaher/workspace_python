@@ -733,7 +733,6 @@ def load_segfile(filename=None):
     return data
 
 
-
 def find_outside_seg(segfile=None,swap=True):
     """
     Takes a segfile dict and finds which segment is the outside.
@@ -779,8 +778,6 @@ def find_outside_seg(segfile=None,swap=True):
         else:
             print 'Could not find single outside segment'  
         return  
-
-
 
 
 def save_nodfile(segfile,filename=None):
@@ -893,5 +890,58 @@ def doubleres_nei(neifile):
     
     return nnf
 
+def load_stationfile(filename=None):
+    """
+    Loads an FVCOM station input file and returns the data as a dictionary. 
+    """
+    
+    data={}    
 
+    if filename==None:
+        print 'load_stationfile requires a filename to load.'
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print  'load_stationfile: invalid filename.'
+        return data
+
+    headerstr=fp.readline()
+    data_str=np.genfromtxt(filename,skip_header=1,dtype=str)
+    fp.close()
+
+    data['header']=headerstr
+    data['station_num']=data_str[:,0].astype(np.int32)
+    data['cell']=data_str[:,3].astype(np.int32)
+    data['x']=data_str[:,1].astype(np.float64)
+    data['y']=data_str[:,2].astype(np.float64)
+    data['h']=data_str[:,4].astype(np.float64)
+    data['station_name'] = data_str[:,5]
+    
+    return data
+
+
+def save_stationfile(sdata,outname):
+    """
+    Save an FVCOM station input file. 
+    """
+    
+    if outname==None:
+        print 'save_stationfile requires a filename to save.'
+        return
+    try:
+        fp=open(outname,'w')
+    except IOError:
+        print  'save_stationfile: invalid filename.'
+        return data
+        
+
+    fp.write('%s' % sdata['header'] )        
+    for i in range(0,len(sdata['x'])):
+        fp.write('%d %f %f %d %f %s\n'% (sdata['station_num'][i],sdata['x'][i],sdata['y'][i],sdata['cell'][i],sdata['h'][i],sdata['station_name'][i] )   )
+
+    fp.close()
+
+   
+    return 
 
