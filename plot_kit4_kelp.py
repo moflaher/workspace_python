@@ -187,7 +187,7 @@ for i in range(len(lats)):
 locx=[-129.4875,-129.49535]#,-129.475]
 locy=[52.65,52.6485]#,52.65]
 
-axsub3.plot(locx,locy,'*r',markersize=10)
+#axsub3.plot(locx,locy,'*r',markersize=10)
 
 axsub3.axis(region3['region'])
 axsub3.set_aspect(get_aspectratio(region3))

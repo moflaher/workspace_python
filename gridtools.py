@@ -890,6 +890,7 @@ def doubleres_nei(neifile):
     
     return nnf
 
+
 def load_stationfile(filename=None):
     """
     Loads an FVCOM station input file and returns the data as a dictionary. 
@@ -945,3 +946,60 @@ def save_stationfile(sdata,outname):
    
     return 
 
+
+def get_nv(neifile):
+    
+    print "This doesn't work yet."
+    break
+    
+    nv=np.empty((0,3))    
+    
+    import copy    
+    neighbours=copy.deepcopy(neifile['neighbours'])
+
+    kk=0
+    for i in range(neifile['nnodes']-2):
+        print i+1
+        nei_cnt=1
+        for ii in range(neifile['maxnei']-1):
+            print ii+1
+            if neighbours[i,ii+1]==0:
+                break
+            nei_cnt=ii+1    
+            if neighbours[i,ii]<=i+1:
+                continue
+            if neighbours[i,ii+1]<=i+1:
+                continue   
+            for j in range(neifile['maxnei']):
+                if neighbours[neighbours[i,ii]-1,j]!=neighbours[i,ii+1]:
+                    continue
+                nv=np.vstack([nv,np.array([i+1,neighbours[i,ii],neighbours[i,ii+1] ])])
+                break
+
+        print "nei_count" + ("%d"%(nei_cnt+1))
+        if (nei_cnt>1):
+            print "nei_count" + ("%d"%(nei_cnt+1))
+            for j in range(neifile['maxnei']):
+                print j+1
+                if neighbours[i,0]<=i+1:
+                    break
+                if neighbours[i,nei_cnt-1]<=i+1:
+                    break
+                if neighbours[neighbours[i,0]-1,j] ==0:
+                    break    
+                if neighbours[neighbours[i,0]-1,j] ==neighbours[i,nei_cnt-1]:
+                    continue
+                nv=np.vstack([nv,np.array([i+1,neighbours[i,nei_cnt-1],neighbours[i,0] ])])
+                break
+                                
+    neifile['trinodes']=(nv-1).astype(int)          
+                
+    return neifile
+    
+    
+    
+    
+    
+    
+    
+    
