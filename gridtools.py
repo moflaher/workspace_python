@@ -1001,17 +1001,20 @@ def get_sidelength(data):
         Takes an FVCOM dictionary and returns it with the average element sidelength added.
     """
     sl=np.zeros([len(data['nv']),])
-    sidemin=10000000
-    sidemax=0
+    sidemin=np.zeros([len(data['nv']),])+100000000
+    sidemax=np.zeros([len(data['nv']),])
+    
     for i in range(0,len(data['nv'])):
         slmin=0
         for j in range(3):
             slmin=np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2)+slmin
-            sidemin=np.min([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemin])
-            sidemax=np.max([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemax])
+            sidemin[i]=np.min([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemin[i]])
+            sidemax[i]=np.max([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemax[i]])
         sl[i]=slmin/3
         
     data['sl']=sl
+    data['slmin']=sidemin
+    data['slmax']=sidemax
     
     return data
     

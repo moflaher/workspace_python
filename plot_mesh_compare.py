@@ -26,13 +26,13 @@ datatype='2d'
 
 
 ### load the mesh files #####
-data0=loadnei('/home/moe46/Desktop/school/grids/van_low/van_low_pre/'+name0+'.nei')
+data0=loadnei('/home/moflaher/Desktop/misc/grids/van_low/van_low_pre/'+name0+'.nei')
 data0=get_nv(data0)
 data0['x'],data0['y'],data0['proj']=lcc(data0['lon'],data0['lat'])
 data0=ncdatasort(data0)
 data0=get_sidelength(data0)
 
-data1=loadnei('/home/moe46/Desktop/school/grids/fr_high/fr_50m_tight2/add_to_mesh/'+name1+'.nei')
+data1=loadnei('/home/moflaher/Desktop/misc/grids/fr_high/fr_50m_tight2/add_to_mesh/'+name1+'.nei')
 data1['x'],data1['y'],data1['proj']=lcc(data1['lon'],data1['lat'])
 data1=get_nv(data1)
 data1=ncdatasort(data1)
@@ -42,7 +42,7 @@ data1=get_sidelength(data1)
 savepath='figures/png/misc/mesh_compare/' + name0+'_'+name1 +'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-
+kill
 
 for regionname in regionlist:
     
