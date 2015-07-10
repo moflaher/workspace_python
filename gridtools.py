@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 from StringIO import StringIO
+import time
 
 import datatools as dt
 import misctools as mt
@@ -948,55 +949,145 @@ def save_stationfile(sdata,outname):
 
 
 def get_nv(neifile):
+
     
-    print "This doesn't work yet."
-    break
-    
-    nv=np.empty((0,3))    
+    nv=np.empty((len(neifile['neighbours'])*2,3))    
     
     import copy    
     neighbours=copy.deepcopy(neifile['neighbours'])
 
     kk=0
     for i in range(neifile['nnodes']-2):
-        print i+1
         nei_cnt=1
         for ii in range(neifile['maxnei']-1):
-            print ii+1
             if neighbours[i,ii+1]==0:
                 break
             nei_cnt=ii+1    
-            if neighbours[i,ii]<=i+1:
+            if neighbours[i,ii]<=(i+1):
                 continue
-            if neighbours[i,ii+1]<=i+1:
+            if neighbours[i,ii+1]<=(i+1):
                 continue   
             for j in range(neifile['maxnei']):
                 if neighbours[neighbours[i,ii]-1,j]!=neighbours[i,ii+1]:
                     continue
-                nv=np.vstack([nv,np.array([i+1,neighbours[i,ii],neighbours[i,ii+1] ])])
+                nv[kk,:]=[i+1,neighbours[i,ii],neighbours[i,ii+1]]
+                kk=kk+1
                 break
 
-        print "nei_count" + ("%d"%(nei_cnt+1))
         if (nei_cnt>1):
-            print "nei_count" + ("%d"%(nei_cnt+1))
             for j in range(neifile['maxnei']):
-                print j+1
-                if neighbours[i,0]<=i+1:
+                if neighbours[i,0]<=(i+1):
                     break
-                if neighbours[i,nei_cnt-1]<=i+1:
+                if neighbours[i,nei_cnt]<=(i+1):
                     break
                 if neighbours[neighbours[i,0]-1,j] ==0:
                     break    
-                if neighbours[neighbours[i,0]-1,j] ==neighbours[i,nei_cnt-1]:
+                if neighbours[neighbours[i,0]-1,j] !=neighbours[i,nei_cnt]:
                     continue
-                nv=np.vstack([nv,np.array([i+1,neighbours[i,nei_cnt-1],neighbours[i,0] ])])
+                nv[kk,:]=[i+1,neighbours[i,nei_cnt],neighbours[i,0] ]
+                kk=kk+1
                 break
-                                
-    neifile['trinodes']=(nv-1).astype(int)          
+                 
+    nv=np.delete(nv,np.s_[kk:],axis=0)
+    neifile['nv']=(nv-1).astype(int)  
+    neifile['trigrid'] = mplt.Triangulation(neifile['lon'], neifile['lat'],neifile['nv'])   
+      
                 
     return neifile
     
     
+def get_sidelength(data):
+    """
+        Takes an FVCOM dictionary and returns it with the average element sidelength added.
+    """
+    sl=np.zeros([len(data['nv']),])
+    sidemin=10000000
+    sidemax=0
+    for i in range(0,len(data['nv'])):
+        slmin=0
+        for j in range(3):
+            slmin=np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2)+slmin
+            sidemin=np.min([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemin])
+            sidemax=np.max([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemax])
+        sl[i]=slmin/3
+        
+    data['sl']=sl
+    
+    return data
+    
+ 
+def save_segfile(segfile,outfile=None):
+    """
+    Saves a seg file. 
+    """
+
+
+    if outfile==None:
+        print 'save_segfile requires a filename to save.'
+        return
+    try:
+        fp=open(outfile,'w')
+    except IOError:
+        print  'save_segfile: invalid filename.'
+        return
+
+    for seg in segfile:
+        fp.write('%s %d\n' % (seg,len(segfile[seg]) ) )
+        for i in range(len(segfile[seg])):
+            fp.write('%d %f %f\n' % (i+1,segfile[seg][i,0],segfile[seg][i,1] ) )
+    fp.close()
+
+    return 
+
+    
+def save_seg2nc(segfile,outname):
+    
+    try:
+        import netCDF4 as n4
+    except ImportError:
+        print "netCDF4 is not installed, please install netCDF4."
+        return
+
+    ncid = n4.Dataset(outname, 'w',format='NETCDF3_CLASSIC')
+
+    tlen=0
+    for seg in segfile:
+        tlen+=len(segfile[seg])
+    numkey=len(segfile.keys())
+
+    #create dimensions
+    ncid.createDimension('nlines',numkey)
+    ncid.createDimension('npoints',tlen) 
+
+    #define variables
+    lat = ncid.createVariable('lat','d',('npoints',))
+    lon = ncid.createVariable('lon','d',('npoints',))
+    start = ncid.createVariable('start','i4',('nlines',))
+    count = ncid.createVariable('count','i4',('nlines',))
+
+    START=np.empty((numkey,))
+    COUNT=np.empty((numkey,))
+    LON=np.empty((tlen,))
+    LAT=np.empty((tlen,))
+    
+    START[0]=0
+    for i,seg in enumerate(segfile):
+        COUNT[i]=len(segfile[seg])   
+        if i<(numkey-1):
+            START[i+1]=START[i]+COUNT[i]    
+        LON[START[i]:(START[i]+COUNT[i])]=segfile[seg][:,0]
+        LAT[START[i]:(START[i]+COUNT[i])]=segfile[seg][:,1]
+        
+    start[:]=START
+    count[:]=COUNT
+    lon[:]=LON
+    lat[:]=LAT
+    
+    ncid.__setattr__('description','Coastline for Xscan in nc format')
+    ncid.__setattr__('history','Created ' +time.ctime(time.time()) )
+
+    ncid.close()
+
     
     
     

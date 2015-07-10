@@ -50,7 +50,6 @@ def gridproj(grid):
     return pyp.Proj(proj=projstr[grid])
 
 
-
 def ll2m(locs,loce):
     TPI=111194.92664455874
     y0c = TPI * (loce[1] - locs[1])
@@ -205,6 +204,7 @@ def region2path(region):
     
     return region
 
+
 def regionarea(region):
     return mdist(region['region'][[0,2]],region['region'][[0,3]])*mdist(region['region'][[0,2]],region['region'][[1,2]])
 
@@ -220,7 +220,39 @@ def smallestregion(data,host):
 
     return bestregion
 
-
-
+def lcc(lon,lat):
+    """
+    Given a lon lat converts to x,y and return them and the projection     
+    """
+    try:
+        import pyproj as pyp
+    except ImportError:
+        print "pyproj is not installed, please install pyproj."
+        return
+    
+    
+    #define the lcc projection
+    xmax=np.nanmax(lon)
+    xmin=np.nanmin(lon)
+    ymax=np.nanmax(lat)
+    ymin=np.nanmin(lat)
+    xavg = ( xmax + xmin ) * 0.5;
+    yavg = ( ymax + ymin ) * 0.5;
+    ylower = ( ymax - ymin ) * 0.25 + ymin;
+    yupper = ( ymax - ymin ) * 0.75 + ymin;
+    
+    projstr='lcc +lon_0='+str(xavg)+' +lat_0='+str(yavg)+' +lat_1='+str(ylower)+' +lat_2='+str(yupper)
+    proj=pyp.Proj(proj=projstr)
+    
+    x,y=proj(lon,lat)     
+    
+    return x,y,proj
+    
+    
+    
+    
+    
+    
+    
 
 
