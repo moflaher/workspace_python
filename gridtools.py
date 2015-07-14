@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import os as os
 from StringIO import StringIO
 import time
+from scipy.io import netcdf
 
 import datatools as dt
 import misctools as mt
