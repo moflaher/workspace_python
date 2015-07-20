@@ -18,7 +18,7 @@ import matplotlib.path as path
 
 
 # Define names and types of data
-filename='data/bathy_mod/vh_depth.dat'
+filename='data/bathy_mod/kit4_depths.dat'
 averaged=100
 
 data=np.genfromtxt(filename)
@@ -47,7 +47,7 @@ ind_b=np.in1d(idx_vec_f,idx_d)
 idx=idx_vec_f[ind_b]
 
 data[idx,2]=(data[idx,2]+averaged)/2
-save_llz(data,'data/bathy_mod/vh_depth_avg_'+str(averaged)+'_1.dat')
+save_llz(data,'data/bathy_mod/kit4_depths_avg_'+str(averaged)+'_1.dat')
 
 
 idx_d=np.argwhere(data[:,2]<averaged)
@@ -55,7 +55,7 @@ ind_b=np.in1d(idx_vec_f,idx_d)
 idx=idx_vec_f[ind_b]
 
 data[idx,2]=(data[idx,2]+averaged)/2
-save_llz(data,'data/bathy_mod/vh_depth_avg_'+str(averaged)+'_2.dat')
+save_llz(data,'data/bathy_mod/kit4_depths_avg_'+str(averaged)+'_2.dat')
 
 
 

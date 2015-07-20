@@ -752,7 +752,9 @@ def find_outside_seg(segfile=None,swap=True):
     lonmax=-10000000
     latmin=10000000
     latmax=-10000000
+    first=100000000
     for key in segfile.keys():
+        first=np.min([first,int(key)])
         if lonmax<np.max(segfile[key][:,0]):
             lonmax=np.max(segfile[key][:,0])
             lonmaxkey=key
@@ -767,9 +769,9 @@ def find_outside_seg(segfile=None,swap=True):
             latminkey=key
 
     if swap==True:
-        if lonmaxkey==lonminkey==latmaxkey==latminkey:
-            print 'Swapping ' +lonmaxkey+ ' and 1'
-            segfile['1'],segfile[lonmaxkey]=segfile[lonmaxkey],segfile['1']
+        if (lonmaxkey==lonminkey==latmaxkey==latminkey):
+            print 'Swapping ' +lonmaxkey+ ' and first segment'
+            segfile[first.astype(str)],segfile[lonmaxkey]=segfile[lonmaxkey],segfile[first.astype(str)]
         else:
             print 'Could not find single outside segment'            
 
