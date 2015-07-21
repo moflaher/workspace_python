@@ -30,12 +30,12 @@ datatype='2d'
 regionA=regions('kit4')
 region1=regions('kelpchain')
 region2=regions('kit4_kelp_tight5')
-region3=regions('kit4_kelpfield')
+region3=regions('kit4_kelp_tight2_kelpfield')
 regionAf=[.09,.1,.725,.75]
 cbarf=[.885,.1,.025,.8]
-region1f=[.225,.55,.325,.415]
+region1f=[.19,.55,.31,.415]
 region2f=[.36,.035,.575,.39]
-region3f=[.56,.4575,.275,.5]
+region3f=[.535,.4575,.275,.5]
 
 
 ### load the .nc file #####
@@ -189,8 +189,41 @@ locy=[52.65,52.6485]#,52.65]
 
 #axsub3.plot(locx,locy,'*r',markersize=10)
 
+
+rn={}
+rn['region']=np.array([-129.492, -129.479,52.6375,52.655])
+rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+plot_box(axsub3,rn,'b',1.5)
+aa=axsub3.text(rn['center'][0],rn['center'][1],'1',fontsize=12,rotation=0,color='b')
+
+rn={}
+rn['region']=np.array([-129.499, -129.494,52.651,52.6551])
+rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+plot_box(axsub3,rn,'b',1.5)
+aa=axsub3.text(rn['center'][0],rn['center'][1],'2',fontsize=12,rotation=0,color='b')
+
+rn={}
+rn['region']=np.array([-129.49, -129.48,52.6575,52.665])
+rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+plot_box(axsub3,rn,'b',1.5)
+aa=axsub3.text(rn['center'][0],rn['center'][1],'3',fontsize=12,rotation=0,color='b')
+
+rn={}
+rn['region']=np.array([-129.474, -129.465,52.6475,52.655])
+rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+plot_box(axsub3,rn,'b',1.5)
+aa=axsub3.text(rn['center'][0],rn['center'][1],'4',fontsize=12,rotation=0,color='b')
+
+
+xx=np.empty((100,1))-129.471
+yy=np.linspace(52.645,52.656,100)
+axsub3.plot(xx,yy,color='m',lw=3)
+ 
+
 axsub3.axis(region3['region'])
 axsub3.set_aspect(get_aspectratio(region3))
+_formatter2 = mpl.ticker.FormatStrFormatter("%.3f")
+axsub3.yaxis.set_major_formatter(_formatter2)
 fix_osw(axsub3)
 
 plotcoast(axsub3,filename='pacific.nc',color='0.75',fill=True)
@@ -207,8 +240,7 @@ for label in axsub3.get_xticklabels():
 for label in axsub3.get_yticklabels():
     label.set_fontsize(8)
 
-_formatter2 = mpl.ticker.FormatStrFormatter("%.2f")
-axsub3.yaxis.set_major_formatter(_formatter2)
+
 
 
 
@@ -220,7 +252,7 @@ axsub3.yaxis.set_major_formatter(_formatter2)
 plt.draw()
 
 axsub1bb=axsub1.get_axes().get_position().bounds
-ax_all.annotate("",xy=(axsub1bb[1]-.00525,axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][1],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
+ax_all.annotate("",xy=(axsub1bb[0]+axsub1bb[2],axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][1],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 ax_all.annotate("",xy=(axsub1bb[0],axsub1bb[1]),xycoords='figure fraction',xytext=(region1['region'][0],region1['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='g',headwidth=3))
 
 axsub2bb=axsub2.get_axes().get_position().bounds
