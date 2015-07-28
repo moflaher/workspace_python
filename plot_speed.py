@@ -29,14 +29,14 @@ global cmax
 
 
 # Define names and types of data
-name='vhfr_low_fricspg'
-grid='vhfr_low'
+name='fr_high_test'
+grid='fr_high'
 datatype='2d'
-regionname='vhfr_whole'
+regionname='fr_mouth'
 starttime=0
-endtime=5000
+endtime=1000
 cmin=0
-cmax=3
+cmax=2
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')

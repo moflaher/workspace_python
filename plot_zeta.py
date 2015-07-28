@@ -25,12 +25,12 @@ global nidx
 
 
 # Define names and types of data
-name='vhfr_low_test_0'
-grid='vhfr_low'
+name='fr_high_test'
+grid='fr_high'
 datatype='2d'
-regionname='vhfr_whole'
+regionname='fr_mouth'
 starttime=0
-endtime=100
+endtime=1000
 
 
 ### load the .nc file #####
@@ -65,12 +65,12 @@ def zeta_plot(i):
 #        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 #        ax.add_collection(lseg_t) 
     prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
-    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=600)
+    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
 
-pool = multiprocessing.Pool()
+pool = multiprocessing.Pool(4)
 pool.map(zeta_plot,range(starttime,endtime))
 
 
