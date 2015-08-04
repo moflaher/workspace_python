@@ -18,17 +18,17 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='vhfr_low_test_0'
-grid='vhfr_low'
+name='fr_high_test'
+grid='fr_high'
 #regionlist=regions()
-regionlist=['vhfr_whole']
+regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','fr_area3']
 datatype='2d'
 
 
 
 ### load the mesh files #####
 data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
-data.update(loadnei('runs/'+grid+'/'+name+'/input/vhfr_low.nei'))
+data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
 data=ncdatasort(data)
 
 savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/'
