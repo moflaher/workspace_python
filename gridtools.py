@@ -18,6 +18,7 @@ import interptools as ipt
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
 import collections
+import copy
 
 
 """
@@ -513,7 +514,7 @@ def save_obcfile(datain,filepath,casename=None):
         print  'save_obcfile: invalid case name.'
         return data
 
-    fp.write('OBC Node Number = %d\n' % datain['spgf_num'] )
+    fp.write('OBC Node Number = %d\n' % datain['obcf_num'] )
     for i in range(0,datain['obcf_num']):
         fp.write('%d %d %d\n'% (datain['obcf_numbers'][i],datain['obcf_nodes'][i],datain['obcf_value'][i]))
     fp.close()
@@ -845,10 +846,8 @@ def save_llz(data,filename=None):
     fp.close()
 
 
-def doubleres_nei(neifile):
-    
-    import copy
-    
+def doubleres_nei(neifile):    
+   
     #newneifile
     nnf=copy.deepcopy(neifile)
     #newnodenumber
@@ -956,7 +955,6 @@ def get_nv(neifile):
     
     nv=np.empty((len(neifile['neighbours'])*2,3))    
     
-    import copy    
     neighbours=copy.deepcopy(neifile['neighbours'])
 
     kk=0
@@ -1095,8 +1093,117 @@ def save_seg2nc(segfile,outname):
     ncid.close()
 
     
+def sort_boundary(neifile):
+
+    nn=copy.deepcopy(neifile['nodenumber'][neifile['bcode']==1]).astype(int)
+    nnei=copy.deepcopy(neifile['neighbours'][neifile['bcode']==1]).astype(int)
+    
+    #find the neighbour of the first node
+    idx=np.argwhere(nnei==nn[0])[0][0]
+    
+    #have to use temp values with copy as the standard swap doesn't work when things are swapped again and again.
+    #there must be a more python way to hand that....
+    tmpval=nn[1].copy()
+    nn[1]=nn[idx]
+    nn[idx]=tmpval    
+    tmpval=nnei[1,:].copy()
+    nnei[1,:]=nnei[idx,:]
+    nnei[idx,:]=tmpval
+   
+    for i in range(1,len(nn)-1):
+        for j in range(neifile['maxnei']):
+            nei=nnei[i,j]
+            if nei==0: continue
+            idx=np.argwhere(nn[(i+1):]==nei)
+
+            if len(idx)==1:
+                tmpval=nn[(i+1)].copy()
+                nn[(i+1)]=nn[(idx+i+1)]
+                nn[(idx+i+1)]=tmpval                
+                tmpval=nnei[(i+1),:].copy()
+                nnei[(i+1),:]=nnei[(idx+i+1),:]
+                nnei[(idx+i+1),:]=tmpval
+                break
+                
+                
+                
+    return nn
     
     
+def save_elobc(elobc,outname):
     
+    try:
+        import netCDF4 as n4
+    except ImportError:
+        print "netCDF4 is not installed, please install netCDF4."
+        return
+
+    ncid = n4.Dataset(outname, 'w',format='NETCDF3_CLASSIC')
+
+
+    #create dimensions
+    ncid.createDimension('nobc',len(elobc['obc_nodes']))
+    ncid.createDimension('tidal_components',len(elobc['tide_period'])) 
+    ncid.createDimension('TideLen',np.shape(elobc['equilibrium_tide_type'])[1])
+    ncid.createDimension('DateStrLen',len(elobc['time_origin']))
+
+    #define variables
+    obc_nodes = ncid.createVariable('obc_nodes','i4',('nobc',))    
+    tide_period = ncid.createVariable('tide_period','f',('tidal_components',))
+    tide_Eref = ncid.createVariable('tide_Eref','f',('nobc',))
+    tide_Ephase = ncid.createVariable('tide_Ephase','f',('tidal_components','nobc'))
+    tide_Eamp = ncid.createVariable('tide_Eamp','f',('tidal_components','nobc'))
+    equilibrium_tide_Eamp = ncid.createVariable('equilibrium_tide_Eamp','f',('tidal_components',))
+    equilibrium_beta_love = ncid.createVariable('equilibrium_beta_love','f',('tidal_components',))
+    equilibrium_tide_type = ncid.createVariable('equilibrium_tide_type','c',('tidal_components','TideLen'))
+    time_origin = ncid.createVariable('time_origin','c',('DateStrLen',))
+
+    obc_nodes[:] = elobc['obc_nodes']   
+    obc_nodes.__setattr__('long_name','Open Boundary Node Number')
+    obc_nodes.__setattr__('grid','obc_grid')
+    
+    tide_period[:] = elobc['tide_period']
+    tide_period.__setattr__('long_name','tide angular period')
+    tide_period.__setattr__('units','seconds')
+    
+    tide_Eref[:] = elobc['tide_Eref']
+    tide_Eref.__setattr__('long_name','tidal elevation reference level')
+    tide_Eref.__setattr__('units','meters')
+    
+    tide_Ephase[:] = elobc['tide_Ephase']
+    tide_Ephase.__setattr__('long_name','tidal elevation phase angle')
+    tide_Ephase.__setattr__('units','degrees, time of maximum elevation with respect to chosen time origin')
+    
+    tide_Eamp[:] = elobc['tide_Eamp']
+    tide_Eamp.__setattr__('long_name','tidal elevation amplitude')
+    tide_Eamp.__setattr__('units','meters')
+    
+    equilibrium_tide_Eamp[:] = elobc['equilibrium_tide_Eamp']
+    equilibrium_tide_Eamp.__setattr__('long_name','equilibrium tidal elevation amplitude')
+    equilibrium_tide_Eamp.__setattr__('units','meters')
+    
+    equilibrium_beta_love[:] = elobc['equilibrium_beta_love']
+    equilibrium_beta_love.__setattr__('formula','beta=1+klove-hlove')
+    
+    equilibrium_tide_type[:] = elobc['equilibrium_tide_type']
+    equilibrium_tide_type.__setattr__('long_name','formula')
+    equilibrium_tide_type.__setattr__('units','beta=1+klove-hlove')
+
+    
+    time_origin[:] = elobc['time_origin']
+    time_origin.__setattr__('long_name','time')
+    time_origin.__setattr__('units','yyyy-mm-dd HH:MM:SS')
+    time_origin.__setattr__('time_zone','UTC')
+    time_origin.__setattr__('comments','tidal harmonic origin_date')
+    
+
+    
+
+
+    
+    ncid.__setattr__('type','FVCOM SPECTRAL ELEVATION FORCING FILE')
+    ncid.__setattr__('history','Created ' +time.ctime(time.time()) )
+
+    ncid.close()    
     
     

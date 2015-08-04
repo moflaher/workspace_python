@@ -25,44 +25,39 @@ data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print 'done load'
 data = ncdatasort(data)
 print 'done sort'
-indata=load_fvcom_files('runs/'+grid+'/'+name+'/input','kit4','kit4_non_julian_obc.nc')
-
 
 
 # Define names and types of data
-name2='kit4_kelp_clean'
-grid2='kit4_kelp'
-datatype='2d'
+filename='kit4_wave_pre_final.nei'
 
 
-indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input','kit4_kelp')
-neifile=loadnei('runs/'+grid2+'/'+name2+'/input/kit4_kelp.nei')
-indata2.update(neifile)
+neifile=loadnei('data/grid_stuff/'+filename)
+neifile=get_nv(neifile)
 
 interp_h=mpl.tri.LinearTriInterpolator(data['trigrid'], data['h'])
-new_h=interp_h(indata2['nodell'][:,0],indata2['nodell'][:,1])
+new_h=interp_h(neifile['nodell'][:,0],neifile['nodell'][:,1])
 
 
 nn_h=interp.NearestNDInterpolator((data['nodell'][:,0],data['nodell'][:,1]), data['h'])
-new_h2=nn_h.__call__(indata2['nodell'][:,0],indata2['nodell'][:,1])
+new_h2=nn_h.__call__(neifile['nodell'][:,0],neifile['nodell'][:,1])
 
 
 
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(indata2['trigridxy'],new_h-new_h2,vmin=-100,vmax=100)
+triax=ax.tripcolor(neifile['trigrid'],new_h-new_h2,vmin=-100,vmax=100)
 plt.colorbar(triax,ax=ax)
 f.show()
 
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(indata2['trigridxy'],new_h2,vmin=0,vmax=650)
+triax=ax.tripcolor(neifile['trigrid'],new_h2,vmin=0,vmax=650)
 plt.colorbar(triax,ax=ax)
 f.show()
 
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(data['trigridxy'],data['h'],vmin=0,vmax=650)
+triax=ax.tripcolor(data['trigrid'],data['h'],vmin=0,vmax=650)
 plt.colorbar(triax,ax=ax)
 f.show()
 
@@ -70,9 +65,9 @@ f.show()
 
 
 
-indata2['h']=new_h2
+neifile['h']=new_h2
 
-savenei('data/grid_stuff/kit4_kelp_nnh.nei',indata2)
+savenei('data/grid_stuff/kit4_wave_nnh.nei',neifile)
 
 
 
