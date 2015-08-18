@@ -18,7 +18,7 @@ import matplotlib.path as path
 
 
 # Define names and types of data
-filename='data/bathy_mod/kit4_depths.dat'
+filename='data/bathy_mod/van_low_dep.dat'
 averaged=100
 
 data=np.genfromtxt(filename)
@@ -28,7 +28,7 @@ region['region']=np.array([np.min(data[:,0]),np.max(data[:,0]),np.min(data[:,1])
 
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
-scb=ax.scatter(data[:,0],data[:,1],c=data[:,2],s=10,edgecolor='None',vmin=0,vmax=300)
+scb=ax.scatter(data[:,0],data[:,1],c=data[:,2],s=10,edgecolor='None',vmin=0,vmax=100)
 prettyplot_ll(ax,setregion=region,cb=scb,cblabel='',grid=True)
 
 
@@ -47,7 +47,7 @@ ind_b=np.in1d(idx_vec_f,idx_d)
 idx=idx_vec_f[ind_b]
 
 data[idx,2]=(data[idx,2]+averaged)/2
-save_llz(data,'data/bathy_mod/kit4_depths_avg_'+str(averaged)+'_1.dat')
+save_llz(data,'data/bathy_mod/van_low_dep_'+str(averaged)+'_1.dat')
 
 
 idx_d=np.argwhere(data[:,2]<averaged)
@@ -55,7 +55,7 @@ ind_b=np.in1d(idx_vec_f,idx_d)
 idx=idx_vec_f[ind_b]
 
 data[idx,2]=(data[idx,2]+averaged)/2
-save_llz(data,'data/bathy_mod/kit4_depths_avg_'+str(averaged)+'_2.dat')
+save_llz(data,'data/bathy_mod/van_low_dep_'+str(averaged)+'_2.dat')
 
 
 
