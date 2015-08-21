@@ -27,6 +27,10 @@ Functions
 =========
 """
 #load modules
+from __future__ import division
+import collections
+import matplotlib.dates as dates
+
 #Numerical modules
 import numpy as np
 import matplotlib.tri as mplt
@@ -40,6 +44,8 @@ from scipy.io import netcdf
 import scipy.io as sio
 import mmap
 import os
+
+
 
 
 
@@ -694,5 +700,122 @@ def npydic2mat(path, filename):
     print('Saving Mat-File')
     sio.savemat(path+filename[:-3]+'mat',mdict=indata)
     print('Mat-File saved')
+
+
+def loadCUR(filename):
+    """
+    Loads an IOS CUR file. (Different from a cur file).
+    """
+    
+    with open(filename) as fp:
+        FILEHEADER={}
+        CUR={}
+        dataheader=r''
+        first=True
+        num=0
+        for line in fp:
+            if (line[0]=='*') :
+                if first:
+                    first=False
+                    tdict=collections.OrderedDict()
+                else:
+                    FILEHEADER[heading]=tdict   
+                    tdict=collections.OrderedDict()
+              
+                
+                if ('END OF HEADER' in line[1:]): 
+                    FILEHEADER[heading]=tdict   
+                    heading='data'  
+                    tdict=collections.OrderedDict()     
+                    #print line        
+                    break              
+                
+                heading=line[1:].strip()
+                tdict['title']=line[1:].strip()
+
+                    
+                
+            if ( (line[0:4]=='    ') and (line[4]!='$') ):
+                sidx=line.find(':')
+                tname=line[4:sidx].strip()
+                
+                eidx=line.find('!')
+                tdata=line[(sidx+1):eidx].strip()
+
+                tdict[tname]=tdata
+                    
+            if ( (line[0:4]=='    ') and (line[4]=='$') ):
+                tname=line[5:].strip()
+                table=r''
+                
+                line=fp.next() 
+                num+=1
+                while line[4:8] != '$END':                    
+                    table+=line
+                    line=fp.next()  
+                    num+=1               
+                
+                tdict[tname]=table
+                
+            if line[0]=='!':
+                dataheader+=line
+                
+            num+=1
+                
+     
+                
+        CUR['dataheader']=dataheader        
+        data=np.genfromtxt(filename,skip_header=num+1)
+        CUR['FILEHEADER']=FILEHEADER
+        
+        #data is all loaded other then comments.....
+        #can add that later if needed
+        
+        #process data so its usable
+        stimestr=FILEHEADER['FILE']['START TIME'][4:]+' '+FILEHEADER['FILE']['START TIME'][:4] 
+        etimestr=FILEHEADER['FILE']['END TIME'][4:]+' '+FILEHEADER['FILE']['END TIME'][:4]         
+        tspace=np.array([float(x) for x in FILEHEADER['FILE']['TIME INCREMENT'].split()])*np.array([1,1/24,1/(24*60),1/(24*60*60),1/(24*60*60*1000)])
+        stime=dates.datestr2num(stimestr)
+        etime=dates.datestr2num(etimestr)
+
+        CUR['time']=np.arange(stime,etime+tspace.sum(),tspace.sum())
+        
+        lonstr=FILEHEADER['LOCATION']['LONGITUDE']
+        if ('W' in lonstr):
+            lonstr=lonstr.replace('W','')
+            CUR['lon']=np.sum(np.array([float(x) for x in lonstr.split()])*np.array([-1,1/60]))            
+        latstr=FILEHEADER['LOCATION']['LATITUDE']
+        if ('N' in latstr):
+            latstr=latstr.replace('N','')
+            CUR['lat']=np.sum(np.array([float(x) for x in latstr.split()])*np.array([1,1/60]))
+            
+        CUR['h']=float(FILEHEADER['INSTRUMENT']['DEPTH'])
+
+        a=np.array([ x for x in FILEHEADER['FILE']['TABLE: CHANNELS'].split('\r\n')])        
+        tstr=a[0].replace('!','').split()
+        nameidx=tstr.index('Name')        
+        names=np.array([])
+        for row in a[2:]:
+            if row!='':
+                names=np.append(names,row.split()[nameidx])
+        for i,name in enumerate(names):
+            CUR[name]=data[:,i]
+        
+                
+    return CUR
+                
+        
+        
+
+
+
+
+
+
+
+
+
+
+
 
 

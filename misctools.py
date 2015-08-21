@@ -52,6 +52,17 @@ def dic_shape(indic):
 def speeder(ua,va):
     return np.sqrt(ua**2+va**2)
 
-
+def myprint(d):
+  """
+    Print nested dictionaries in a readable manner.
+    Code from Stack overflow - Scharron
+    
+  """  
+    
+  for k, v in d.iteritems():
+    if isinstance(v, dict):
+      myprint(v)
+    else:
+      print "{0} : {1}".format(k, v)
 
 
