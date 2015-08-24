@@ -332,8 +332,8 @@ def place_axes(region,numplots,cb=False,rotation=False):
     For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
     :Parameters:
-    	region - The region being plotted, needed for aspect ratio
-    	numplots - The number of axes being define   
+        region - The region being plotted, needed for aspect ratio
+        numplots - The number of axes being define   
     :Optional:
         cb - True/False option for colorbar (default False)
     """
@@ -396,7 +396,7 @@ def ppll_sub(axin,**kwargs):
     NOTE: If cblabel is specified then cb must be specified as well. len(cb)==len(cblabel) for code to function.
 
     :Parameters:
-    	axin - The axes to be modified.
+        axin - The axes to be modified.
     :Optional:
         grid - True/False to enable grid (default False)
         setregion - Which region to zoom in on and set the aspect ratio. (default N/A)
@@ -541,8 +541,8 @@ def meter_box(axin,loc,dist,color='k',lw=1,retbox=False):
 
     :Parameters:
         axin -  The axes to plot the box on.
-    	loc - The center of the box being plotted.
-    	dist - The distance in meters around the box to plot.
+        loc - The center of the box being plotted.
+        dist - The distance in meters around the box to plot.
     """
     dist=np.atleast_1d(np.array(dist))
     loc=np.array(loc)
@@ -562,7 +562,7 @@ def meter_box(axin,loc,dist,color='k',lw=1,retbox=False):
     plot_box(axin,tr,color=color,lw=lw)
     
     if retbox==True:
-		return tr['region']
+        return tr['region']
 
 
 def axes_label(axin,label,**kwargs):
@@ -593,8 +593,8 @@ def scalebar(axin,region,dist,**kwargs):
 
     :Parameters:
         axin -  The axes to plot the box on.
-    	region - The region being plotted.
-    	dist - The distance in meters of the scalebar.
+        region - The region being plotted.
+        dist - The distance in meters of the scalebar.
 
         **loc -  Where to place the scalebar (only one option for now, lower left).
         **fontsize - Text fontsize (default - 8).

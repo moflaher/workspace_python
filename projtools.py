@@ -6,7 +6,6 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
-from StringIO import StringIO
 import gridtools as gt
 import datatools as dt
 import plottools as pt
@@ -31,7 +30,7 @@ def gridproj(grid):
     try:
         import pyproj as pyp
     except ImportError:
-        print "pyproj is not installed, please install pyproj."
+        print("pyproj is not installed, please install pyproj.")
         return
 
     projstr={}
@@ -121,7 +120,7 @@ def regions(regionname=None):
     allregions=makeregions()
 
     if regionname==None:
-        print 'Valid regions are'
+        print('Valid regions are')
         return allregions.keys()        
     else:
         tmpregion=allregions[regionname]
@@ -200,7 +199,7 @@ def region2path(region):
     try:
         region['pathxy']=[[region['regionxy'][0],region['regionxy'][2]],[region['regionxy'][0],region['regionxy'][3]],[region['regionxy'][1],region['regionxy'][3]],[region['regionxy'][1],region['regionxy'][2]]]
     except KeyError:
-        print "No regionxy. pathxy could not be added."
+        print("No regionxy. pathxy could not be added.")
     
     return region
 
@@ -227,7 +226,7 @@ def lcc(lon,lat):
     try:
         import pyproj as pyp
     except ImportError:
-        print "pyproj is not installed, please install pyproj."
+        print("pyproj is not installed, please install pyproj.")
         return
     
     

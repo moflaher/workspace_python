@@ -6,7 +6,6 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
-from StringIO import StringIO
 import gridtools as gt
 import datatools as dt
 import plottools as pt
@@ -26,7 +25,7 @@ def runstats(datain=None):
    
 
     if datain==None:
-        print 'Need to pass in data array'  
+        print('Need to pass in data array')
     else:
         maxval=np.nanmax(datain)
         minval=np.nanmin(datain)
@@ -46,7 +45,7 @@ def ne_fv(casename,h=False,is31=False):
 
 def dic_shape(indic):
     df=pd.DataFrame([str(np.shape(indic[key])) for key in indic.keys()],indic.keys())
-    print df
+    print(df)
 
 
 def speeder(ua,va):
@@ -63,6 +62,6 @@ def myprint(d):
     if isinstance(v, dict):
       myprint(v)
     else:
-      print "{0} : {1}".format(k, v)
+      print("{0} : {1}".format(k, v))
 
 

@@ -6,7 +6,6 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
-from StringIO import StringIO
 import time
 from scipy.io import netcdf
 
@@ -40,17 +39,17 @@ def loadnei(neifilename=None):
     """
     
     if neifilename==None:
-        print 'loadnei requires a filename to load.'
+        print('loadnei requires a filename to load.')
         return
     try:
         fp=open(neifilename,'r')
     except IOError:
-        print 'Can not find ' + neifilename
+        print('Can not find ' + neifilename)
         return
 
     nnodes=int(fp.readline())
     maxnei=int(fp.readline())
-    llminmax=np.genfromtxt(StringIO(fp.readline()))
+    llminmax=np.array([float(x) for x in fp.readline().split()])
     t_data=np.loadtxt(neifilename,skiprows=3,dtype='float64')
     fp.close()
 
@@ -78,7 +77,7 @@ def find_land_nodes(neifile=None):
     """
 
     if neifile==None:
-        print 'find_land_nodes requires a neifile dictionary.'
+        print('find_land_nodes requires a neifile dictionary.')
         return
     #the numbers of the boundary nodes
     nn=neifile['nodenumber'][neifile['bcode']!=0]
@@ -99,16 +98,16 @@ def savenei(neifilename=None,neifile=None):
     """
     
     if neifilename==None:
-        print 'savenei requires a filename to save.'
+        print('savenei requires a filename to save.')
         return
     try:
         fp=open(neifilename,'w')
     except IOError:
-        print 'Can''t make ' + neifilename
+        print('Can''t make ' + neifilename)
         return
 
     if neifile==None:
-        print 'No neifile dict given.'
+        print('No neifile dict given.')
         return
 
 
@@ -130,10 +129,10 @@ def max_element_side_ll(data=None,elenum=None):
     Given data and an element number returns the length of the longest side in ll. 
     """
     if data==None:
-        print 'Need proper data structure'
+        print('Need proper data structure')
         return
     if elenum==None:
-        print 'Need to specify an element'
+        print('Need to specify an element')
         return
     
     a=data['nodell'][data['nv'][elenum,0],]
@@ -149,22 +148,22 @@ def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
     """
     #Check for filename and open, catch expection if it can't create file.
     if filename==None:
-        print 'fvcom_savecage requires a filename to save.'
+        print('fvcom_savecage requires a filename to save.')
         return
     try:
         fp=open(filename,'w')
     except IOError:
-        print 'Can''t make ' + filename
+        print('Can''t make ' + filename)
         return
 
     #Make sure all arrays were given
     if ((nodes==None) or (drag==None) or (depth==None)):
-        print 'Need to gives arrays of nodes,drag, and depth.'
+        print('Need to gives arrays of nodes,drag, and depth.')
         fp.close()
         return
     #Make sure they are all the same size
     if ((nodes.size!=drag.size) or (nodes.size!=depth.size)):
-        print 'Arrays are not the same size.'
+        print('Arrays are not the same size.')
         fp.close()
         return 
     #Make sure that the arrays are single columns or rank 1. If not then transpose them.
@@ -255,7 +254,7 @@ def regioner(data,region,subset=False):
 def interp_vel(data,loc,layer=None,ll=True):
     #This function is deprecated in favor of ipt.interpE_at_loc.
     #It has been modified to call ipt.interpE_at_loc, should return identical results.
-    print "This function is deprecated in favor of ipt.interpE_at_loc, please switch."
+    print("This function is deprecated in favor of ipt.interpE_at_loc, please switch.")
 
     if (layer==None and loc.size==2):
         ua=ipt.interpE_at_loc(data,'ua',loc,layer=layer,ll=ll)
@@ -279,19 +278,18 @@ def _load_grdfile(casename=None):
     data={}    
 
     if casename==None:
-        print '_load_grdfile requires a filename to load.'
+        print('_load_grdfile requires a filename to load.')
         return
     try:
         fp=open(casename+'_grd.dat','r')
     except IOError:
-        print  '_load_grdfiles: invalid case name.'
+        print('_load_grdfiles: invalid case name.')
         return data
 
     nodes_str=fp.readline().split('=')
     elements_str=fp.readline().split('=')
     nnodes=int(nodes_str[1])
     nele=int(elements_str[1])
-    #llminmax=np.genfromtxt(StringIO(fp.readline()))
     t_data1=np.genfromtxt(casename+'_grd.dat',skip_header=2, skip_footer=nnodes,dtype='int64')
     t_data2=np.genfromtxt(casename+'_grd.dat',skip_header=2+nele,dtype='float64')
     fp.close()
@@ -315,12 +313,12 @@ def _load_depfile(casename=None):
     data={}
     
     if casename==None:
-        print '_load_depfile requires a filename to load.'
+        print('_load_depfile requires a filename to load.')
         return
     try:
         fp=open(casename+'_dep.dat','r')
     except IOError:
-        print  '_load_depfile: invalid case name.'
+        print('_load_depfile: invalid case name.')
         return data
 
     dep_str=fp.readline().split('=')
@@ -345,12 +343,12 @@ def _load_spgfile(casename=None):
     data={}
     
     if casename==None:
-        print '_load_spgfile requires a filename to load.'
+        print('_load_spgfile requires a filename to load.')
         return
     try:
         fp=open(casename+'_spg.dat','r')
     except IOError:
-        print  '_load_spgfile: invalid case name.'
+        print('_load_spgfile: invalid case name.')
         return data
 
     spg_str=fp.readline().split('=')
@@ -375,12 +373,12 @@ def _load_obcfile(casename=None):
     data={}
 
     if casename==None:
-        print '_load_obcfile requires a filename to load.'
+        print('_load_obcfile requires a filename to load.')
         return
     try:
         fp=open(casename+'_obc.dat','r')
     except IOError:
-        print  '_load_obcfile: invalid case name.'
+        print('_load_obcfile: invalid case name.')
         return data
 
     obc_str=fp.readline().split('=')
@@ -405,12 +403,12 @@ def _load_llfiles(casename=None):
     data={}
     
     if casename==None:
-        print '_load_llfiles requires a filename to load.'
+        print('_load_llfiles requires a filename to load.')
         return
     try:
         fp=open(casename+'_long.dat','r')
     except IOError:
-        print  '_load_llfiles: long file is invalid.'
+        print('_load_llfiles: long file is invalid.')
         return data
 
     lon=np.genfromtxt(casename+'_long.dat')
@@ -419,7 +417,7 @@ def _load_llfiles(casename=None):
     try:
         fp=open(casename+'_lat.dat','r')
     except IOError:
-        print  '_load_llfiles: lat file is invalid.'
+        print('_load_llfiles: lat file is invalid.')
         return data
 
     lat=np.genfromtxt(casename+'_lat.dat')
@@ -484,12 +482,12 @@ def save_spgfile(datain,filepath,casename=None):
     data={}
     
     if casename==None:
-        print 'save_spgfile requires a filename to save.'
+        print('save_spgfile requires a filename to save.')
         return
     try:
         fp=open(filepath + casename+'_spg.dat','w')
     except IOError:
-        print  'save_spgfile: invalid case name.'
+        print('save_spgfile: invalid case name.')
         return data
 
     fp.write('Sponge Node Number = %d\n' % datain['spgf_num'] )
@@ -506,12 +504,12 @@ def save_obcfile(datain,filepath,casename=None):
     data={}
     
     if casename==None:
-        print 'save_obcfile requires a filename to save.'
+        print('save_obcfile requires a filename to save.')
         return
     try:
         fp=open(filepath + casename+'_obc.dat','w')
     except IOError:
-        print  'save_obcfile: invalid case name.'
+        print('save_obcfile: invalid case name.')
         return data
 
     fp.write('OBC Node Number = %d\n' % datain['obcf_num'] )
@@ -543,12 +541,12 @@ def load_nodfile(filename=None,h=False):
     data={}
     
     if filename==None:
-        print 'load_nodfile requires a filename to load.'
+        print('load_nodfile requires a filename to load.')
         return
     try:
         fp=open(filename,'r')
     except IOError:
-        print  'load_nodfile: invalid filename.'
+        print('load_nodfile: invalid filename.')
         return data
 
     t_data1=np.genfromtxt(filename)
@@ -573,12 +571,12 @@ def load_elefile(filename=None):
     data={}
     
     if filename==None:
-        print 'load_elefile requires a filename to load.'
+        print('load_elefile requires a filename to load.')
         return
     try:
         fp=open(filename,'r')
     except IOError:
-        print  'load_elefile: invalid filename.'
+        print('load_elefile: invalid filename.')
         return data
 
     t_data1=np.genfromtxt(filename)
@@ -596,12 +594,12 @@ def save_grdfile(grddata,depdata,outname,is31=True):
     """
     
     if outname==None:
-        print 'save_grdfile requires a filename to save.'
+        print('save_grdfile requires a filename to save.')
         return
     try:
         fp=open(outname,'w')
     except IOError:
-        print  'save_grdfile: invalid filename.'
+        print('save_grdfile: invalid filename.')
         return data
     if is31:
         fp.write('Node Number = %d\n' % len(depdata['node_num']) )
@@ -624,12 +622,12 @@ def save_depfile(depdata,outname,is31=True):
   
 
     if outname==None:
-        print 'save_depfile requires a filename to save.'
+        print('save_depfile requires a filename to save.')
         return
     try:
         fp=open(outname,'w')
     except IOError:
-        print  'save_depfile: invalid filename.'
+        print('save_depfile: invalid filename.')
         return data
     if is31:
         fp.write('Node Number = %d\n' % len(depdata['node_num']) )
@@ -649,12 +647,12 @@ def load_rivfile(filename=None):
     data={}
 
     if filename==None:
-        print 'load_rivfile requires a filename to load.'
+        print('load_rivfile requires a filename to load.')
         return
     try:
         fp=open(filename,'r')
     except IOError:
-        print  'load_rivfile: invalid filename.'
+        print('load_rivfile: invalid filename.')
         return data
     
     data['RIVER_NAME']=''
@@ -686,12 +684,12 @@ def save_rivfile(rivdata,filename=None):
     data={}
 
     if filename==None:
-        print 'save_rivfile requires a filename to save.'
+        print('save_rivfile requires a filename to save.')
         return
     try:
         fp=open(filename,'w')
     except IOError:
-        print  'save_rivfile: invalid filename.'
+        print('save_rivfile: invalid filename.')
         return data
     
     for i in range(len(rivdata['RIVER_NAME'])):
@@ -711,12 +709,12 @@ def load_segfile(filename=None):
     data={}
     
     if filename==None:
-        print 'load_segfile requires a filename to load.'
+        print('load_segfile requires a filename to load.')
         return
     try:
         fp=open(filename,'r')
     except IOError:
-        print  'load_segfile: invalid filename.'
+        print('load_segfile: invalid filename.')
         return data
 
     data=collections.OrderedDict()
@@ -746,7 +744,7 @@ def find_outside_seg(segfile=None,swap=True):
 
     
     if segfile==None:
-        print 'find_outside_seg needs a segfile dict'
+        print('find_outside_seg needs a segfile dict')
         return
 
     lonmin=10000000
@@ -771,17 +769,17 @@ def find_outside_seg(segfile=None,swap=True):
 
     if swap==True:
         if (lonmaxkey==lonminkey==latmaxkey==latminkey):
-            print 'Swapping ' +lonmaxkey+ ' and first segment'
+            print('Swapping ' +lonmaxkey+ ' and first segment')
             segfile[first.astype(str)],segfile[lonmaxkey]=segfile[lonmaxkey],segfile[first.astype(str)]
         else:
-            print 'Could not find single outside segment'            
+            print('Could not find single outside segment')            
 
         return segfile
     else:
         if lonmaxkey==lonminkey==latmaxkey==latminkey:
-            print lonmaxkey+ ' is the outside segment'
+            print(lonmaxkey+ ' is the outside segment')
         else:
-            print 'Could not find single outside segment'  
+            print('Could not find single outside segment')
         return  
 
 
@@ -791,12 +789,12 @@ def save_nodfile(segfile,filename=None):
     """
     
     if filename==None:
-        print 'save_nodfile requires a filename to save.'
+        print('save_nodfile requires a filename to save.')
         return
     try:
         fp=open(filename,'w')
     except IOError:
-        print  'save_nodfile: invalid filename.'
+        print('save_nodfile: invalid filename.')
         return data
 
     dictlen=0
@@ -826,12 +824,12 @@ def save_llz(data,filename=None):
     """
     
     if filename==None:
-        print 'save_llz requires a filename to save.'
+        print('save_llz requires a filename to save.')
         return
     try:
         fp=open(filename,'w')
     except IOError:
-        print 'Can''t make ' + filename
+        print('Can''t make ' + filename)
         return
 
 
@@ -902,12 +900,12 @@ def load_stationfile(filename=None):
     data={}    
 
     if filename==None:
-        print 'load_stationfile requires a filename to load.'
+        print('load_stationfile requires a filename to load.')
         return
     try:
         fp=open(filename,'r')
     except IOError:
-        print  'load_stationfile: invalid filename.'
+        print('load_stationfile: invalid filename.')
         return data
 
     headerstr=fp.readline()
@@ -931,12 +929,12 @@ def save_stationfile(sdata,outname):
     """
     
     if outname==None:
-        print 'save_stationfile requires a filename to save.'
+        print('save_stationfile requires a filename to save.')
         return
     try:
         fp=open(outname,'w')
     except IOError:
-        print  'save_stationfile: invalid filename.'
+        print('save_stationfile: invalid filename.')
         return data
         
 
@@ -1027,12 +1025,12 @@ def save_segfile(segfile,outfile=None):
 
 
     if outfile==None:
-        print 'save_segfile requires a filename to save.'
+        print('save_segfile requires a filename to save.')
         return
     try:
         fp=open(outfile,'w')
     except IOError:
-        print  'save_segfile: invalid filename.'
+        print('save_segfile: invalid filename.')
         return
 
     for seg in segfile:
@@ -1049,7 +1047,7 @@ def save_seg2nc(segfile,outname):
     try:
         import netCDF4 as n4
     except ImportError:
-        print "netCDF4 is not installed, please install netCDF4."
+        print("netCDF4 is not installed, please install netCDF4.")
         return
 
     ncid = n4.Dataset(outname, 'w',format='NETCDF3_CLASSIC')
@@ -1135,7 +1133,7 @@ def save_elobc(elobc,outname):
     try:
         import netCDF4 as n4
     except ImportError:
-        print "netCDF4 is not installed, please install netCDF4."
+        print("netCDF4 is not installed, please install netCDF4.")
         return
 
     ncid = n4.Dataset(outname, 'w',format='NETCDF3_CLASSIC')

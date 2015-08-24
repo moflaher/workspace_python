@@ -21,7 +21,7 @@ from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
 name_orig='kit4_kelp_nodrag'
-name_change='kit4_kelp_20m_drag_0.018'
+name_change='kit4_kelp_20m_drag_0.007'
 grid='kit4_kelp'
 regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
 datatype='2d'
@@ -212,6 +212,7 @@ for regionname in regionlist:
 
     lseg=np.empty((3,),dtype=object)
     ABC=['A','B','C']
+    ABC=['D','E','F']
     plt.draw()
     for i,axi in enumerate(ax):
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)

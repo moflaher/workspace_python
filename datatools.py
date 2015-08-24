@@ -54,9 +54,9 @@ def loadnc(datadir, singlename=None):
     Loads a .nc  data file
 
     :Parameters:
-    	**datadir** -- The path to the directory where the data is stored.
+        **datadir** -- The path to the directory where the data is stored.
 
-    	**singlename (optional)** -- the name of the .nc file of interest,
+        **singlename (optional)** -- the name of the .nc file of interest,
             not needed if there is only one .nc file in datadir       
     """
     #identify the file to load
@@ -81,13 +81,13 @@ def loadnc(datadir, singlename=None):
    
     #data['nv'] = np.transpose(ncid.variables['nv'].data.astype(int))-[1] #python index
     #data['nbe'] = np.transpose(ncid.variables['nbe'].data.astype(int))-[1] #python index
-    if data.has_key('nv'):
+    if ('nv' in data):
         data['nv']=data['nv'].astype(int).T-1
-    if data.has_key('nbe'):
+    if ('nv' in data):
         data['nbe']=data['nbe'].astype(int).T-1
-    if ncid.dimensions.has_key('nele'):    
+    if ('nele' in ncid.dimensions):    
         data['nele'] = ncid.dimensions['nele']
-    if ncid.dimensions.has_key('node'):
+    if ('node' in ncid.dimensions):
         data['node'] = ncid.dimensions['node']
 
    
@@ -95,7 +95,7 @@ def loadnc(datadir, singlename=None):
     #Now we get the long/lat data.  Note that this method will search
     #for long/lat files in the datadir and up to two levels above
     #the datadir.
-    if (data.has_key('lon') and data.has_key('x')):
+    if (('lon' in data) and ('x' in data)):
         if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
             long_matches = []
             lat_matches = []
@@ -122,12 +122,12 @@ def loadnc(datadir, singlename=None):
                 data['lon'] = np.loadtxt(long_matches[0])
                 data['lat'] = np.loadtxt(lat_matches[0])        
             else:        
-                print "No long/lat files found. Long/lat set to x/y"
+                print("No long/lat files found. Long/lat set to x/y")
                 data['lon'] = data['x']
                 data['lat'] = data['y']
 
             
-    if data.has_key('nv'):
+    if ('nv' in data):
         data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
         data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
   
@@ -179,15 +179,15 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     data['nodell'] = nodell
     data['nodexy'] = nodexy
 
-    if data.has_key('time'):
+    if ('time' in data):
         data['time']=data['time']+678576
 
-    if data.has_key('trigrid')==False:
-        if (data.has_key('nv') and data.has_key('lat') and data.has_key('lon')):
+    if ('trigrid' in data)==False:
+        if (('nv' in data) and('lon' in data) and ('lat' in data)):
             data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])  
     
-    if data.has_key('trigridxy')==False:
-        if (data.has_key('nv') and data.has_key('x') and data.has_key('y')):
+    if ('trigridxy' in data)==False:
+        if (('nv' in data) and('x' in data) and ('y' in data)):
             data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])  
 
     if trifinder==True:
@@ -339,83 +339,83 @@ def calc_energy(data):
 
 
 def size_check(datadir):
-	"""Used in ncMerger.  Determines the total number of time series for a
-	number of .nc files in a directory
+    """Used in ncMerger.  Determines the total number of time series for a
+    number of .nc files in a directory
 
-	:Parameters:
-		**datadir** -- The directory where the .nc files are contained.
-	"""
-	files = glob.glob(datadir + '*.nc')
-	numFiles = len(files)
-	ncid = netcdf.netcdf_file(files[0])
-	nele = ncid.dimensions['nele']
-	node = ncid.dimensions['node']
-	ncid.close()
-	timeDim = 0
-	for i in xrange(numFiles):
-		ncid = netcdf.netcdf_file(files[i])
-		timeDim += len(ncid.variables['time'].data)
-		ncid.close()
-	return nele, node, timeDim
+    :Parameters:
+        **datadir** -- The directory where the .nc files are contained.
+    """
+    files = glob.glob(datadir + '*.nc')
+    numFiles = len(files)
+    ncid = netcdf.netcdf_file(files[0])
+    nele = ncid.dimensions['nele']
+    node = ncid.dimensions['node']
+    ncid.close()
+    timeDim = 0
+    for i in xrange(numFiles):
+        ncid = netcdf.netcdf_file(files[i])
+        timeDim += len(ncid.variables['time'].data)
+        ncid.close()
+    return nele, node, timeDim
 
 
 def time_sorter(datadir):
-	"""Used in ncMerger.  Sorts the output of glob (which has no inherent
-	order) so that the files can be loaded chronologically.
+    """Used in ncMerger.  Sorts the output of glob (which has no inherent
+    order) so that the files can be loaded chronologically.
 
-	:Parameters:
-		**datadir** -- The directory where the .nc files are contained.
+    :Parameters:
+        **datadir** -- The directory where the .nc files are contained.
 
-	:Returns:
-		**ordered_time** -- A list of indices that sort the output of glob.
-	"""
-	files = glob.glob(datadir + "*.nc")
-	first_time = np.zeros(len(files))
-	for i in xrange(len(files)):
-		ncid = netcdf.netcdf_file(files[i])
-		first_time[i] = ncid.variables['time'][0]
-		ncid.close()
-	ordered_time = first_time.argsort()
-	return ordered_time
+    :Returns:
+        **ordered_time** -- A list of indices that sort the output of glob.
+    """
+    files = glob.glob(datadir + "*.nc")
+    first_time = np.zeros(len(files))
+    for i in xrange(len(files)):
+        ncid = netcdf.netcdf_file(files[i])
+        first_time[i] = ncid.variables['time'][0]
+        ncid.close()
+    ordered_time = first_time.argsort()
+    return ordered_time
 
 
 def nan_index(data, dim='2D'):
-	"""Used in ncMerger. Determines, for a given data set, what time series
-	contain nans.  Also calculates the fraction of
-	a data set that is nans (a measure of the 'goodness' of
-	the data set).
+    """Used in ncMerger. Determines, for a given data set, what time series
+    contain nans.  Also calculates the fraction of
+    a data set that is nans (a measure of the 'goodness' of
+    the data set).
 
-	:Parameters:
-		**data** -- The typical python data dictionary, containing
-		merged data.
+    :Parameters:
+        **data** -- The typical python data dictionary, containing
+        merged data.
 
-		**dim = {'2D', '3D'}** -- The dimension of the data.
+        **dim = {'2D', '3D'}** -- The dimension of the data.
 
-	:Returns:
-		**nanInd** -- A list containing the time series that contain nans
+    :Returns:
+        **nanInd** -- A list containing the time series that contain nans
 
-		**nanFrac** -- The fraction of nans in a given time series.
-	"""
-	#name necessary variables
-	#initialize list of nan-containing time series
-	nanInd = []
-	key = ['ua', 'va']
-	if dim == '3D':
-		three_d =['u', 'v', 'ww']
+        **nanFrac** -- The fraction of nans in a given time series.
+    """
+    #name necessary variables
+    #initialize list of nan-containing time series
+    nanInd = []
+    key = ['ua', 'va']
+    if dim == '3D':
+        three_d =['u', 'v', 'ww']
         key.append(i for i in three_d)
 
-	for i in xrange(data['time'].shape[0]):
-		checkArray = []
-		for j in key:
-			checkArray.append(np.isnan(np.sum(data[j][i,:])))
-		if dim == '3D':
-			for p in key:
-				checkArray.append(np.isnan(np.sum(data[p][i,:,:])))
-		if True in checkArray:
-			nanInd.append(i)
-	#calculate percentage of nans
-	nanFrac = len(nanInd)/data['time'].shape[0]
-	return nanInd, nanFrac
+    for i in xrange(data['time'].shape[0]):
+        checkArray = []
+        for j in key:
+            checkArray.append(np.isnan(np.sum(data[j][i,:])))
+        if dim == '3D':
+            for p in key:
+                checkArray.append(np.isnan(np.sum(data[p][i,:,:])))
+        if True in checkArray:
+            nanInd.append(i)
+    #calculate percentage of nans
+    nanFrac = len(nanInd)/data['time'].shape[0]
+    return nanInd, nanFrac
 
 
 def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
@@ -516,14 +516,14 @@ def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
                     ZETA[start_ind:NT,:] = zeta_temp
                     nt = NT
                 else:
-                    #there was no matching index, i.e. the data does not 						overlap
+                    #there was no matching index, i.e. the data does not                         overlap
                     numT = ltt + nt
                     Time[nt:numT] = time_temp
                     UA[nt:numT,:] = ua_temp
                     VA[nt:numT,:] = va_temp
                     ZETA[nt:numT,:] = zeta_temp
                     nt += ltt
-                print "Loaded file " + str(i+1) + " of " + str(numFiles) + "."
+                print("Loaded file " + str(i+1) + " of " + str(numFiles) + ".")
         else:
             for i in xrange(1, numFiles):
                 #load a file
@@ -558,7 +558,7 @@ def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
                     WW[start_ind:NT,...] = ww_temp
                     nt = NT
                 else:
-                    #there was no matching index, i.e. the data does not 						overlap
+                    #there was no matching index, i.e. the data does not                         overlap
                     numT = ltt + nt
                     Time[nt:numT] = time_temp
                     UA[nt:numT,:] = ua_temp
@@ -568,7 +568,7 @@ def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
                     V[nt:numT,...] = v_temp
                     WW[nt:numT,...] = ww_temp
                     nt += ltt
-            print "Loaded file " + str(i+1) + " of " + str(numFiles) + "."
+            print("Loaded file " + str(i+1) + " of " + str(numFiles) + ".")
         #now for the intelligent part
     else:
         l = len(data['time'])
@@ -646,7 +646,7 @@ def merge_nc(datadir, savedir, clean_nans = False, intelligent=False,dim='2D'):
                     V[nt:numT,...] = v_temp
                     WW[nt:numT,...] = ww_temp
                 nt += ltt
-        print "Loaded file " + str(i+1) + " of " + str(numFiles) + "."
+        print("Loaded file " + str(i+1) + " of " + str(numFiles) + ".")
     #delete  any extra space at the end of the arrays.
     try:
         toDelete =tuple(np.arange(nt, len(Time)))

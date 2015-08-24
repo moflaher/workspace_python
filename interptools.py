@@ -6,7 +6,6 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
-from StringIO import StringIO
 
 import gridtools as gt
 import datatools as dt
@@ -55,23 +54,23 @@ def interpE_at_loc(data,varname,loc,layer=None,ll=True):
         trigrid='trigridxy'
 
     if (data.has_key(trifinder)==False and data.has_key(trigrid)):
-        print 'No trifinder initialized. Initializing now.'
+        print('No trifinder initialized. Initializing now.')
         data[trifinder]=data[trigrid].get_trifinder()
     elif data.has_key(trigrid)==False:
-        print 'No trifinder or trigrid to initialize it.'
+        print('No trifinder or trigrid to initialize it.')
         return
 
     if ((len(data[varname].shape)>2) and (layer==None)):
-        print '3d variable specified without layer. Returning surface layer.'
+        print('3d variable specified without layer. Returning surface layer.')
         layer=0
     elif ((len(data[varname].shape)==2) and (layer!=None)):
-        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        print('2d variable specified with layer. That would break things, unspecifing layer.')
         layer=None
 
     loc=np.array(loc)
     host=data[trifinder].__call__(loc[0],loc[1])
     if host==-1:
-        print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        print('Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.')
         out=np.empty(shape=(data[varname][:,layer,host]).squeeze().shape)
         out[:]=np.nan
         return out
@@ -137,23 +136,23 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
         trigrid='trigridxy'
 
     if (data.has_key(trifinder)==False and data.has_key(trigrid)):
-        print 'No trifinder initialized. Initializing now.'
+        print('No trifinder initialized. Initializing now.')
         data[trifinder]=data[trigrid].get_trifinder()
     elif data.has_key(trigrid)==False:
-        print 'No trifinder or trigrid to initialize it.'
+        print('No trifinder or trigrid to initialize it.')
         return
 
     if ((len(data[varname].shape)>2) and (layer==None)):
-        print '3d variable specified without layer. Returning surface layer.'
+        print('3d variable specified without layer. Returning surface layer.')
         layer=0
     elif ((len(data[varname].shape)==2) and (layer!=None)):
-        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        print('2d variable specified with layer. That would break things, unspecifing layer.')
         layer=None
 
     loc=np.array(loc)
     host=data[trifinder].__call__(loc[0],loc[1])
     if host==-1:
-        print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        print('Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.')
         if len(data[varname].shape)==1:
             out=np.nan
         else:
@@ -222,23 +221,23 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
         trigrid='trigridxy'
 
     if (data.has_key(trifinder)==False and data.has_key(trigrid)):
-        print 'No trifinder initialized. Initializing now.'
+        print('No trifinder initialized. Initializing now.')
         data[trifinder]=data[trigrid].get_trifinder()
     elif data.has_key(trigrid)==False:
-        print 'No trifinder or trigrid to initialize it.'
+        print('No trifinder or trigrid to initialize it.')
         return
 
     if ((len(data[varname].shape)>2) and (layer==None)):
-        print '3d variable specified without layer. Returning surface layer.'
+        print('3d variable specified without layer. Returning surface layer.')
         layer=0
     elif ((len(data[varname].shape)==2) and (layer!=None)):
-        print '2d variable specified with layer. That would break things, unspecifing layer.'
+        print('2d variable specified with layer. That would break things, unspecifing layer.')
         layer=None
 
     locs=np.atleast_2d(locs)
     hosts=data[trifinder].__call__(locs[:,0],locs[:,1])
     #if host==-1:
-        #print 'Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        #print('Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
         #out=np.empty(shape=(data[varname][timein,layer,host]).squeeze().shape)
         #out[:]=np.nan
         #return out
@@ -275,9 +274,9 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
 
 def cross_shore_transect_2d(grid,name,region,vec,npt):
     data = dt.loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-    print 'done load'
+    print('done load')
     data = dt.ncdatasort(data,trifinder=True)
-    print 'done sort'
+    print('done sort')
 
     cages=gt.loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
     if np.shape(cages)!=():
@@ -324,15 +323,15 @@ def cross_shore_transect_2d(grid,name,region,vec,npt):
     dist=np.empty((npt,))
     h=np.empty((npt,))
 
-    print 'interp uvw on path'
+    print('interp uvw on path')
     for i in range(0,len(xi)):
-        print i
+        print(i)
         fillarray_u[:,i],fillarray_v[:,i]=interp_vel(data,[xi[i],yi[i]])
         h[i]=interpN_at_loc(data,'h',[xi[i],yi[i]])
 
-    print 'Calc along path current'
+    print('Calc along path current')
     for i in range(0,len(xi)):
-        print i
+        print(i)
         inner=np.inner(np.vstack([fillarray_u[:,i],fillarray_v[:,i]]).T,snv)
         along=np.vstack([inner*snv[0],inner*snv[1]]).T
         tmpa=np.multiply(np.sign(np.arctan2(along[:,1],along[:,0])),np.linalg.norm(along,axis=1))
