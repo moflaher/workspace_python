@@ -13,7 +13,6 @@ import scipy.io as sio
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
-from StringIO import StringIO
 
 from gridtools import *
 from datatools import *

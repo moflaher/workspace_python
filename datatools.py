@@ -27,7 +27,7 @@ Functions
 =========
 """
 #load modules
-from __future__ import division
+from __future__ import division,print_function
 import collections
 import matplotlib.dates as dates
 
@@ -805,8 +805,25 @@ def loadCUR(filename):
     return CUR
                 
         
-        
+def loadkml(filename):
+    """
+    Loads a kml file.
+    """
 
+    try:
+        import fastkml
+    except ImportError:
+        print('Install fastkml.')
+        return
+        
+    doc=file(filename).read()
+    k=fastkml.kml.KML()
+    k.from_string(doc)
+    f1=[f.features() for f in k.features()]
+    pm=list(f1[0])
+    
+    return np.array(pm[0].geometry.coords)
+    
 
 
 
