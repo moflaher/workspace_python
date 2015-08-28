@@ -37,10 +37,10 @@ import sys
 
 
 # Define names and types of data
-name='fr_high_test'
-grid='fr_high'
+name='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
-starttime=1000
+starttime=384
 interpheight=1
 
 ### load the .nc file #####
@@ -66,7 +66,6 @@ tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['
 tempdic['siglay']=data['siglay'][:,0]
 tempdic['siglev']=data['siglev'][:,0]
 sio.savemat('data/ncgrid2mat/'+grid +'_basic.mat',mdict=tempdic)
-
 
 tempdic['ua']=data['ua'][starttime:,:]
 tempdic['va']=data['va'][starttime:,:]

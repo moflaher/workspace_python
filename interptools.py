@@ -2,6 +2,7 @@ from __future__ import division
 import numpy as np
 import matplotlib as mpl
 import scipy as sp
+import scipy.io as sio
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -326,7 +327,8 @@ def cross_shore_transect_2d(grid,name,region,vec,npt):
     print('interp uvw on path')
     for i in range(0,len(xi)):
         print(i)
-        fillarray_u[:,i],fillarray_v[:,i]=interp_vel(data,[xi[i],yi[i]])
+        fillarray_u[:,i]=interpE_at_loc(data,'ua',[xi[i],yi[i]])
+        fillarray_v[:,i]=interpE_at_loc(data,'va',[xi[i],yi[i]])
         h[i]=interpN_at_loc(data,'h',[xi[i],yi[i]])
 
     print('Calc along path current')

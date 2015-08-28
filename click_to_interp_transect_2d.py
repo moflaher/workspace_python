@@ -4,6 +4,7 @@ import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
+from projtools import *
 import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
@@ -68,9 +69,11 @@ vec=f.ginput(n=2,timeout=-1)
 plt.close(f)
 
 
-ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.018',region,vec,200)
-ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.007',region,vec,200)
-ipt.cross_shore_transect_2d(grid,'kit4_kelp_nodrag',region,vec,200)
+npts=500
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.018',region,vec,npts)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.011',region,vec,npts)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_20m_drag_0.007',region,vec,npts)
+ipt.cross_shore_transect_2d(grid,'kit4_kelp_nodrag',region,vec,npts)
 
 
 
