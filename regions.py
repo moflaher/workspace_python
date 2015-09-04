@@ -91,6 +91,7 @@ def makeregions():
         tmpdic={}  
         tmpdic['region']=np.array(row[0])
         tmpdic['passage']=row[1]
+        tmpdic['regionname']=row[1]
         tmpdic['passageP']=row[2]
         allregions[row[1]]=tmpdic
 

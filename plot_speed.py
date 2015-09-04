@@ -25,18 +25,23 @@ global savepath
 global data
 global cmin
 global cmax
+global vectorflag
+global coastflag
+global vidx
+global vector_scale
 
 
 
 # Define names and types of data
-name='fr_high_test'
-grid='fr_high'
+name='kit4_kelp_20m_drag_0.018_2d_5min'
+grid='kit4_kelp'
 datatype='2d'
-regionname='fr_mouth'
-starttime=0
-endtime=1000
+regionname='kit4_kelp_tight5'
+starttime=7680
+endtime=8180
 cmin=0
-cmax=2
+cmax=0.5
+
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
@@ -44,9 +49,13 @@ print 'done load'
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print 'done sort'
 
+vectorflag=True
+coastflag=True
+vector_spacing=200
+vector_scale=100
 
 cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
-if cages!=None:
+if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
     color='g'
     lw=.2
@@ -54,8 +63,14 @@ if cages!=None:
 
 
 region=regions(regionname)
+#region={}
+#region['regionname']='kelpfield_rightisland'
+#region['region']=np.array([-129.46,-129.48,52.640,52.665])
+vidx=equal_vectors(data,region,vector_spacing)
+print(np.shape(vidx))
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+
+savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -64,12 +79,16 @@ def speed_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
-#    plotcoast(ax,color='k',fill=True)
-#    if cages!=None:   
-#        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-#        ax.add_collection(lseg_t) 
+    if coastflag==True:
+        plotcoast(ax,color='k',fill=True)
+    if np.shape(cages)!=():   
+        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        ax.add_collection(lseg_t) 
+    if vectorflag==True:
+        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)        
+        
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
-    f.savefig(savepath + grid + '_' + regionname +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
