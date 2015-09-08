@@ -13,6 +13,7 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import h5py as h5
@@ -24,8 +25,8 @@ name2='kit4_kelp_20m_drag_0.018'
 #name='kit4_45days_3'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
-lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s0'
+regionname='kit4'
+lname='kit4_kelp_south_shiproute_10pp_s4_diff_1'
 
 
 ### load the .nc file #####
@@ -49,37 +50,37 @@ savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/movement_compare/
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 if 'savelag1' not in globals():
-    print "Loading savelag1"
+    print("Loading savelag1")
     fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
     savelag1={}
     for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z' or i=='saverandomstate'):
             continue
-        savelag1[i]=fileload['savelag'][i].value.T
+        savelag1[i]=(fileload['savelag'][i]).value.T
 
 if 'savelag2' not in globals():
-    print "Loading savelag2"
+    print("Loading savelag2")
     fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
     savelag2={}
     for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
+        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z' or i=='saverandomstate'):
             continue
         savelag2[i]=fileload['savelag'][i].value.T
 
-cols=3
+cols=4
 rows=3
 
 nos=rows*cols
-subtimes=np.linspace(0,5760,nos)
+subtimes=np.linspace(0,1800,nos)
 
-expand=2500
+expand=0
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)
 ax=ax.flatten()
 
 for i in range(0,len(ax)):
-    print i
+    print(i)
     ax[i].triplot(data['trigridxy'],lw=.05)
     lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
     ax[i].add_collection(lseg1)

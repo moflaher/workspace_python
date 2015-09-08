@@ -33,12 +33,12 @@ global vector_scale
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018_2d_5min'
+name='kit4_kelp_baroclinic_noic_nogotm'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight5'
-starttime=7680
-endtime=8180
+regionname='kit4_kelp_tight2_small'
+starttime=0
+endtime=20
 cmin=0
 cmax=0.5
 
@@ -67,7 +67,6 @@ region=regions(regionname)
 #region['regionname']='kelpfield_rightisland'
 #region['region']=np.array([-129.46,-129.48,52.640,52.665])
 vidx=equal_vectors(data,region,vector_spacing)
-print(np.shape(vidx))
 
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/speed/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
@@ -75,7 +74,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 def speed_plot(i):
-    print i
+    print(i)
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
