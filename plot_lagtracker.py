@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -29,9 +29,9 @@ lname='kit4_kelp_0.0_0_all_in_a_box'
 
 ### load the .nc file #####
 data = loadnc('/media/moe46/My Passport/kit4_runs/' + name +'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/' + lfolder + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)

@@ -49,9 +49,9 @@ plotspeed=False
 
 ### load the .nc file #####
 data = loadnc('runs/' +grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data,trifinder=True)
-print 'done sort'
+print('done sort')
 
 kelp=np.genfromtxt('data/misc/kelplocations.dat')
 

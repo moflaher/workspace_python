@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 from datatools import *
 import matplotlib.tri as mplt
@@ -8,9 +8,9 @@ import os as os
 
 ### load a timeslice from an .nc file #####
 data1 = load_timeslice('/home/moflaher/workspace_matlab/runs/beaufort3/3d/try16/output/',0,100,singlename='beaufort3_0001.nc',dim='3D')
-print 'done load'
+print('done load')
 data1 = ncdatasort(data1)
-print 'done sort'
+print('done sort')
 
 #### Grand passage region #####
 #data1 = regioner([-66.320543,-66.360025,44.242371,44.290312],data1,dim='3D')

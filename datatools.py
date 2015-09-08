@@ -27,7 +27,7 @@ Functions
 =========
 """
 #load modules
-from __future__ import division,print_function
+from __future__ import division,print_function,print_function
 import collections
 import matplotlib.dates as dates
 

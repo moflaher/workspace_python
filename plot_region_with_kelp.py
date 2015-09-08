@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -28,9 +28,9 @@ datatype='2d'
 
 ### load the .nc file #####
 data = loadnc('/media/moflaher/My Book/kit4_runs/' + name + '/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 cages=np.genfromtxt('/media/moflaher/My Book/kit4_runs/' +namek+ '/input/kit4_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)

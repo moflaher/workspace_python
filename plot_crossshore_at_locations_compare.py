@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -32,9 +32,9 @@ data = loadnc('/media/moflaher/My Book/'+grid+'/'+name+'/output/',singlename=gri
 data2 = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
 #data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 #data2 = loadnc('/media/moe46/Hardy/spet_18_work/'+name2+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 
 trigridxy = mplt.Triangulation(data['x'], data['y'],data['nv'])

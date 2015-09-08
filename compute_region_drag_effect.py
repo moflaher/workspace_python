@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -40,10 +40,10 @@ data = loadnc('/media/moflaher/MB_3TB/'+grid+'/'+name+'/output/',singlename=grid
 data2 = loadnc('/media/moflaher/My Book/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
 #data2 = loadnc('/media/moe46/My Passport/'+grid+'/'+name2+'/output/',singlename=grid + '_0001.nc')
 #data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
 data2 = ncdatasort(data2)
-print 'done sort'
+print('done sort')
 
 
 

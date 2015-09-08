@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -31,9 +31,9 @@ regionf=[.1,.11,.85,.85]
 
 ### load the .nc file #####
 data = loadnc('/media/moe46/My Passport/kit4_runs/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 cages=np.genfromtxt('/media/moe46/My Passport/kit4_runs/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)

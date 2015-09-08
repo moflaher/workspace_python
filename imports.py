@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 
 import sys
 sys.path.append('/home/moflaher/Desktop/workspace_python/')

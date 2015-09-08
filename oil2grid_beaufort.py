@@ -47,7 +47,7 @@ regionname='beaufort3'
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
 
 cages=sio.loadmat('oil_locations.mat')

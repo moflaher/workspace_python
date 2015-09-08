@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -31,9 +31,9 @@ lname='kit4_kelp_tight2_kelpfield_3elements_200x200_1000pp_s21'
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 cages=loadcage('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat')
 if np.shape(cages)!=():

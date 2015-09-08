@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -30,10 +30,10 @@ cmax=0.5
 ### load the .nc file #####
 data1 = loadnc('runs/'+grid1+'/'+name1+'/output/',singlename=grid1 + '_0001.nc')
 data2 = loadnc('runs/'+grid2+'/'+name2+'/output/',singlename=grid2 + '_0001.nc')
-print 'done load'
+print('done load')
 data1 = ncdatasort(data1)
 data2 = ncdatasort(data2)
-print 'done sort'
+print('done sort')
 
 
 savepath='figures/png/' + grid2 + '_' + datatype + '/misc/'

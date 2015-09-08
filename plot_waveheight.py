@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import matplotlib as mpl
 import scipy as sp
@@ -12,9 +12,9 @@ import os as os
 
 ### load a timeslice from an .nc file #####
 data = loadnc('/media/moflaher/My Book/kitimat3_runs/kitimat_wavetest_default_3sec/output/',singlename='kitimat3_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 
 

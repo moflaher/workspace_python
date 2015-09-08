@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *

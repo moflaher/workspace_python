@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -25,9 +25,9 @@ cmax=1
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 data['uvzeta']=(data['zeta'][starttime:,data['nv'][:,0]] + data['zeta'][starttime:,data['nv'][:,1]] + data['zeta'][starttime:,data['nv'][:,2]]) / 3.0
 zeta_grad=np.gradient(data['uvzeta'])[0]

@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -28,9 +28,9 @@ regionsub=['kit4_area1','kit4_area2','kit4_area3','kit4_area4']
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 
 region=regions(regionname)

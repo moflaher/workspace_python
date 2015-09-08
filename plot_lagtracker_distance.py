@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -32,9 +32,9 @@ ffontsize=16
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data,trifinder=True)
-print 'done sort'
+print('done sort')
 
 savepath='figures/png/' + grid + '_' + datatype + '/lagtracker/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)

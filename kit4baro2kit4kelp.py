@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -23,9 +23,9 @@ grid_old='kit4'
 datatype='2d'
 ### load the .nc file #####
 data_old = loadnc('runs/'+grid_old+'/'+name_old+'/output/',singlename=grid_old + '_0001.nc')
-print 'done load'
+print('done load')
 data_old = ncdatasort(data_old)
-print 'done sort'
+print('done sort')
 
 
 # Define names and types of data
@@ -34,9 +34,9 @@ grid_new='kit4_kelp'
 datatype='2d'
 ### load the .nc file #####
 data_new = loadnc('runs/'+grid_new+'/'+name_new+'/output/',singlename=grid_new + '_0001.nc')
-print 'done load'
+print('done load')
 data_new = ncdatasort(data_new)
-print 'done sort'
+print('done sort')
 
 
 indata_new=load_fvcom_files('runs/'+grid_new+'/'+name_new+'/input','kit4_kelp')

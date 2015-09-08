@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -26,9 +26,9 @@ endtime=400
 ### load the .nc file #####
 data1 = loadnc('/media/moe46/My Passport/kit4_runs/'+name1+'/output/',singlename=grid + '_0001.nc')
 data2 = loadnc('/media/moe46/My Passport/kit4_runs/'+name2+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data1 = ncdatasort(data1)
-print 'done sort'
+print('done sort')
 
 trigridxy = mplt.Triangulation(data1['x'], data1['y'],data1['nv'])
 

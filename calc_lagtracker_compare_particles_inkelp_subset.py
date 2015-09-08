@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -28,9 +28,9 @@ datatype='2d'
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data,trifinder=True)
-print 'done sort'
+print('done sort')
 
 lcages=loadcage('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat')
 if np.shape(lcages)!=():

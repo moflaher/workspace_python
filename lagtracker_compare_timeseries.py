@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -32,9 +32,9 @@ lname='element_85847_s6'
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name +'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/all_particles_short/' + name + '_'+name2+'/'+regionname+'/' +lname +'/'
 if not os.path.exists(savepath): os.makedirs(savepath)

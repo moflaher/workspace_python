@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
 from datatools import *
@@ -27,9 +27,9 @@ starttime=384
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name_orig+'/output/',singlename=grid + '_0001.nc')
 data2 = loadnc('runs/'+grid+'/'+name_change+'/output/',singlename=grid + '_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 data['time']=data['time']-678576
 
 savepath='figures/png/' + grid + '_' + datatype + '/tide_length/' + name_orig + '_' + name_change + '/' +regionname +'/'

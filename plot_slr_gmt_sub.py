@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division,print_function
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
@@ -30,9 +30,9 @@ subregion=regions('slr_upperbof')
 
 ### load the .nc file #####
 data = loadnc('runs/misc/sealevelrise/',singlename='sfm6e_0001.nc')
-print 'done load'
+print('done load')
 data = ncdatasort(data)
-print 'done sort'
+print('done sort')
 
 neifile=loadnei('runs/misc/sealevelrise/sfm6e.nei')
 
