@@ -257,16 +257,17 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
     e1=data['nbe'][hosts,1]
     e2=data['nbe'][hosts,2]
       
-    var_e=(data[varname][timein,layer,hosts])    
-    var_0=(data[varname][timein,layer,e0])
-    var_1=(data[varname][timein,layer,e1])
-    var_2=(data[varname][timein,layer,e2])    
+    var_e=(data[varname][timein,layer,hosts]).flatten()   
+    var_0=(data[varname][timein,layer,e0]).flatten()
+    var_1=(data[varname][timein,layer,e1]).flatten()
+    var_2=(data[varname][timein,layer,e2]).flatten()
     var_0[e0==-1]=0
     var_1[e1==-1]=0
     var_2[e2==-1]=0        
-
+    
     dvardx= data['a1u'][0,hosts]*var_e+data['a1u'][1,hosts]*var_0+data['a1u'][2,hosts]*var_1+data['a1u'][3,hosts]*var_2
     dvardy= data['a2u'][0,hosts]*var_e+data['a2u'][1,hosts]*var_0+data['a2u'][2,hosts]*var_1+data['a2u'][3,hosts]*var_2
+    
     var= var_e + dvardx*x0c + dvardy*y0c
         
     return var

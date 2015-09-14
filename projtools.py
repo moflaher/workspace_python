@@ -89,10 +89,9 @@ def regionll2xy(data,region):
         xp,yp=ll2m(data['nodell'][nhost,:],region['region'][[1,3]])
         xn,yn=ll2m(data['nodell'][nhost,:],region['region'][[0,2]])
     else:
-        region['centerxy']=data['uvnode'][nhost,:]
+        region['centerxy']=data['uvnode'][ehost,:]
         xp,yp=ll2m(data['uvnodell'][ehost,:],region['region'][[1,3]])
         xn,yn=ll2m(data['uvnodell'][ehost,:],region['region'][[0,2]])
-
 
     region['regionxy']=[region['centerxy'][0]+xn,region['centerxy'][0]+xp,region['centerxy'][1]+yn,region['centerxy'][1]+yp]      
 

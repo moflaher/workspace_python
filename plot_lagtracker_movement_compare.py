@@ -21,12 +21,12 @@ from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
 name='kit4_kelp_nodrag'
-name2='kit4_kelp_20m_drag_0.018'
+name2='kit4_kelp_nodrag'
 #name='kit4_45days_3'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4'
-lname='kit4_kelp_south_shiproute_10pp_s4_diff_1'
+regionname='kit4_kelp_tight2'
+lname='kit4_kelp_tight2_small_1element_north_fakeroute_4000x2000_10000pp_s0_diff_1'
 
 
 ### load the .nc file #####
@@ -56,7 +56,15 @@ if 'savelag1' not in globals():
     for i in fileload['savelag'].keys():
         if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z' or i=='saverandomstate'):
             continue
+            
         savelag1[i]=(fileload['savelag'][i]).value.T
+
+    #to fix weird sometimes tuple issue......
+    a,b=np.shape(savelag1['x'])
+    savelag1['x']=np.array([x[0] for x in savelag1['x'].flatten()]).reshape(a,b)
+    savelag1['y']=np.array([x[0] for x in savelag1['y'].flatten()]).reshape(a,b)
+
+    
 
 if 'savelag2' not in globals():
     print("Loading savelag2")
@@ -67,13 +75,18 @@ if 'savelag2' not in globals():
             continue
         savelag2[i]=fileload['savelag'][i].value.T
 
+    #to fix weird sometimes tuple issue......
+    a,b=np.shape(savelag2['x'])
+    savelag2['x']=np.array([x[0] for x in savelag2['x'].flatten()]).reshape(a,b)
+    savelag2['y']=np.array([x[0] for x in savelag2['y'].flatten()]).reshape(a,b)
+
 cols=4
 rows=3
 
 nos=rows*cols
 subtimes=np.linspace(0,1800,nos)
 
-expand=0
+expand=5000
 region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
 
 f, ax = plt.subplots(nrows=rows,ncols=cols, sharex=True, sharey=True)
@@ -82,8 +95,9 @@ ax=ax.flatten()
 for i in range(0,len(ax)):
     print(i)
     ax[i].triplot(data['trigridxy'],lw=.05)
-    lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
-    ax[i].add_collection(lseg1)
+    if np.shape(cages)!=():
+        lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
+        ax[i].add_collection(lseg1)
     ax[i].scatter(savelag1['x'][:,subtimes[i].astype(int)],savelag1['y'][:,subtimes[i].astype(int)],color='b',label='No drag',s=.25,zorder=10)
     ax[i].scatter(savelag2['x'][:,subtimes[i].astype(int)],savelag2['y'][:,subtimes[i].astype(int)],color='r',label='Drag',s=.25,zorder=15)
     ax[i].axis(region['regionxy'])
