@@ -21,12 +21,12 @@ from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
 name='kit4_kelp_nodrag'
-name2='kit4_kelp_nodrag'
+name2='kit4_kelp_20m_drag_0.018'
 #name='kit4_45days_3'
 grid='kit4_kelp'
 datatype='2d'
-regionname='kit4_kelp_tight2'
-lname='kit4_kelp_tight2_small_1element_north_fakeroute_4000x2000_10000pp_s0_diff_1'
+regionname='kit4_kelp_tight2_kelpfield'
+lname='kit4_kelp_tight2_small_1element_northwest_fakeroute_4000x2000_10000pp_s0_diff_1'
 
 
 ### load the .nc file #####

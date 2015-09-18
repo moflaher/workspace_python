@@ -17,22 +17,22 @@ import netCDF4 as n4
 
 
 # Define names and types of data
-name='vhfr_low_fricspg'
+name='vhfr_low_clean_hpc'
 grid='vhfr_low'
 datatype='2d'
 
 ###load old grid stuff
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print('done load')
-data = ncdatasort(data)
+#data = ncdatasort(data)
 print('done sort')
 indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,'vhfr_low_el_obc.nc')
 
 
 
 ###load new grid stuff
-name2='fr_high_test'
-grid2='fr_high'
+name2='vh_high_clean'
+grid2='vh_high'
 datatype='2d'
 
 
@@ -43,7 +43,7 @@ newbnodes=np.empty((len(indata['spgf_nodes']),1),dtype=int)
 
 #have to minus 1 from spgf_nodes to account for python indexing
 for i in range(0,len(indata['spgf_nodes'])):
-    newbnodes[i]=np.argmin( (indata2['nodell'][:,0]-data['nodell'][indata['spgf_nodes'][i]-1,0])**2+(indata2['nodell'][:,1]-data['nodell'][indata['spgf_nodes'][i]-1,1])**2)
+    newbnodes[i]=np.argmin( (indata2['nodell'][:,0]-indata['nodell'][indata['spgf_nodes'][i]-1,0])**2+(indata2['nodell'][:,1]-indata['nodell'][indata['spgf_nodes'][i]-1,1])**2)
 
 
 
