@@ -25,7 +25,7 @@ datatype='2d'
 regionname='kit4_kelp_tight2'
 starttime=407
 runtime=100
-forward=True
+forward=False
 
 
 
