@@ -18,11 +18,11 @@ from matplotlib.collections import PolyCollection as PC
 import matplotlib.path as path
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
-grid='kit4_kelp'
+name='fr_high_test_old'
+grid='fr_high'
 datatype='2d'
-regionname='kit4'
-starttime=384
+regionname='vh_harbour'
+
 
 
 ### load the .nc file #####
@@ -56,9 +56,14 @@ if np.shape(cages)!=():
 vec=f.ginput(n=2,timeout=-1)
 plt.close(f)
 
+
+ll1=np.min([vec[0][0],vec[1][0]])
+ll2=np.max([vec[0][0],vec[1][0]])
+ll3=np.min([vec[1][1],vec[0][1]])
+ll4=np.max([vec[1][1],vec[0][1]])
+
 print(vec)
 print('')
 print('region={}')
-print('region[\'region\']=np.array([{},{},{},{}])'.format(vec[0][0],vec[1][0],vec[1][1],vec[0][1]))
-
+print('region[\'region\']=np.array([{},{},{},{}])'.format(ll1,ll2,ll3,ll4))
 

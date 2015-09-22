@@ -1017,6 +1017,24 @@ def get_sidelength(data):
     
     return data
     
+def get_dhh(data):
+    dh=np.zeros([len(data['nv']),])
+    for i in range(0,len(data['nv'])):
+        one=data['h'][data['nv'][i,0]]
+        two=data['h'][data['nv'][i,1]]
+        three=data['h'][data['nv'][i,2]]
+        hmin=np.min([one,two,three])
+        first=np.absolute(one-two)/hmin
+        second=np.absolute(two-three)/hmin
+        thrid=np.absolute(three-one)/hmin
+	
+        if ( (first > 0) or (second >0) or (thrid> 0) ):
+            dh[i]=np.max([first,second,thrid]);
+            
+    data['dhh']=dh
+    return data
+
+    
  
 def save_segfile(segfile,outfile=None):
     """

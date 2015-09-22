@@ -18,10 +18,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='fr_high_test'
+name='fr_high_clean_hpc'
 grid='fr_high'
 #regionlist=regions()
-regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','fr_area3']
+regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','fr_area3','vh_whole','firstnarrows','secondnarrows','vhfr_tight','vhfr_whole']
+#regionlist=['firstnarrows','secondnarrows']
 datatype='2d'
 
 
@@ -29,7 +30,10 @@ datatype='2d'
 ### load the mesh files #####
 data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
 data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
+data=get_nv(data)
 data=ncdatasort(data)
+data=get_sidelength(data)
+data=get_dhh(data)
 
 savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -45,7 +49,7 @@ for regionname in regionlist:
     if ((len(nidx)==0) or (len(eidx)==0)):
         continue
     
-    print 'plotting region: ' +regionname
+    print('plotting region: ' +regionname)
 
 
     # Plot mesh
@@ -85,44 +89,20 @@ for regionname in regionlist:
 
 
     # Plot dh/h
-    dh=np.zeros([len(data['nv']),])
-    for i in range(0,len(data['nv'])):
-        one=data['h'][data['nv'][i,0]]
-        two=data['h'][data['nv'][i,1]]
-        three=data['h'][data['nv'][i,2]]
-        hmin=np.min([one,two,three])
-        first=np.absolute(one-two)/hmin
-        second=np.absolute(two-three)/hmin
-        thrid=np.absolute(three-one)/hmin
-	
-        if ( (first > 0) or (second >0) or (thrid> 0) ):
-            dh[i]=np.max([first,second,thrid]);
-    clims=np.percentile(dh[nidx],[1,99])
-
+    clims=np.percentile(data['dhh'][nidx],[1,99])
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],dh,vmin=clims[0],vmax=clims[1])
+    triax=ax.tripcolor(data['trigrid'],data['dhh'],vmin=clims[0],vmax=clims[1])
     prettyplot_ll(ax,setregion=region,grid=True,cblabel=r'$\frac{\delta H}{H}$',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_dhh.png',dpi=600)
     plt.close(f)
 
 
     # Plot sidelength
-    sl=np.zeros([len(data['nv']),])
-    sidemin=1000000
-    sidemax=0
-    for i in range(0,len(data['nv'])):
-        slmin=0
-        for j in range(3):
-            slmin=np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2)+slmin
-            sidemin=np.min([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemin])
-            sidemax=np.max([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemax])
-        sl[i]=slmin/3
-    clims=np.percentile(sl[eidx],[1,99])
-
+    clims=np.percentile(data['sl'][eidx],[1,99])
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],sl,vmin=clims[0],vmax=clims[1])
+    triax=ax.tripcolor(data['trigrid'],data['sl'],vmin=clims[0],vmax=clims[1])
     prettyplot_ll(ax,setregion=region,grid=True,cblabel=r'Sidelength (m)',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_sidelength.png',dpi=600)
     plt.close(f)
