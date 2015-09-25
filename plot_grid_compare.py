@@ -18,8 +18,8 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name0='vhfr_low'
-name1='vh_high'
+name0='vhfr_low_test'
+name1='fr_high'
 regionlist=['vhfr_whole','fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','firstnarrows','secondnarrows','vh_whole']
 datatype='2d'
 
@@ -33,14 +33,14 @@ data0=ncdatasort(data0)
 data0=get_sidelength(data0)
 
 
-data1=loadnei('runs/vh_high/vh_high_clean_hpc/input/'+name1+'.nei')
+data1=loadnei('runs/fr_high/fr_high_clean_hpc/input/'+name1+'.nei')
 data1['x'],data1['y'],data1['proj']=lcc(data1['lon'],data1['lat'])
 data1=get_nv(data1)
 data1=ncdatasort(data1)
 data1=get_sidelength(data1)
 
 
-savepath='figures/png/misc/mesh_compare/' + name0+'_'+name1 +'/'
+savepath='figures/png/misc/grid_compare/' + name0+'_'+name1 +'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -96,13 +96,13 @@ for regionname in regionlist:
     plt.close(f)
 
     # Plot depth
-    clims0=np.percentile(data0['h'][nidx0],[1,99])
-    clims1=np.percentile(data1['h'][nidx1],[1,99])
+    clims0=np.percentile(np.hstack([data0['h'][nidx0],data1['h'][nidx1]]),[1,99])
+
 
     f,ax=place_axes(region,2,cb=True)  
     triax0=ax[0].tripcolor(data0['trigrid'],data0['h'],vmin=clims0[0],vmax=clims0[1])
-    triax1=ax[1].tripcolor(data1['trigrid'],data1['h'],vmin=clims1[0],vmax=clims1[1])
-    ppll_sub(ax,setregion=region,cb=[triax0,triax1],cblabel=['Depth (m)','Depth (m)'],llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
+    triax1=ax[1].tripcolor(data1['trigrid'],data1['h'],vmin=clims0[0],vmax=clims0[1])
+    ppll_sub(ax,setregion=region,cb=triax0,cblabel='Depth (m)',llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
     ABC=['A','B']
     figW, figH = f.get_size_inches()
     plt.draw()
@@ -110,7 +110,7 @@ for regionname in regionlist:
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
         axbb=ax[i].get_axes().get_position().bounds
         ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
-    f.savefig(savepath + name0+'_'+name1 +'_'+regionname+'depth_percentile.png',dpi=300)
+    f.savefig(savepath + name0+'_'+name1 +'_'+regionname+'_depth_percentile.png',dpi=300)
     plt.close(f)
 
 

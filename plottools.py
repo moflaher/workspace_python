@@ -56,6 +56,7 @@ def prettyplot_ll(axin,**kwargs):
     cblabel=None
     skinny=False
     fontsize=12
+    ticksout=False
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -72,6 +73,8 @@ def prettyplot_ll(axin,**kwargs):
                 colorax=value    
             if (key=='fontsize'):
                 fontsize=value 
+            if (key=='ticksout'):
+                ticksout=value 
                
 
 
@@ -85,6 +88,9 @@ def prettyplot_ll(axin,**kwargs):
 
     for label in axin.get_xticklabels() +axin.get_yticklabels():
         label.set_fontsize(fontsize)
+        
+    if ticksout:
+        axin.tick_params(direction='out')
 
 
     aspect=axin.get_aspect()
@@ -203,6 +209,7 @@ def plotcoast(axin,**kwargs):
         ls - the style of the coastline's lines (default 1).
         fill - True/False to fill in the coastline (default False)
         fcolor - the color used to fill the coastline (default 0.75, dark gray)
+        ticksout - Face the axis ticksout  (R style - default False) 
     """ 
 
    
@@ -327,7 +334,7 @@ def ax_label_spacer(axin):
         label.set_visible(False)
 
 
-def place_axes(region,numplots,cb=False,rotation=False):
+def place_axes(region,numplots,cb=True,rotation=False):
     """
     For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
@@ -335,7 +342,7 @@ def place_axes(region,numplots,cb=False,rotation=False):
         region - The region being plotted, needed for aspect ratio
         numplots - The number of axes being define   
     :Optional:
-        cb - True/False option for colorbar (default False)
+        cb - True/False option for colorbar (default True So that plots of the same area appear the same in frame.)
     """
 
     #note to check region orientations this function uses aspect*fa. It is possible it may need to use dr as well. If weird axes orientation are return check into the effect of dr.
@@ -362,7 +369,9 @@ def place_axes(region,numplots,cb=False,rotation=False):
 
     axisgap=.01
 
-    spaceper=(space-axisgap*numplots)/numplots
+    #works but small can probably do better
+    spaceper=(space-start-axisgap*numplots)/numplots
+    #spaceper=(space-axisgap*numplots)/numplots
 
 
     axf=np.zeros((numplots,4))
@@ -376,8 +385,17 @@ def place_axes(region,numplots,cb=False,rotation=False):
          
 
     else:
-        ytarget=spaceper
-        xtarget=np.min([1-.125-start,spaceper*fa/aspect/dr])    
+        #if (spaceper*fa/aspect/dr)<(1-.125-start):
+            #xtarget=spaceper*fa/aspect/dr
+            #ytarget=xtarget*dr*aspect/fa
+        #else:
+            #ytarget=spaceper
+            #xtarget=np.min([1-.125-start,spaceper*fa/aspect/dr])    
+            
+            
+        xtarget=spaceper*fa/aspect/dr
+        ytarget=xtarget*dr*aspect/fa
+
         axf[0,:]=[.125,.1,xtarget,1]
         for i in range(1,numplots):
             axf[i,:]=[.125,.1+(axisgap+ytarget)*i,xtarget,1]
@@ -406,6 +424,7 @@ def ppll_sub(axin,**kwargs):
         cbticksize -  The fontsize of the colorbar ticks.
         fontsize -  The fontsize of the x and y ticks.
         llfontsize -  The fontsize of the x and y axis labels.
+        ticksout - Face the axis ticksout  (R style - default False) 
         
     """
     cblabel=None
@@ -416,6 +435,7 @@ def ppll_sub(axin,**kwargs):
     cbticksize=8
     llfontsize=12
     cbtickrotation=0
+    ticksout=False
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -442,10 +462,17 @@ def ppll_sub(axin,**kwargs):
                 llfontsize=value 
             if (key=='cbtickrotation'):
                 cbtickrotation=value 
+            if (key=='ticksout'):
+                ticksout=value 
                
     f=axin[0].get_figure()
     figW, figH = f.get_size_inches()
     fa = figH / figW
+    
+    if ticksout:
+        for ax in axin:
+            ax.tick_params(direction='out')
+    
 
     aspect=axin[0].get_aspect()
     if (aspect>=1/fa):
@@ -494,7 +521,7 @@ def ppll_sub(axin,**kwargs):
             else:
                 for i,ax in enumerate(axin):
                     axbb=ax.get_axes().get_position().bounds
-                    axca=f.add_axes([axbb[0]+axbb[2]+.025,axbb[1],.025,axbb[3]])
+                    axca=f.add_axes([axbb[0]+axbb[2]+.01,axbb[1],.025,axbb[3]])
                     cb=plt.colorbar(colorax[i],cax=axca)
                     cb.set_label(cblabel[i],fontsize=cblabelsize)     
                     for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():
@@ -513,7 +540,7 @@ def ppll_sub(axin,**kwargs):
                     tick.set_fontsize(cbticksize)
 
             else:
-                ax0ca=f.add_axes([axstart[0]+axstart[2]+.025,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
+                ax0ca=f.add_axes([axstart[0]+axstart[2]+.01,axend[1],0.025,axstart[1]+axstart[3]-axend[1]])
                 cb=plt.colorbar(colorax,cax=ax0ca)
                 cb.set_label(cblabel,fontsize=cblabelsize)
                 for tick in cb.ax.get_yticklabels()+cb.ax.get_xticklabels():

@@ -33,12 +33,12 @@ global vector_scale
 
 
 # Define names and types of data
-name='vhfr_low_test'
-grid='vhfr_low'
+name='vh_high_test_2'
+grid='vh_high'
 datatype='2d'
 regionname='vh_whole'
 starttime=0
-endtime=1000
+endtime=238
 cmin=0
 cmax=2
 
@@ -92,7 +92,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(1)
+pool = multiprocessing.Pool(4)
 pool.map(speed_plot,range(starttime,endtime))
 
 
