@@ -33,14 +33,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='kit4_kelp_baroclinic_noic_nogotm'
-grid='kit4_kelp'
+name='vhfr_low_test'
+grid='vhfr_low'
 datatype='2d'
-regionname='kit4_kelp_tight2_small'
+regionname='vh_whole'
 starttime=0
-endtime=155
+endtime=1000
 cmin=0
-cmax=0.5
+cmax=2
 
 
 ### load the .nc file #####
@@ -49,7 +49,7 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=True
+vectorflag=False
 coastflag=True
 vector_spacing=200
 vector_scale=100
@@ -92,7 +92,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(4)
+pool = multiprocessing.Pool(1)
 pool.map(speed_plot,range(starttime,endtime))
 
 

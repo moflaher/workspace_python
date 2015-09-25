@@ -19,12 +19,12 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='fr_high_test'
-grid='fr_high'
+name='vhfr_low_test'
+grid='vhfr_low'
 datatype='2d'
-regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','fr_area3']
-starttime=300
-plotgrid=True
+regionlist=['vhfr_whole','fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','firstnarrows','secondnarrows','vh_whole']
+starttime=500
+plotgrid=False
 
 
 ### load the .nc file #####
@@ -51,7 +51,7 @@ for regionname in regionlist:
     if ((len(nidx)==0) or (len(eidx)==0)):
         continue
     
-    print 'plotting region: ' +regionname
+    print('plotting region: ' +regionname)
 
     # Plot mean speed
     meanspeed=(np.sqrt(data['ua'][starttime:,]**2 +data['va'][starttime:,]**2)).mean(axis=0)
@@ -108,7 +108,6 @@ for regionname in regionlist:
     prettyplot_ll(ax,setregion=region,grid=plotgrid,cblabel=r'Mean Zeta (m)',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_meanzeta_percentile.png',dpi=600)
     plt.close(f)
-
 
 
     # Plot tidal range

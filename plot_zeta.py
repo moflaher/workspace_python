@@ -25,10 +25,10 @@ global nidx
 
 
 # Define names and types of data
-name='fr_high_test'
-grid='fr_high'
+name='vhfr_low_test'
+grid='vhfr_low'
 datatype='2d'
-regionname='fr_mouth'
+regionname='vh_whole'
 starttime=0
 endtime=1000
 
@@ -55,6 +55,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 def zeta_plot(i):
+    print(i)
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     nidxh=data['zeta'][i,nidx]
@@ -70,7 +71,7 @@ def zeta_plot(i):
 
 
 
-pool = multiprocessing.Pool(4)
+pool = multiprocessing.Pool(1)
 pool.map(zeta_plot,range(starttime,endtime))
 
 

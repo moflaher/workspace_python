@@ -77,7 +77,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-124,   -121.95,    48.65,    49.8],'vhfr_whole','Complete Domain for vhfr grids']])
     tl=np.vstack([tl,        [[-123.96833,   -122,    48.797548,   49.69656],'vhfr_tight','Complete Domain for vhfr grids']])
     tl=np.vstack([tl,        [[-123.325,   -121.975,    48.95,    49.6],'fr_whole','fr_whole']])
-    tl=np.vstack([tl,        [[-123.3,   -123.0,    49,    49.275],'fr_mouth','fr_mouth']])
+    tl=np.vstack([tl,        [[-123.33,   -123.0,    49,    49.275],'fr_mouth','fr_mouth']])
     tl=np.vstack([tl,        [[-122.75,   -122.45,    49.25,    49.55],'pitt_lake','pitt_lake']])
     tl=np.vstack([tl,        [[-123.1,   -122.8,    49.075,    49.235],'fr_area1','fr_area1']])
     tl=np.vstack([tl,        [[-122.8,   -122.525,    49.14,    49.27],'fr_area2','fr_area2']])
@@ -85,7 +85,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-123.286, -122.815,  49.242,   49.488],'vh_whole','vh_whole']])
     tl=np.vstack([tl,        [[-123.191, -122.968,  49.256,   49.348],'vh_harbour','vh_harbour']])
     tl=np.vstack([tl,        [[-123.16, -123.095,  49.291,   49.332],'firstnarrows','firstnarrows']])
-    tl=np.vstack([tl,        [[-123.045, -122.995,  49.283,   49.310],'secondnarrows','secondnarrows']])
+    tl=np.vstack([tl,        [[-123.04, -123.0,  49.288,   49.310],'secondnarrows','secondnarrows']])
 
 
     allregions={}  
