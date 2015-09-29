@@ -334,7 +334,7 @@ def ax_label_spacer(axin):
         label.set_visible(False)
 
 
-def place_axes(region,numplots,cb=True,rotation=False):
+def place_axes(region,numplots,cb=True,rotation=True):
     """
     For placing "subplot" axes when setting aspect ratio. Function starts and returns the figure and axes.
 
@@ -352,56 +352,79 @@ def place_axes(region,numplots,cb=True,rotation=False):
     aspect=get_aspectratio(region)
     dr=get_data_ratio(region)
     figW, figH = f.get_size_inches()
-    fa = figH / figW
-
-    space=.8
-    if aspect*fa>=1:
-        space=.775    
-        rotation=True
-
-    start=.1
-    if cb==True:
-        start=start+.125
-    #quick fix for pushing xlabel off the plot when rotating xticklabels
-    #works for my use case probably not all
-    if rotation==True:
-        start=start+.125
-
-    axisgap=.01
-
-    #works but small can probably do better
-    spaceper=(space-start-axisgap*numplots)/numplots
-    #spaceper=(space-axisgap*numplots)/numplots
-
-
+    fa = figH / figW    
+            
+    #Define the working space for plotting
+    #Default to assuming colorbar so regions are the same on the canvas regardless
+    #Can override colorbar with cb=False
+    ystart=0.1
+    yspace=0.8
+    xstart=0.125
+    xspace=0.775
+    axisgap=0.01   
     axf=np.zeros((numplots,4))
-
-    if aspect*fa>=1:  
-        xtarget=spaceper  
-        ytarget=np.min([1-.1-start,spaceper*dr*aspect/fa])
-        axf[0,:]=[.125,start,1,ytarget]
+     
+            
+    if  (aspect>=1/fa):
+        #For axes that are taller then wide
+        
+        #Left value is colorbar width in ppll_sub 
+        #Right value is a guess at a general text width
+        if cb==True:
+            cbspace=0.1
+        else:
+            cbspace=0
+            
+        if rotation==True:
+            rotspace=0.05
+        else:
+            rotspace=0  
+            
+        #How much space per plot
+        spaceper=(xspace-axisgap*(numplots-1))/numplots
+        
+        #Given the available horizontal space per plot where will the axes width endup
+        ytarget=spaceper*dr*aspect/fa
+        #If the axes width plus colorbar width is greater than the space.
+        #Then decrease the axes width to the xspace minus the colorbar space
+        if (ytarget+cbspace+rotspace)>yspace:
+            ytarget=yspace-cbspace-rotspace
+        #Figure out the final plot height so we can place the axes in the correct locations
+        xtarget=ytarget*fa/aspect/dr
+        
+        
+        axf[0,:]=[xstart,ystart+cbspace+rotspace,1,ytarget]
         for i in range(1,numplots):
-            axf[i,:]=[.125+(axisgap+xtarget)*i,start,1,ytarget]
-         
-
+            axf[i,:]=[xstart+(axisgap+xtarget)*i,ystart+cbspace+rotspace,1,ytarget]
+        
     else:
-        #if (spaceper*fa/aspect/dr)<(1-.125-start):
-            #xtarget=spaceper*fa/aspect/dr
-            #ytarget=xtarget*dr*aspect/fa
-        #else:
-            #ytarget=spaceper
-            #xtarget=np.min([1-.125-start,spaceper*fa/aspect/dr])    
-            
-            
+        #For axes that are wider then tall       
+        
+        #Left value is colorbar width in ppll_sub 
+        #Right value is a guess at a general text width
+        if cb==True:
+            cbspace=0.025+0.035+axisgap
+        else:
+            cbspace=0
+        
+        #How much space per plot
+        spaceper=(yspace-axisgap*(numplots-1))/numplots
+        
+        #Given the available vertical space per plot where will the axes width endup
         xtarget=spaceper*fa/aspect/dr
+        #If the axes width plus colorbar width is greater than the space.
+        #Then decrease the axes width to the xspace minus the colorbar space
+        if (xtarget+cbspace)>xspace:
+            xtarget=xspace-cbspace
+        #Figure out the final plot height so we can place the axes in the correct locations
         ytarget=xtarget*dr*aspect/fa
-
-        axf[0,:]=[.125,.1,xtarget,1]
+        
+        axf[0,:]=[xstart,ystart,xtarget,1]
         for i in range(1,numplots):
-            axf[i,:]=[.125,.1+(axisgap+ytarget)*i,xtarget,1]
-
+            axf[i,:]=[xstart,ystart+(axisgap+ytarget)*i,xtarget,1]  
         axf=np.flipud(axf)
-
+                    
+    
     for i in range(numplots):
         axarr[i]=f.add_axes(axf[i,:])
 
