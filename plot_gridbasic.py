@@ -18,24 +18,26 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='fr_high_clean_hpc'
-grid='fr_high'
+name='vh_high_smoothed_dhh_1.00_loop_4'
+grid='vh_high'
 #regionlist=regions()
-regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','fr_area3','vh_whole','firstnarrows','secondnarrows','vhfr_tight','vhfr_whole']
+regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
 #regionlist=['firstnarrows','secondnarrows']
 datatype='2d'
 
 
 
 ### load the mesh files #####
-data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
-data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
+#data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
+#data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
+data=loadnei('data/grid_stuff/' +name+ '.nei')
+data['x'],data['y'],proj=lcc(data['lon'],data['lat'])
 data=get_nv(data)
 data=ncdatasort(data)
 data=get_sidelength(data)
 data=get_dhh(data)
 
-savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/'
+savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/' +name + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

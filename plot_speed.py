@@ -33,14 +33,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='vh_high_test_2'
-grid='vh_high'
+name='kit4_kelp_20m_drag_0.018_ts_test'
+grid='kit4_kelp'
 datatype='2d'
-regionname='vh_whole'
+regionname='kit4_kelp_tight2_kelpfield'
 starttime=0
-endtime=238
+endtime=400
 cmin=0
-cmax=2
+cmax=0.5
 
 
 ### load the .nc file #####

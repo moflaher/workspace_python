@@ -59,11 +59,11 @@ def loadnei(neifilename=None):
     neifile['maxnei']=maxnei
     neifile['llminmax']=llminmax
 
-    neifile['nodenumber']=t_data[:,0]
+    neifile['nodenumber']=t_data[:,0].astype(int)
     neifile['nodell']=t_data[:,1:3]
-    neifile['bcode']=t_data[:,3]
+    neifile['bcode']=t_data[:,3].astype(int)
     neifile['h']=t_data[:,4]
-    neifile['neighbours']=t_data[:,5:]
+    neifile['neighbours']=t_data[:,5:].astype(int)
     neifile['lon']=t_data[:,1]
     neifile['lat']=t_data[:,2]
     
