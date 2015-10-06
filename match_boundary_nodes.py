@@ -17,8 +17,8 @@ import netCDF4 as n4
 
 
 # Define names and types of data
-name='fr_high_clean_hpc_old'
-grid='fr_high'
+name='vhfr_low_clean_hpc'
+grid='vhfr_low'
 datatype='2d'
 
 ###load old grid stuff
@@ -26,13 +26,13 @@ datatype='2d'
 print('done load')
 #data = ncdatasort(data)
 print('done sort')
-indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,grid+'_el_obc.nc')
+indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,grid+'_spectide.nc')
 
 
 
 ###load new grid stuff
-name2='vh_high_clean_hpc'
-grid2='vh_high'
+name2='fr_high_clean_hpc'
+grid2='fr_high'
 datatype='2d'
 
 
@@ -61,7 +61,7 @@ save_obcfile(indatasave,'data/grid_stuff/',grid2)
 
 
 #new ncfile name
-ncid = n4.Dataset('data/grid_stuff/'+grid2+'_el_obc.nc', 'r+',format='NETCDF3_CLASSIC')
+ncid = n4.Dataset('data/grid_stuff/'+grid2+'_spectide.nc', 'r+',format='NETCDF3_CLASSIC')
 ncid.variables['obc_nodes'][:]=newbnodes+1
 ncid.close()
 

@@ -827,16 +827,12 @@ def loadkml(filename):
 
 def loadcur(filename,exact=False):
         
-    if exact==True:
-        files=[filename]
-    else:
-        files=glob.glob(filename)
-        files.sort()
+    files=glob.glob(filename)
+    files.sort()
 
-    returndic={}
-    first=True
+    returndic={} 
 
-    for fname in files:
+    for j,fname in enumerate(files):
 
         fp=open(fname,'r')
 
@@ -856,7 +852,6 @@ def loadcur(filename,exact=False):
                     sline=line.split()  
                     indata['bin']=int(sline[5][:-1])
                     indata['range']=np.array([int(val) for val in sline[6][:-1].split('-')])
-                    indata['binh']=indata['range'].mean()
             else:
                 if headerdone==False:
                     headerdone=True
@@ -876,24 +871,10 @@ def loadcur(filename,exact=False):
                     indata['v'][i-arrstart]=float(sline[3])
                 else:
                     print('Unhandled Case')
-        fp.close()
+        fp.close()        
         
-        if first:
-            first=False
-            returndic=indata
-            returndic['time']=dates.datestr2num(returndic['timestr'])
-        else:
-            fields=['u','v','bin','range','binh']
-            for key in fields:
-                returndic[key]=np.vstack([returndic[key],indata[key]])
-
-
-    fields=['u','v']
-    for key in fields:
-        returndic[key]=returndic[key].T
-    fields=['bin','binh']
-    for key in fields:
-        returndic[key]=returndic[key].flatten()
+        returndic[j+1]=indata
+        returndic[j+1]['time']=dates.datestr2num(returndic[j+1]['timestr'])
         
     return returndic
 
