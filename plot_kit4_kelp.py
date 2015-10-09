@@ -117,8 +117,8 @@ axsub1.text(-129.2725,52.775,'Aristazabal',fontsize=6,rotation=-45)
 axsub1.text(-129.2725,52.755,'Island',fontsize=6,rotation=-45)
 axsub1.text(-129.39,52.675,'Moore Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 axsub1.text(-129.53,52.78,'Rennison Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
-axsub1.text(-129.53,52.5,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None','alpha':1, 'pad':3})
-axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+#axsub1.text(-129.53,52.5,'Conroy Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None','alpha':1, 'pad':3})
+#axsub1.text(-129.4,52.485,'Harvey Island',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
 
 
@@ -219,8 +219,11 @@ aa=axsub3.text(rn['center'][0],rn['center'][1],'4',fontsize=12,rotation=0,color=
 axsub3.plot([-129.471,-129.471],[52.645,52.656],color='m',lw=1)
 #axsub3.plot([-129.4866, -129.4866],[52.6397,   52.6499],color='hotpink',lw=1)
 axsub3.plot([-129.4944, -129.4748],[52.6331,   52.6601],color='r',lw=1)
-axsub3.plot([-129.4866, -129.4866],[52.6397,52.6448],color='k',lw=1)
+#axsub3.plot([-129.4866, -129.4866],[52.6397,52.6448],color='k',lw=1)
+axsub3.plot([-129.4931, -129.4830],[52.6477,   52.6500],color='k',lw=1)
  
+axsub3.text(-129.4775,52.64,'McKenney Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
+
 
 axsub3.axis(region3['region'])
 axsub3.set_aspect(get_aspectratio(region3))

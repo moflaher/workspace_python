@@ -879,7 +879,48 @@ def loadcur(filename,exact=False):
     return returndic
 
 
-
+def loadslev(filename):
+    
+    with open(filename) as fp:
+        numlines = len(fp.readlines())
+        fp.seek(0)
+        cnt=0
+        
+        rd={}
+        rd['timestr']=np.empty((numlines-8,),dtype='S16')
+        rd['zeta']=np.zeros((numlines-8,))              
+        
+        for i,line in enumerate(fp.readlines()):
+            line=line.replace('\r','').replace('\n','') 
+            if '' == line:
+                continue
+            if i<8:                               
+                if 'Station_Name' in line:
+                    rd['Station_Name']=line[13:]
+                if 'Station_Number' in line:
+                    rd['Station_Number']=line[15:]
+                if 'Latitude_Decimal_Degrees' in line:
+                    rd['lat']=float(line[25:])           
+                if 'Longitude_Decimal_Degrees' in line:
+                    rd['lon']=-1*float(line[26:])    
+                if 'Datum' in line:
+                    rd['datum']=line[6:]
+                if 'Time_zone' in line:
+                    rd['tz']=line[10:]
+            else:
+                lsplit=line.split(',')
+                rd['timestr'][cnt]=lsplit[0]
+                rd['zeta'][cnt]=lsplit[1]
+                cnt+=1
+          
+        #remove empty values due to extra spaces in file  
+        idx=np.argwhere(rd['timestr']=='')
+        rd['timestr']=np.delete(rd['timestr'],idx)
+        rd['zeta']=np.delete(rd['zeta'],idx)
+        
+        rd['time']=dates.datestr2num(rd['timestr'])
+        
+    return rd
 
 
 

@@ -38,7 +38,7 @@ grid='kit4_kelp'
 datatype='2d'
 regionname='kit4_kelp_tight2_kelpfield'
 starttime=0
-endtime=400
+endtime=100
 cmin=0
 cmax=0.5
 
