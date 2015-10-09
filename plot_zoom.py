@@ -88,10 +88,10 @@ for i in range(spacing):
         label.set_visible(True)
     for label in ax.get_xticklabels()[::2]+ax.get_yticklabels()[::2]:
         label.set_visible(False)
-    f.savefig(savepath + grid + '_'+ name +'_'+regionname1+'_'+regionname2+'_'+stype+'_'+'spacing_'+("%d"%spacing)+'_'+("%05d"%i)+'_grid.png',dpi=300)
+    f.savefig(savepath + grid + '_'+ name +'_'+regionname1+'_'+regionname2+'_'+stype+'_'+'spacing_'+("%d"%spacing)+'_'+("%05d"%i)+'_grid.png',dpi=150)
     #plt.close(f)
 
-for j in range(i,i+20):
-    f.savefig(savepath + grid + '_'+ name +'_'+regionname1+'_'+regionname2+'_'+stype+'_'+'spacing_'+("%d"%spacing)+'_'+("%05d"%j)+'_grid.png',dpi=300)
+for j in range(i,i+50):
+    f.savefig(savepath + grid + '_'+ name +'_'+regionname1+'_'+regionname2+'_'+stype+'_'+'spacing_'+("%d"%spacing)+'_'+("%05d"%j)+'_grid.png',dpi=150)
 
 
