@@ -174,7 +174,7 @@ def expand_region(region,dist=0,shift=0):
     if shift!=0:
         shift=np.atleast_1d(np.array(shift))
         lon_space=ll_dist(region,shift[0])
-        if len(dist)==2:
+        if len(shift)==2:
             lat_space=shift[1]/111120 
             y_dist=shift[1]   
         else:

@@ -18,10 +18,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='vh_high'
-grid='vh_high'
+name='vhfr_low'
+grid='vhfr_low'
 #regionlist=regions()
 regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
+regionlist=['vh_whole']
 #regionlist=['firstnarrows','secondnarrows']
 datatype='2d'
 
@@ -30,7 +31,7 @@ datatype='2d'
 ### load the mesh files #####
 #data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
 #data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
-data=loadnei('runs/'+grid+'/vh_high_clean_hpc/input/' +name+ '.nei')
+data=loadnei('runs/'+grid+'/vhfr_low_clean_hpc/input/' +name+ '.nei')
 data['x'],data['y'],proj=lcc(data['lon'],data['lat'])
 data=get_nv(data)
 data=ncdatasort(data)
@@ -60,6 +61,15 @@ for regionname in regionlist:
     ax.triplot(data['trigrid'],lw=.1)
     prettyplot_ll(ax,setregion=region,grid=True,title=regionname)
     f.savefig(savepath + grid + '_' + regionname +'_grid.png',dpi=300)
+    plt.close(f)
+    
+    # Plot mesh
+    f=plt.figure()
+    ax=plt.axes([.125,.1,.775,.8])
+    ax.triplot(data['trigrid'],lw=.1)
+    prettyplot_ll(ax,setregion=region)
+    plotcoast(ax,filename='pacific_harbour.nc',color='0.75',fill=True)
+    f.savefig(savepath + grid + '_' + regionname +'_grid_pretty.png',dpi=300)
     plt.close(f)
 
 

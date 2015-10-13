@@ -14,8 +14,8 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
-grid='kit4_kelp'
+name='vh_high_test_2'
+grid='vh_high'
 regionlist=regions()
 datatype='2d'
 

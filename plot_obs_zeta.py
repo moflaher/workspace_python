@@ -19,7 +19,7 @@ import glob
 
 
 # Define names and types of data
-name='vhfr_low_20120201_0.02_0.01'
+name='2012-02-01_2012-03-01_0.02_0.001'
 grid='vhfr_low'
 datatype='2d'
 
@@ -39,7 +39,7 @@ for ifile in files:
     obs=loadslev(ifile)
     obsname=ifile.replace(obspath,'').replace('.csv','')
     #shifttime because PST
-    obs['time']=obs['time']+(4/24)
+    obs['time']=obs['time']
 
 
     savepath='figures/png/' + grid + '_' + datatype + '/obs_zeta/' +obsname + '/'
@@ -56,7 +56,7 @@ for ifile in files:
     eidx=get_elements(data,region)
 
     #there seems to be a shift in the time of 21 tidal cycles. have to find if it is real and where it is from.
-    time=data['time'][0]+(np.arange(len(data['time']))*(5.0/(24*60)))-(21*12.42/24)
+    time=data['time']
     limit=[0,-1]
 
 
