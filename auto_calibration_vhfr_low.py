@@ -36,8 +36,9 @@ for case in folder2results:
             filename = startdir+path2runs+f+'/output/vhfr_low_0001.nc'
             fvcom = FVCOM(filename)
             #print station._origin_file
-            val = Validation(obs, fvcom,closefallback=True,debug=True)
+            val = Validation(obs, fvcom,closefallback=True)
             val.validate_data(filename = f+'_FVCOM_vs_tidegauges', save_csv=True)
+            val.validate_harmonics(filename = f+'_FVCOM_vs_tidegauges', save_csv=True)
         except (PyseidonError, IndexError) as e:
             pass
 
