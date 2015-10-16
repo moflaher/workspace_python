@@ -752,7 +752,47 @@ def plot_llz(data,show=True,crange=None,s=10,region=None):
         return f,ax
 
 
+def plotlinreg(model,obs,lr,savestr):
+    
+    f = plt.figure(figsize=(18,10))
+    ax = f.add_subplot(111)
 
+    ax.scatter(model, obs, c='b', marker='+', alpha=0.5)
+
+    ## plot regression line
+    mod_max = np.amax(ms)
+    mod_min = np.amin(ms)
+    upper_intercept = lr['intercept'] + lr['pred_CI_width']
+    lower_intercept = lr['intercept'] - lr['pred_CI_width']
+    ax.plot([mod_min, mod_max], [mod_min * lr['slope'] + lr['intercept'],
+            mod_max * lr['slope'] + lr['intercept']],
+            color='k', linestyle='-', linewidth=2, label='Linear fit')
+
+    ## plot CI's for slope
+    ax.plot([mod_min, mod_max], [mod_min * lr['slope_CI'][0] + lr['intercept_CI'][0],
+                                 mod_max * lr['slope_CI'][0] + lr['intercept_CI'][0]],
+             color='r', linestyle='--', linewidth=2)
+    ax.plot([mod_min, mod_max], [mod_min * lr['slope_CI'][1] + lr['intercept_CI'][1],
+                                 mod_max * lr['slope_CI'][1] + lr['intercept_CI'][1]],
+             color='r', linestyle='--', linewidth=2, label='Slope CI')
+
+    ## plot CI's for predictands
+    ax.plot([mod_min, mod_max], [mod_min * lr['slope'] + upper_intercept,
+                                 mod_max * lr['slope'] + upper_intercept],
+             color='g', linestyle='--', linewidth=2)
+    ax.plot([mod_min, mod_max], [mod_min * lr['slope'] + lower_intercept,
+                                 mod_max * lr['slope'] + lower_intercept],
+             color='g', linestyle='--', linewidth=2, label='Predictand CI')
+
+    ax.set_xlabel('Modeled Data')
+    ax.set_ylabel('Observed Data')
+    f.suptitle('Modeled vs. Observed {}: Linear Fit'.format('ADCP'))
+    plt.legend(loc='lower right', shadow=True)
+
+    r_string = 'R Squared: {}'.format(np.around(lr['r_2'], decimals=3))
+    plt.title(r_string)
+    f.savefig(savestr,dpi=300)
+    plt.close(f)
 
 
 

@@ -17,9 +17,10 @@ import scipy.fftpack as fftp
 import pandas as pd
 
 # Define names and types of data
-namelist=['2012-02-01_2012-03-01_0.01_0.001', '2012-02-01_2012-03-01_0.01_0.01', '2012-02-01_2012-03-01_0.01_0.1', '2012-02-01_2012-03-01_0.02_0.001', '2012-02-01_2012-03-01_0.02_0.01', '2012-02-01_2012-03-01_0.02_0.1', '2012-02-01_2012-03-01_0.03_0.001', '2012-02-01_2012-03-01_0.03_0.01', '2012-02-01_2012-03-01_0.03_0.1']
+namelist=['2012-02-01_2012-03-01_0.01_0.001', '2012-02-01_2012-03-01_0.01_0.01', '2012-02-01_2012-03-01_0.02_0.001', '2012-02-01_2012-03-01_0.02_0.01', '2012-02-01_2012-03-01_0.03_0.001', '2012-02-01_2012-03-01_0.03_0.01']
+namelist=['2012-02-01_2012-03-01_0.01_0.001','2012-02-01_2012-03-01_0.03_0.01']
 #name='2012-02-01_2012-03-01_0.01_0.01'
-grid='vhfr_low'
+grid='vh_high'
 datatype='2d'
 regionname='secondnarrows'
 region=regions(regionname)
@@ -27,9 +28,7 @@ region=regions(regionname)
 obspath='data/misc/vhfr_obs/VancouverBC_Harbour_Currents/'
 obsname='04100_20110621'
 obs=loadcur(obspath+obsname+'*')
-#shifttime because PST
-for key in obs:
-    obs[key]['time']=obs[key]['time']
+
 
 
 savepath='figures/png/' + grid + '_' + datatype + '/obs_speed/' +obsname + '/'
@@ -39,7 +38,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 for name in namelist:
 
     ### load the .nc file #####
-    data = loadnc('runs/'+grid+'/calibration/'+name+'/output/',singlename=grid + '_0001.nc')
+    data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
     print('done load')
     data = ncdatasort(data,trifinder=True)
     print('done sort')

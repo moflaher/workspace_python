@@ -37,6 +37,8 @@ import matplotlib.tri as mplt
 import bisect
 import numexpr as ne
 import h5py
+from scipy.interpolate import interp1d
+import scipy.stats as stats
 
 #I/O modules
 import glob
@@ -922,7 +924,81 @@ def loadslev(filename):
         
     return rd
 
+def linReg(mod,obs, alpha=0.05):
+        '''
+        Does linear regression on the model data vs. recorded data.
 
+        Gives a 100(1-alpha)% confidence interval for the slope
+        '''
+
+        obs_mean = np.mean(obs)
+        mod_mean = np.mean(mod)
+        n = mod.size
+        df = n - 2
+
+        # calculate square sums
+        SSxx = np.sum(mod**2) - np.sum(mod)**2 / n
+        SSyy = np.sum(obs**2) - np.sum(obs)**2 / n
+        SSxy = np.sum(mod * obs) - np.sum(mod) * np.sum(obs) / n
+        SSE = SSyy - SSxy**2 / SSxx
+        MSE = SSE / df
+
+        # estimate parameters
+        slope = SSxy / SSxx
+        intercept = obs_mean - slope * mod_mean
+        sd_slope = np.sqrt(MSE / SSxx)
+        r_squared = 1 - SSE / SSyy
+
+        # calculate 100(1 - alpha)% CI for slope
+        width = stats.t.isf(0.5 * alpha, df) * sd_slope
+        lower_bound = slope - width
+        upper_bound = slope + width
+        slope_CI = (lower_bound, upper_bound)
+
+        # calculate 100(1 - alpha)% CI for intercept
+        lower_intercept = obs_mean - lower_bound * mod_mean
+        upper_intercept = obs_mean - upper_bound * mod_mean
+        intercept_CI = (lower_intercept, upper_intercept)
+
+        # estimate 100(1 - alpha)% CI for predictands
+        predictands = slope * mod + intercept
+        sd_resid = np.std(obs - predictands)
+        y_CI_width = stats.t.isf(0.5 * alpha, df) * sd_resid * \
+            np.sqrt(1 - 1 / n)
+
+        # return data in a dictionary
+        data = {}
+        data['slope'] = slope
+        data['intercept'] = intercept
+        data['r_2'] = r_squared
+        data['slope_CI'] = slope_CI
+        data['intercept_CI'] = intercept_CI
+        data['pred_CI_width'] = y_CI_width
+        data['conf_level'] = 100 * (1 - alpha)
+        
+        return data
+        
+def interpol(data_1, data_2, time_step=5.0/(24*60)):    
+    dt_1 = data_1['time']
+    dt_2 = data_2['time']
+
+    # generate interpolation functions using linear interpolation
+    f1 = interp1d(dt_1, data_1['pts'])
+    f2 = interp1d(dt_2, data_2['pts'])
+
+    # choose interval on which to interpolate
+    start = max(dt_1[0], dt_2[0])
+    end = min(dt_1[-1], dt_2[-1])
+
+    # create timestamp array for new data and perform interpolation
+    output_times = np.arange(start,end,time_step)
+
+    series_1 = f1(output_times)
+    series_2 = f2(output_times)
+
+    dt_start = max(dt_1[0], dt_2[0])
+
+    return (series_1, series_2, output_times, time_step)
 
 
 
