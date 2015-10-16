@@ -760,8 +760,8 @@ def plotlinreg(model,obs,lr,savestr):
     ax.scatter(model, obs, c='b', marker='+', alpha=0.5)
 
     ## plot regression line
-    mod_max = np.amax(ms)
-    mod_min = np.amin(ms)
+    mod_max = np.amax(model)
+    mod_min = np.amin(obs)
     upper_intercept = lr['intercept'] + lr['pred_CI_width']
     lower_intercept = lr['intercept'] - lr['pred_CI_width']
     ax.plot([mod_min, mod_max], [mod_min * lr['slope'] + lr['intercept'],
