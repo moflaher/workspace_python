@@ -26,7 +26,7 @@ name2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 datatype='2d'
 regionname='kit4_kelp_tight2_kelpfield'
-lname='kit4_kelp_tight2_small_1element_northwest_fakeroute_4000x2000_10000pp_s0_diff_1'
+lname='kit4_kelp_tight2_small_northeast_400x1100_10000pp_s407_diff_1'
 
 
 ### load the .nc file #####

@@ -7,10 +7,11 @@ from pyseidon.utilities.pyseidon_error import PyseidonError
 import os
 
 startdir=os.getcwd()+'/'
-path2runs = 'runs/vh_high/'
-folder2results=['2012-02-01_2012-03-01_0.01_0.001','2012-02-01_2012-03-01_0.03_0.01']
+path2runs = 'runs/vhfr_low/calibration/'
+folder2results=['2012-02-01_2012-03-01_0.01_0.001', '2012-02-01_2012-03-01_0.01_0.01', '2012-02-01_2012-03-01_0.02_0.001', '2012-02-01_2012-03-01_0.02_0.01', '2012-02-01_2012-03-01_0.03_0.001', '2012-02-01_2012-03-01_0.03_0.01']
 
-path2results = 'figures/png/vh_high_2d/calibration/'
+
+path2results = 'figures/png/vhfr_low_2d/calibration_tg/'
 
 
 path2obs = "data/misc/vhfr_obs/slev/"
@@ -33,12 +34,12 @@ for case in folder2results:
     for f in folders:
         try:
             print "Validating: "+ f +"..."
-            filename = startdir+path2runs+f+'/output/vh_high_0001.nc'
+            filename = startdir+path2runs+f+'/output/vhfr_low_0001.nc'
             fvcom = FVCOM(filename)
             #print station._origin_file
             val = Validation(obs, fvcom,closefallback=True)
             val.validate_data(filename = f+'_FVCOM_vs_tidegauges', save_csv=True)
-            #val.validate_harmonics(filename = f+'_FVCOM_vs_tidegauges', save_csv=True)
+            val.validate_harmonics(filename = f+'_FVCOM_vs_tidegauges', save_csv=True)
         except (PyseidonError, IndexError) as e:
             pass
 

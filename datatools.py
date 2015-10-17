@@ -877,6 +877,7 @@ def loadcur(filename,exact=False):
         
         returndic[j+1]=indata
         returndic[j+1]['time']=dates.datestr2num(returndic[j+1]['timestr'])
+        returndic[j+1]['filename']=fname
         
     return returndic
 

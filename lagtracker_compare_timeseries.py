@@ -13,21 +13,33 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import h5py as h5
 from matplotlib.collections import PolyCollection as PC
 import time
+import multiprocessing
 
+global data
+global region
+global tmparray
+global name
+global name2
+global savepath
+global regionname
+global savelag1
+global savelag2
+global lname
 
 
 # Define names and types of data
-name='kit4_45days_3'
-name2='kit4_kelp_20m_0.018'
-grid='kit4'
-regionname='kit4_ftb'
+name='kit4_kelp_nodrag'
+name2='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
+regionname='kit4_kelp_tight2_kelpfield'
 datatype='2d'
-lname='element_85847_s6'
+
 
 
 ### load the .nc file #####
@@ -36,58 +48,39 @@ print('done load')
 data = ncdatasort(data)
 print('done sort')
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/all_particles_short/' + name + '_'+name2+'/'+regionname+'/' +lname +'/'
-if not os.path.exists(savepath): os.makedirs(savepath)
 
-data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
+
+cages=loadcage('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat')
+if np.shape(cages)!=():
+    tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+    color='g'
+    lw=.1
+    ls='solid'
+
+
+
 region=regions(regionname)
+region=expand_region(region,[5000,5000],[0,0])
 region=regionll2xy(data,region)
 
 
-if 'savelag1' not in globals():
-    print "Loading savelag1"
-    fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
-    savelag1={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag1[i]=fileload['savelag'][i].value.T
-
-if 'savelag2' not in globals():
-    print "Loading savelag2"
-    fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
-    savelag2={}
-    for i in fileload['savelag'].keys():
-        if (i=='u' or i=='v' or i=='w' or i=='sig' or i=='z'):
-            continue
-        savelag2[i]=fileload['savelag'][i].value.T
 
 
-cages=np.genfromtxt('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
 
 
-tmparray=[list(zip(data['nodexy'][data['nv'][i,[0,1,2]],0],data['nodexy'][data['nv'][i,[0,1,2]],1])) for i in cages ]
-sidx=np.where((savelag1['x'][:,0]>region['regionxy'][0])&(savelag1['x'][:,0]<region['regionxy'][1])&(savelag1['y'][:,0]>region['regionxy'][2])&(savelag1['y'][:,0]<region['regionxy'][3]))
+def lag_plot(i):
+    print(i)
 
-expand=2500
-region['regionxy']=[region['regionxy'][0]-expand,region['regionxy'][1]+expand,region['regionxy'][2]-expand,region['regionxy'][3]+expand]
-
-#for i in range(0,len(savelag1['time']),4):
-for i in range(0,223,1):
-    print ("%d"%i)+"              "+("%f"%(i/len(savelag1['time'])*100)) 
     f = plt.figure()
     ax=f.add_axes([.125,.1,.775,.8])
-
 
     #plotcoast(ax,filename='pacific.nc',color='k')
     ax.triplot(data['trigridxy'],lw=.25,zorder=1)
     ax.axis(region['regionxy'])
     lseg1=PC(tmparray,facecolor = 'g',edgecolor='None')
     ax.add_collection(lseg1)
-
-    ax.scatter(savelag1['x'][sidx,i],savelag1['y'][sidx,i],color='k',label='No drag',s=4,zorder=10)
-    ax.scatter(savelag2['x'][sidx,i],savelag2['y'][sidx,i],color='r',label='Drag',s=4,zorder=15)
+    ax.scatter(savelag1['x'][:,i],savelag1['y'][:,i],color='b',label='No drag',s=.25,zorder=10)
+    ax.scatter(savelag2['x'][:,i],savelag2['y'][:,i],color='r',label='Drag',s=.25,zorder=15)
 
     handles, labels = ax.get_legend_handles_labels()
     handles[0:2]=[handles[0],handles[-1]]
@@ -95,12 +88,52 @@ for i in range(0,223,1):
     legend=ax.legend(handles[0:2], labels[0:2],prop={'size':10},loc=4,numpoints=1)
     legend.set_zorder(25)
 
-    tstr=time.strftime("%H:%M", time.gmtime(savelag1['time'][i]-savelag1['time'][0]))
+    tstr=time.strftime("%d-%H:%M", time.gmtime(savelag1['time'][i]-savelag1['time'][0]))
     ax.annotate(("Time: %s"%tstr),xy=(.025,.95),xycoords='axes fraction',bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 
-    f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_timestep_'+("%05d"%i)+'.png',dpi=150)
+    f.savefig(savepath +''+name+'_'+name2+'_'+regionname+'_'+lname+'_timestep_'+("%05d"%i)+'.png',dpi=150)
     plt.close(f)
 
+
+
+
+
+
+
+lname='kit4_kelp_tight2_small_northeast_400x1100_10000pp_s407_diff_10'
+
+
+
+print("Loading savelag1")
+fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
+savelag1={}
+for i in fileload['savelag'].keys():
+    if (i=='x' or i=='y' or i=='time'):
+        savelag1[i]=fileload['savelag'][i].value.T
+        
+a,b=np.shape(savelag1['x'])
+savelag1['x']=np.array([x[0] for x in savelag1['x'].flatten()]).reshape(a,b)
+savelag1['y']=np.array([x[0] for x in savelag1['y'].flatten()]).reshape(a,b)
+
+
+print("Loading savelag2")
+fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
+savelag2={}
+for i in fileload['savelag'].keys():
+    if (i=='x' or i=='y'):
+        savelag2[i]=fileload['savelag'][i].value.T
+        
+#to fix weird sometimes tuple issue......
+#a,b=np.shape(savelag2['x'])
+#savelag2['x']=np.array([x[0] for x in savelag2['x'].flatten()]).reshape(a,b)
+#savelag2['y']=np.array([x[0] for x in savelag2['y'].flatten()]).reshape(a,b)
+
+
+savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/' + name + '_'+name2+'/'+regionname+'/' +lname +'/'
+if not os.path.exists(savepath): os.makedirs(savepath)
+
+pool = multiprocessing.Pool(4)
+pool.map(lag_plot,range(1500))
 
 
 
