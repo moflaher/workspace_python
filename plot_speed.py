@@ -33,14 +33,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018_ts_test'
-grid='kit4_kelp'
+name='2012-02-01_2012-03-01_0.01_0.001'
+grid='vh_high'
 datatype='2d'
-regionname='kit4_kelp_tight2_kelpfield'
-starttime=0
-endtime=100
+regionname='firstnarrows'
+starttime=300
+endtime=600
 cmin=0
-cmax=0.5
+cmax=2
 
 
 ### load the .nc file #####
@@ -92,7 +92,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(4)
+pool = multiprocessing.Pool(3)
 pool.map(speed_plot,range(starttime,endtime))
 
 

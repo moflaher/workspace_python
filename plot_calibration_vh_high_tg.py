@@ -13,9 +13,8 @@ import matplotlib.pyplot as plt
 import collections
 
 
-folder2results=['2012-02-01_2012-03-01_0.01_0.001', '2012-02-01_2012-03-01_0.01_0.01', '2012-02-01_2012-03-01_0.02_0.001', '2012-02-01_2012-03-01_0.02_0.01', '2012-02-01_2012-03-01_0.03_0.001', '2012-02-01_2012-03-01_0.03_0.01']
-path2results = 'figures/png/vhfr_low_2d/calibration_adcp/'
-
+folder2results=['2012-02-01_2012-03-01_0.01_0.001','2012-02-01_2012-03-01_0.03_0.01']
+path2results = 'figures/png/vh_high_2d/calibration_tg/'
 
 savepath=path2results+'stat_plots/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -78,14 +77,8 @@ def calibration_plot(fdict,varname,stat):
 types=['speed', 'dir', 'u', 'v', 'vel', 'cubic_speed']    
 stats=['pbias','r2', 'RMSE', 'NOF', 'CF', 'SI', 'bias', 'NRMSE', 'corr', 'POF', 'NSE', 'skill','MDNO', 'SD']    
 
-types=['speed', 'dir', 'u', 'v', 'vel']
+types=['elev']
 stats=['r2', 'RMSE','bias', 'NRMSE', 'corr'] 
 for varname in types:
     for stat in stats:
         calibration_plot(fdict,varname,stat)
-
-
-
-for i,case in enumerate(fdict):
-    print(case)
-    print(fdict[case]['vel'][['r2','RMSE']].mean())
