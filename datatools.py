@@ -85,7 +85,7 @@ def loadnc(datadir, singlename=None):
     #data['nbe'] = np.transpose(ncid.variables['nbe'].data.astype(int))-[1] #python index
     if ('nv' in data):
         data['nv']=data['nv'].astype(int).T-1
-    if ('nv' in data):
+    if ('nbe' in data):
         data['nbe']=data['nbe'].astype(int).T-1
     if ('nele' in ncid.dimensions):    
         data['nele'] = ncid.dimensions['nele']

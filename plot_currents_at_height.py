@@ -13,12 +13,13 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
+name='kit4_baroclinic'
 grid='kit4'
 regionname='kit4_area5'
 datatype='2d'
@@ -38,16 +39,11 @@ nidx=get_nodes(data,region)
 savepath='figures/png/' + grid + '_' + datatype + '/currents_' + ("%d" %interpheight)+ 'm/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-#base_dir = os.path.dirname(__file__)
-#filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
-#if (os.path.exists(os.path.join(base_dir,'data/old', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data/old', 'v' + filename))):
-#    print 'Loading old interpolated currents'
-#    newu=np.load(os.path.join(base_dir,'data/old', 'u' + filename))
-#    newv=np.load(os.path.join(base_dir,'data/old', 'v' + filename))
-#    print 'Loaded old interpolated currents'
-#else:
-#    print 'Interpolate currents first'
-#    sys.exit(0)
+print('Loading old interpolated currents')
+currents=np.load('data/interp_currents/'+ grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy')
+currents=currents[()]
+print('Loaded old interpolated currents')
+
 
 
 

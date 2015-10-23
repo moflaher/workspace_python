@@ -13,7 +13,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_45days_3'
+name='kit4_baroclinic'
 grid='kit4'
 datatype='2d'
 starttime=384
@@ -43,30 +43,20 @@ def interzeta(rlhzero,interpheight,i):
 
 
 
-
-
-
 levelheight=data['uvh']*data['siglay'][:,0]
 levelheight=-1*levelheight
 rlh=data['uvh']-levelheight
 rlhzero=np.hstack((rlh,np.zeros((data['nele'],1))))
 
+print('Creating new interpolated data')
+savedict={}
+savedict['u']=np.zeros((len(data['time'][starttime:]),data['nele']))
+savedict['v']=np.zeros((len(data['time'][starttime:]),data['nele']))
+for i in range(0,data['nele']):
+    print(i)
+    savedict['u'][:,i],savedict['v'][:,i]=interzeta(rlhzero,interpheight,i)
+    
+np.save('data/interp_currents/' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy',savedict)
 
-
-base_dir = os.path.dirname(__file__)
-filename='_' + grid + '_' +name+ '_' + ("%d" %interpheight) + 'm.npy'
-if (os.path.exists(os.path.join(base_dir,'data/old', 'u' + filename)) & os.path.exists(os.path.join(base_dir,'data/old', 'v' + filename))):
-    print 'Loading old interpolated data'
-    newu=np.load(os.path.join(base_dir,'data/old', 'u' + filename))
-    newv=np.load(os.path.join(base_dir,'data/old', 'v' + filename))
-else:
-    print 'Creating new interpolated data'
-    newu=np.zeros((len(data['time'][starttime:]),data['nele']))
-    newv=np.zeros((len(data['time'][starttime:]),data['nele']))
-    for i in range(0,data['nele']):
-        print i
-        newu[:,i],newv[:,i]=interzeta(rlhzero,interpheight,i)
-    np.save(os.path.join(base_dir,'data/old', 'u' + filename))
-    np.save(os.path.join(base_dir,'data/old', 'v' + filename))
 
 
