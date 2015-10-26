@@ -49,7 +49,7 @@ cages=loadcage('runs/'+grid+'/' +name_change+ '/input/' +grid+ '_cage.dat')
 if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
     color='g'
-    lw=.1
+    lw=.4
     ls='solid'
 
 savepath='figures/png/' + grid + '_' + datatype + '/asymmetry_compare_interp_with_vectors/'
@@ -191,7 +191,7 @@ for regionname in regionlist:
     host=data['trigrid'].get_trifinder().__call__(xii,yii)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
     print ('griddata interp: %f' % (time.clock() - start))
- 
+ #,cmap=mpl.cm.seismic
     colorax=ax[1].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
 
     Q1=ax[1].quiver(data['uvnodell'][eidx[evidx],0],data['uvnodell'][eidx[evidx],1],uf2[evidx],vf2[evidx],angles='xy',scale_units='xy',scale=scale1,zorder=10)
@@ -228,8 +228,8 @@ for regionname in regionlist:
     ax[1].add_patch(rec)
 
 
-    lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-    ax[1].add_collection(lseg)
+    #lseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+    #ax[1].add_collection(lseg)
 
     ABC=['A','B','C']
     plt.draw()

@@ -77,13 +77,13 @@ ax_all.xaxis.set_major_formatter(_formatter)
 prettyplot_ll(ax_all,setregion=regionA)
 #plotcoast(ax_all,filename='pacific.nc',color='0.75',fill=True)
 
-a=ax_all.text(-128.5,53.905,'Kitimat',fontsize=8)
+a=ax_all.text(-128.5,53.905,'Kitimat',fontsize=10)
 a.set_zorder(100)
 #ax_all.text(-129.24,53.58,'Douglas',fontsize=4,rotation=90)
 #ax_all.text(-129.2,53.76,'Channel',fontsize=4,rotation=39)
 #ax_all.text(-128.25,53,'British Columbia',fontsize=8)
 #ax_all.text(-127.9,52.88,'Canada',fontsize=8)
-ax_all.text(-131.3,53.1,'Hecate Strait',fontsize=8,rotation=-55)
+ax_all.text(-131.3,53.1,'Hecate Strait',fontsize=14,rotation=-55,color='w')
 
 
 
@@ -193,34 +193,34 @@ locy=[52.65,52.6485]#,52.65]
 rn={}
 rn['region']=np.array([-129.492, -129.479,52.6375,52.655])
 rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'b',1.5)
-aa=axsub3.text(rn['center'][0],rn['center'][1],'1',fontsize=12,rotation=0,color='b')
+plot_box(axsub3,rn,'k',1.5)
+aa=axsub3.text(rn['center'][0]-.011,rn['center'][1]-.005,'F1',fontsize=12,rotation=0,color='k')
 
 rn={}
 rn['region']=np.array([-129.499, -129.494,52.651,52.6551])
 rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'b',1.5)
-aa=axsub3.text(rn['center'][0],rn['center'][1],'2',fontsize=12,rotation=0,color='b')
+plot_box(axsub3,rn,'k',1.5)
+aa=axsub3.text(rn['center'][0]-.007,rn['center'][1],'F2',fontsize=12,rotation=0,color='k')
 
 rn={}
 rn['region']=np.array([-129.49, -129.48,52.6575,52.665])
 rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'b',1.5)
-aa=axsub3.text(rn['center'][0],rn['center'][1],'3',fontsize=12,rotation=0,color='b')
+plot_box(axsub3,rn,'k',1.5)
+aa=axsub3.text(rn['center'][0]-.01,rn['center'][1]+.0025,'F3',fontsize=12,rotation=0,color='k')
 
 rn={}
 rn['region']=np.array([-129.474, -129.465,52.6475,52.655])
 rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'b',1.5)
-aa=axsub3.text(rn['center'][0],rn['center'][1],'4',fontsize=12,rotation=0,color='b')
+plot_box(axsub3,rn,'k',1.5)
+aa=axsub3.text(rn['center'][0]+.0025,rn['center'][1]+.005,'F4',fontsize=12,rotation=0,color='k')
 
 
 
-axsub3.plot([-129.471,-129.471],[52.645,52.656],color='m',lw=1)
+axsub3.plot([-129.471,-129.471],[52.645,52.656],color='b',lw=2)
 #axsub3.plot([-129.4866, -129.4866],[52.6397,   52.6499],color='hotpink',lw=1)
-axsub3.plot([-129.4944, -129.4748],[52.6331,   52.6601],color='r',lw=1)
+axsub3.plot([-129.4944, -129.4748],[52.6331,   52.6601],color='r',lw=2)
 #axsub3.plot([-129.4866, -129.4866],[52.6397,52.6448],color='k',lw=1)
-axsub3.plot([-129.4931, -129.4830],[52.6477,   52.6500],color='k',lw=1)
+axsub3.plot([-129.4931, -129.4830],[52.6477,   52.6500],color='k',lw=2)
  
 axsub3.text(-129.4775,52.64,'McKenney Islands',fontsize=6,rotation=0,bbox={'facecolor':'white','edgecolor':'None', 'alpha':1, 'pad':3})
 

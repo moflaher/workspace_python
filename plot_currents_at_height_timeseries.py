@@ -19,12 +19,12 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_baroclinic'
+name='kit4_baroclinic_new_322'
 grid='kit4'
 regionname='kit4_area5'
 datatype='2d'
-starttime=384
-endtime=450
+starttime=0
+endtime=50
 interpheight=1
 
 ### load the .nc file #####
@@ -47,12 +47,12 @@ print('Loaded old interpolated currents')
 
 
 
-vectorspacing=250
-vector_scale=100
-cmin=0
-cmax=1
 
-
+arrows=35    
+width=ll2m([region['region'][0],region['center'][1]],[region['region'][1],region['center'][1]])[0]
+height=ll2m([region['center'][0],region['region'][2]],[region['center'][0],region['region'][3]])[1]    
+vectorspacing=np.min([width/arrows,height/arrows]).astype(int)
+print(vectorspacing)
 vidx=equal_vectors(data,region,vectorspacing)
 
 
@@ -61,14 +61,16 @@ for i in range(starttime,endtime):
     print(i)
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],np.sqrt(currents['u'][i,:]**2+currents['v'][i,:]**2),vmin=cmin,vmax=cmax)
-    plotcoast(ax,color='k',fill=True)
+    #triax=ax.tripcolor(data['trigrid'],np.sqrt(currents['u'][i,:]**2+currents['v'][i,:]**2),vmin=cmin,vmax=cmax)
+    plotcoast(ax,color='None',filename='pacific.nc',fill=True)
     #if np.shape(cages)!=():   
         #lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         #ax.add_collection(lseg_t) 
-    Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],1,1,angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)           
-    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],currents['u'][i,vidx],currents['v'][i,vidx],angles='xy',scale_units='xy',scale=arrows/4,zorder=100,width=.0025)        
+    q1=ax.quiverkey(Q1,.1,1.05,.25, r'0.25 m s$^{-1}$', labelpos='W',fontproperties={'size': 8})
+  
+    prettyplot_ll(ax,setregion=region)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_vector_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
