@@ -22,7 +22,7 @@ grid='kit4_kelp'
 datatype='2d'
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
+regionlist=['kit4_kelp_tight2_kelpfield']
 #regionlist=['kit4_kelp_tight5']
 starttime=384
 cmin=-1
@@ -106,7 +106,7 @@ p_nom4 = delta*np.cos(dtheta0)+epslon*(np.cos(dtheta4)*np.cos(pusi)-ECCM4*np.sin
 
 
 for regionname in regionlist:
-    print 'plotting region: ' +regionname
+    print('plotting region: ' +regionname)
 
     region=regions(regionname)
     nidx=get_nodes(data,region)
@@ -134,7 +134,7 @@ for regionname in regionlist:
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
     print ('griddata interp: %f' % (time.clock() - start))
 
-    axtri=ax[0].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
+    axtri=ax[0].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax,cmap=mpl.cm.seismic)
 #    Vpos=np.array([0,.4,.8])
 #    Vneg=np.array([-.8,-.4])
 #    CS2=ax[0].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
@@ -147,9 +147,9 @@ for regionname in regionlist:
     start = time.clock()
     efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], p_noz0, xi, yi)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
-    print ('griddata interp: %f' % (time.clock() - start))
+    print('griddata interp: %f' % (time.clock() - start))
  
-    axtri=ax[1].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
+    axtri=ax[1].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax,cmap=mpl.cm.seismic)
 #    Vpos=np.array([0,.4,.8])
 #    Vneg=np.array([-.8,-.4])
 #    CS2=ax[1].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
@@ -162,9 +162,9 @@ for regionname in regionlist:
     start = time.clock()
     efs_interp=mpl.mlab.griddata(data['uvnodell'][:,0],data['uvnodell'][:,1], p_nom4, xi, yi)
     efs_interp_mask = np.ma.masked_where(host==-1,efs_interp)
-    print ('griddata interp: %f' % (time.clock() - start))
+    print('griddata interp: %f' % (time.clock() - start))
 
-    axtri=ax[2].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax)
+    axtri=ax[2].pcolormesh(xi,yi,efs_interp_mask,vmin=cmin,vmax=cmax,cmap=mpl.cm.seismic)
 #    Vpos=np.array([0,.4,.8])
 #    Vneg=np.array([-.8,-.4])
 #    CS2=ax[2].contour(xi,yi,efs_interp_mask,Vpos,colors='k',zorder=30,linestyles='solid',linewidths=.5)
