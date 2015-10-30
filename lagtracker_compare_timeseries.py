@@ -100,7 +100,7 @@ def lag_plot(i):
 
 
 
-lname='kit4_kelp_tight2_small_northeast_400x1100_10000pp_s407_diff_10'
+lname='kit4_kelp_tight2_small_north_470x230_10000pp_s10'
 
 
 
@@ -109,24 +109,14 @@ fileload=h5.File('savedir/'+name+'/'+lname+'.mat')
 savelag1={}
 for i in fileload['savelag'].keys():
     if (i=='x' or i=='y' or i=='time'):
-        savelag1[i]=fileload['savelag'][i].value.T
-        
-a,b=np.shape(savelag1['x'])
-savelag1['x']=np.array([x[0] for x in savelag1['x'].flatten()]).reshape(a,b)
-savelag1['y']=np.array([x[0] for x in savelag1['y'].flatten()]).reshape(a,b)
-
+        savelag1[i]=fileload['savelag'][i].value.T        
 
 print("Loading savelag2")
 fileload=h5.File('savedir/'+name2+'/'+lname+'.mat')
 savelag2={}
 for i in fileload['savelag'].keys():
     if (i=='x' or i=='y'):
-        savelag2[i]=fileload['savelag'][i].value.T
-        
-#to fix weird sometimes tuple issue......
-#a,b=np.shape(savelag2['x'])
-#savelag2['x']=np.array([x[0] for x in savelag2['x'].flatten()]).reshape(a,b)
-#savelag2['y']=np.array([x[0] for x in savelag2['y'].flatten()]).reshape(a,b)
+        savelag2[i]=fileload['savelag'][i].value.T        
 
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/' + name + '_'+name2+'/'+regionname+'/' +lname +'/'

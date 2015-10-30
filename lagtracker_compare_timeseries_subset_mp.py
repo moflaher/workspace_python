@@ -38,7 +38,7 @@ global sub
 name='kit4_kelp_nodrag'
 name2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-regionname='kit4_kelp_tight2_kelpfield'
+regionname='kit4_kelp_tight2_small_north_470x230_10000pp_s10'
 datatype='2d'
 
 
