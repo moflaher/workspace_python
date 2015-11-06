@@ -100,7 +100,7 @@ def lag_plot(i):
 
 
 
-lname='kit4_kelp_tight2_small_north_470x230_10000pp_s10'
+lname='kit4_kelp_tight2_small_north3_480x340_10000pp_s11'
 
 
 
@@ -122,8 +122,10 @@ for i in fileload['savelag'].keys():
 savepath='figures/timeseries/' + grid + '_' + datatype + '/lagtracker/' + name + '_'+name2+'/'+regionname+'/' +lname +'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-pool = multiprocessing.Pool(4)
-pool.map(lag_plot,range(1500))
+a,b=savelag2['x'].shape
+
+pool = multiprocessing.Pool(3)
+pool.map(lag_plot,range(b))
 
 
 
