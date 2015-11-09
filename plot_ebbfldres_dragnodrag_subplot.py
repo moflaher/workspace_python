@@ -21,7 +21,7 @@ from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
 name_orig='kit4_kelp_nodrag'
-name_change='kit4_kelp_20m_drag_0.007'
+name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
 datatype='2d'
@@ -177,7 +177,7 @@ for regionname in regionlist:
     resv2=np.empty((len(eidx),len(data['time'][starttime:])))
     if testing==False:
         for j in range(0,len(eidx)):
-            print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
+            #print ("%d"%j)+"              "+("%f"%(j/len(eidx)*100)) 
             i=eidx[j]    
             resu[j,:]=data['ua'][starttime:,i]-np.real(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
             resv[j,:]=data['va'][starttime:,i]-np.imag(t_predic(data['time'][starttime:],uv1['nameu'],uv1['freq'],uv1['tidecon'][i,:,:])).flatten()
@@ -213,7 +213,7 @@ for regionname in regionlist:
     lseg=np.empty((3,),dtype=object)
     ABC=['A','B','C']
     ABC=['D','E','F']
-    plt.draw()
+    plt.draw()        
     for i,axi in enumerate(ax):
         plotcoast(ax[i],filename='pacific.nc',color='None',fill=True)
         axbb=ax[i].get_axes().get_position().bounds
@@ -222,6 +222,33 @@ for regionname in regionlist:
         lseg[i]=PC(tmparray,facecolor = 'g',edgecolor='None')
         ax[i].add_collection(lseg[i])
         #ax[i].text(-129.4225,52.686,r'Moore Islands',fontsize=5,rotation=80)
+        
+        
+        rn={}
+        rn['region']=np.array([-129.492, -129.479,52.6375,52.655])
+        rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+        plot_box(ax[i],rn,'k',1.5)
+        aa=ax[i].text(rn['center'][0]-.011,rn['center'][1]-.005,'F1',fontsize=12,rotation=0,color='k')
+        
+        rn={}
+        rn['region']=np.array([-129.499, -129.494,52.651,52.6551])
+        rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+        plot_box(ax[i],rn,'k',1.5)
+        aa=ax[i].text(rn['center'][0]-.007,rn['center'][1],'F2',fontsize=12,rotation=0,color='k')
+        
+        rn={}
+        rn['region']=np.array([-129.49, -129.48,52.6575,52.665])
+        rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+        plot_box(ax[i],rn,'k',1.5)
+        aa=ax[i].text(rn['center'][0]-.01,rn['center'][1]+.0025,'F3',fontsize=12,rotation=0,color='k')
+        
+        rn={}
+        rn['region']=np.array([-129.474, -129.465,52.6475,52.655])
+        rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+        plot_box(ax[i],rn,'k',1.5)
+        aa=ax[i].text(rn['center'][0]+.0025,rn['center'][1]+.005,'F4',fontsize=12,rotation=0,color='k')
+      
+            
 
     if usemean==True:
         f.savefig(savepath + grid + '_'+ name_orig+'_'+ name_change+'_'+regionname+'_meanebb_meanfld_meanres.png',dpi=600)

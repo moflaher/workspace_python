@@ -190,35 +190,35 @@ locy=[52.65,52.6485]#,52.65]
 #axsub3.plot(locx,locy,'*r',markersize=10)
 
 
-rn={}
-rn['region']=np.array([-129.492, -129.479,52.6375,52.655])
-rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'k',1.5)
-aa=axsub3.text(rn['center'][0]-.011,rn['center'][1]-.005,'F1',fontsize=12,rotation=0,color='k')
+#rn={}
+#rn['region']=np.array([-129.492, -129.479,52.6375,52.655])
+#rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+#plot_box(axsub3,rn,'k',1.5)
+#aa=axsub3.text(rn['center'][0]-.011,rn['center'][1]-.005,'F1',fontsize=12,rotation=0,color='k')
 
-rn={}
-rn['region']=np.array([-129.499, -129.494,52.651,52.6551])
-rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'k',1.5)
-aa=axsub3.text(rn['center'][0]-.007,rn['center'][1],'F2',fontsize=12,rotation=0,color='k')
+#rn={}
+#rn['region']=np.array([-129.499, -129.494,52.651,52.6551])
+#rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+#plot_box(axsub3,rn,'k',1.5)
+#aa=axsub3.text(rn['center'][0]-.007,rn['center'][1],'F2',fontsize=12,rotation=0,color='k')
 
-rn={}
-rn['region']=np.array([-129.49, -129.48,52.6575,52.665])
-rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'k',1.5)
-aa=axsub3.text(rn['center'][0]-.01,rn['center'][1]+.0025,'F3',fontsize=12,rotation=0,color='k')
+#rn={}
+#rn['region']=np.array([-129.49, -129.48,52.6575,52.665])
+#rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+#plot_box(axsub3,rn,'k',1.5)
+#aa=axsub3.text(rn['center'][0]-.01,rn['center'][1]+.0025,'F3',fontsize=12,rotation=0,color='k')
 
-rn={}
-rn['region']=np.array([-129.474, -129.465,52.6475,52.655])
-rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
-plot_box(axsub3,rn,'k',1.5)
-aa=axsub3.text(rn['center'][0]+.0025,rn['center'][1]+.005,'F4',fontsize=12,rotation=0,color='k')
+#rn={}
+#rn['region']=np.array([-129.474, -129.465,52.6475,52.655])
+#rn['center']=[(rn['region'][0]+rn['region'][1])/2,(rn['region'][2]+rn['region'][3])/2]
+#plot_box(axsub3,rn,'k',1.5)
+#aa=axsub3.text(rn['center'][0]+.0025,rn['center'][1]+.005,'F4',fontsize=12,rotation=0,color='k')
 
 
 
 axsub3.plot([-129.471,-129.471],[52.645,52.656],color='b',lw=2)
 #axsub3.plot([-129.4866, -129.4866],[52.6397,   52.6499],color='hotpink',lw=1)
-axsub3.plot([-129.4944, -129.4748],[52.6331,   52.6601],color='r',lw=2)
+#axsub3.plot([-129.4944, -129.4748],[52.6331,   52.6601],color='r',lw=2)
 #axsub3.plot([-129.4866, -129.4866],[52.6397,52.6448],color='k',lw=1)
 axsub3.plot([-129.4931, -129.4830],[52.6477,   52.6500],color='k',lw=2)
  
