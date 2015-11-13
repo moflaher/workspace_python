@@ -26,6 +26,7 @@ global data
 global cmin
 global cmax
 global vectorflag
+global uniformvectorflag
 global coastflag
 global vidx
 global vector_scale
@@ -38,7 +39,7 @@ grid='vh_high'
 datatype='2d'
 regionname='secondnarrows'
 starttime=0
-endtime=500
+endtime=1000
 cmin=0
 cmax=2
 
@@ -51,8 +52,12 @@ print('done sort')
 
 vectorflag=False
 coastflag=True
-vector_spacing=200
-vector_scale=100
+uniformvectorflag=True
+vector_spacing=75
+vector_scale=1250
+
+#vector_spacing=125
+#vector_scale=750
 
 cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
 if np.shape(cages)!=():
@@ -79,14 +84,18 @@ def speed_plot(i):
     ax=plt.axes([.125,.1,.775,.8])
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
     if coastflag==True:
-        plotcoast(ax,color='k',fill=True)
+        plotcoast(ax,filename='pacific_harbour.nc',color='None', fcolor='darkgreen', fill=True)
     if np.shape(cages)!=():   
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         ax.add_collection(lseg_t) 
     if vectorflag==True:
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)        
+        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
+    if uniformvectorflag==True:
+        norm=np.sqrt(data['ua'][i,vidx]**2+data['va'][i,vidx]**2)
+        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['ua'][i,vidx],norm),np.divide(data['va'][i,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
+            
         
-    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax,grid=True)
+    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)
     f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 

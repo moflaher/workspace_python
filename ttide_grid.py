@@ -41,7 +41,7 @@ tidesave={}
 tidesave['nameu']=nameu
 tidesave['freq']=freq
 tidesave['tidecon']=tidecon_uv
-np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_2d_uv_all.npy',tidesave)
+np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy',tidesave)
 
 
 tidecon_el=np.empty([len(data['nodell'][:,0]),29,4])
