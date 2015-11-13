@@ -34,12 +34,13 @@ ax=plt.axes([.125,.5,.775,.4])
 im = plt.imread(imgfile);
 implot = ax.imshow(im,extent=[-123.155+x,-123.0+x,49.27+y,49.3275+y]);
 plotcoast(ax,filename='pacific.nc',lw=2,color='r')
+#plotcoast(ax,filename='pacific_harbour.nc',lw=2,color='b')
 cl=loadkml('data/misc/vh_bathymetry/vh_harbour_coast.kml')
 ax.plot(cl[:,0],cl[:,1],'b')
 
 region={}
 region['region']=[-123.1375,-123.08,49.283,49.304]
-plot_box(ax,region,'g',3)
+plot_box(ax,region,'g',1.5)
 ax.axis([-123.155+x,-123.0+x,49.27+y,49.3275+y])
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax.yaxis.set_major_formatter(_formatter)
@@ -49,6 +50,7 @@ ax.xaxis.set_major_formatter(_formatter)
 ax1=plt.axes([.125,.075,.775,.375])
 implot = ax1.imshow(im,extent=[-123.155+x,-123.0+x,49.27+y,49.3275+y]);
 plotcoast(ax1,filename='pacific.nc',lw=2,color='r')
+plotcoast(ax1,filename='pacific_harbour.nc',lw=2,color='b')
 ax1.plot(cl[:,0],cl[:,1],'b')
 ax1.axis(region['region'])
 ax1.yaxis.set_major_formatter(_formatter)

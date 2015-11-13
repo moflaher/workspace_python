@@ -22,7 +22,7 @@ name='vhfr_low'
 grid='vhfr_low'
 #regionlist=regions()
 regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
-regionlist=['vh_whole']
+regionlist=['vhfr_whole']
 #regionlist=['firstnarrows','secondnarrows']
 datatype='2d'
 

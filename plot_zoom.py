@@ -16,10 +16,10 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018'
-grid='kit4_kelp'
-regionname1='kit4'
-regionname2='kit4_kelp_tight2_small'
+name='2012-02-01_2012-03-01_0.01_0.001'
+grid='vh_high'
+regionname1='vhfr_whole'
+regionname2='vh_whole'
 datatype='2d'
 #spacing must be even
 spacing=250
@@ -51,8 +51,9 @@ ax.triplot(data['trigrid'],lw=.1)
 #prettyplot_ll(ax,setregion=region)
 #scalebar(ax,region,200)
 plotcoast(ax,filename='pacific.nc',color='None',fill=True)
-lsega=PC(tmparray,facecolor = color,edgecolor='None')
-ax.add_collection(lsega)
+if np.shape(cages)!=():
+    lsega=PC(tmparray,facecolor = color,edgecolor='None')
+    ax.add_collection(lsega)
 _formatter = mpl.ticker.FormatStrFormatter("%.2f")
 ax.yaxis.set_major_formatter(_formatter)
 ax.xaxis.set_major_formatter(_formatter)
