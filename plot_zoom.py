@@ -16,10 +16,10 @@ from matplotlib.collections import PolyCollection as PC
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vh_high'
+name='1978-03-04_1978-04-06'
+grid='fr_high'
 regionname1='vhfr_whole'
-regionname2='vh_whole'
+regionname2='fr_mouth'
 datatype='2d'
 #spacing must be even
 spacing=250
@@ -89,6 +89,8 @@ for i in range(spacing):
         label.set_visible(True)
     for label in ax.get_xticklabels()[::2]+ax.get_yticklabels()[::2]:
         label.set_visible(False)
+    ax.set_xticklabels(-1*(ax.get_xticks()))
+
     f.savefig(savepath + grid + '_'+ name +'_'+regionname1+'_'+regionname2+'_'+stype+'_'+'spacing_'+("%d"%spacing)+'_'+("%05d"%i)+'_grid.png',dpi=150)
     #plt.close(f)
 

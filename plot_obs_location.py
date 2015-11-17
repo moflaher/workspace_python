@@ -15,30 +15,42 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import scipy.io as sio
 import scipy.fftpack as fftp
 import pandas as pd
-from pyseidon import TideGauge
+from pyseidon_dvt import *
 mpl.rcParams.update(mpl.rcParamsDefault)
 
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vhfr_low'
+grid='vh_high'
 datatype='2d'
 regionname='fr_whole'
 region=regions(regionname)
-
 region=expand_region(region,dist=[-32000,-18000], shift=[-28000,6000])
-obspath='data/misc/vhfr_obs/VancouverBC_Harbour_Currents/'
-obsname='04100_20110621'
-obs=loadcur(obspath+obsname+'*.cur')
+
+region2=regions('secondnarrows')
+region2=expand_region(region2,dist=[-1000,-800], shift=[-400,-400])
+
+# eobs
+TGobs = []
+Aobs = []
+
+path2obs = "data/misc/vhfr_obs/VancouverBC_Harbour_Currents/"
+obsnamelist = [s for s in os.listdir(path2obs) if "pad.mat" in s]
+obsnamelist.sort()
+for nameo in obsnamelist:
+    filename = path2obs + nameo
+    print("Stacking: "+ nameo +"...")
+    inobs = ADCP(filename)
+    inobs.Variables.ua=inobs.Variables.u
+    inobs.Variables.va=inobs.Variables.v    
+    Aobs.append(inobs)
 
 path2obs = "data/misc/vhfr_obs/slev/"
 obsnamelist = [s for s in os.listdir(path2obs) if ".mat" in s]
-# eobs
-eobs = []
 for tname in obsnamelist:
     filename = path2obs + tname
     print("Stacking: "+ tname +"...")
     inobs = TideGauge(filename)
-    eobs.append(inobs)
+    TGobs.append(inobs)
 
 
 savepath='figures/png/' + grid + '_' + datatype + '/misc/'
@@ -55,24 +67,61 @@ print('done sort')
 
 #Plot obs location
 f=plt.figure()
-ax=plt.axes([.125,.1,.775,.8])
+ax=f.add_axes([.125,.1,.75,.8])
 ax.triplot(data['trigrid'],lw=.2)
 prettyplot_ll(ax,setregion=region)
-plotcoast(ax,filename='pacific_harbour.nc',color='0.6',fcolor='0.6',fill=True)
+plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
 
-for key in obs:    
-    ax.plot(obs[key]['lon'],obs[key]['lat'],'b*',markersize=8)
+#for key in obs:    
+    #ax.plot(obs[key]['lon'],obs[key]['lat'],'b*',markersize=8)
 
-ax.annotate('ADCPs',xy=(obs[key]['lon']-.01,obs[key]['lat']-.01),xycoords='data',xytext=(obs[key]['lon']-.13,obs[key]['lat']-.05), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+#ax.annotate('ADCPs',xy=(obs[key]['lon']-.01,obs[key]['lat']-.01),xycoords='data',xytext=(obs[key]['lon']-.13,obs[key]['lat']-.05), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+
+for tobs in Aobs:
+    ax.plot(tobs.Variables.lon,tobs.Variables.lat,'b*',markersize=8)
+    #if tobs.Variables.RBR.name[-4:]=='7795':
+    #    ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon+.01,tobs.Variables.lat+.01),xycoords='data',xytext=(tobs.Variables.lon+.03,tobs.Variables.lat+.1), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+    #else:
+    #    ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon+.01,tobs.Variables.lat+.01),xycoords='data',xytext=(tobs.Variables.lon+.05,tobs.Variables.lat+.05), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+
+ax.annotate('ADCPs',xy=(tobs.Variables.lon,tobs.Variables.lat),xycoords='data',xytext=(tobs.Variables.lon-.13,tobs.Variables.lat-.05), textcoords='data',arrowprops=dict(width=.5,shrink=0.05,color='w',headwidth=3),color='w')
+
 
     
-for tobs in eobs:
+for tobs in TGobs:
     ax.plot(tobs.Variables.lon,tobs.Variables.lat,'r*',markersize=8)
     if tobs.Variables.RBR.name[-4:]=='7795':
-        ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon+.01,tobs.Variables.lat+.01),xycoords='data',xytext=(tobs.Variables.lon+.03,tobs.Variables.lat+.1), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+        ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon,tobs.Variables.lat),xycoords='data',xytext=(tobs.Variables.lon+.03,tobs.Variables.lat+.1), textcoords='data',arrowprops=dict(width=.5,shrink=0.05,color='w',headwidth=3),color='w')
     else:
-        ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon+.01,tobs.Variables.lat+.01),xycoords='data',xytext=(tobs.Variables.lon+.05,tobs.Variables.lat+.05), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='w',headwidth=3),color='w')
+        ax.annotate(tobs.Variables.RBR.name[-4:],xy=(tobs.Variables.lon,tobs.Variables.lat),xycoords='data',xytext=(tobs.Variables.lon+.05,tobs.Variables.lat+.05), textcoords='data',arrowprops=dict(width=.5,shrink=0.05,color='w',headwidth=3),color='w')
 
+plot_box(ax,region2,'r',1.5)
+
+ax0=f.add_axes([.4,.525,.6,.375])
+ax0.xaxis.set_tick_params(labeltop='on',labelbottom='off')
+ax0.yaxis.set_tick_params(labelright='on',labelleft='off')
+ax0.triplot(data['trigrid'],lw=.2)
+
+prettyplot_ll(ax0,setregion=region2)
+plotcoast(ax0,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
+ax0.set_xlabel('')
+ax0.set_ylabel('')
+ax0.set_xticklabels(ax0.get_xticks(),rotation=30)
+ax0.set_yticklabels(ax0.get_yticks(),rotation=30)
+
+for i,tobs in enumerate(Aobs):  
+    j=6-i  
+    ax0.plot(tobs.Variables.lon,tobs.Variables.lat,'b*',markersize=4)
+    ax0.annotate("%d"%(j+1),(tobs.Variables.lon,tobs.Variables.lat),(tobs.Variables.lon+.002,tobs.Variables.lat+.003-j*.0008),arrowprops=dict(width=.5,shrink=0.15,color='k',headwidth=3),color='k')
+
+ax0.set_xticklabels(-1*(ax0.get_xticks()))
+
+
+plt.draw()
+
+ax0bb=ax0.get_axes().get_position().bounds
+ax.annotate("",xy=(ax0bb[0],ax0bb[1]),xycoords='figure fraction',xytext=(region2['region'][0],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='r',headwidth=3))
+ax.annotate("",xy=(ax0bb[0]+ax0bb[2],ax0bb[1]),xycoords='figure fraction',xytext=(region2['region'][1],region2['region'][2]), textcoords='data',arrowprops=dict(width=.5,shrink=0,color='r',headwidth=3))
 
 
     
