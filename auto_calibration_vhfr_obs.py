@@ -7,7 +7,7 @@ from pyseidon.utilities.pyseidon_error import PyseidonError
 import os
 
 
-grid='vh_high'
+grid='vhfr_low'
 datatype='2d'
 
 startdir=os.getcwd()+'/'

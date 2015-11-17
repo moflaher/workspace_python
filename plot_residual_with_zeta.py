@@ -51,10 +51,11 @@ if np.shape(cages)!=():
 
 
 region=regions(regionname)
+nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 vidx=equal_vectors(data,region,vector_spacing)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/residual/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/residual_with_zeta/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -71,8 +72,8 @@ for j in range(0,len(eidx)):
     resv[i,:]=data['va'][starttime:(endtime+1),i]-np.imag(tp).flatten()
 
 
-
-
+ymax=np.max(data['zeta'][starttime:endtime,nidx[2500]])
+ymin=np.min(data['zeta'][starttime:endtime,nidx[2500]])
 
 
 def res_plot(i):
@@ -89,10 +90,22 @@ def res_plot(i):
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],resu[vidx,i],resv[vidx,i],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
     if uniformvectorflag==True:
         norm=np.sqrt(resu[vidx,i]**2+resv[vidx,i]**2)
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(resu[vidx,i],norm),np.divide(resv[vidx,i],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
-            
-        
+        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(resu[vidx,i],norm),np.divide(resv[vidx,i],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k') 
     prettyplot_ll(ax,setregion=region,cblabel=r'Residual (ms$^{-1}$)',cb=triax)
+    
+    ax1=plt.axes([.125,.675,.675,.2])
+    ax1.plot(data['time'][starttime:i]-data['time'][starttime],data['zeta'][starttime:i,nidx[2500]])
+    ax1.set_ylabel(r'Elevation (m)')
+    ax1.set_xlabel(r'Time (days)')
+    ax1.xaxis.set_tick_params(labeltop='on',labelbottom='off')
+    ax1.axis([data['time'][starttime]-data['time'][starttime],data['time'][endtime]-data['time'][starttime],ymin,ymax])
+    _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+    ax1.yaxis.set_major_formatter(_formatter)
+    ax1.xaxis.set_major_formatter(_formatter)
+    ax1.xaxis.set_label_coords(0.5, 1.4) 
+    
+    
+    
     f.savefig(savepath + grid + '_' + region['regionname'] +'_residual_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
