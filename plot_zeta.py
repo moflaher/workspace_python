@@ -25,10 +25,10 @@ global nidx
 
 
 # Define names and types of data
-name='vhfr_low_test'
-grid='vhfr_low'
+name='2012-02-01_2012-03-01'
+grid='fr_high'
 datatype='2d'
-regionname='vh_whole'
+regionname='fr_mouth'
 starttime=0
 endtime=1000
 
@@ -71,7 +71,7 @@ def zeta_plot(i):
 
 
 
-pool = multiprocessing.Pool(1)
+pool = multiprocessing.Pool(2)
 pool.map(zeta_plot,range(starttime,endtime))
 
 

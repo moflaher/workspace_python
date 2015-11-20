@@ -15,9 +15,9 @@ from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 
 # Define names and types of data
-name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vh_high'
-regionlist=['firstnarrows','secondnarrows','vh_whole']
+name='2012-02-01_2012-03-01'
+grid='fr_high'
+regionlist=['fr_mouth']
 datatype='2d'
 starttime=0
 endtime=2785

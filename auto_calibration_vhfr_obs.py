@@ -7,12 +7,12 @@ from pyseidon_dvt import *
 import os
 
 
-grid='vh_high'
+grid='fr_high'
 datatype='2d'
 
 startdir=os.getcwd()+'/'
 path2runs = 'runs/'+grid+'/'
-folder2results=['2012-02-01_2012-03-01_0.01_0.001']
+folder2results=['2012-02-01_2012-03-01']
 
 
 path2results = 'figures/png/'+grid+'_'+datatype+'/calibration_short/'

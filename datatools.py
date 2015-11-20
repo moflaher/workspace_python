@@ -785,7 +785,7 @@ def loadCUR(filename):
         lonstr=FILEHEADER['LOCATION']['LONGITUDE']
         if ('W' in lonstr):
             lonstr=lonstr.replace('W','')
-            CUR['lon']=np.sum(np.array([float(x) for x in lonstr.split()])*np.array([-1,1/60]))            
+            CUR['lon']=np.sum(np.array([float(x) for x in lonstr.split()])*np.array([-1,-1/60]))            
         latstr=FILEHEADER['LOCATION']['LATITUDE']
         if ('N' in latstr):
             latstr=latstr.replace('N','')

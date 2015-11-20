@@ -23,7 +23,7 @@ import multiprocessing
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 datatype='2d'
-regionname='firstnarrows'
+regionname='secondnarrows'
 starttime=0
 endtime=1000
 cmin=0
@@ -39,8 +39,11 @@ print('done sort')
 vectorflag=False
 coastflag=True
 uniformvectorflag=True
-vector_spacing=125
-vector_scale=750
+#vector_spacing=125
+#vector_scale=750
+vector_spacing=75
+vector_scale=1250
+zetanode=2500
 
 cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
 if np.shape(cages)!=():
@@ -72,8 +75,8 @@ for j in range(0,len(eidx)):
     resv[i,:]=data['va'][starttime:(endtime+1),i]-np.imag(tp).flatten()
 
 
-ymax=np.max(data['zeta'][starttime:endtime,nidx[2500]])
-ymin=np.min(data['zeta'][starttime:endtime,nidx[2500]])
+ymax=np.max(data['zeta'][starttime:endtime,nidx[zetanode]])
+ymin=np.min(data['zeta'][starttime:endtime,nidx[zetanode]])
 
 
 def res_plot(i):
@@ -93,8 +96,9 @@ def res_plot(i):
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(resu[vidx,i],norm),np.divide(resv[vidx,i],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k') 
     prettyplot_ll(ax,setregion=region,cblabel=r'Residual (ms$^{-1}$)',cb=triax)
     
-    ax1=plt.axes([.125,.675,.675,.2])
-    ax1.plot(data['time'][starttime:i]-data['time'][starttime],data['zeta'][starttime:i,nidx[2500]])
+    #ax1=plt.axes([.125,.675,.675,.2])
+    ax1=plt.axes([.125,.545,.675,.2])
+    ax1.plot(data['time'][starttime:i]-data['time'][starttime],data['zeta'][starttime:i,nidx[zetanode]])
     ax1.set_ylabel(r'Elevation (m)')
     ax1.set_xlabel(r'Time (days)')
     ax1.xaxis.set_tick_params(labeltop='on',labelbottom='off')

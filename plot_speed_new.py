@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vh_high'
+name='2012-02-01_2012-03-01'
+grid='fr_high'
 datatype='2d'
-regionname='secondnarrows'
+regionname='fr_mouth'
 starttime=0
 endtime=1000
 cmin=0
-cmax=2
+cmax=1
 
 
 ### load the .nc file #####
@@ -53,8 +53,12 @@ print('done sort')
 vectorflag=False
 coastflag=True
 uniformvectorflag=True
-vector_spacing=75
-vector_scale=1250
+vector_spacing=600
+vector_scale=150
+
+
+#vector_spacing=75
+#vector_scale=1250
 
 #vector_spacing=125
 #vector_scale=750
