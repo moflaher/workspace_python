@@ -19,7 +19,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 # Define names and types of data
 name0='vhfr_low'
-name1='vh_high'
+name1='fr_high'
 regionlist=['vhfr_whole','fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','firstnarrows','secondnarrows','vh_whole']
 datatype='2d'
 
@@ -33,7 +33,7 @@ data0=ncdatasort(data0)
 data0=get_sidelength(data0)
 
 
-data1=loadnei('runs/vh_high/vh_high_clean_hpc/input/'+name1+'.nei')
+data1=loadnei('runs/fr_high/2012-02-01_2012-03-01/input/'+name1+'.nei')
 data1['x'],data1['y'],data1['proj']=lcc(data1['lon'],data1['lat'])
 data1=get_nv(data1)
 data1=ncdatasort(data1)
