@@ -85,6 +85,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-123.325,   -121.975,    48.95,    49.6],'fr_whole','fr_whole']])
     tl=np.vstack([tl,        [[-123.33,   -123.0,    49,    49.275],'fr_mouth','fr_mouth']])
     tl=np.vstack([tl,        [[-122.75,   -122.45,    49.25,    49.55],'pitt_lake','pitt_lake']])
+    tl=np.vstack([tl,        [[-122.7,   -122.55,    49.3,    49.4],'pitt_lake_sandbar','pitt_lake_sandbar']])
     tl=np.vstack([tl,        [[-123.1,   -122.8,    49.075,    49.235],'fr_area1','fr_area1']])
     tl=np.vstack([tl,        [[-122.8,   -122.525,    49.14,    49.27],'fr_area2','fr_area2']])
     tl=np.vstack([tl,        [[-122.2,   -122.0,    49.11,    49.21],'fr_area3','fr_area3']])
