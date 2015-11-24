@@ -110,9 +110,9 @@ ax0.set_xticklabels(ax0.get_xticks(),rotation=30)
 ax0.set_yticklabels(ax0.get_yticks(),rotation=30)
 
 for i,tobs in enumerate(Aobs):  
-    j=6-i  
+    j=i  
     ax0.plot(tobs.Variables.lon,tobs.Variables.lat,'b*',markersize=4)
-    ax0.annotate("%d"%(j+1),(tobs.Variables.lon,tobs.Variables.lat),(tobs.Variables.lon+.002,tobs.Variables.lat+.003-j*.0008),arrowprops=dict(width=.5,shrink=0.15,color='k',headwidth=3),color='k')
+    ax0.annotate("%d"%(j+1),(tobs.Variables.lon,tobs.Variables.lat),(tobs.Variables.lon+.002,tobs.Variables.lat-.003+j*.0008),arrowprops=dict(width=.5,shrink=0.15,color='k',headwidth=3),color='k')
 
 ax0.set_xticklabels(-1*(ax0.get_xticks()))
 
