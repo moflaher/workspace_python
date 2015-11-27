@@ -18,10 +18,10 @@ from matplotlib.collections import PolyCollection as PC
 import matplotlib.path as path
 
 # Define names and types of data
-name='kit4_baroclinic_new_322'
-grid='kit4'
+name='2012-02-01_2012-03-01'
+grid='fr_high'
 datatype='2d'
-regionname='douglaslarge'
+regionname='fr_whole'
 
 
 
