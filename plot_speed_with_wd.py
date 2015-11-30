@@ -102,7 +102,7 @@ def speed_plot(i):
             
     sand=np.argwhere(data['wet_cells'][i,:]==0)
     tmparray=[list(zip(data['nodell'][data['nv'][j,[0,1,2]],0],data['nodell'][data['nv'][j,[0,1,2]],1])) for j in sand ]
-    lseg_sand=PC(tmparray,facecolor = 'sandybrown',edgecolor='sandybrown')
+    lseg_sand=PC(tmparray,facecolor = '0.75',edgecolor='0.75')
     ax.add_collection(lseg_sand) 
         
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)

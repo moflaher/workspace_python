@@ -21,7 +21,7 @@ from matplotlib.collections import PolyCollection as PC
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-regionname='secondnarrows'
+regionname='vh_whole'
 datatype='2d'
 starttime=0
 
@@ -74,9 +74,12 @@ if testing==False:
 res_speed=np.sqrt(resu**2+resv**2)
 res_speed_mean=res_speed.mean(axis=0)
 
+res_speed_mean_full=np.zeros((data['nele'],))
+res_speed_mean_full[eidx]=res_speed_mean
+
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(data['trigrid'],res_speed_mean)
+triax=ax.tripcolor(data['trigrid'],res_speed_mean_full)
 prettyplot_ll(ax,setregion=region,cb=triax,cblabel=r'Residual Speed (m s$^{-1}$)')
 plotcoast(ax,color='None',fcolor='darkgreen',fill=True)
 f.savefig(savepath + grid + '_'+ name +'_'+regionname+'_meanres.png',dpi=600)

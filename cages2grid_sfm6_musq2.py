@@ -39,13 +39,13 @@ import sys
 
 
 
-data = loadnc('/media/moflaher/My Book/cages/sfm6_musq2_test_2/output/')
+data = loadnc('runs/sfm6_musq2/sfm6_musq2_all_cages/output/',singlename='sfm6_musq2_0001.nc')
 data =ncdatasort(data)
-cages=sio.loadmat('brent_2014_farmlocations.mat')
+cages=np.load('data/misc/fishcage/farmlocations.npy')
+cages=cages[()]
 
-cageloc=np.hstack([cages['farmx'],cages['farmy']])
+cageloc=np.vstack([cages['lon'],cages['lat']]).T
 
-region=regions('musq')
 
 savepath='figures/png/sfm6_musq2/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -72,15 +72,15 @@ newhost=newhost[newhost !=-1]
 
 tempdic={}
 tempdic['cage_elements']=newhost+1
-sio.savemat('cage_elements_sfm6_musq2.mat',mdict=tempdic)
+sio.savemat('data/misc/fishcage/cage_elements_sfm6_musq2.mat',mdict=tempdic)
 
 
-np.savetxt('cage_elements_sfm6_musq2.dat',newhost+1,fmt='%i')
+np.savetxt('data/misc/fishcage/cage_elements_sfm6_musq2.dat',newhost+1,fmt='%i')
 
 drag=np.zeros([newhost.shape[0],])+0.6
 depth=np.zeros([newhost.shape[0],])+10
 
-fvcom_savecage('sfm6_musq2_cage.dat',newhost+1,drag,depth)
+fvcom_savecage('data/misc/fishcage/sfm6_musq2_cage.dat',newhost+1,drag,depth)
 
 trihost=np.zeros([data['uvnodell'].shape[0],])
 trihost[newhost]=1
@@ -92,6 +92,6 @@ plt.colorbar()
 plt.grid()
 plt.axis([-66.925, -66.8,45.0,45.075])
 plt.title('Locations with cages')
-plt.savefig(savepath + 'cage_host_locations.png',dpi=2400)
+plt.savefig(savepath + 'cage_host_locations_new.png',dpi=2400)
 plt.close()
 
