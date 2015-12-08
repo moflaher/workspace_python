@@ -46,6 +46,8 @@ from scipy.io import netcdf
 import scipy.io as sio
 import mmap
 import os
+from osgeo import ogr
+from osgeo import osr
 
 
 
@@ -1003,3 +1005,66 @@ def interpol(data_1, data_2, time_step=5.0/(24*60)):
 
 
 
+def save_poly_shp(data,varLabel,filename):
+    epsg_in=4326
+    
+    lon = data['lon']
+    lat = data['lat']
+    trinodes = data['nv']
+    var=data[varLabel]
+
+
+
+    driver = ogr.GetDriverByName('ESRI Shapefile')
+    shapeData = driver.CreateDataSource(filename)
+
+    spatialRefi = osr.SpatialReference()
+    spatialRefi.ImportFromEPSG(epsg_in)
+    lyr = shapeData.CreateLayer("poly_layer", spatialRefi, ogr.wkbPolygon )
+
+    #var is just a rdm string?
+    lyr.CreateField(ogr.FieldDefn(varLabel, ogr.OFTReal))
+
+    cnt = 0
+    for row in trinodes:
+        val1 = -999
+        ring = ogr.Geometry(ogr.wkbLinearRing)
+        for val in row:
+            if val1 == -999:
+                val1 = val
+            ring.AddPoint(lon[val], lat[val])
+        #Add 1st point to close ring
+        ring.AddPoint(lon[val1], lat[val1])
+
+        poly = ogr.Geometry(ogr.wkbPolygon)
+        poly.AddGeometry(ring)
+
+        #Now add field values from array
+        feat = ogr.Feature(lyr.GetLayerDefn())
+        feat.SetGeometry(poly)
+        feat.SetField(varLabel, float(var[cnt]))
+
+        lyr.CreateFeature(feat)
+        feat.Destroy()
+        poly.Destroy()
+
+        val1 = -999
+        cnt += 1
+        
+    shapeData.Destroy()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
