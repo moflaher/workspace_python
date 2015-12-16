@@ -34,17 +34,20 @@ def gridproj(grid):
         return
 
     projstr={}
-    projstr['kit4_kelp']='lcc +lon_0=-129.4954 +lat_0=53.55285 +lat_1=52.36906 +lat_2=54.73664'
     projstr['smallcape_force']='lcc +lon_0=-64.55880 +lat_0=41.84493 +lat_1=39.72147 +lat_2=43.96838'
     projstr['voucher']='lcc +lon_0=-64.55880 +lat_0=41.84492 +lat_1=39.72147 +lat_2=43.96838'
     projstr['dngrid']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
-    projstr['dn_coarse']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
-    
+    projstr['dn_coarse']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'    
     
     projstr['acadia_force']='lcc +lon_0=-64.55880 +lat_0=41.84493 +lat_1=39.72147 +lat_2=43.96838'
     projstr['acadia_BoF']='lcc +lon_0=-64.55880 +lat_0=41.84492 +lat_1=39.72147 +lat_2=43.96838'
     projstr['acadia_dn']='lcc +lon_0=-64.55880 +lat_0=41.78504 +lat_1=39.69152 +lat_2=43.87856'
 
+    projstr['kit4_kelp']='lcc +lon_0=-129.4954 +lat_0=53.55285 +lat_1=52.36906 +lat_2=54.73664'
+    projstr['vhfr_low']='lcc +lon_0=-122.9842 +lat_0=49.24705 +lat_1=49.02230 +lat_2=49.47181'
+    projstr['vh_high']='lcc +lon_0=-122.9842 +lat_0=49.24705 +lat_1=49.02230 +lat_2=49.47181'
+    projstr['fr_high']='lcc +lon_0=-122.9842 +lat_0=49.24705 +lat_1=49.02230 +lat_2=49.47181'
+    
 
     return pyp.Proj(proj=projstr[grid])
 

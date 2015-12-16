@@ -247,7 +247,7 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
 
     #code for ll adapted from mod_utils.F
     if ll==True:
-        x0c,y0c=pjt.ll2m(data['uvnodell'][hosts,:],locs)
+        x0c,y0c=pjt.ll2m(data['uvnodell'][hosts,:].flatten(),locs.flatten())
     else:       
         x0c=locs[:,0]-data['uvnode'][hosts,0]
         y0c=locs[:,1]-data['uvnode'][hosts,1] 
