@@ -21,7 +21,7 @@ name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 datatype='2d'
 region={}
-region['region']=np.array([-123.2,-123.08,49.26,49.34])
+region['region']=np.array([-123.19,-123.09,49.27,49.34])
 stime=100
 
 savepath='figures/png/' + grid + '_' + datatype + '/shippath/'
@@ -33,9 +33,11 @@ print('done load')
 data = ncdatasort(data)
 print('done sort')
 
-seg=load_segfile('data/misc/shippath_fake_vh_1.seg')
-locs=np.array([seg['1'][:,0],seg['1'][:,1]]).T
-
+seg=load_segfile('data/misc/shippath_fake_vh_2.seg')
+locs=np.array([])
+for key in seg.keys():
+    locs=np.append(locs,np.array([seg[key][:,0],seg[key][:,1]]).T)
+locs=locs.reshape(-1,2)
 
 #Plot obs location
 f=plt.figure()
@@ -61,7 +63,8 @@ dx=np.diff(x)
 dy=np.diff(y)
 d=np.sqrt(dx**2+dy**2)
 
-sspeed=np.array([ 2.,  1.,  4.,  1.,  1.,  5.,  1.,  1.,  1.,  4.,  2.,  4.,  1.])    
+np.random.seed(10)
+sspeed=np.round(np.random.rand(len(locs)-1)*4)+1  
 times=np.append(data['time'][stime],np.cumsum(np.divide(d,sspeed)/(24*60*60))+data['time'][stime])
 idx=np.argwhere(((data['time']<=times.max()) & (data['time']>=times.min()))).ravel()
 if idx.min()!=0:
@@ -86,16 +89,13 @@ for i,time in enumerate(times):
     v1 = interp1d(mtimes[[lidx,uidx]], np.array([lva,uva]).flatten())
     sva[i] = v1(time)
 
-qax=ax.quiver(locs[:,0],locs[:,1],sua,sva,angles='xy',scale_units='xy',scale=50,width=0.005)
+qax=ax.quiver(locs[:,0],locs[:,1],sua,sva,angles='xy',scale_units='xy',scale=50,width=0.003)
 qax.set_zorder(20)
 qaxk=ax.quiverkey(qax,.125,.85,0.5, r'0.5 ms')
 
         
 f.savefig(savepath + grid + '_shippath_arrows.png',dpi=300)
 plt.close(f)
-
-
-
 
 
 
