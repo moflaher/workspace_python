@@ -97,8 +97,3 @@ qaxk=ax.quiverkey(qax,.125,.85,0.5, r'0.5 ms')
 f.savefig(savepath + grid + '_shippath_arrows.png',dpi=300)
 plt.close(f)
 
-
-
-
-
-
