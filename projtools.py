@@ -48,6 +48,8 @@ def gridproj(grid):
     projstr['vh_high']='lcc +lon_0=-122.9842 +lat_0=49.24705 +lat_1=49.02230 +lat_2=49.47181'
     projstr['fr_high']='lcc +lon_0=-122.9842 +lat_0=49.24705 +lat_1=49.02230 +lat_2=49.47181'
     
+    projstr['sfm6_musq2']='lcc +lon_0=-64.62943 lat_0=45.39876 lat_1=45.11211 lat_2=45.68542'
+    
 
     return pyp.Proj(proj=projstr[grid])
 
