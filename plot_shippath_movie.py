@@ -15,6 +15,8 @@ import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 from scipy.interpolate import interp1d
 from matplotlib import patches as pp
+from osgeo import osr, gdal
+from matplotlib.colors import LinearSegmentedColormap
 
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
@@ -84,11 +86,62 @@ for i,time in enumerate(times):
 u_vec=np.empty((len(vidx),))
 v_vec=np.empty((len(vidx),))
 
+
+gdal.UseExceptions()
+ds = gdal.Open('data/misc/vhfr_obs/misc/3481_Geotiff.tif')
+band = ds.GetRasterBand(1)
+ct=band.GetColorTable()
+elevation = ds.ReadAsArray()
+
+cb=np.array([])
+for i in range(ct.GetCount()):
+    cb=np.append(cb,ct.GetColorEntry(i)[:])
+cb=cb.reshape(-1,4)
+mycmap=LinearSegmentedColormap.from_list('my_colormap',cb[:13,:]/256,13)
+
+old_cs= osr.SpatialReference()
+old_cs.ImportFromWkt(ds.GetProjectionRef())
+
+wgs84_wkt = """
+GEOGCS["WGS 84",
+    DATUM["WGS_1984",
+        SPHEROID["WGS 84",6378137,298.257223563,
+            AUTHORITY["EPSG","7030"]],
+        AUTHORITY["EPSG","6326"]],
+    PRIMEM["Greenwich",0,
+        AUTHORITY["EPSG","8901"]],
+    UNIT["degree",0.01745329251994328,
+        AUTHORITY["EPSG","9122"]],
+    AUTHORITY["EPSG","4326"]]"""
+new_cs = osr.SpatialReference()
+new_cs.ImportFromWkt(wgs84_wkt)
+
+# create a transform object to convert between coordinate systems
+transform = osr.CoordinateTransformation(old_cs,new_cs) 
+
+#get the point to transform, pixel (0,0) in this case
+width = ds.RasterXSize
+height = ds.RasterYSize
+gt = ds.GetGeoTransform()
+minx = gt[0]
+miny = gt[3] + width*gt[4] + height*gt[5] 
+maxx = gt[0] + width*gt[1] + height*gt[2]
+maxy = gt[3]  
+
+#get the coordinates in lat long
+latlongBL = transform.TransformPoint(minx,miny)
+latlongBR = transform.TransformPoint(maxx,miny)
+latlongTL = transform.TransformPoint(minx,maxy)
+latlongTR = transform.TransformPoint(maxx,maxy) 
+
+
+
 def plot_ship(i):
     f=plt.figure()
     ax=f.add_axes([.125,.1,.75,.8])
     prettyplot_ll(ax,setregion=region)
-    plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
+    #plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
+    ax.imshow(elevation, cmap=mycmap,vmax=13, extent=[latlongBL[0],latlongTR[0],latlongBL[1],latlongTR[1]])
     
     ax.plot(locs[:,0],locs[:,1],'r',lw=2)
     qax=ax.quiver(locs[:,0],locs[:,1],sua,sva,angles='xy',scale_units='xy',scale=100,width=0.003)
