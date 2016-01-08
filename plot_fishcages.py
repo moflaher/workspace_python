@@ -13,6 +13,7 @@ from gridtools import *
 from datatools import *
 from misctools import *
 from plottools import *
+from projtools import *
 from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
@@ -20,7 +21,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
+name='sfm6_musq2_half_cages'
 grid='sfm6_musq2'
 datatype='2d'
 
@@ -62,7 +63,7 @@ while (len(cagesleft)>0):
         #print 'cnt:'+ ("%d"%cnt)
         #print clen
 
-    print 'cagecnt:' +("%d"%cagecnt)
+    print('cagecnt:' +("%d"%cagecnt))
     #print cage1  
     sortedcages[cagecnt,cage1]=True
     cagecnt+=1
@@ -155,7 +156,7 @@ for i in oldcages:
 cageposx=np.empty([sortedcages.shape[0],])
 cageposy=np.empty([sortedcages.shape[0],])
 for i in range(0,sortedcages.shape[0]):
-    print i
+    print(i)
     cageposx[i]=np.mean(data['uvnodell'][sortedcages[i,:],0])
     cageposy[i]=np.mean(data['uvnodell'][sortedcages[i,:],1]) 
 
@@ -180,12 +181,12 @@ ax_cages.text(-66.85,45.055,'Frye Island',fontsize=14,rotation=75)
 
 
 
-plotcoast(ax_all,filename='mid_nwatl6b_test.nc',fill=True)
+plotcoast(ax_all,filename='mid_nwatl6c.nc',fill=True)
 
 #plt.plot(data['uvnodell'][cages,0],data['uvnodell'][cages,1],'b.',markersize=2)
 
 
 
-f.show()
-#plt.savefig(savepath + grid + '_' +name+ '_gmt_clone_cage_outline.png',dpi=1200)
-
+#f.show()
+f.savefig(savepath + grid + '_' +name+ '_gmt_clone_cage_outline.png',dpi=1200)
+plt.close(f)

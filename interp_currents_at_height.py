@@ -13,10 +13,10 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kit4_baroclinic_new_322'
-grid='kit4'
+name='sfm6_musq2_all_cages'
+grid='sfm6_musq2'
 datatype='2d'
-starttime=384
+starttime=0
 interpheight=1
 
 ### load the .nc file #####
