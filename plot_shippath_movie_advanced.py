@@ -26,7 +26,7 @@ region={}
 region['region']=np.array([-123.19,-123.09,49.27,49.34])
 stime=100
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/shippath/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/shippath_advanced/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 ### load the .nc file #####
@@ -56,7 +56,7 @@ dy=np.diff(y)
 d=np.sqrt(dx**2+dy**2)
 
 np.random.seed(10)
-sspeed=np.round(np.random.rand(len(locs)-1)*2)
+sspeed=np.round(np.random.rand(len(locs)-1)*5)/5
 sspeed[sspeed==0]=0.1  
 times=np.append(data['time'][stime],np.cumsum(np.divide(d,sspeed)/(24*60*60))+data['time'][stime])
 idx=np.argwhere(((data['time']<=times.max()) & (data['time']>=times.min()))).ravel()
@@ -86,6 +86,8 @@ for i,time in enumerate(times):
 u_vec=np.empty((len(vidx),))
 v_vec=np.empty((len(vidx),))
 
+dxs=dx/(np.diff(times)*3600*24)
+dys=dy/(np.diff(times)*3600*24)
 
 def load_geotiff(filename):
     
@@ -143,8 +145,8 @@ def load_geotiff(filename):
 
 def plot_ship(i):
     f=plt.figure()
-    ax=f.add_axes([.125,.1,.75,.8])
-    prettyplot_ll(ax,setregion=region)
+    ax=f.add_axes([.125,.1,.45,.8])
+    #prettyplot_ll(ax,setregion=region)
     #plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
     ax.imshow(geotiff, cmap=cmap,vmax=13, extent=extent)
     
@@ -191,8 +193,49 @@ def plot_ship(i):
                             facecolor=fcolor)
             ax.add_artist(a)
     for label in ax.get_xticklabels()[::2]:
-        label.set_visible(False)
-            
+        label.set_visible(False)     
+    prettyplot_ll(ax,setregion=region)
+    #plt.draw()
+    #a=ax.get_axes().get_position()
+    #print(a)
+    #print(ax.get_aspect())
+    #figW, figH = f.get_size_inches()
+    #fa = figH / figW
+    #print(fa)
+    #ax.axis(region['region'])
+    space=.01
+    plots=3
+    axsub=np.empty((plots,),dtype=object) 
+    height=(.450898-((plots-1)*space))/3
+    for j in range(plots):   
+        #print([.575+space,.1+(height+space)*i,.325,height])
+        axsub[j]=f.add_axes([.575+space/ax.get_aspect(),.1+(height+space)*j,.315,height])    
+  
+    axsub[2].plot(times*24-times.min()*24,speeder(sua,sva),'k')
+    axsub[1].quiver(times*24-times.min()*24,np.zeros((len(times),)),sua,sva,scale=3,width=.0025)    
+    axsub[0].quiver(times[:-1]*24-times[:-1].min()*24,np.zeros((len(times[:-1]),)),dxs,dys,scale=6,width=.0025)   
+        
+    for label in axsub[1].get_xticklabels():
+        label.set_visible(False)    
+    for label in axsub[2].get_xticklabels():
+        label.set_visible(False)    
+    axsub[1].xaxis.set_tick_params(labelbottom='off')
+    axsub[2].xaxis.set_tick_params(labelbottom='off')
+    axsub[2].set_ylabel(r'Speed (ms$^{-1}$)',fontsize=8) 
+    axsub[1].set_ylabel(r'Cur. Dir.',fontsize=8)
+    axsub[0].set_ylabel(r'Ship Dir.',fontsize=8)
+    axsub[0].set_xlabel('Time (h)')
+    
+    axsub[2].set_ylim([0,1])
+    axsub[1].set_ylim([-np.pi,np.pi])
+    for axin in axsub:
+        axin.yaxis.set_tick_params(labelleft='off')
+        axin.yaxis.set_label_position('right')
+    axsub[2].yaxis.set_tick_params(labelright='on')     
+    
+    for axin in axsub:
+        axin.axvline(times[i]*24-times.min()*24,color='r') 
+      
     f.savefig(savepath + grid + '_shippath_'+"{}".format(i+stime)+'.png',dpi=300)
     plt.close(f)
 
