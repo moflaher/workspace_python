@@ -18,10 +18,10 @@ from matplotlib.collections import PolyCollection as PC
 import matplotlib.path as path
 
 # Define names and types of data
-name='2012-02-01_2012-03-01'
-grid='fr_high'
+name='kit4_kelp_20m_drag_0.018'
+grid='kit4_kelp'
 datatype='2d'
-regionname='fr_whole'
+regionname='kit4'
 
 
 
@@ -40,6 +40,9 @@ if np.shape(cages)!=():
 
 
 region=regions(regionname)
+region={}
+region['region']=np.array([-129.615566168,-129.215178942,52.44600635,52.83665705])
+
 nidx=get_nodes(data,region)
 
 
