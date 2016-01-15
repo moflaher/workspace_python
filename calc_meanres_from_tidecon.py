@@ -16,9 +16,9 @@ from t_tide import t_tide
 from t_predic import t_predic
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
+name='sfm6_musq2_half_cages'
 grid='sfm6_musq2'
-datatype='3d'
+datatype='2d'
 starttime=0
 
 
@@ -30,7 +30,7 @@ print('done sort')
 
 
 
-ttidein=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_layer_19_all.npy')
+ttidein=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_surface_currents_all.npy')
 ttidein=ttidein[()]
 
 tidecon=ttidein['tidecon']
@@ -42,7 +42,7 @@ resu=np.empty((tidecon.shape[0],len(data['time'][starttime:])))
 resv=np.empty((tidecon.shape[0],len(data['time'][starttime:])))
 
 for j in range(0,tidecon.shape[0]):
-    print ("%d"%j)+"              "+("%f"%(j/tidecon.shape[0]*100)) 
+    print( ("%d"%j)+"              "+("%f"%(j/tidecon.shape[0]*100)) )
     tpre=t_predic(data['time'][starttime:],nameu,freq,tidecon[j,:,:])
     resu[j,:]=data['u'][starttime:,19,j]-np.real(tpre).flatten()
     resv[j,:]=data['v'][starttime:,19,j]-np.imag(tpre).flatten()
@@ -53,7 +53,7 @@ resmean['resumean']=resu.mean(axis=1)
 resmean['resvmean']=resv.mean(axis=1)
 
 
-np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_layer_19_all_mean.npy',resmean)
+np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_surface_currents_all_mean.npy',resmean)
 
 
 

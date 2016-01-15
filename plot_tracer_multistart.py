@@ -5,7 +5,6 @@ from datatools import *
 from gridtools import *
 from plottools import *
 from projtools import *
-from interptools import *
 import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
@@ -85,8 +84,8 @@ y=np.array([val[1] for val in vec])
 for i,step in enumerate(range(starttime,starttime+runtime,direction)):
     if i<12:
         locs[i::12,i,0],locs[i::12,i,1]=proj(x,y)
-    ua=interpEfield_locs(data,'ua',locs[:,i,:],step)
-    va=interpEfield_locs(data,'va',locs[:,i,:],step)    
+    ua=ipt.interpEfield_locs(data,'ua',locs[:,i,:],step)
+    va=ipt.interpEfield_locs(data,'va',locs[:,i,:],step)    
     locs[:,i+1,0]=locs[:,i,0]+(ua*dt)
     locs[:,i+1,1]=locs[:,i,1]+(va*dt)
 

@@ -5,7 +5,7 @@ from datatools import *
 from gridtools import *
 from plottools import *
 from projtools import *
-from interptools import *
+import interptools as ipt
 from misctools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
@@ -39,8 +39,8 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 loc=[-58.9161,44.1942]
 
-ua=interpE_at_loc(data,'ua',loc)
-va=interpE_at_loc(data,'va',loc)
+ua=ipt.interpE_at_loc(data,'ua',loc)
+va=ipt.interpE_at_loc(data,'va',loc)
 
 
 [nameu, freq, tidecon_uv, xout]=t_tide(ua[starttime:endtime]+1j*va[starttime:endtime],stime=data['time'][starttime],lat=loc[1],output=True,constitnames=['M2','S2','N2','K1','O1'],dt=np.diff(data['time'])[0]*24)

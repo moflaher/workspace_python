@@ -37,7 +37,6 @@ import matplotlib.tri as mplt
 import bisect
 import numexpr as ne
 import h5py
-from scipy.interpolate import interp1d
 import scipy.stats as stats
 
 #I/O modules
@@ -979,32 +978,9 @@ def linReg(mod,obs, alpha=0.05):
         data['pred_CI_width'] = y_CI_width
         data['conf_level'] = 100 * (1 - alpha)
         
-        return data
+        return data     
         
-def interpol(data_1, data_2, time_step=5.0/(24*60)):    
-    dt_1 = data_1['time']
-    dt_2 = data_2['time']
-
-    # generate interpolation functions using linear interpolation
-    f1 = interp1d(dt_1, data_1['pts'])
-    f2 = interp1d(dt_2, data_2['pts'])
-
-    # choose interval on which to interpolate
-    start = max(dt_1[0], dt_2[0])
-    end = min(dt_1[-1], dt_2[-1])
-
-    # create timestamp array for new data and perform interpolation
-    output_times = np.arange(start,end,time_step)
-
-    series_1 = f1(output_times)
-    series_2 = f2(output_times)
-
-    dt_start = max(dt_1[0], dt_2[0])
-
-    return (series_1, series_2, output_times, time_step)
-
-
-
+        
 def save_poly_shp(data,varLabel,filename):
     epsg_in=4326
     

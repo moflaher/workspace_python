@@ -16,6 +16,7 @@ from matplotlib.collections import LineCollection as LC
 import seawater as sw
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
+import scipy.interpolate as spitp
 
 
 """
@@ -367,5 +368,49 @@ def cross_shore_transect_2d(grid,name,region,vec,npt):
     np.save(savepath+grid+'_'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%len(xi))+'_2d.npy',savedic)
     sio.savemat(savepath+'matfiles/'+grid+'_'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%len(xi))+'_2d.mat',mdict=savedic)
 
+
+def interpol(data_1, data_2, time_step=5.0/(24*60)):    
+    dt_1 = data_1['time']
+    dt_2 = data_2['time']
+
+    # generate interpolation functions using linear interpolation
+    f1 = interp1d(dt_1, data_1['pts'])
+    f2 = interp1d(dt_2, data_2['pts'])
+
+    # choose interval on which to interpolate
+    start = max(dt_1[0], dt_2[0])
+    end = min(dt_1[-1], dt_2[-1])
+
+    # create timestamp array for new data and perform interpolation
+    output_times = np.arange(start,end,time_step)
+
+    series_1 = f1(output_times)
+    series_2 = f2(output_times)
+
+    dt_start = max(dt_1[0], dt_2[0])
+
+    return (series_1, series_2, output_times, time_step)
+    
+def interp1d(in_time, in_data, out_time, kind='linear'):    
+    """
+    Takes data (1d) and its timestamp. Returns the linear interpolates the vector to a second timestamp.
+    
+    :Parameters:
+    in_data - data to interpolate
+    in_time - timestamp of in_data
+    out_time - timestamps to output
+    
+    :Optional:
+    kind - sets the linear interpolator kind used in scipy.interpolate.interp1d
+    """   
+
+
+    # generate interpolation functions using linear interpolation
+    f = spitp.interp1d(in_time, in_data, kind=kind)
+
+    # Create output data
+    out_data = f(out_time)
+
+    return out_data
 
 

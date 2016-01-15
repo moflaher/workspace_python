@@ -6,7 +6,7 @@ from gridtools import *
 from misctools import *
 from plottools import *
 from projtools import *
-from interptools import *
+import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -77,12 +77,12 @@ sva=np.empty((len(locs),))
 for i,time in enumerate(times):
     
     lidx=np.argwhere(mtimes<=time).max()
-    lua=interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
-    lva=interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
+    lua=ipt.interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
+    lva=ipt.interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
      
     uidx=np.argwhere(mtimes>time).min()
-    uua=interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
-    uva=interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
+    uua=ipt.interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
+    uva=ipt.interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
     
     u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
     sua[i] = u1(time)

@@ -6,7 +6,7 @@ from gridtools import *
 from misctools import *
 from plottools import *
 from projtools import *
-from interptools import *
+import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -70,12 +70,12 @@ sva=np.empty((len(locs),))
 for i,time in enumerate(times):
     
     lidx=np.argwhere(mtimes<=time).max()
-    lua=interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
-    lva=interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
+    lua=ipt.interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
+    lva=ipt.interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
      
     uidx=np.argwhere(mtimes>time).min()
-    uua=interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
-    uva=interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
+    uua=ipt.interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
+    uva=ipt.interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
     
     u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
     sua[i] = u1(time)
@@ -159,11 +159,11 @@ def plot_ship(i):
     lidx=np.argwhere(mtimes<=time).max()
     uidx=np.argwhere(mtimes>time).min()
     for j,idx in enumerate(vidx):
-        lua=interpEfield_locs(data,'ua',data['uvnodell'][idx,:],lidx,ll=True)    
-        lva=interpEfield_locs(data,'va',data['uvnodell'][idx,:],lidx,ll=True)           
+        lua=ipt.interpEfield_locs(data,'ua',data['uvnodell'][idx,:],lidx,ll=True)    
+        lva=ipt.interpEfield_locs(data,'va',data['uvnodell'][idx,:],lidx,ll=True)           
 
-        uua=interpEfield_locs(data,'ua',data['uvnodell'][idx,:],uidx,ll=True)    
-        uva=interpEfield_locs(data,'va',data['uvnodell'][idx,:],uidx,ll=True)  
+        uua=ipt.interpEfield_locs(data,'ua',data['uvnodell'][idx,:],uidx,ll=True)    
+        uva=ipt.interpEfield_locs(data,'va',data['uvnodell'][idx,:],uidx,ll=True)  
         
         u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
         u_vec[j] = u1(time)

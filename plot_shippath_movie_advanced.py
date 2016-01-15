@@ -6,7 +6,7 @@ from gridtools import *
 from misctools import *
 from plottools import *
 from projtools import *
-from interptools import *
+import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -70,24 +70,34 @@ sva=np.empty((len(locs),))
 for i,time in enumerate(times):
     
     lidx=np.argwhere(mtimes<=time).max()
-    lua=interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
-    lva=interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
+    lua=ipt.interpEfield_locs(data,'ua',locs[i,:],lidx,ll=True)    
+    lva=ipt.interpEfield_locs(data,'va',locs[i,:],lidx,ll=True)  
      
     uidx=np.argwhere(mtimes>time).min()
-    uua=interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
-    uva=interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
+    uua=ipt.interpEfield_locs(data,'ua',locs[i,:],uidx,ll=True)    
+    uva=ipt.interpEfield_locs(data,'va',locs[i,:],uidx,ll=True)   
     
-    u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
-    sua[i] = u1(time)
-    v1 = interp1d(mtimes[[lidx,uidx]], np.array([lva,uva]).flatten())
-    sva[i] = v1(time)
+    #u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
+    #sua[i] = u1(time)
+    #v1 = interp1d(mtimes[[lidx,uidx]], np.array([lva,uva]).flatten())
+    #sva[i] = v1(time)
+    sua[i] = ipt.interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten(), time)
+    sva[i] = ipt.interp1d(mtimes[[lidx,uidx]], np.array([lva,uva]).flatten(), time)
 
+# Create constant spaced versions of sua and sva to plot
+ctime=np.linspace(times.min(),times.max(),100)
+csua=ipt.interp1d(times,sua,ctime)
+csva=ipt.interp1d(times,sva,ctime)
 
 u_vec=np.empty((len(vidx),))
 v_vec=np.empty((len(vidx),))
 
 dxs=dx/(np.diff(times)*3600*24)
 dys=dy/(np.diff(times)*3600*24)
+
+ctime2=np.linspace(times.min(),times[:-1].max(),100)
+cdxs=ipt.interp1d(times[:-1],dxs,ctime2,kind='zero')
+cdys=ipt.interp1d(times[:-1],dys,ctime2,kind='zero')
 
 def load_geotiff(filename):
     
@@ -161,11 +171,11 @@ def plot_ship(i):
     lidx=np.argwhere(mtimes<=time).max()
     uidx=np.argwhere(mtimes>time).min()
     for j,idx in enumerate(vidx):
-        lua=interpEfield_locs(data,'ua',data['uvnodell'][idx,:],lidx,ll=True)    
-        lva=interpEfield_locs(data,'va',data['uvnodell'][idx,:],lidx,ll=True)           
+        lua=ipt.interpEfield_locs(data,'ua',data['uvnodell'][idx,:],lidx,ll=True)    
+        lva=ipt.interpEfield_locs(data,'va',data['uvnodell'][idx,:],lidx,ll=True)           
 
-        uua=interpEfield_locs(data,'ua',data['uvnodell'][idx,:],uidx,ll=True)    
-        uva=interpEfield_locs(data,'va',data['uvnodell'][idx,:],uidx,ll=True)  
+        uua=ipt.interpEfield_locs(data,'ua',data['uvnodell'][idx,:],uidx,ll=True)    
+        uva=ipt.interpEfield_locs(data,'va',data['uvnodell'][idx,:],uidx,ll=True)  
         
         u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
         u_vec[j] = u1(time)
@@ -211,9 +221,9 @@ def plot_ship(i):
         #print([.575+space,.1+(height+space)*i,.325,height])
         axsub[j]=f.add_axes([.575+space/ax.get_aspect(),.1+(height+space)*j,.315,height])    
   
-    axsub[2].plot(times*24-times.min()*24,speeder(sua,sva),'k')
-    axsub[1].quiver(times*24-times.min()*24,np.zeros((len(times),)),sua,sva,scale=3,width=.0025)    
-    axsub[0].quiver(times[:-1]*24-times[:-1].min()*24,np.zeros((len(times[:-1]),)),dxs,dys,scale=6,width=.0025)   
+    axsub[2].plot(ctime*24-ctime.min()*24,speeder(csua,csva),'k')
+    axsub[1].quiver(ctime*24-ctime.min()*24,np.zeros((len(ctime),)),csua,csva,scale=3,width=.0025)    
+    axsub[0].quiver(ctime2[:-1]*24-ctime2[:-1].min()*24,np.zeros((len(ctime2[:-1]),)),cdxs,cdys,scale=6,width=.0025)   
         
     for label in axsub[1].get_xticklabels():
         label.set_visible(False)    
