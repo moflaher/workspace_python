@@ -76,7 +76,7 @@ def loadnc(datadir, singlename=None):
     data['filepath'] = filepath
 
     #load data
-    ncid = netcdf.netcdf_file(filepath, 'r',mmap=True)
+    ncid = netcdf.netcdf_file(filepath, 'r', mmap=True)
 
     for i in ncid.variables.keys():
         data[i]=ncid.variables[i].data

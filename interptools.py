@@ -197,7 +197,7 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
     return var
 
 
-def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
+def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False,fill_value=-9999):
     #"""
     #Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
     #Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
@@ -210,6 +210,7 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
     #:Optional:
     #layer - default None. Specify which layer of 3d data to use
     #ll - default True. Is point lon/lat or xy.    
+    #fill_value - default -9999 when points are outside the domain they return fill_value
     #"""   
 
 
@@ -270,6 +271,8 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False):
     dvardy= data['a2u'][0,hosts]*var_e+data['a2u'][1,hosts]*var_0+data['a2u'][2,hosts]*var_1+data['a2u'][3,hosts]*var_2
     
     var= var_e + dvardx*x0c + dvardy*y0c
+    # Handle any points outside the domain    
+    var[hosts==-1]=fill_value
         
     return var
 
