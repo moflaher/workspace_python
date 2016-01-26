@@ -25,6 +25,7 @@ datatype='2d'
 region={}
 region['region']=np.array([-123.19,-123.09,49.27,49.34])
 stime=100
+useKnots=True
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/shippath_advanced/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -35,12 +36,17 @@ print('done load')
 data = ncdatasort(data)
 print('done sort')
 
+if useKnots:
+    cv=1.9455252918287937
+else:
+    cv=1
+
 #find spacing
 dist=mdist([region['region'][0],region['region'][2]],[region['region'][1],region['region'][2]])
 spacing=dist/20.0
 vidx=equal_vectors(data,region,spacing)
 
-srange=np.array([.1,.5,1,2,3,5,7,10,13,99])*0.514
+srange=np.array([.1,.5,1,2,3,5,7,10,13,99])*0.514*cv
 crange=np.array(['#7652e2','#4898d3','#61cbe5','#6dbc45','#b4dc00','#cdc100','#f8a718','#f7a29d','#ff1e1e'])
 
 seg=load_segfile('data/misc/shippath_fake_vh_2.seg')
@@ -98,6 +104,13 @@ dys=dy/(np.diff(times)*3600*24)
 ctime2=np.linspace(times.min(),times[:-1].max(),100)
 cdxs=ipt.interp1d(times[:-1],dxs,ctime2,kind='zero')
 cdys=ipt.interp1d(times[:-1],dys,ctime2,kind='zero')
+
+#interp locations and set locations and times to interpolated version
+oldlocs=locs
+locx=ipt.interp1d(times,locs[:,0],ctime)
+locy=ipt.interp1d(times,locs[:,1],ctime)
+locs=np.vstack([locx,locy]).T
+times=ctime
 
 def load_geotiff(filename):
     
@@ -161,9 +174,12 @@ def plot_ship(i):
     ax.imshow(geotiff, cmap=cmap,vmax=13, extent=extent)
     
     ax.plot(locs[:,0],locs[:,1],'r',lw=2)
-    qax=ax.quiver(locs[:,0],locs[:,1],sua,sva,angles='xy',scale_units='xy',scale=100,width=0.003)
+    qax=ax.quiver(locs[:,0],locs[:,1],csua*cv,csva*cv,angles='xy',scale_units='xy',scale=100,width=0.003)
     qax.set_zorder(20)
-    qaxk=ax.quiverkey(qax,.9,.85,0.5, r'0.5 ms')
+    if useKnots:
+        qaxk=ax.quiverkey(qax,.9,.85,0.5, r'1 knot')
+    else:
+        qaxk=ax.quiverkey(qax,.9,.85,0.5, r'0.5 ms$^{-1}$')
 
     ax.plot(locs[i,0],locs[i,1],'m*',markersize=15)
     
@@ -178,9 +194,9 @@ def plot_ship(i):
         uva=ipt.interpEfield_locs(data,'va',data['uvnodell'][idx,:],uidx,ll=True)  
         
         u1 = interp1d(mtimes[[lidx,uidx]], np.array([lua,uua]).flatten())
-        u_vec[j] = u1(time)
+        u_vec[j] = u1(time)*cv
         v1 = interp1d(mtimes[[lidx,uidx]], np.array([lva,uva]).flatten())
-        v_vec[j] = v1(time)
+        v_vec[j] = v1(time)*cv
         
     s_vec=speeder(u_vec,v_vec)
     scale=((region['region'][1]-region['region'][0])*.0475)/s_vec.max()
@@ -221,7 +237,7 @@ def plot_ship(i):
         #print([.575+space,.1+(height+space)*i,.325,height])
         axsub[j]=f.add_axes([.575+space/ax.get_aspect(),.1+(height+space)*j,.315,height])    
   
-    axsub[2].plot(ctime*24-ctime.min()*24,speeder(csua,csva),'k')
+    axsub[2].plot(ctime*24-ctime.min()*24,speeder(csua,csva)*cv,'k')
     axsub[1].quiver(ctime*24-ctime.min()*24,np.zeros((len(ctime),)),csua,csva,scale=3,width=.0025)    
     axsub[0].quiver(ctime2[:-1]*24-ctime2[:-1].min()*24,np.zeros((len(ctime2[:-1]),)),cdxs,cdys,scale=6,width=.0025)   
         
@@ -231,12 +247,19 @@ def plot_ship(i):
         label.set_visible(False)    
     axsub[1].xaxis.set_tick_params(labelbottom='off')
     axsub[2].xaxis.set_tick_params(labelbottom='off')
-    axsub[2].set_ylabel(r'Speed (ms$^{-1}$)',fontsize=8) 
+    if useKnots:
+        axsub[2].set_ylabel(r'Speed (knot)',fontsize=8)
+    else:
+        axsub[2].set_ylabel(r'Speed (ms$^{-1}$)',fontsize=8) 
     axsub[1].set_ylabel(r'Cur. Dir.',fontsize=8)
     axsub[0].set_ylabel(r'Ship Dir.',fontsize=8)
     axsub[0].set_xlabel('Time (h)')
     
-    axsub[2].set_ylim([0,1])
+    if useKnots:
+        axsub[2].set_ylim([0,2])
+    else:
+        axsub[2].set_ylim([0,1]) 
+
     axsub[1].set_ylim([-np.pi,np.pi])
     for axin in axsub:
         axin.yaxis.set_tick_params(labelleft='off')
@@ -246,14 +269,16 @@ def plot_ship(i):
     for axin in axsub:
         axin.axvline(times[i]*24-times.min()*24,color='r') 
       
-    f.savefig(savepath + grid + '_shippath_'+"{}".format(i+stime)+'.png',dpi=300)
+    f.savefig(savepath + grid + '_shippath_'+"{:06.6f}".format(time)+'.png',dpi=300)
     plt.close(f)
 
 
 
 geotiff, cmap, extent = load_geotiff('data/misc/vhfr_obs/misc/3481_Geotiff.tif')
 
-for p in range(37):
+
+
+for p,tt in enumerate(times):
     print(p)
     plot_ship(p)
 
