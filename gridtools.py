@@ -13,11 +13,14 @@ import datatools as dt
 import misctools as mt
 import plottools as pt
 import interptools as ipt
+import projtools as pjt
 
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
 import collections
 import copy
+
+import pyproj as pyp
 
 
 """
@@ -192,22 +195,31 @@ def equal_vectors(data,region,spacing):
     Returns: The element idx that best approximates the given spacing in the region. 
     """
 
-    centerele=np.argsort((data['uvnodell'][:,1]-(region['region'][3]+region['region'][2])/2)**2+(data['uvnodell'][:,0]-(region['region'][1]+region['region'][0])/2)**2)
-    xhalf=0.75*np.fabs(region['region'][1]-region['region'][0])*112200
-    yhalf=0.75*np.fabs(region['region'][3]-region['region'][2])*112200
+    ll=np.array([region['region'][0],region['region'][2]])
+    ur=np.array([region['region'][1],region['region'][3]])
+    
+    x,y,proj=pjt.lcc(data['lon'],data['lat'])
+    
+    llxy=ll
+    urxy=ur
+    
+    llxy[0],llxy[1]=proj(ll[0],ll[1])
+    urxy[0],urxy[1]=proj(ur[0],ur[1])
+    
+    spacing=np.atleast_1d(np.array(spacing))
+    xspacing=spacing[0]
+    yspacing=spacing[0]
+    if len(spacing)==2:
+        yspacing=spacing[1]  
 
-    #xmultiplier=np.floor(np.fabs(xhalf*2)/spacing)
-    #ymultiplier=np.floor(np.fabs(yhalf*2)/spacing)    
-
-    XI=np.arange((data['uvnode'][centerele[1],0]-xhalf),(data['uvnode'][centerele[1],0]+xhalf),spacing)
-    YI=np.arange((data['uvnode'][centerele[1],1]-yhalf),(data['uvnode'][centerele[1],1]+yhalf),spacing)
-
-    xv,yv=np.meshgrid(XI,YI)
-    xytrigrid = mplt.Triangulation(data['x'], data['y'],data['nv'])
-    host=xytrigrid.get_trifinder().__call__(xv.reshape(-1,1),yv.reshape(-1,1))
+    rangex=np.arange(llxy[0],urxy[0]+xspacing,xspacing)
+    rangey=np.arange(llxy[1],urxy[1]+yspacing,yspacing)
+    xv,yv=np.meshgrid(rangex,rangey)
+    
+    lon,lat = proj(xv.flatten(),yv.flatten(),inverse=True)
+    host=data['trigrid'].get_trifinder().__call__(lon,lat)
 
     idx=dt.get_elements(data,region)
-
     common=np.in1d(host,idx)
 
     return np.unique(host[common].flatten())
