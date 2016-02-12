@@ -10,6 +10,7 @@ import gridtools as gt
 import datatools as dt
 import misctools as mt
 import projtools as pjt
+import os
 
 
 """
@@ -235,7 +236,8 @@ def plotcoast(axin,**kwargs):
             if (key=='fcolor'):
                 fcolor=value
 
-    sl=dt.loadnc("",singlename='data/shorelines/'+filename)
+    _base_dir = os.path.dirname(__file__)
+    sl=dt.loadnc("",singlename=_base_dir+'/data/shorelines/'+filename)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]

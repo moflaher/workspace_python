@@ -27,7 +27,7 @@ Functions
 =========
 """
 #load modules
-from __future__ import division,print_function,print_function
+from __future__ import division,print_function
 import collections
 import matplotlib.dates as dates
 
@@ -74,13 +74,13 @@ def loadnc(datadir, singlename=None):
     data = {}
     #store the filepath in case it is needed in the future
     data['filepath'] = filepath
+    
 
-    #load data
+    #load data with scipy
     ncid = netcdf.netcdf_file(filepath, 'r', mmap=True)
 
-    for i in ncid.variables.keys():
-        data[i]=ncid.variables[i].data
-
+    for key in ncid.variables.keys():
+        data[key]=ncid.variables[key].data
    
     #data['nv'] = np.transpose(ncid.variables['nv'].data.astype(int))-[1] #python index
     #data['nbe'] = np.transpose(ncid.variables['nbe'].data.astype(int))-[1] #python index

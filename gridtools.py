@@ -962,46 +962,55 @@ def save_stationfile(sdata,outname):
 
 def get_nv(neifile):
 
+    try:
+        import pyximport; pyximport.install()
+        import get_nv as gnv
+        
+        neifile['nv']=gnv.get_nvc(neifile['neighbours'],neifile['nnodes'],neifile['maxnei'])
+        neifile['trigrid'] = mplt.Triangulation(neifile['lon'], neifile['lat'],neifile['nv'])  
+    except:
+        print('There was an issue with during using cython falling back to python.')
     
-    nv=np.empty((len(neifile['neighbours'])*2,3))    
-    
-    neighbours=copy.deepcopy(neifile['neighbours'])
+        nv=np.empty((len(neifile['neighbours'])*2,3))    
+        
+        neighbours=copy.deepcopy(neifile['neighbours'])
 
-    kk=0
-    for i in range(neifile['nnodes']-2):
-        nei_cnt=1
-        for ii in range(neifile['maxnei']-1):
-            if neighbours[i,ii+1]==0:
-                break
-            nei_cnt=ii+1    
-            if neighbours[i,ii]<=(i+1):
-                continue
-            if neighbours[i,ii+1]<=(i+1):
-                continue   
-            for j in range(neifile['maxnei']):
-                if neighbours[neighbours[i,ii]-1,j]!=neighbours[i,ii+1]:
+        kk=0
+        for i in range(neifile['nnodes']-2):
+            nei_cnt=1
+            for ii in range(neifile['maxnei']-1):
+                if neighbours[i,ii+1]==0:
+                    break
+                nei_cnt=ii+1    
+                if neighbours[i,ii]<=(i+1):
                     continue
-                nv[kk,:]=[i+1,neighbours[i,ii],neighbours[i,ii+1]]
-                kk=kk+1
-                break
+                if neighbours[i,ii+1]<=(i+1):
+                    continue   
+                for j in range(neifile['maxnei']):
+                    if neighbours[neighbours[i,ii]-1,j]!=neighbours[i,ii+1]:
+                        continue
+                    nv[kk,:]=[i+1,neighbours[i,ii],neighbours[i,ii+1]]
+                    kk=kk+1
+                    break
 
-        if (nei_cnt>1):
-            for j in range(neifile['maxnei']):
-                if neighbours[i,0]<=(i+1):
+            if (nei_cnt>1):
+                for j in range(neifile['maxnei']):
+                    if neighbours[i,0]<=(i+1):
+                        break
+                    if neighbours[i,nei_cnt]<=(i+1):
+                        break
+                    if neighbours[neighbours[i,0]-1,j] ==0:
+                        break    
+                    if neighbours[neighbours[i,0]-1,j] !=neighbours[i,nei_cnt]:
+                        continue
+                    nv[kk,:]=[i+1,neighbours[i,nei_cnt],neighbours[i,0] ]
+                    kk=kk+1
                     break
-                if neighbours[i,nei_cnt]<=(i+1):
-                    break
-                if neighbours[neighbours[i,0]-1,j] ==0:
-                    break    
-                if neighbours[neighbours[i,0]-1,j] !=neighbours[i,nei_cnt]:
-                    continue
-                nv[kk,:]=[i+1,neighbours[i,nei_cnt],neighbours[i,0] ]
-                kk=kk+1
-                break
-                 
-    nv=np.delete(nv,np.s_[kk:],axis=0)
-    neifile['nv']=(nv-1).astype(int)  
-    neifile['trigrid'] = mplt.Triangulation(neifile['lon'], neifile['lat'],neifile['nv'])   
+                     
+        nv=np.delete(nv,np.s_[kk:],axis=0)
+        neifile['nv']=(nv-1).astype(int)  
+        neifile['trigrid'] = mplt.Triangulation(neifile['lon'], neifile['lat'],neifile['nv'])   
+        
       
                 
     return neifile
