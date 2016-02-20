@@ -36,7 +36,6 @@ import numpy as np
 import matplotlib.tri as mplt
 import bisect
 import numexpr as ne
-import h5py
 import scipy.stats as stats
 
 #I/O modules

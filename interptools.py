@@ -196,8 +196,7 @@ def interpN_at_loc(data,varname,loc,layer=None,ll=True):
         
     return var
 
-
-def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False,fill_value=-9999):
+def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False,fill_value=-9999,hosts=[]):
     #"""
     #Interpolate element data at a location. If variable is 3d then specify a layer, defaults to surface layer otherwise.
     #Note: 1d element data will break this, should be possible to handle. I will work out the logic another day.
@@ -238,7 +237,9 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False,fill_value=-9
         layer=None
 
     locs=np.atleast_2d(locs)
-    hosts=data[trifinder].__call__(locs[:,0],locs[:,1])
+    #Only find the hosts if not given
+    if hosts==[]:
+        hosts=data[trifinder].__call__(locs[:,0],locs[:,1])
     #if host==-1:
         #print('Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
         #out=np.empty(shape=(data[varname][timein,layer,host]).squeeze().shape)
