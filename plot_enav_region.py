@@ -19,11 +19,14 @@ from osgeo import osr, gdal
 from matplotlib.colors import LinearSegmentedColormap
 
 # Define names and types of data
-#name='2012-02-01_2012-03-01_0.01_0.001'
-name='sfm5m_sjr_basicrun'
-grid='sfm5m_sjr'
+#name='sfm5m_sjr_basicrun'
+#grid='sfm5m_sjr'
+#datatype='2d'
+#regionname='stjohn_harbour'
+name='2012-02-01_2012-03-01_0.01_0.001'
+grid='vh_high'
 datatype='2d'
-regionname='stjohn_harbour'
+regionname='vh_high_ship_approach1'
 region=regions(regionname)
 starttime=0
 endtime=24
@@ -63,7 +66,7 @@ def load_geotiff(filename):
     for i in range(ct.GetCount()):
         cb=np.append(cb,ct.GetColorEntry(i)[:])
     cb=cb.reshape(-1,4)
-    mycmap=LinearSegmentedColormap.from_list('my_colormap',cb[:13,:]/256,13)
+    mycmap=LinearSegmentedColormap.from_list('my_colormap',cb/255,256)
 
     old_cs= osr.SpatialReference()
     old_cs.ImportFromWkt(ds.GetProjectionRef())
@@ -110,7 +113,7 @@ def plot_vector_map(i):
     ax=f.add_axes([.125,.1,.775,.8])
     #prettyplot_ll(ax,setregion=region)
     #plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
-    ax.imshow(geotiff, cmap=cmap,vmax=13, extent=extent)
+    ax.imshow(geotiff, cmap=cmap,vmax=256, extent=extent)
     
 
     ua=data['ua'][i,vidx]
@@ -142,13 +145,14 @@ def plot_vector_map(i):
 
 
 
-geotiff, cmap, extent = load_geotiff('data/misc/vhfr_obs/misc/3481_Geotiff.tif')
+geotiff, cmap, extent = load_geotiff('data/enav/vancouverGeotiff_combo_600dpi.tif')
 
 idx=range(starttime,endtime)
 ua=data['ua'][idx,:][:,vidx]
 va=data['va'][idx,:][:,vidx]
 s_vec=speeder(ua,va)
-scale=((region['region'][1]-region['region'][0])*.0475)/s_vec.max()
+clim=np.percentile(s_vec,[20,99])
+scale=((region['region'][1]-region['region'][0])*.0475)/clim[1]
 
 for tt in range(starttime,endtime):
     print(tt)

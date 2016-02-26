@@ -19,11 +19,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='vhfr_low_test'
-grid='vhfr_low'
+name='sfm5m_sjr_basicrun'
+grid='sfm5m_sjr'
 datatype='2d'
-regionlist=['vhfr_whole','fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','firstnarrows','secondnarrows','vh_whole']
-starttime=500
+regionlist=['sfmwhole']
+starttime=0
 plotgrid=False
 
 

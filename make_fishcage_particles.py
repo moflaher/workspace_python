@@ -32,8 +32,10 @@ print('done load')
 data = ncdatasort(data,trifinder=True)
 print('done sort')
 
-cages=np.genfromtxt('runs/sfm6_musq2/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
-cages=(cages[:,0]-1).astype(int)
+cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
+if np.shape(cages)!=():
+    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
+    color='g'
 
 
 

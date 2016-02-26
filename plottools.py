@@ -217,7 +217,7 @@ def plotcoast(axin,**kwargs):
     color='k'
     lw=1
     ls='solid'
-    filename='mid_nwatl6b.nc'
+    filename='mid_nwatl6c.nc'
     fcolor='0.75'
     fill=False
 
@@ -237,7 +237,7 @@ def plotcoast(axin,**kwargs):
                 fcolor=value
 
     _base_dir = os.path.dirname(__file__)
-    sl=dt.loadnc("",singlename=_base_dir+'/data/shorelines/'+filename)
+    sl=dt.loadnc(__file__[:-12],singlename='data/shorelines/'+filename)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]

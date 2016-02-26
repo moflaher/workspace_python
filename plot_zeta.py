@@ -25,12 +25,12 @@ global nidx
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01'
-grid='fr_high'
+name='2011-08-25_2011-09-08'
+grid='acadia_force_3d'
 datatype='2d'
-regionname='fr_mouth'
-starttime=0
-endtime=1000
+regionname='mp'
+starttime=-20
+endtime=-1
 
 
 ### load the .nc file #####
@@ -59,7 +59,7 @@ def zeta_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
     nidxh=data['zeta'][i,nidx]
-    her=np.percentile(nidxh,[20,80])
+    her=np.percentile(nidxh,[5,95])
     triax=ax.tripcolor(data['trigrid'],data['zeta'][i,:],vmin=her[0],vmax=her[1])
 #    plotcoast(ax,color='k',fill=True)
 #    if cages!=None:   
@@ -70,7 +70,9 @@ def zeta_plot(i):
     plt.close(f)
 
 
-
+trange=range(len(data['time']))
+starttime=trange[starttime]
+endtime=trange[endtime]
 pool = multiprocessing.Pool(2)
 pool.map(zeta_plot,range(starttime,endtime))
 

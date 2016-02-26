@@ -534,7 +534,7 @@ def loadcage(filepath):
     cages=None
     try:
         with open(filepath) as f_in:
-            cages=np.genfromtxt(f_in,skiprows=1)
+            cages=np.genfromtxt(f_in,skip_header=1)
             if len(cages)>0:
                 cages=(cages[:,0]-1).astype(int)
             else:
