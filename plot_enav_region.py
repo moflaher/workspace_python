@@ -19,14 +19,14 @@ from osgeo import osr, gdal
 from matplotlib.colors import LinearSegmentedColormap
 
 # Define names and types of data
-#name='sfm5m_sjr_basicrun'
-#grid='sfm5m_sjr'
-#datatype='2d'
-#regionname='stjohn_harbour'
-name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vh_high'
+name='sfm5m_sjr_basicrun'
+grid='sfm5m_sjr'
 datatype='2d'
-regionname='vh_high_ship_approach1'
+regionname='stjohn_harbour_tight'
+#name='2012-02-01_2012-03-01_0.01_0.001'
+#grid='vh_high'
+#datatype='2d'
+#regionname='vh_high_ship_approach1'
 region=regions(regionname)
 starttime=0
 endtime=24
@@ -145,7 +145,8 @@ def plot_vector_map(i):
 
 
 
-geotiff, cmap, extent = load_geotiff('data/enav/vancouverGeotiff_combo_600dpi.tif')
+#geotiff, cmap, extent = load_geotiff('data/enav/vancouverGeotiff_combo_600dpi.tif')
+geotiff, cmap, extent = load_geotiff('data/enav/Saint_John_ENC_edited.tif')
 
 idx=range(starttime,endtime)
 ua=data['ua'][idx,:][:,vidx]

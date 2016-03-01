@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01'
-grid='fr_high'
+name='sfm5m_sjr_basicrun'
+grid='sfm5m_sjr'
 datatype='2d'
-regionname='fr_sandbar_island1'
+regionname='stjohn_harbour_tight'
 starttime=0
-endtime=1000
+endtime=24
 cmin=0
-cmax=1
+cmax=2
 
 
 ### load the .nc file #####
@@ -50,9 +50,9 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=False
+vectorflag=True
 coastflag=True
-uniformvectorflag=True
+uniformvectorflag=False
 vector_spacing=125
 vector_scale=700
 
@@ -87,10 +87,12 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 def speed_plot(i):
     print(i)
     f=plt.figure()
-    ax=plt.axes([.125,.1,.775,.8])
-    triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
+    ax=plt.axes([.125,.1,.775,.8])    
     if coastflag==True:
         plotcoast(ax,filename='pacific_harbour.nc',color='None', fcolor='darkgreen', fill=True)
+        
+    triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
+    
     if np.shape(cages)!=():   
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         ax.add_collection(lseg_t) 
