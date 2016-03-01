@@ -37,7 +37,7 @@ if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
     color='g'
 
-tcages=np.load('data/misc/fishcage/googlefishcage_normal.npy')
+tcages=np.load('data/misc/fishcage/googlefishcage_all.npy')
 tcages=tcages[()]
 
 
