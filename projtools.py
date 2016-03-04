@@ -252,9 +252,29 @@ def lcc(lon,lat):
     return x,y,proj
     
     
+def degree2decdeg(degree_in):
     
+    if len(degree_in)>degree_in.size:
+        print('Vectors only!')
+        return 
     
+    array_out=np.empty((len(degree_in),))
+    sign=1
     
+    for i,cord in enumerate(degree_in):
+        if 'panda' in str(type(cord)):
+            cord=cord[0]
+        if 'W' in cord:
+            sign=-1
+        if 's' in cord:
+            sign=-1
+        
+        a,b=cord.split('\xc2\xb0')
+        c,d=b.split("'")
+        e,f=d.split('"')
+        array_out[i] = sign*(float(a) + float(c)/60.0 + float(e)/3600.0)
+        
+    return array_out
     
     
 
