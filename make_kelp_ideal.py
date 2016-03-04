@@ -22,11 +22,12 @@ def at(xx,yy,xt,yt):
 x=0.0
 y=0.0
 
-xspace=20.0
-yspace=20.0
+xspace=200.0
+yspace=200.0
 xcube=5000.0
-ycube=500.0
+ycube=1000.0
 bayr=2000.0
+rspace=.1
 
 
 llx=x-xcube/2
@@ -51,7 +52,6 @@ xx,yy=at(xx,yy,xt,yt)
 
 
 #bay top
-rspace=.01
 ang2=np.arange(np.pi-np.arctan(ycube/2/bayr),0,-rspace)
 ang=ang2[2:]
 yt=bayr*np.sin(ang)
@@ -61,7 +61,6 @@ xt=xcube+xxt-np.min(xtt+xcube/2)
 xx,yy=at(xx,yy,xt,yt)
 
 #bay bottom
-rspace=.01
 ang2=np.arange(0,-np.pi+np.arctan(ycube/2/bayr),-rspace)[:-2]
 ang=ang2#[:-1]
 #ang=np.arange(0,-np.pi,-rspace)
@@ -90,7 +89,7 @@ save_nodfile(segfile,'data/kelp_ideal/kelpideal_0.nod')
 
 plt.plot(lon,lat,'.')
 plt.plot(lon,lat)
-plt.show()
+plt.savefig('test.png')
 
 
 
