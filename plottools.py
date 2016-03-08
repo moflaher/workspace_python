@@ -237,6 +237,7 @@ def plotcoast(axin,**kwargs):
                 fcolor=value
 
     _base_dir = os.path.dirname(__file__)
+    print(__file__)
     idx=__file__.rfind('/')
     sl=dt.loadnc(__file__[:idx],singlename='/data/shorelines/'+filename)
 

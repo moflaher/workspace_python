@@ -103,6 +103,8 @@ def makeregions():
     tl=np.vstack([tl,        [[ -66.17,  -65.96,  45.18,   45.29],'stjohn_harbour','stjohn_harbour']])
     tl=np.vstack([tl,        [[ -66.07,  -66.01,  45.225,   45.275],'stjohn_harbour_tight','stjohn_harbour_tight']])
 
+    tl=np.vstack([tl,        [[ 1.98, 2.018, 1.996, 2.0045],'kelp_channel','kelp_channel']])
+
 
     allregions={}  
 

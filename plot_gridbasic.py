@@ -18,11 +18,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='fr_high'
-grid='fr_high'
+name='kelp_channel'
+grid='kelp_channel'
 #regionlist=regions()
 regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
-#regionlist=['vhfr_whole']
+regionlist=['kelp_channel']
 #regionlist=['firstnarrows','secondnarrows']
 datatype='2d'
 
@@ -31,7 +31,8 @@ datatype='2d'
 ### load the mesh files #####
 #data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
 #data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
-data=loadnei('runs/'+grid+'/2012-02-01_2012-03-01/input/' +name+ '.nei')
+#data=loadnei('runs/'+grid+'/2012-02-01_2012-03-01/input/' +name+ '.nei')
+data=loadnei('data/kelp_ideal/xy_4/makerun/' +name+ '.nei')
 data['x'],data['y'],proj=lcc(data['lon'],data['lat'])
 data=get_nv(data)
 data=ncdatasort(data)
