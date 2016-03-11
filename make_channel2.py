@@ -29,8 +29,8 @@ gfactorx=.1
 gfactory=.49
 
 #define general grid
-xlspace=100
-ylspace=100
+xlspace=50
+ylspace=50
 lll=np.array([-2000,-500])
 url=np.array([2000,500])
 
@@ -53,7 +53,7 @@ XG,YG=at(XG,YG,XH,YH)
 
 
 #define buffer area
-num=7
+num=18
 xcay=np.exp(np.log(xlspace/xhspace)/num)
 ycay=np.exp(np.log(ylspace/yhspace)/num)
 
@@ -77,6 +77,9 @@ if (yc.sum()>(llh[1]-lll[1])) or (yc.sum()>(url[1]-urh[1])):
     print(llh[1]-lll[1])
     print(url[1]-urh[1])
     sys.exit(0)
+    
+print(xc)
+print(yc)
 
 #make a series of lower res meshes
 for i in range(num-1):
@@ -109,8 +112,6 @@ XL=XL.flatten()
 YL=YL.flatten()
 XG,YG=at(XG,YG,XL,YL)
 
-    
-    
 
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
@@ -126,6 +127,9 @@ f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
 ax.triplot(triang)
 f.show()
+
+print(XG.shape)
+print(triang.triangles.shape)
 
 
 #convert to fake projection close to equator
