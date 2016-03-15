@@ -29,10 +29,12 @@ gfactorx=.1
 gfactory=.49
 
 #define general grid
-xlspace=50
-ylspace=50
-lll=np.array([-2000,-500])
-url=np.array([2000,500])
+xlspace=200
+ylspace=200
+gfactorxl=0.1
+gfactoryl=0.25
+lll=np.array([-7000,-1000])
+url=np.array([3000,1000])
 
 
 #define high res
@@ -50,6 +52,11 @@ XH=XH+(np.random.rand(len(XH))-.5)*xhspace*gfactorx
 YH=YH+(np.random.rand(len(YH))-.5)*yhspace*gfactory
 XG,YG=at(XG,YG,XH,YH)
 
+#define  taper area
+xlspace=50
+ylspace=50
+llt=np.array([-2000,-500])
+urt=np.array([2000,500])
 
 
 #define buffer area
@@ -65,17 +72,17 @@ for i in range(num):
     xc=np.append(xc,xs)
     yc=np.append(xc,ys)
     
-if (xc.sum()>(llh[0]-lll[0])) or (xc.sum()>(url[0]-urh[0])):
+if (xc.sum()>(llh[0]-llt[0])) or (xc.sum()>(urt[0]-urh[0])):
     print('Not enough space to decay x. Reduce num or increase x domain')
     print(xc.sum())
-    print(llh[0]-lll[0])
-    print(url[0]-urh[0])
+    print(llh[0]-llt[0])
+    print(urt[0]-urh[0])
     sys.exit(0)
-if (yc.sum()>(llh[1]-lll[1])) or (yc.sum()>(url[1]-urh[1])):
+if (yc.sum()>(llh[1]-llt[1])) or (yc.sum()>(urt[1]-urh[1])):
     print('Not enough space to decay y. Reduce num or increase y domain')
     print(yc.sum())
-    print(llh[1]-lll[1])
-    print(url[1]-urh[1])
+    print(llh[1]-llt[1])
+    print(urt[1]-urh[1])
     sys.exit(0)
     
 print(xc)
@@ -84,8 +91,8 @@ print(yc)
 #make a series of lower res meshes
 for i in range(num-1):
     # define new bigger box
-    tll=llh+(i+1)*(lll-llh)/num
-    tur=urh+(i+1)*(url-urh)/num
+    tll=llh+(i+1)*(llt-llh)/num
+    tur=urh+(i+1)*(urt-urh)/num
     #grid the box
     xt=np.arange(tll[0],tur[0],xc[i])
     yt=np.arange(tll[1],tur[1],yc[i])
@@ -104,12 +111,31 @@ for i in range(num-1):
     
     XG,YG=at(XG,YG,XT,YT)
 
+#add the low res area outside taper
+xl=np.arange(lll[0]+xlspace*2,url[0]-xlspace,xlspace)
+yl=np.arange(lll[1]+ylspace*2,url[1]-ylspace,ylspace)
+XL,YL=np.meshgrid(xl,yl)
+XL=XL.flatten()
+YL=YL.flatten()
+#jiggle
+XL=XL+(np.random.rand(len(XL))-.5)*xlspace*gfactorxl
+YL=YL+(np.random.rand(len(YL))-.5)*ylspace*gfactoryl
+#delete points in the box that have points
+idx=np.argwhere((XL>XG.min()) & (XL<XG.max())&(YL>YG.min()) & (YL<YG.max()))
+XL=np.delete(XL,idx)
+YL=np.delete(YL,idx)
+XG,YG=at(XG,YG,XL,YL)
+
 #add the boundary
 xl=np.arange(lll[0],url[0]+xlspace,xlspace)
 yl=np.arange(lll[1],url[1]+ylspace,ylspace)
 XL,YL=np.meshgrid(xl,yl)
 XL=XL.flatten()
 YL=YL.flatten()
+#delete points in the box that have points
+idx=np.argwhere((XL>XG.min()) & (XL<XG.max())&(YL>YG.min()) & (YL<YG.max()))
+XL=np.delete(XL,idx)
+YL=np.delete(YL,idx)
 XG,YG=at(XG,YG,XL,YL)
 
 
