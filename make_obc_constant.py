@@ -19,19 +19,19 @@ import copy
 # Define names and types of data
 casename='kelpchannel'
 filename='kelpchannel.nei'
-filepath='data/kelp_ideal/xy_4/makerun/input/'
+filepath='data/kelp_ideal/xy_5/makerun/input/'
 
 neifile=loadnei(filepath+filename)
 neifile=get_nv(neifile)
 nn=sort_boundary(neifile)
 
 
+nnloop=np.append(nn,nn)
 
-
-startidx=np.argwhere(nn==18744) #24005
-obc1=nn[startidx:(startidx+11)]
-startidx=np.argwhere(nn==30313)#23933
-obc2=nn[startidx:(startidx+11)]
+startidx=np.argwhere(nn==100755) #99541
+obc1=nnloop[startidx:(startidx+21)]
+startidx=np.argwhere(nn==99621)#100835
+obc2=nnloop[startidx:(startidx+21)]
 
 obc=np.append(obc1,obc2)
 
@@ -61,7 +61,7 @@ save_spgfile(dataout,filepath,casename)
 elobc={}
 elobc['obc_nodes']=obc
 elobc['tide_period']=np.array([44712])
-elobc['tide_Eref']=np.append( np.zeros((len(obc1),))+.1, np.zeros((len(obc2),)))
+elobc['tide_Eref']=np.append( np.zeros((len(obc1),))+.05, np.zeros((len(obc2),)))
 elobc['tide_Ephase']=elobc['tide_Eref']*0
 elobc['tide_Eamp']=elobc['tide_Eref']*0
 elobc['equilibrium_tide_Eamp']=np.array([0])
