@@ -19,7 +19,7 @@ import copy
 # Define names and types of data
 casename='kelpchannel'
 filename='kelpchannel.nei'
-filepath='data/kelp_ideal/xy_5/makerun/input/'
+filepath='data/kelp_ideal/xy_6/makerun/input/'
 
 neifile=loadnei(filepath+filename)
 neifile=get_nv(neifile)
@@ -28,10 +28,10 @@ nn=sort_boundary(neifile)
 
 nnloop=np.append(nn,nn)
 
-startidx=np.argwhere(nn==100755) #99541
-obc1=nnloop[startidx:(startidx+21)]
-startidx=np.argwhere(nn==99621)#100835
-obc2=nnloop[startidx:(startidx+21)]
+startidx=np.argwhere(nn==110974) 
+obc1=nnloop[startidx:(startidx+41)]
+startidx=np.argwhere(nn==58804)
+obc2=nnloop[startidx:(startidx+41)]
 
 obc=np.append(obc1,obc2)
 
