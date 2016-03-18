@@ -11,22 +11,21 @@ import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 from matplotlib.patches import Ellipse
-sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide
 
 
 # Define names and types of data
-name='kit4_kelp_0.05'
-grid='kit4'
-regionname='gilisland'
+name='sfm5m_sjr_basicrun'
+grid='sfm5m_sjr'
 datatype='2d'
-starttime=384
+regionname='stjohn_harbour_tight'
+starttime=0
 spacing=1500
 divider=15
 
 
 ### load the .nc file #####
-data = loadnc('/media/moe46/My Passport/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print('done load')
 data = ncdatasort(data)
 print('done sort')
@@ -49,7 +48,7 @@ for i in range(0,len(idx)):
     [nameu, freq, tidecon_uv[i,], xout]=t_tide(data['ua'][starttime:,j]+1j*data['va'][starttime:,j],stime=data['time'][starttime],lat=data['uvnodell'][j,1],output=False,constitnames=np.array([['M2  '],['N2  '],['S2  '],['K1  '],['O1  ']]))
 
 
-print 'T_tide Finished'
+print('T_tide Finished')
 
 idxl=np.where(tidecon_uv[:,3,2]>=0)[0]
 idxr=np.where(tidecon_uv[:,3,2]<0)[0]
@@ -61,7 +60,7 @@ ellsright= [Ellipse(xy=(data['uvnodell'][idx[idxr[i]],0],data['uvnodell'][idx[id
 f=plt.figure()
 ax=f.add_axes([.125,.1,.85,.85])
 prettyplot_ll(ax,setregion=region)
-plotcoast(ax,filename='pacific.nc',color='k')
+#plotcoast(ax,filename='pacific.nc',color='k')
 
 for e in ellsleft:
     ax.add_artist(e)

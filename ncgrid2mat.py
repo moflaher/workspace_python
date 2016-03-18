@@ -37,10 +37,10 @@ import sys
 
 
 # Define names and types of data
-name='kit4_kelp_20m_drag_0.018_site1'
-grid='kit4_kelp'
+name='kelpchannel_nodrag'
+grid='kelpchannel'
 datatype='2d'
-starttime=384
+starttime=340
 interpheight=1
 
 ### load the .nc file #####
@@ -72,27 +72,27 @@ tempdic['time']=data['time'][starttime:]
 tempdic['zeta']=data['zeta'][starttime:,:]
 sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
-tempdic={}
-tempdic['trigrid']=data['nv']+1
-tempdic['lon']=data['lon']
-tempdic['lat']=data['lat']
-tempdic['lonc']=data['uvnodell'][:,0]
-tempdic['latc']=data['uvnodell'][:,1]
-tempdic['x']=data['x']
-tempdic['y']=data['y']
-tempdic['xc']=data['uvnode'][:,0]
-tempdic['yc']=data['uvnode'][:,1]
-tempdic['h']=data['h']
-tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
-tempdic['siglay']=data['siglay'][:,0]
-tempdic['siglev']=data['siglev'][:,0]
+#tempdic={}
+#tempdic['trigrid']=data['nv']+1
+#tempdic['lon']=data['lon']
+#tempdic['lat']=data['lat']
+#tempdic['lonc']=data['uvnodell'][:,0]
+#tempdic['latc']=data['uvnodell'][:,1]
+#tempdic['x']=data['x']
+#tempdic['y']=data['y']
+#tempdic['xc']=data['uvnode'][:,0]
+#tempdic['yc']=data['uvnode'][:,1]
+#tempdic['h']=data['h']
+#tempdic['hc']= (data['h'][data['nv'][:,0]] + data['h'][data['nv'][:,1]] + data['h'][data['nv'][:,2]]) / 3.0
+#tempdic['siglay']=data['siglay'][:,0]
+#tempdic['siglev']=data['siglev'][:,0]
 
-tempdic['time']=data['time'][starttime:]
-tempdic['u']=data['u'][starttime:,-1,:]
-tempdic['v']=data['v'][starttime:,-1,:]
-#tempdic['ww']=data['ww'][starttime:,-1,:]
+#tempdic['time']=data['time'][starttime:]
+#tempdic['u']=data['u'][starttime:,-1,:]
+#tempdic['v']=data['v'][starttime:,-1,:]
+##tempdic['ww']=data['ww'][starttime:,-1,:]
 
-sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_uv_bottom_currents.mat',mdict=tempdic)
+#sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_uv_bottom_currents.mat',mdict=tempdic)
 
 
 #tempdic={}

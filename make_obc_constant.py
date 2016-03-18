@@ -19,7 +19,7 @@ import copy
 # Define names and types of data
 casename='kelpchannel'
 filename='kelpchannel.nei'
-filepath='data/kelp_ideal/xy_6/makerun/input/'
+filepath='data/kelp_ideal/xy_6/makerun/kelpchannel_clean/input/'
 
 neifile=loadnei(filepath+filename)
 neifile=get_nv(neifile)
@@ -61,7 +61,7 @@ save_spgfile(dataout,filepath,casename)
 elobc={}
 elobc['obc_nodes']=obc
 elobc['tide_period']=np.array([44712])
-elobc['tide_Eref']=np.append( np.zeros((len(obc1),))+.05, np.zeros((len(obc2),)))
+elobc['tide_Eref']=np.append( np.zeros((len(obc1),))+.02, np.zeros((len(obc2),)))
 elobc['tide_Ephase']=elobc['tide_Eref']*0
 elobc['tide_Eamp']=elobc['tide_Eref']*0
 elobc['equilibrium_tide_Eamp']=np.array([0])
