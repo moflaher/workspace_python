@@ -19,7 +19,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kelpchannel_drag_0.018'
+name='kelpchannel_drag_0.018_500x100'
 grid='kelpchannel'
 datatype='2d'
 
