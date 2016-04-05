@@ -34,8 +34,8 @@ global vector_scale
 
 
 # Define names and types of data
-name='sfm5m_sjr_basicrun'
-grid='sfm5m_sjr'
+name='psj_basicrun'
+grid='psj'
 datatype='2d'
 regionname='stjohn_harbour_tight'
 starttime=0

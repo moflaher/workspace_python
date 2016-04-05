@@ -21,15 +21,31 @@ from matplotlib.colors import LinearSegmentedColormap
 # Define names and types of data
 name='sfm5m_sjr_basicrun'
 grid='sfm5m_sjr'
+
+name='psj_basicrun'
+grid='psj'
+
 datatype='2d'
 regionname='stjohn_harbour_tight'
-#name='2012-02-01_2012-03-01_0.01_0.001'
-#grid='vh_high'
-#datatype='2d'
-#regionname='vh_high_ship_approach1'
+gtiff='data/enav/Saint_John_ENC_edited.tif'
+
+#regionname='stjohn_ship_approach1'
+#gtiff='data/enav/4003_Geotiff.tif'
+
+name='2012-02-01_2012-03-01_0.01_0.001'
+grid='vh_high'
+datatype='2d'
+
+regionname='secondnarrows'
+gtiff='data/enav/vancouverGeotiff_combo_600dpi_with_contours.tif'
+
+#regionname='vh_high_large'
+#gtiff='data/enav/West-Coast.tif'
+
+
 region=regions(regionname)
 starttime=0
-endtime=24
+endtime=96
 useKnots=True
 
 savepath='figures/timeseries/' + grid + '_' + datatype + '/enav_region/' + regionname + '/'
@@ -146,7 +162,7 @@ def plot_vector_map(i):
 
 
 #geotiff, cmap, extent = load_geotiff('data/enav/vancouverGeotiff_combo_600dpi.tif')
-geotiff, cmap, extent = load_geotiff('data/enav/Saint_John_ENC_edited.tif')
+geotiff, cmap, extent = load_geotiff(gtiff)
 
 idx=range(starttime,endtime)
 ua=data['ua'][idx,:][:,vidx]

@@ -11,6 +11,7 @@ import datatools as dt
 import misctools as mt
 import projtools as pjt
 import os
+import inspect
 
 
 """
@@ -236,10 +237,9 @@ def plotcoast(axin,**kwargs):
             if (key=='fcolor'):
                 fcolor=value
 
-    _base_dir = os.path.dirname(__file__)
-    print(__file__)
-    idx=__file__.rfind('/')
-    sl=dt.loadnc(__file__[:idx],singlename='/data/shorelines/'+filename)
+    _base_dir = os.path.realpath(inspect.stack()[0][1])
+    idx=_base_dir.rfind('/')
+    sl=dt.loadnc(_base_dir[:idx],singlename='/data/shorelines/'+filename)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]
