@@ -17,27 +17,29 @@ import netCDF4 as n4
 
 
 # Define names and types of data
-name='vhfr_low_clean_hpc'
-grid='vhfr_low'
+name='2012-02-01_2012-03-01_0.03_0.01'
+grid='vh_high'
 datatype='2d'
 
 ###load old grid stuff
-#data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print('done load')
-#data = ncdatasort(data)
+data = ncdatasort(data)
 print('done sort')
 indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,grid+'_spectide.nc')
 
 
 
 ###load new grid stuff
-name2='fr_high_clean_hpc'
-grid2='fr_high'
+name2='vhhigh_v2_clean_hpc'
+grid2='vhhigh_v2'
 datatype='2d'
 
 
 indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input',grid2)
-
+neifile=loadnei('runs/'+grid2+'/'+name2+'/input/'+grid2+'.nei')
+indata2.update(neifile)
+indata2=ncdatasort(indata2)
 
 newbnodes=np.empty((len(indata['spgf_nodes']),1),dtype=int)
 

@@ -37,7 +37,7 @@ grid='vh_high'
 datatype='2d'
 
 regionname='secondnarrows'
-gtiff='data/enav/vancouverGeotiff_combo_600dpi_with_contours.tif'
+gtiff='data/enav/combetest_10000_1200.tif'
 
 #regionname='vh_high_large'
 #gtiff='data/enav/West-Coast.tif'
