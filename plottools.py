@@ -799,6 +799,58 @@ def plotlinreg(model,obs,lr,savestr):
     plt.close(f)
 
 
+def load_geotiff(filename):
+    
+    gdal.UseExceptions()
+    ds = gdal.Open(filename)
+    band = ds.GetRasterBand(1)
+    ct=band.GetColorTable()
+    elevation = ds.ReadAsArray()
+
+    cb=np.array([])
+    for i in range(ct.GetCount()):
+        cb=np.append(cb,ct.GetColorEntry(i)[:])
+    cb=cb.reshape(-1,4)
+    mycmap=LinearSegmentedColormap.from_list('my_colormap',cb/255,256)
+
+    old_cs= osr.SpatialReference()
+    old_cs.ImportFromWkt(ds.GetProjectionRef())
+
+    wgs84_wkt = """
+    GEOGCS["WGS 84",
+        DATUM["WGS_1984",
+            SPHEROID["WGS 84",6378137,298.257223563,
+                AUTHORITY["EPSG","7030"]],
+            AUTHORITY["EPSG","6326"]],
+        PRIMEM["Greenwich",0,
+            AUTHORITY["EPSG","8901"]],
+        UNIT["degree",0.01745329251994328,
+            AUTHORITY["EPSG","9122"]],
+        AUTHORITY["EPSG","4326"]]"""
+    new_cs = osr.SpatialReference()
+    new_cs.ImportFromWkt(wgs84_wkt)
+
+    # create a transform object to convert between coordinate systems
+    transform = osr.CoordinateTransformation(old_cs,new_cs) 
+
+    #get the point to transform, pixel (0,0) in this case
+    width = ds.RasterXSize
+    height = ds.RasterYSize
+    gt = ds.GetGeoTransform()
+    minx = gt[0]
+    miny = gt[3] + width*gt[4] + height*gt[5] 
+    maxx = gt[0] + width*gt[1] + height*gt[2]
+    maxy = gt[3]  
+
+    #get the coordinates in lat long
+    latlongBL = transform.TransformPoint(minx,miny)
+    latlongBR = transform.TransformPoint(maxx,miny)
+    latlongTL = transform.TransformPoint(minx,maxy)
+    latlongTR = transform.TransformPoint(maxx,maxy) 
+    
+    extent=[latlongBL[0],latlongTR[0],latlongBL[1],latlongTR[1]]
+    
+    return elevation, mycmap, extent
 
 
         
