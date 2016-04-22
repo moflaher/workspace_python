@@ -101,7 +101,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-124,   -122.7,    48.85,    49.5],'vh_high_large','Large scale for vh_high']])
     # stjohn
     tl=np.vstack([tl,        [[ -71.0, -58.2,  39.60,   46.5],'stjohn_ship_approach1','stjohn_ship_approach1']])
-    tl=np.vstack([tl,        [[ -66.17,  -65.96,  45.18,   45.29],'stjohn_harbour','stjohn_harbour']])
+    tl=np.vstack([tl,        [[ -66.14,  -65.98,  45.18,   45.29],'stjohn_harbour','stjohn_harbour']])
     tl=np.vstack([tl,        [[ -66.07,  -66.02,  45.2326,   45.275],'stjohn_harbour_tight','stjohn_harbour_tight']])
     tl=np.vstack([tl,        [[-70,   -62,    40,    46],'enav_sjr_large','']])
 
