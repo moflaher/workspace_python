@@ -34,12 +34,12 @@ global vector_scale
 
 
 # Define names and types of data
-name='psj_basicrun'
-grid='psj'
+name='vhhigh_v2_2012-02-01_2012-03-01'
+grid='vhhigh_v2'
 datatype='2d'
-regionname='stjohn_harbour_tight'
+regionname='secondnarrows_tight'
 starttime=0
-endtime=24
+endtime=500
 cmin=0
 cmax=2
 
@@ -50,7 +50,7 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=True
+vectorflag=False
 coastflag=True
 uniformvectorflag=False
 vector_spacing=125

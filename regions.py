@@ -94,6 +94,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-123.191, -122.968,  49.256,   49.348],'vh_harbour','vh_harbour']])
     tl=np.vstack([tl,        [[-123.16, -123.095,  49.291,   49.332],'firstnarrows','firstnarrows']])
     tl=np.vstack([tl,        [[-123.04, -123.0,  49.288,   49.310],'secondnarrows','secondnarrows']])
+    tl=np.vstack([tl,        [[-123.0325, -123.015,  49.29,   49.302],'secondnarrows_tight','secondnarrows_tight']])
     
     #enav  
     # vhfr  
