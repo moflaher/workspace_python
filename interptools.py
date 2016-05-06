@@ -277,7 +277,81 @@ def interpEfield_locs(data,varname,locs,timein,layer=None,ll=False,fill_value=-9
         
     return var
 
+def interpNfield_locs(data,varname,locs,timein,ll=False,fill_value=-9999,hosts=[]):
+    #"""
+    #Interpolate node data at a location.  
+    #  
+    #:Parameters:
+    #data - data dictionary from loadnc
+    #varname - element data variable name. 
+    #loc - location
+    #
+    #:Optional:
+    #ll - default True. Is point lon/lat or xy.    
+    #fill_value - default -9999 when points are outside the domain they return fill_value
+    #"""   
+    ###############################################################################
+    # Error and corner case checking
+    if ll==True:
+        trifinder='trigrid_finder'
+        trigrid='trigrid'
+    else:
+        trifinder='trigridxy_finder'
+        trigrid='trigridxy'
 
+    if (data.has_key(trifinder)==False and data.has_key(trigrid)):
+        print('No trifinder initialized. Initializing now.')
+        data[trifinder]=data[trigrid].get_trifinder()
+    elif data.has_key(trigrid)==False:
+        print('No trifinder or trigrid to initialize it.')
+        return
+
+    locs=np.atleast_2d(locs)
+    #Only find the hosts if not given
+    if hosts==[]:
+        hosts=data[trifinder].__call__(locs[:,0],locs[:,1])
+    #if host==-1:
+        #print('Point at: (' + ('%f'%loc[0]) + ', ' +('%f'%loc[1]) + ') is external to the grid.'
+        #out=np.empty(shape=(data[varname][timein,layer,host]).squeeze().shape)
+        #out[:]=np.nan
+        #return out
+    ###############################################################################
+
+
+    #code for ll adapted from mod_utils.F
+    if ll==True:
+        x0c,y0c=pjt.ll2m(data['uvnodell'][hosts,:].flatten(),locs.flatten())
+    else:       
+        x0c=locs[:,0]-data['uvnode'][hosts,0]
+        y0c=locs[:,1]-data['uvnode'][hosts,1] 
+
+
+    n0=data['nv'][hosts,0]
+    n1=data['nv'][hosts,1]
+    n2=data['nv'][hosts,2]
+      
+
+    #To deal with 1d data, should be a better way to handle this....
+    #This can all be vectorized, checkout robies code could make a factor of 2 difference.
+    if len(data[varname].shape)==1:
+        nvar0=data[varname][n0]
+        nvar1=data[varname][n1]
+        nvar2=data[varname][n2]
+    else:
+        nvar0=(data[varname][timein,n0]).squeeze()
+        nvar1=(data[varname][timein,n1]).squeeze()
+        nvar2=(data[varname][timein,n2]).squeeze()
+
+    var_0=data['aw0'][0,hosts]*nvar0+data['aw0'][1,hosts]*nvar1+data['aw0'][2,hosts]*nvar2
+    var_x=data['awx'][0,hosts]*nvar0+data['awx'][1,hosts]*nvar1+data['awx'][2,hosts]*nvar2
+    var_y=data['awy'][0,hosts]*nvar0+data['awy'][1,hosts]*nvar1+data['awy'][2,hosts]*nvar2
+
+    var= var_0 + var_x*x0c + var_y*y0c
+    
+    # Handle any points outside the domain    
+    var[hosts==-1]=fill_value
+        
+    return var
 
 def cross_shore_transect_2d(grid,name,region,vec,npt):
     data = dt.loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
