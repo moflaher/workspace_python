@@ -36,7 +36,7 @@ A bunch of functions dealing with finite element grids.
            
 """
 
-def loadnei(neifilename=None):
+def load_neifile(neifilename=None):
     """
     Loads a .nei file and returns the data as a dictionary. 
     """
@@ -93,7 +93,7 @@ def find_land_nodes(neifile=None):
     return nodes
 
 
-def savenei(neifilename=None,neifile=None):
+def save_neifile(neifilename=None,neifile=None):
     """
     Loads a .nei file and returns the data as a dictionary.
 
@@ -145,7 +145,7 @@ def max_element_side_ll(data=None,elenum=None):
     return np.max(sp.spatial.distance.pdist(np.array([a,b,c])))
 
 
-def fvcom_savecage(filename=None,nodes=None,drag=None,depth=None):
+def save_cagefile(filename=None,nodes=None,drag=None,depth=None):
     """
     Saves a fvcom cage file. 
     """
@@ -1037,6 +1037,7 @@ def get_sidelength(data):
     data['slmax']=sidemax
     
     return data
+ 
     
 def get_dhh(data):
     dh=np.zeros([len(data['nv']),])
@@ -1242,5 +1243,29 @@ def save_elobc(elobc,outname):
     ncid.__setattr__('history','Created ' +time.ctime(time.time()) )
 
     ncid.close()    
+    
+    
+def load_nei2fvcom(filename,sidelength=True):
+    """
+    Loads a .nei file and returns the data as a dictionary that mimics the structure of fvcom output as closely as possible. 
+    """
+    
+    # Load the neifile
+    data=load_neifile(filename)
+    
+    # Use lcc projection get x,y data
+    data['x'],data['y'],data['proj']=pjt.lcc(data['lon'],data['lat'])
+    
+    # Get nv for grid
+    data=get_nv(data)
+    
+    # ncdatasort to make typically structures
+    data=dt.ncdatasort(data)
+    
+    # get the model sidelength
+    if sidelength:
+        data=get_sidelength(data)       
+        
+    return data
     
     
