@@ -1031,8 +1031,11 @@ def save_poly_shp(data,varLabel,filename):
     shapeData.Destroy()
     
     
+def mdate2pydate(date):
+    return date-366.0
     
-    
+def pydate2mdate(date):
+    return date+366.0
     
     
     
