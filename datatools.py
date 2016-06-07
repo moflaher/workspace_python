@@ -50,90 +50,77 @@ from osgeo import osr
 
 
 
-
-def loadnc(datadir, singlename=None):
+def loadnc(datadir, singlename=[], fvcom=True):
     """
     Loads a .nc  data file
 
     :Parameters:
-        **datadir** -- The path to the directory where the data is stored.
-
-        **singlename (optional)** -- the name of the .nc file of interest,
-            not needed if there is only one .nc file in datadir       
+        **datadir** -- The path to the ncfile.
+        **filename** -- The nc filename.
+        
+        **fvcom** -- True/False - is the ncfile an fvcom file. 
     """
-    #identify the file to load
-    if singlename == None:
-        files = glob.glob(datadir + "*.nc")
-        filepath = files[0]
-        #print filepath
-    else:
-        filepath = datadir + singlename
+    if singlename==[]:
+        singlename=glob.glob('*.nc')[0]
 
-    #initialize a dictionary for the data.
+    # Initialize a dictionary for the data.
     data = {}
-    #store the filepath in case it is needed in the future
-    data['filepath'] = filepath
+    #does the datadir end in / if not append it
+    if (len(datadir)>0) and (not datadir.endswith('/')):
+        datadir=datadir+'/'
+    # Store the filepath in case it is needed in the future
+    data['filepath'] = datadir + singlename
     
 
-    #load data with scipy
-    ncid = netcdf.netcdf_file(filepath, 'r', mmap=True)
+    # Load data with scipy netcdf
+    ncid = netcdf.netcdf_file(data['filepath'], 'r', mmap=True)
 
     for key in ncid.variables.keys():
-        data[key]=ncid.variables[key].data
-   
-    #data['nv'] = np.transpose(ncid.variables['nv'].data.astype(int))-[1] #python index
-    #data['nbe'] = np.transpose(ncid.variables['nbe'].data.astype(int))-[1] #python index
-    if ('nv' in data):
-        data['nv']=data['nv'].astype(int).T-1
-    if ('nbe' in data):
-        data['nbe']=data['nbe'].astype(int).T-1
-    if ('nele' in ncid.dimensions):    
-        data['nele'] = ncid.dimensions['nele']
-    if ('node' in ncid.dimensions):
-        data['node'] = ncid.dimensions['node']
+        data[key]=ncid.variables[key].data   
 
-   
-    #ncid.close()
-    #Now we get the long/lat data.  Note that this method will search
-    #for long/lat files in the datadir and up to two levels above
-    #the datadir.
-    if (('lon' in data) and ('x' in data)):
-        if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
-            long_matches = []
-            lat_matches = []
+    if fvcom:
+        if ('nv' in data):
+            data['nv']=data['nv'].astype(int).T-1
+        if ('nbe' in data):
+            data['nbe']=data['nbe'].astype(int).T-1
+        if ('nele' in ncid.dimensions):    
+            data['nele'] = ncid.dimensions['nele']
+        if ('node' in ncid.dimensions):
+            data['node'] = ncid.dimensions['node']
+       
 
-            if glob.glob(datadir + "*_long.dat"):
-                long_matches.append(glob.glob(datadir + "*_long.dat")[0])
-            if glob.glob(datadir + "*_lat.dat"):
-                lat_matches.append(glob.glob(datadir + "*_lat.dat")[0])
-            if glob.glob(datadir + "../*_long.dat"):
-                long_matches.append(glob.glob(datadir + "../*_long.dat")[0])
-            if glob.glob(datadir + "../*_lat.dat"):
-                lat_matches.append(glob.glob(datadir + "../*_lat.dat")[0])
-            if glob.glob(datadir + "../../*_long.dat"):
-                long_matches.append(glob.glob(datadir + "../../*_long.dat")[0])
-            if glob.glob(datadir + "../../*_lat.dat"):
-                lat_matches.append(glob.glob(datadir + "../../*_lat.dat")[0])
-            if glob.glob(datadir + "../input/*_long.dat"):
-                long_matches.append(glob.glob(datadir + "../input/*_long.dat")[0])
-            if glob.glob(datadir + "../input/*_lat.dat"):
-                lat_matches.append(glob.glob(datadir + "../input/*_lat.dat")[0])
+        #Now we get the long/lat data.  Note that this method will search
+        #for long/lat files in the datadir and in all equal levels
+        #the datadir.
+        if (('lon' in data) and ('x' in data)):
+            if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
+                long_matches = []
+                lat_matches = []
 
-                #let's make sure that long/lat files were found.
-            if (len(long_matches) > 0 and len(lat_matches) > 0):
-                data['lon'] = np.loadtxt(long_matches[0])
-                data['lat'] = np.loadtxt(lat_matches[0])        
-            else:        
-                print("No long/lat files found. Long/lat set to x/y")
-                data['lon'] = data['x']
-                data['lat'] = data['y']
+                if glob.glob(datadir + "*_long.dat"):
+                    long_matches.append(glob.glob(datadir + "*_long.dat")[0])
+                if glob.glob(datadir + "*_lat.dat"):
+                    lat_matches.append(glob.glob(datadir + "*_lat.dat")[0])                    
+                if glob.glob(datadir + "../input/*_long.dat"):
+                    long_matches.append(glob.glob(datadir + "../*/*_long.dat")[0])
+                if glob.glob(datadir + "../input/*_lat.dat"):
+                    lat_matches.append(glob.glob(datadir + "../*/*_lat.dat")[0])
 
-            
-    if ('nv' in data):
-        if 'lon' in data and 'lat' in data:
-            data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
-        if 'x' in data and 'y' in data:
-            data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
+                    #let's make sure that long/lat files were found.
+                if (len(long_matches) > 0 and len(lat_matches) > 0):
+                    data['lon'] = np.loadtxt(long_matches[0])
+                    data['lat'] = np.loadtxt(lat_matches[0])        
+                else:        
+                    print("No long/lat files found. Long/lat set to x/y")
+                    data['lon'] = data['x']
+                    data['lat'] = data['y']
+
+                
+        if ('nv' in data):
+            if 'lon' in data and 'lat' in data:
+                data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
+            if 'x' in data and 'y' in data:
+                data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
   
         
     return data
