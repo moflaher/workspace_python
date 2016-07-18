@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='vhhigh_v2_2012-02-01_2012-03-01'
-grid='vhhigh_v2'
+name='vh_high_3d_profile'
+grid='vh_high'
 datatype='2d'
-regionname='secondnarrows_tight'
-starttime=0
-endtime=500
+regionname='vh_harbour_tight'
+starttime=500
+endtime=1000
 cmin=0
-cmax=2
+cmax=0.25
 
 
 ### load the .nc file #####
@@ -50,11 +50,11 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=False
+vectorflag=True
 coastflag=True
 uniformvectorflag=False
 vector_spacing=125
-vector_scale=700
+vector_scale=50
 
 #vector_spacing=600
 #vector_scale=150
@@ -97,7 +97,7 @@ def speed_plot(i):
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
         ax.add_collection(lseg_t) 
     if vectorflag==True:
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
+        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
     if uniformvectorflag==True:
         norm=np.sqrt(data['ua'][i,vidx]**2+data['va'][i,vidx]**2)
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['ua'][i,vidx],norm),np.divide(data['va'][i,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
@@ -109,7 +109,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(2)
+pool = multiprocessing.Pool()
 pool.map(speed_plot,range(starttime,endtime))
 
 

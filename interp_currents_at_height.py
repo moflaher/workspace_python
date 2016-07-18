@@ -13,11 +13,11 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-grid='sfm6_musq2'
+name='kit4_45days_3'
+grid='kit4'
 datatype='2d'
-starttime=0
-interpheight=1
+starttime=96
+interpheight=2
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/' + name + '/output/',singlename=grid + '_0001.nc')

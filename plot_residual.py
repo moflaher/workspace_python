@@ -13,8 +13,8 @@ import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
-from t_tide import t_tide
-from t_predic import t_predic
+from ttide.t_tide import t_tide
+from ttide.t_predic import t_predic
 from matplotlib.collections import LineCollection as LC
 from matplotlib.collections import PolyCollection as PC
 import multiprocessing
@@ -23,9 +23,9 @@ import multiprocessing
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 datatype='2d'
-regionname='firstnarrows'
+regionname='vh_harbour_tight'
 starttime=0
-endtime=1000
+endtime=100
 cmin=0
 cmax=0.5
 
@@ -98,7 +98,7 @@ def res_plot(i):
 
 
 
-pool = multiprocessing.Pool(2)
+pool = multiprocessing.Pool()
 pool.map(res_plot,range(starttime,endtime))
 
 

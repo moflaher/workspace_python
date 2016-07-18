@@ -61,6 +61,7 @@ def prettyplot_ll(axin,**kwargs):
     skinny=False
     fontsize=12
     ticksout=False
+    axlabels=True
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -79,6 +80,8 @@ def prettyplot_ll(axin,**kwargs):
                 fontsize=value 
             if (key=='ticksout'):
                 ticksout=value 
+            if (key=='axlabels'):
+                axlabels=value
                
 
 
@@ -86,8 +89,13 @@ def prettyplot_ll(axin,**kwargs):
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
     axin.set_xticklabels(-1*(axin.get_xticks()))
-    axin.set_xlabel(r'Longitude ($^{\circ}$W)')
-    axin.set_ylabel(r'Latitude ($^{\circ}$N)')
+    if axlabels:
+        axin.set_xlabel(r'Longitude ($^{\circ}$W)')
+        axin.set_ylabel(r'Latitude ($^{\circ}$N)')
+    else:
+        axin.xaxis.set_tick_params(labelbottom='off')
+        axin.yaxis.set_tick_params(labelleft='off')
+
 
 
     for label in axin.get_xticklabels() +axin.get_yticklabels():
@@ -624,6 +632,8 @@ def meter_box(axin,loc,dist,color='k',lw=1,retbox=False):
 def axes_label(axin,label,**kwargs):
     loc=0
     drawn=False
+    size=12
+    color='k'
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -631,6 +641,10 @@ def axes_label(axin,label,**kwargs):
                 loc=value           
             if (key=='drawn'):
                 drawn=value
+            if (key=='color'):
+                color=value
+            if (key=='size'):
+                size=value
 
 
     if drawn==False:
@@ -638,7 +652,7 @@ def axes_label(axin,label,**kwargs):
 
     if loc==0:
         axbb=axin.get_axes().get_position().bounds
-        t=axin.annotate(label,xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+        t=axin.annotate(label,xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction',color=color,fontsize=size)
         t.set_zorder(100)
 
 
@@ -855,7 +869,29 @@ def load_geotiff(filename):
     return elevation, mycmap, extent
 
 
-        
+def box2ax(axbox,axregion,region,letter,**kwargs):
+    """
+    Given two axes and a region draw a box and label with letters.
+    """
+    defaults={'color' : 'k',
+              'lw' : 1,
+              'textcolor' : 'k',
+              'fontsize' : 8}
+    
+    for (option, value) in kwargs.iteritems():
+        defaults[option]=value
+
+    plot_box(axbox,region,color=defaults['color'],lw=defaults['lw'])
+    xos=0.05*(region['region'][1]-region['region'][0])
+    yos=0.05*(region['region'][3]-region['region'][2])
+    axbox.annotate(letter,xy=(region['region'][0]+xos,region['region'][2]+yos),xycoords='data',color=defaults['textcolor'],fontsize=defaults['fontsize'])
+    
+    plt.draw()
+    axbb=axregion.get_axes().get_position().bounds
+    axregion.annotate(letter,xy=(axbb[0]+.0075,axbb[1]+.0075),xycoords='figure fraction',color=defaults['textcolor'],fontsize=defaults['fontsize'])
+    
+    
+    
 
 
 

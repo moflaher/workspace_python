@@ -36,8 +36,8 @@ outputpath='data/enav/stjohn_24hourby1hour_spacing_0.00025.nc'
 
 
 ### load the .nc file #####
-#data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('data/enav/',singlename='sfm5m_sjr_ua_va_15feb2003.nc')
+data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+#data = loadnc('data/enav/',singlename='sfm5m_sjr_ua_va_15feb2003.nc')
 print('done load')
 data = ncdatasort(data,trifinder=True)
 print('done sort')

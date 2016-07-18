@@ -7,12 +7,12 @@ from pyseidon_dvt import *
 import os
 
 
-grid='fr_high'
+grid='vhhigh_v2'
 datatype='2d'
 
 startdir=os.getcwd()+'/'
 path2runs = 'runs/'+grid+'/'
-folder2results=['2012-02-01_2012-03-01']
+folder2results=['vhhigh_v2_2012-02-01_2012-03-01']
 
 
 path2results = 'figures/png/'+grid+'_'+datatype+'/calibration_short/'
@@ -52,11 +52,11 @@ for case in folder2results:
         try:
             print "Validating: "+ f +"..."
             filename = startdir+path2runs+f+'/output/'+grid+'_0001.nc'
-            fvcom = FVCOM(filename,tx=['2012-02-05 00:00:00','2012-02-10 00:00:00'])
+            fvcom = FVCOM(filename,tx=['2012-02-13 00:00:00','2012-02-20 00:00:00'])
             #print station._origin_file
-            val = Validation(obs, fvcom,outpath=path2results+case+'/')
+            val = Validation(obs, fvcom,outpath=path2results+case+'/',debug=True)
             val.validate_data(filename = f+'_FVCOM_vs_OBS_data', save_csv=True)
-            val.validate_harmonics(filename = f+'_FVCOM_vs_OBS_harmo', save_csv=True)
+            #val.validate_harmonics(filename = f+'_FVCOM_vs_OBS_harmo', save_csv=True)
         except (PyseidonError, IndexError) as e:
             pass
 

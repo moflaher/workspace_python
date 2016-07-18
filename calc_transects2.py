@@ -20,8 +20,8 @@ from matplotlib.colors import LinearSegmentedColormap
 import collections
 
 # Define names and types of data
-name='vh_high_3d_profile'
-grid='vh_high'
+name='vhhigh_v2_3d_profile'
+grid='vhhigh_v2'
 datatype='2d'
 
 ### load the .nc file #####

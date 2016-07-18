@@ -164,7 +164,7 @@ def expand_region(region,dist=0,shift=0):
     """
     if dist!=0:
         dist=np.atleast_1d(np.array(dist))
-        lon_space=ll_dist(region,dist[0])
+        lon_space=ll_dist(region,dist[0])[0]
         if len(dist)==2:
             lat_space=dist[1]/111120 
             y_dist=dist[1]   
@@ -172,14 +172,14 @@ def expand_region(region,dist=0,shift=0):
             lat_space=dist[0]/111120  
             y_dist=dist[0]   
 
-        region['region']=region['region']+[-lon_space,+lon_space,-lat_space,+lat_space]
+        region['region']=region['region']+np.array([-lon_space,+lon_space,-lat_space,+lat_space])
         region['lon_edist']=lon_space
         region['lat_edist']=lat_space
 
 
     if shift!=0:
         shift=np.atleast_1d(np.array(shift))
-        lon_space=ll_dist(region,shift[0])
+        lon_space=ll_dist(region,shift[0])[0]
         if len(shift)==2:
             lat_space=shift[1]/111120 
             y_dist=shift[1]   
@@ -187,7 +187,7 @@ def expand_region(region,dist=0,shift=0):
             lat_space=shift[0]/111120  
             y_dist=shift[0]   
 
-        region['region']=region['region']+[+lon_space,+lon_space,+lat_space,+lat_space]
+        region['region']=region['region']+np.array([+lon_space,+lon_space,+lat_space,+lat_space])
         region['lon_sdist']=lon_space
         region['lat_sdist']=lat_space
 

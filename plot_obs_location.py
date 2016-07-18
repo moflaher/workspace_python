@@ -70,7 +70,7 @@ f=plt.figure()
 ax=f.add_axes([.125,.1,.75,.8])
 ax.triplot(data['trigrid'],lw=.2)
 prettyplot_ll(ax,setregion=region)
-plotcoast(ax,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
+plotcoast(ax,filename='pacific_harbour.nc',color='None',fill=True)
 
 #for key in obs:    
     #ax.plot(obs[key]['lon'],obs[key]['lat'],'b*',markersize=8)
@@ -103,7 +103,7 @@ ax0.yaxis.set_tick_params(labelright='on',labelleft='off')
 ax0.triplot(data['trigrid'],lw=.2)
 
 prettyplot_ll(ax0,setregion=region2)
-plotcoast(ax0,filename='pacific_harbour.nc',color='None',fcolor='darkgreen',fill=True)
+plotcoast(ax0,filename='pacific_harbour.nc',color='None',fill=True)
 ax0.set_xlabel('')
 ax0.set_ylabel('')
 ax0.set_xticklabels(ax0.get_xticks(),rotation=30)
