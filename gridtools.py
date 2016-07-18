@@ -1131,10 +1131,10 @@ def save_seg2nc(segfile,outname):
     ncid.close()
 
     
-def sort_boundary(neifile):
+def sort_boundary(neifile,boundary=1):
 
-    nn=copy.deepcopy(neifile['nodenumber'][neifile['bcode']==1]).astype(int)
-    nnei=copy.deepcopy(neifile['neighbours'][neifile['bcode']==1]).astype(int)
+    nn=copy.deepcopy(neifile['nodenumber'][neifile['bcode']==boundary]).astype(int)
+    nnei=copy.deepcopy(neifile['neighbours'][neifile['bcode']==boundary]).astype(int)
     
     #find the neighbour of the first node
     idx=np.argwhere(nnei==nn[0])[0][0]
@@ -1267,5 +1267,26 @@ def load_nei2fvcom(filename,sidelength=True):
         data=get_sidelength(data)       
         
     return data
+    
+def nei2seg(neifile):
+    """
+    Convert the boundaries from an neifile to a segfile.
+    """
+    
+    segfile=collections.OrderedDict()
+    segfileidx=collections.OrderedDict()
+    
+    bcode=neifile['bcode']  
+    nbound=np.unique(bcode) 
+        
+    for j in range(1,len(nbound)):
+        idx=sort_boundary(neifile,boundary=j)-1
+        segfile[str(j)]=np.vstack([neifile['lon'][idx],neifile['lat'][idx]]).T          
+
+    return segfile
+    
+    
+
+    
     
     

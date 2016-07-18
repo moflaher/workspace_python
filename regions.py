@@ -92,7 +92,11 @@ def makeregions():
     tl=np.vstack([tl,        [[-122.83, -122.746, 49.20, 49.25],'fr_sandbar_island1','fr_sandbar_island1']])
     tl=np.vstack([tl,        [[-123.286, -122.815,  49.242,   49.488],'vh_whole','vh_whole']])
     tl=np.vstack([tl,        [[-123.191, -122.968,  49.256,   49.348],'vh_harbour','vh_harbour']])
+<<<<<<< HEAD
     tl=np.vstack([tl,        [[-123.12, -123.07,  49.28,   49.32],'vh_harbour_tight','vh_harbour_tight']])
+=======
+    tl=np.vstack([tl,        [[-123.125, -123.025,  49.256,   49.348],'vh_harbour_tight','vh_harbour_tight']])
+>>>>>>> 909200e9537bc9ef9ea0f899662319af6cd83ce9
     tl=np.vstack([tl,        [[-123.16, -123.095,  49.291,   49.332],'firstnarrows','firstnarrows']])
     tl=np.vstack([tl,        [[-123.04, -123.0,  49.288,   49.310],'secondnarrows','secondnarrows']])
     tl=np.vstack([tl,        [[-123.0325, -123.015,  49.29,   49.302],'secondnarrows_tight','secondnarrows_tight']])

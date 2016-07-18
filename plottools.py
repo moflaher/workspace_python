@@ -869,13 +869,18 @@ def load_geotiff(filename):
     return elevation, mycmap, extent
 
 
+<<<<<<< HEAD
 def box2ax(axbox,axregion,region,letter,**kwargs):
+=======
+def box2ax(axbox,axregion,region,letter,kwargs):
+>>>>>>> 909200e9537bc9ef9ea0f899662319af6cd83ce9
     """
     Given two axes and a region draw a box and label with letters.
     """
     defaults={'color' : 'k',
               'lw' : 1,
               'textcolor' : 'k',
+<<<<<<< HEAD
               'fontsize' : 8}
     
     for (option, value) in kwargs.iteritems():
@@ -889,6 +894,21 @@ def box2ax(axbox,axregion,region,letter,**kwargs):
     plt.draw()
     axbb=axregion.get_axes().get_position().bounds
     axregion.annotate(letter,xy=(axbb[0]+.0075,axbb[1]+.0075),xycoords='figure fraction',color=defaults['textcolor'],fontsize=defaults['fontsize'])
+=======
+              'textsize' : 8}
+    
+    for (option, value) in kwargs:
+        defaults[option]=value
+
+    plot_box(axbox,region,color=defaults['color'],lw=defaults['lw'])
+    xos=0.0075*(region[0]-region[1])
+    yos=0.03*(region[3]-region[2])
+    axbox.annotate(letter,xy=(region[0]+xos,region[3]-yos),xycoords='data')
+    
+    plt.draw()
+    axbb=axregion.get_axes().get_position().bounds
+    axregion.annotate(letter,xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+>>>>>>> 909200e9537bc9ef9ea0f899662319af6cd83ce9
     
     
     
