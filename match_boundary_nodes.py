@@ -17,27 +17,30 @@ import netCDF4 as n4
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01_0.03_0.01'
-grid='vh_high'
+name='2011-08-25_2011-09-08_0.0025'
+grid='acadia_force_2d'
 datatype='2d'
 
 ###load old grid stuff
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('runs_acadia/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 print('done load')
 data = ncdatasort(data)
 print('done sort')
-indata=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid,grid+'_spectide.nc')
+indata=load_fvcom_files('runs_acadia/'+grid+'/'+name+'/input',grid,grid+'_spectide.nc')
+indata['nodell']=data['nodell']
 
 
 
 ###load new grid stuff
-name2='vhhigh_v2_clean_hpc'
-grid2='vhhigh_v2'
+#name2='vhhigh_v3_clean_hpc'
+grid2='acadia_bof_v2_2d'
 datatype='2d'
 
 
-indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input',grid2)
-neifile=loadnei('runs/'+grid2+'/'+name2+'/input/'+grid2+'.nei')
+#indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input',grid2)
+#neifile=load_neifile('runs/'+grid2+'/'+name2+'/input/'+grid2+'.nei')
+indata2=load_fvcom_files('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/makerun/input/',grid2)
+neifile=load_neifile('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/makerun/input/'+grid2+'.nei')
 indata2.update(neifile)
 indata2=ncdatasort(indata2)
 

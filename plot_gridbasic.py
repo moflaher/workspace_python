@@ -18,12 +18,13 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='kelp_channel'
-grid='kelp_channel'
-#regionlist=regions()
-regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
-regionlist=['kelp_channel']
-#regionlist=['firstnarrows','secondnarrows']
+name='seaview_add_19'
+grid='envenio'
+regionlist=regions()
+#regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
+#regionlist=['kelp_channel']
+regionlist=['gp','pp','gp_tight','dg','dg_upper','sfmwhole','bof','mp','pp','blackrock','blackrock_ebb','blackrock_fld','capedor','northgrid','northgrid_cape']
+regionlist=['sjr','seaview','bof']
 datatype='2d'
 
 
@@ -32,7 +33,8 @@ datatype='2d'
 #data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
 #data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
 #data=loadnei('runs/'+grid+'/2012-02-01_2012-03-01/input/' +name+ '.nei')
-data=loadnei('data/kelp_ideal/xy_4/makerun/' +name+ '.nei')
+data=load_neifile('/home/moe46/Desktop/school/grids/envenio/seaview_20m/' +name+ '.nei')
+#data=load_neifile('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/' +name+ '.nei')
 data['x'],data['y'],proj=lcc(data['lon'],data['lat'])
 data=get_nv(data)
 data=ncdatasort(data)
@@ -59,7 +61,7 @@ for regionname in regionlist:
     # Plot mesh
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    ax.triplot(data['trigrid'],lw=.1)
+    ax.triplot(data['trigrid'],lw=.1,color='k')
     prettyplot_ll(ax,setregion=region,grid=True,title=regionname)
     f.savefig(savepath + grid + '_' + regionname +'_grid.png',dpi=300)
     plt.close(f)
@@ -67,7 +69,7 @@ for regionname in regionlist:
     # Plot mesh
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])
-    ax.triplot(data['trigrid'],lw=.1)
+    ax.triplot(data['trigrid'],lw=.1,color='k')
     prettyplot_ll(ax,setregion=region)
     plotcoast(ax,filename='pacific_harbour.nc',color='0.75',fill=True)
     f.savefig(savepath + grid + '_' + regionname +'_grid_pretty.png',dpi=300)

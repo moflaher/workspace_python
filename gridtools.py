@@ -795,7 +795,7 @@ def find_outside_seg(segfile=None,swap=True):
         return  
 
 
-def save_nodfile(segfile,filename=None):
+def save_nodfile(segfile,filename=None,bnum=[]):
     """
     Save a nod file from a seg dict. 
     """
@@ -815,7 +815,10 @@ def save_nodfile(segfile,filename=None):
 
 
     fp.write('%d\n' % dictlen )
-    fp.write('%d\n' % len(segfile.keys()) )
+    if bnum==[]:
+        fp.write('%d\n' % len(segfile.keys()) )
+    else:
+        fp.write('%d\n' % bnum )
 
     for key in segfile.keys():
         fp.write('%d\n'% len(segfile[key]))
