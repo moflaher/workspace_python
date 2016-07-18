@@ -83,8 +83,8 @@ def prettyplot_ll(axin,**kwargs):
             if (key=='axlabels'):
                 axlabels=value
                
-
-
+               
+    f=axin.get_figure()
     _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
@@ -119,17 +119,17 @@ def prettyplot_ll(axin,**kwargs):
         #cax = divider.append_axes("right", size="5%", pad=0.25)
         #plt.colorbar(cax=cax)
         if skinny==True:
-            plt.draw()
+            f.canvas.draw()
             box=axin.get_position()
             cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
             cb=plt.colorbar(colorax,cax=cax)
             cb.set_label(cblabel,fontsize=10)
         else:
-            plt.draw()
+            f.canvas.draw()
             box=axin.get_position()
             box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-.1,box.ymax]]))
             axin.set_position(box)
-            plt.draw()
+            f.canvas.draw()
             box=axin.get_position()
             cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
             cb=plt.colorbar(colorax,cax=cax)
