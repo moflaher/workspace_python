@@ -37,10 +37,10 @@ import sys
 
 
 # Define names and types of data
-name='kelpchannel_nodrag'
-grid='kelpchannel'
+name='kit4_baroclinic_new_322'
+grid='kit4'
 datatype='2d'
-starttime=340
+starttime=96
 interpheight=1
 
 ### load the .nc file #####
@@ -66,13 +66,13 @@ tempdic['siglay']=data['siglay'][:,0]
 tempdic['siglev']=data['siglev'][:,0]
 sio.savemat('data/ncgrid2mat/'+grid +'_basic.mat',mdict=tempdic)
 
-tempdic['ua']=data['ua'][starttime:,:]
-tempdic['va']=data['va'][starttime:,:]
-tempdic['time']=data['time'][starttime:]
-tempdic['zeta']=data['zeta'][starttime:,:]
-sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
+#tempdic['ua']=data['ua'][starttime:,:]
+#tempdic['va']=data['va'][starttime:,:]
+#tempdic['time']=data['time'][starttime:]
+#tempdic['zeta']=data['zeta'][starttime:,:]
+#sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 
-#tempdic={}
+tempdic={}
 #tempdic['trigrid']=data['nv']+1
 #tempdic['lon']=data['lon']
 #tempdic['lat']=data['lat']
@@ -87,12 +87,12 @@ sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_currents.mat',mdict=tempdic)
 #tempdic['siglay']=data['siglay'][:,0]
 #tempdic['siglev']=data['siglev'][:,0]
 
-#tempdic['time']=data['time'][starttime:]
-#tempdic['u']=data['u'][starttime:,-1,:]
-#tempdic['v']=data['v'][starttime:,-1,:]
-##tempdic['ww']=data['ww'][starttime:,-1,:]
+tempdic['time']=data['time'][starttime:]
+tempdic['u']=data['u'][starttime:,-1,:]
+tempdic['v']=data['v'][starttime:,-1,:]
+#tempdic['ww']=data['ww'][starttime:,-1,:]
 
-#sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_uv_bottom_currents.mat',mdict=tempdic)
+sio.savemat('data/ncgrid2mat/'+grid +'_'+name+'_uv_bottom_currents.mat',mdict=tempdic)
 
 
 #tempdic={}
