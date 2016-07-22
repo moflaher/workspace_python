@@ -18,11 +18,18 @@ import shutil
 cons=['M2','K1']
 place=[0,4]
 
+#cons=['M2']
+#place=[0]
+
+#cons=['K1']
+#place=[4]
+
+
 filepath='data/grid_stuff/'
 
 #new ncfile name
-ncid = n4.Dataset(filepath+'vhhigh_v2_spectide.nc', 'r',format='NETCDF3_CLASSIC')
-g = n4.Dataset(filepath+'vhhigh_v2_spectide_m2k1.nc', 'w',format='NETCDF3_CLASSIC')
+ncid = n4.Dataset(filepath+'vhhigh_v3_spectide.nc', 'r',format='NETCDF3_CLASSIC')
+g = n4.Dataset(filepath+'vhhigh_v3_spectide_m2k1.nc', 'w',format='NETCDF3_CLASSIC')
 
 
 
