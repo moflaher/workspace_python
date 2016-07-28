@@ -246,11 +246,11 @@ def regioner(data,region,subset=False):
         nv_tmp2[inds] = i
 
     nv_new = np.reshape(nv_tmp2, (-1, 3), 'F')
-
+    
     data['trigrid_sub'] = mplt.Triangulation(data['lon'][nidx_uni], data['lat'][nidx_uni],nv_new)
     data['nidx_sub']=nidx_uni
     data['eidx_sub']=eidx
-
+    data['nv_sub']=nv_new
 
     if subset==True:  
         data['zeta']=data['zeta'][:,nidx_uni]
