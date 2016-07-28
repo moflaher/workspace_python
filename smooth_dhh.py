@@ -19,16 +19,16 @@ import copy
 
 
 # Define names and types of data
-name='vh_high_clean_hpc'
-grid='vh_high'
+name='vhhigh_v3_clean_hpc'
+grid='vhhigh_v3'
 datatype='2d'
 cutoff=1
-smoothing=10
+smoothing=50
 
 
 ### load the mesh files #####
 data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
-data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
+data.update(load_neifile('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
 data=get_nv(data)
 data=ncdatasort(data)
 data=get_dhh(data)
@@ -59,6 +59,7 @@ prettyplot_ll(ax,setregion=region,grid=True,cblabel=r'$\frac{\delta H}{H}$',cb=t
 f.savefig(savepath + grid +'_dhh.png',dpi=600)
 plt.close(f)
 
+modified=np.arange(data['nnodes'])
 
 for loop in range(smoothing):
     data=get_dhh(data)
@@ -75,14 +76,18 @@ for loop in range(smoothing):
             
             for j in range(-1,2):
                 #print(j)
-                if (np.fabs(h[j]-h[j+1])/hm)>cutoff:
-                    n=data['neighbours'][data['nv'][i,j]]
-                    n=n[n!=0]
-                    datasave['h'][data['nv'][i,j]]=data['h'][n-1].mean()
+                #if (np.fabs(h[j]-h[j+1])/hm)>cutoff:
+                n=data['neighbours'][data['nv'][i,j]]
+                n=n[n!=0]
+                    ##only smooth a point once
+                    #if np.sum(modified==data['nv'][i,j])==1:
+                        #modified[data['nv'][i,j]]=999999999
+                        #datasave['h'][data['nv'][i,j]]=data['h'][n-1].mean()
+                datasave['h'][data['nv'][i,j]]=data['h'][n-1].mean()
                     
                     
        
-    savenei('data/grid_stuff/'+grid+ '_smoothed_dhh_'+("%.2f"%cutoff)+'_loop_'+("%d"%loop)+'.nei',datasave)
+    save_neifile('data/grid_stuff/'+grid+ '_smoothed_dhh_'+("%.2f"%cutoff)+'_loop_'+("%d"%loop)+'.nei',datasave)
       
     datasave=get_dhh(datasave)               
                     
