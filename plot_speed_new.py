@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='vh_high_3d_profile'
-grid='vh_high'
+name='vhhigh_v2_20120201-20120301'
+grid='vhhigh_v2'
 datatype='2d'
-regionname='vh_harbour_tight'
-starttime=500
-endtime=1000
+regionname='secondnarrows'
+starttime=0
+endtime=25
 cmin=0
-cmax=0.25
+cmax=3.0
 
 
 ### load the .nc file #####
@@ -50,7 +50,7 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=True
+vectorflag=False
 coastflag=True
 uniformvectorflag=False
 vector_spacing=125
