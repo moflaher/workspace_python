@@ -18,11 +18,11 @@ from regions import makeregions
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
-grid='vh_high'
-name='2012-02-01_2012-03-01_0.01_0.001'
+grid='vhhigh_v2'
+name='vhhigh_v2_2012-02-01_2012-03-01'
 datatype='2d'
 
-data=load_nei2fvcom('runs/'+grid+'/'+name+'/input/vh_high.nei')
+data=load_nei2fvcom('runs/'+grid+'/'+name+'/input/vhhigh_v2.nei')
 
 savepath='figures/png/' + grid + '_' + datatype + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -35,15 +35,15 @@ ax0=f.add_axes([.125,.1,.375,.8])
 ax0.triplot(data['trigrid'],lw=.075,color='k')
 region0=regions('vhfr_whole')
 prettyplot_ll(ax0,setregion=region0)
-plotcoast(ax0,filename='pacific_harbour.nc',fill=True,color='None')
+plotcoast(ax0,filename='pacific_harbour_20160320.nc',fill=True,color='None')
 axes_label(ax0,'A',color='g',size=12)
 
 #plot second narrow
 ax2=f.add_axes([.55,.05,.4,.8])
 ax2.triplot(data['trigrid'],lw=.15,color='k')
-region2=regions('secondnarrows')
+region2=regions('secondnarrows_zoom')
 prettyplot_ll(ax2,setregion=region2,axlabels=False)
-plotcoast(ax2,filename='pacific_harbour.nc',fill=True,color='None')
+plotcoast(ax2,filename='pacific_harbour_20160320.nc',fill=True,color='None')
 
 #plot vh_whole
 ax1=f.add_axes([.365,.225,.4,.8])
@@ -51,7 +51,7 @@ ax1.triplot(data['trigrid'],lw=.05,color='k')
 region1=regions('vh_whole')
 region1['region'][3]=region1['region'][3]-.05
 prettyplot_ll(ax1,setregion=region1,axlabels=False)
-plotcoast(ax1,filename='pacific_harbour.nc',fill=True,color='None')
+plotcoast(ax1,filename='pacific_harbour_20160320.nc',fill=True,color='None')
 
 box2ax(ax0,ax1,region1,'B',textcolor='g',color='g',lw=1.5,fontsize=14)
 box2ax(ax1,ax2,region2,'C',textcolor='g',color='g',lw=.5,fontsize=8)

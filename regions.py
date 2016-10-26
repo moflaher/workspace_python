@@ -101,6 +101,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-123.16, -123.095,  49.291,   49.332],'firstnarrows','firstnarrows']])
     tl=np.vstack([tl,        [[-123.04, -123.0,  49.288,   49.310],'secondnarrows','secondnarrows']])
     tl=np.vstack([tl,        [[-123.0325, -123.015,  49.29,   49.302],'secondnarrows_tight','secondnarrows_tight']])
+    tl=np.vstack([tl,        [[-123.035, -123.0175,  49.2925,   49.301],'secondnarrows_zoom','secondnarrows_zoom']])
     
     #enav  
     # vhfr  

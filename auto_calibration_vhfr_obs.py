@@ -15,7 +15,7 @@ path2runs = 'runs/'+grid+'/'
 folder2results=['vhhigh_v2_2012-02-01_2012-03-01']
 
 
-path2results = 'figures/png/'+grid+'_'+datatype+'/calibration_short/'
+path2results = 'figures/png/'+grid+'_'+datatype+'/calibration/'
 
 
 # obs
@@ -52,7 +52,7 @@ for case in folder2results:
         try:
             print "Validating: "+ f +"..."
             filename = startdir+path2runs+f+'/output/'+grid+'_0001.nc'
-            fvcom = FVCOM(filename,tx=['2012-02-13 00:00:00','2012-02-20 00:00:00'])
+            fvcom = FVCOM(filename)#,tx=['2012-02-13 00:00:00','2012-02-20 00:00:00'])
             #print station._origin_file
             val = Validation(obs, fvcom,outpath=path2results+case+'/',debug=True)
             val.validate_data(filename = f+'_FVCOM_vs_OBS_data', save_csv=True)

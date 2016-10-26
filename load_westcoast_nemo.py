@@ -33,7 +33,18 @@ data = ncdatasort(data)
 print('done sort')
 
 
-grid = xr.open_dataset('https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetry2V1')
+grid=xr.open_dataset('https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetry2V1',engine='pydap')
+
+lon=grid.longitude.data[0]
+lat=grid.latitude.data[0]
+
+
+#ts=xr.open_dataset('https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSn3DTracerFields1hV1',engine='pydap')
+
+#sal=ts.salinity.data
+#temp=ts.temperature.data
+
+
 
 
 

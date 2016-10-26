@@ -27,6 +27,7 @@ starttime=0
 endtime=23
 stride=1
 outputpath='data/enav/eastcoast/'+grid+'_'+name+'_cd.nc'
+outputpath2='data/enav/eastcoast/'+grid+'_'+name+'_cd_masked.nc'
 
 
 
@@ -81,6 +82,14 @@ tmp=tmp+cdnomask
 ncid.variables['zeta'][:]=tmp
 ncid.close()
 
+os.system('rm ' + outputpath2)
+os.system('cp ' + 'runs/'+grid+'/'+name+'/output/' +grid + '_0001.nc ' + outputpath2)
+ncid=n4.Dataset(outputpath2,'r+',format='NETCDF3_64BIT')
+#mask data with 99999 for an place that is every dry.
+idx=np.argwhere(np.sum(data['wet_nodes'],axis=0)!=24)
+tmp[:,idx]=99999
+ncid.variables['zeta'][:]=tmp
+ncid.close()
 
 
 

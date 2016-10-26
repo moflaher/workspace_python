@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01'
+name='May012010_Dec312010'
 grid='fr_high'
 datatype='2d'
-regionname='pitt_lake_sandbar'
-starttime=0
-endtime=1000
+regionname='fr_mouth'
+starttime=1000
+endtime=2000
 cmin=0
-cmax=1
+cmax=1.5
 
 
 ### load the .nc file #####
@@ -111,7 +111,7 @@ def speed_plot(i):
 
 
 
-pool = multiprocessing.Pool(2)
+pool = multiprocessing.Pool()
 pool.map(speed_plot,range(starttime,endtime))
 
 

@@ -894,7 +894,33 @@ def box2ax(axbox,axregion,region,letter,**kwargs):
     return
     
     
-
+def plottri(data, field, minmax=[],show=True):
+    """
+    Plot an FE data field.
+    """
+    
+    f=plt.figure()
+    ax=f.add_axes([0.125,.1,.775,.8])
+    if minmax==[]:
+        triax=ax.tripcolor(data['trigrid'],field)
+    else:
+        triax=ax.tripcolor(data['trigrid'],field,vmin=minmax[0],vmax=minmax[1])
+    plt.colorbar(triax)
+    
+    if show==True:
+        f.show()
+        return
+    else:
+        return f,ax
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 

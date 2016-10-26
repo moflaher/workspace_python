@@ -24,7 +24,7 @@ name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 datatype='2d'
 outputpath='data/enav/westcoast/'+grid+'_'+name+'_cd.nc'
-
+outputpath2='data/enav/westcoast/'+grid+'_'+name+'_cd_masked.nc'
 
 
 ### load the .nc file #####
@@ -88,7 +88,15 @@ tmp=tmp+cdnomask
 ncid.variables['zeta'][:]=tmp
 ncid.close()
 
+os.system('rm ' + outputpath2)
+os.system('cp ' + 'runs/'+grid+'/'+name+'/output/' +grid + '_0001.nc ' + outputpath2)
+ncid=n4.Dataset(outputpath2,'r+',format='NETCDF3_64BIT')
+#mask data with 99999 for an place that is every dry.
+idx=np.argwhere(np.sum(data['wet_nodes'],axis=0)!=2785)
+tmp[:,idx]=99999
 
+ncid.variables['zeta'][:]=tmp
+ncid.close()
 
 
 #old plots for wrong thing.
@@ -99,26 +107,26 @@ ncid.close()
 #cb.set_label('h (m)')
 #f.show()
 
-f=plt.figure()
-ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(data['trigrid'],meanel)
-cb=plt.colorbar(triax)
-cb.set_label('meanel (m)')
-f.show()
+#f=plt.figure()
+#ax=f.add_axes([.125,.1,.775,.8])
+#triax=ax.tripcolor(data['trigrid'],meanel)
+#cb=plt.colorbar(triax)
+#cb.set_label('meanel (m)')
+#f.show()
 
-f=plt.figure()
-ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(data['trigrid'],maxel-minel)
-cb=plt.colorbar(triax)
-cb.set_label('tidal range (m)')
-f.show()
+#f=plt.figure()
+#ax=f.add_axes([.125,.1,.775,.8])
+#triax=ax.tripcolor(data['trigrid'],maxel-minel)
+#cb=plt.colorbar(triax)
+#cb.set_label('tidal range (m)')
+#f.show()
 
-f=plt.figure()
-ax=f.add_axes([.125,.1,.775,.8])
-triax=ax.tripcolor(data['trigrid'],testel)
-cb=plt.colorbar(triax)
-cb.set_label('meanel-shallow_bathy (m)')
-f.show()
+#f=plt.figure()
+#ax=f.add_axes([.125,.1,.775,.8])
+#triax=ax.tripcolor(data['trigrid'],testel)
+#cb=plt.colorbar(triax)
+#cb.set_label('meanel-shallow_bathy (m)')
+#f.show()
 
 #f=plt.figure()
 #ax=f.add_axes([.125,.1,.775,.8])
