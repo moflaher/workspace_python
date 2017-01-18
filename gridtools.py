@@ -21,6 +21,7 @@ import collections
 import copy
 
 import pyproj as pyp
+from osgeo import ogr
 
 
 """
@@ -744,6 +745,41 @@ def load_segfile(filename=None):
     fp.close()
 
     return data
+    
+    
+def load_nodefile(filename=None):
+    """
+    Loads an nod file into a dictionary. 
+    """
+
+    data={}
+    
+    if filename==None:
+        print('load_nodefile requires a filename to load.')
+        return
+    try:
+        fp=open(filename,'r')
+    except IOError:
+        print('load_nodefile: invalid filename.')
+        return data
+
+    data=collections.OrderedDict()
+
+    tp = fp.readline()
+    nbnd = int(fp.readline())
+
+    for cnt in range(nbnd):
+        cnt=str(cnt)
+        llist=fp.readline().split()        
+        data[cnt]=np.empty((int(llist[0]),2))
+        for i in range(int(llist[0])):
+            llist=fp.readline().split() 
+            data[cnt][i,0] = float(llist[0])
+            data[cnt][i,1] = float(llist[1])
+            
+    fp.close()
+
+    return data
 
 
 def find_outside_seg(segfile=None,swap=True):
@@ -1126,8 +1162,8 @@ def save_seg2nc(segfile,outname):
         COUNT[i]=len(segfile[seg])   
         if i<(numkey-1):
             START[i+1]=START[i]+COUNT[i]    
-        LON[START[i]:(START[i]+COUNT[i])]=segfile[seg][:,0]
-        LAT[START[i]:(START[i]+COUNT[i])]=segfile[seg][:,1]
+        LON[int(START[i]):int(START[i]+COUNT[i])]=segfile[seg][:,0]
+        LAT[int(START[i]):int(START[i]+COUNT[i])]=segfile[seg][:,1]
         
     start[:]=START
     count[:]=COUNT
@@ -1295,7 +1331,80 @@ def nei2seg(neifile):
     return segfile
     
     
+def nan2seg(datain):
+    """
+    Convert a nan separated array to a seg dict
+    """
+    
+    nanidx=np.argwhere(np.isnan(datain[:,0]))
+    
+    #Add start and end points
+    nanidx=np.append(0, nanidx)
+    nanidx=np.append(nanidx,len(datain[:,0])-1)
+    #Remove no unique points
+    nanidx=np.unique(nanidx)
+    
+    segfile = collections.OrderedDict()
+    
+    for i in range(len(nanidx)-1):
+        segfile[str(i+1)] = datain[nanidx[i]+1:nanidx[i+1],]
+    
+    
+    return segfile
+    
+
+def mergesegfiles(seg1,seg2):
+    """
+    Merge two seg dicts
+    """
+    
+    maxseg=int(list(seg1.keys())[-1])
+    
+    for seg in seg2:
+        maxseg+=1
+        seg1[str(maxseg)]=seg2[seg]
+            
+    return seg1   
+    
+    
+def merge_segments(segfile,segnum1,segnum2,flip1=False,flip2=False):
+    """
+    Merge two segments in a segfile
+    """
+    
+    if flip1:
+        seg1=np.flipud(segfile[segnum1])
+    else:
+        seg1=segfile[segnum1]
+    if flip2:
+        seg2=np.flipud(segfile[segnum2])
+    else:
+        seg2=segfile[segnum2]
+    
+    segfile[segnum1]=np.vstack([seg1,seg2])
+    del segfile[segnum2]    
+    
+    return segfile
+    
+
+def load_kml2seg(filename):
+    """
+    Loads a coastline kml as a seg dict
+    """
+    
+    data=collections.OrderedDict()
+    cnt=1
+
+    ds = ogr.Open(filename)
+    for lyr in ds:
+        for feat in lyr:
+            geom = feat.GetGeometryRef()
+            if (geom != None) and (geom.GetGeometryName() == 'LINESTRING'):
+                data[str(cnt)]=np.array(geom.GetPoints())
+                cnt+=1
+    
+    return data
 
     
-    
+
     

@@ -46,6 +46,7 @@ import mmap
 import os
 from osgeo import ogr
 from osgeo import osr
+import netCDF4 as n4
 
 
 

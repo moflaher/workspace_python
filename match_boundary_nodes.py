@@ -70,6 +70,7 @@ ncid = n4.Dataset('data/grid_stuff/'+grid2+'_spectide.nc', 'r+',format='NETCDF3_
 ncid.variables['obc_nodes'][:]=newbnodes+1
 ncid.close()
 
+
 f=plt.figure()
 ax=f.add_axes([.125,.1,.775,.8])
 ax.scatter(indata2['nodell'][:,0],indata2['nodell'][:,1],s=1,c='b',edgecolor='None')

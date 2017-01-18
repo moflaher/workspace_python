@@ -231,6 +231,7 @@ def plotcoast(axin,**kwargs):
     filename='mid_nwatl6c.nc'
     fcolor='0.75'
     fill=False
+    filepath=[]
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():            
@@ -246,10 +247,14 @@ def plotcoast(axin,**kwargs):
                 fill=value 
             if (key=='fcolor'):
                 fcolor=value
-
-    _base_dir = os.path.realpath(inspect.stack()[0][1])
-    idx=_base_dir.rfind('/')
-    sl=dt.loadnc(_base_dir[:idx],singlename='/data/shorelines/'+filename)
+            if (key=='filepath'):
+                filepath=value            
+    if filepath==[]:
+        _base_dir = os.path.realpath(inspect.stack()[0][1])
+        idx=_base_dir.rfind('/')
+        sl=dt.loadnc(_base_dir[:idx],singlename='/data/shorelines/'+filename)
+    else:
+        sl=dt.loadnc(filepath,singlename=filename)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]
@@ -726,7 +731,7 @@ def scalebar(axin,region,dist,**kwargs):
 
 
 
-def plot_llz(data,show=True,crange=None,s=10,region=None):
+def plot_llz(data,show=True,crange=None,s=10,region=None,pretty=False):
 
 
     f=plt.figure()
@@ -764,7 +769,10 @@ def plot_llz(data,show=True,crange=None,s=10,region=None):
         region={}
         region['region']=np.array([np.min(px),np.max(px),np.min(py),np.max(py)])
     
-    prettyplot_ll(ax,setregion=region,cb=scb,cblabel='')
+    if pretty:
+        prettyplot_ll(ax,setregion=region,cb=scb,cblabel='')
+    else:
+        plt.colorbar(scb)
   
     if show==True:
         f.show()
@@ -915,7 +923,62 @@ def plottri(data, field, minmax=[],show=True):
     
     
     
+def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
+    """
+    Plots a grid and its sidelength and bathymetry for a region.
+    If not region then plots the whole grid.
+    """
     
+    data = gt.load_nei2fvcom(filename)
+    if regionname is not None:
+        region = pjt.regions(regionname)
+        nidx = dt.get_nodes(data,region)
+        eidx = dt.get_elements(data,region)
+    filename=filename.split('.')[0]
+    
+    # Plot grid
+    f = plt.figure()
+    ax=f.add_axes([.1, .125, .775, .8])
+    ax.triplot(data['trigrid'], lw=.25, color='k')
+    if regionname is not None:
+        ax.axis(region['region'])
+        f.savefig(filename+'_'+regionname+'_grid.png',dpi=dpi)
+    else:
+        f.savefig(filename+'_grid.png',dpi=dpi)
+    
+    # Plot sidelength
+    f = plt.figure()
+    ax=f.add_axes([.1, .125, .775, .8])
+    if regionname is not None:
+        cs=np.percentile(data['sl'][eidx],percentiles)
+    else:
+        cs=np.percentile(data['sl'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['sl'],vmin=cs[0],vmax=cs[1])
+    cb=plt.colorbar(triax)
+    cb.set_label('Sidelength (m)')
+    if regionname is not None:
+        ax.axis(region['region'])
+        f.savefig(filename+'_'+regionname+'_sidelength.png',dpi=dpi)
+    else:
+        f.savefig(filename+'_sidelength.png',dpi=dpi)
+        
+    # Plot bathymetry
+    f = plt.figure()
+    ax=f.add_axes([.1, .125, .775, .8])
+    if regionname is not None:
+        cs=np.percentile(data['h'][nidx],percentiles)
+    else:
+        cs=np.percentile(data['h'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['h'],vmin=cs[0],vmax=cs[1])
+    cb=plt.colorbar(triax)
+    cb.set_label('Depth (m)')
+    if regionname is not None:
+        ax.axis(region['region'])
+        f.savefig(filename+'_'+regionname+'_depth.png',dpi=dpi)
+    else:
+        f.savefig(filename+'_depth.png',dpi=dpi)
+    
+
     
     
     
