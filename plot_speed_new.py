@@ -34,14 +34,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='vhhigh_v2_20120201-20120301'
-grid='vhhigh_v2'
+name='sjh_hr_v1_test_01'
+grid='sjh_hr_v1'
 datatype='2d'
-regionname='secondnarrows'
-starttime=0
-endtime=25
+regionname='stjohn_harbour'
+starttime=1000
+endtime=2000
 cmin=0
-cmax=3.0
+cmax=1
 
 
 ### load the .nc file #####
@@ -89,7 +89,7 @@ def speed_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])    
     if coastflag==True:
-        plotcoast(ax,filename='pacific_harbour.nc',color='None', fcolor='darkgreen', fill=True)
+        plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='darkgreen', fill=True)
         
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
     

@@ -14,6 +14,8 @@ import os
 import inspect
 from osgeo import osr, gdal
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.ticker import FuncFormatter
+import matplotlib.path as path
 
 
 """
@@ -88,7 +90,8 @@ def prettyplot_ll(axin,**kwargs):
     _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
     axin.yaxis.set_major_formatter(_formatter)
     axin.xaxis.set_major_formatter(_formatter)
-    axin.set_xticklabels(-1*(axin.get_xticks()))
+    axin.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: -1*x))
+    #axin.set_xticklabels(-1*(axin.get_xticks()))
     if axlabels:
         axin.set_xlabel(r'Longitude ($^{\circ}$W)')
         axin.set_ylabel(r'Latitude ($^{\circ}$N)')
@@ -114,26 +117,21 @@ def prettyplot_ll(axin,**kwargs):
                 label.set_visible(False)
     
     if (cblabel != None):
-        #doesnt really work        
-        #divider = make_axes_locatable(axin)
-        #cax = divider.append_axes("right", size="5%", pad=0.25)
-        #plt.colorbar(cax=cax)
-        if skinny==True:
-            f.canvas.draw()
-            box=axin.get_position()
-            cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
-            cb=plt.colorbar(colorax,cax=cax)
-            cb.set_label(cblabel,fontsize=10)
-        else:
-            f.canvas.draw()
-            box=axin.get_position()
-            box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-.1,box.ymax]]))
+        f.canvas.draw()
+        #Find the bounding box and if its too big for a colorbar then reduce size
+        box=axin.get_position()
+        cbarwidth=box.xmax+0.1+0.1
+        if cbarwidth>1.0:
+            resize=cbarwidth-1.0+.01
+            box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-resize,box.ymax]]))
             axin.set_position(box)
-            f.canvas.draw()
+            f.canvas.draw()            
             box=axin.get_position()
-            cax=axin.get_figure().add_axes([box.xmax + .025, box.ymin, .025, box.height])
-            cb=plt.colorbar(colorax,cax=cax)
-            cb.set_label(cblabel,fontsize=10)
+            
+        cax=f.add_axes([box.xmax + .025, box.ymin, .025, box.height])
+
+        cb=plt.colorbar(colorax,cax=cax)
+        cb.set_label(cblabel,fontsize=10)
 
 
 def get_data_ratio(region):
@@ -979,7 +977,59 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
         f.savefig(filename+'_depth.png',dpi=dpi)
     
 
+def llz_click_remove(data,crange=None,s=10,region=None,pretty=False):
+
+
+    f=plt.figure()
+    ax=f.add_axes([.125,.1,.775,.8])
+
+    if isinstance(data,dict):
+        if data.has_key('h'):  
+            if crange==None:  
+                vmin=data['h'].min()
+                vmax=data['h'].max()  
+            else:
+                vmin=crange[0]
+                vmax=crange[1]     
+            if data.has_key('nodell'):
+                px,py,ph=data['nodell'][:,0],data['nodell'][:,1],data['h']
+            elif (data.has_key('lon') and data.has_key('lat')):
+                px,py,ph=data['lon'],data['lat'],data['h']
+            elif (data.has_key('x') and data.has_key('y')):
+                px,py,ph=data['x'],data['y'],data['h']
+    else:
+        if crange==None:  
+            vmin=data[:,2].min()
+            vmax=data[:,2].max()
+        else:
+            vmin=crange[0]
+            vmax=crange[1]
+        px,py,ph=data[:,0],data[:,1],data[:,2]
+
+
+    scb=ax.scatter(px,py,c=ph,edgecolor='None',s=s,vmin=vmin,vmax=vmax)   
+
+    if region==None:
+        region={}
+        region['region']=np.array([np.min(px),np.max(px),np.min(py),np.max(py)])
     
+    if pretty:
+        prettyplot_ll(ax,setregion=region,cb=scb,cblabel='')
+    else:
+        plt.colorbar(scb)
+  
+    vec=f.ginput(n=-1,timeout=-1)
+    plt.close(f)
+
+    #turn selected points into path
+    p=path.Path(vec)
+    
+    
+    #find points in path and remove and return as array
+    idx=p.contains_points(np.array([px,py]).T)    
+    return np.vstack([px[~idx], py[~idx], ph[~idx]]).T
+
+
     
     
     

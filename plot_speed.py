@@ -33,14 +33,14 @@ global vector_scale
 
 
 # Define names and types of data
-name='2012-02-01_2012-03-01_0.01_0.001'
-grid='vh_high'
+name='sjh_hr_v1_02'
+grid='sjh_hr_v1'
 datatype='2d'
-regionname='secondnarrows'
+regionname='stjohn_harbour_large'
 starttime=0
-endtime=500
+endtime=93
 cmin=0
-cmax=2
+cmax=1
 
 
 ### load the .nc file #####
