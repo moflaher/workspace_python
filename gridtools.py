@@ -869,9 +869,7 @@ def save_nodfile(segfile,filename=None,bnum=[]):
 
 def save_llz(data,filename=None):
     """
-    Saves a llz array as a file.
-
- 
+    Saves a llz array as a file. Takes an Nx3 array 
     """
     
     if filename==None:
@@ -883,17 +881,32 @@ def save_llz(data,filename=None):
         print('Can''t make ' + filename)
         return
 
-
-
- 
-   
-
     for i in range(len(data)):
         fp.write('%f %f %f\n' % (data[i,0],data[i,1],data[i,2] ) )
 
-    
     fp.close()
 
+
+def save_nv(data,filename=None):
+    """
+    Saves a nv array as a file.
+
+ 
+    """
+    
+    if filename==None:
+        print('save_nv requires a filename to save.')
+        return
+    try:
+        fp=open(filename,'w')
+    except IOError:
+        print('Can''t make ' + filename)
+        return
+
+    for i in range(len(data)):
+        fp.write('%d %d %d\n' % (data[i,0],data[i,1],data[i,2] ) )
+
+    fp.close()
 
 def doubleres_nei(neifile):    
    

@@ -2,11 +2,12 @@ from __future__ import division,print_function
 
 import sys
 sys.path.append('/home/moflaher/Desktop/workspace_python/')
-sys.path.append('/home/moe46/Desktop/school/workspace_python/')
+sys.path.append('/home/moe46/Desktop/workspace_python/')
 
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
+mpl.use('Qt4Agg')
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 import scipy.io as sio

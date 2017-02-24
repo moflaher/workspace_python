@@ -33,14 +33,14 @@ indata['nodell']=data['nodell']
 
 ###load new grid stuff
 #name2='vhhigh_v3_clean_hpc'
-grid2='acadia_bof_v2_2d'
+grid2='sjh_hr_v1'
 datatype='2d'
 
 
 #indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input',grid2)
 #neifile=load_neifile('runs/'+grid2+'/'+name2+'/input/'+grid2+'.nei')
-indata2=load_fvcom_files('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/makerun/input/',grid2)
-neifile=load_neifile('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/makerun/input/'+grid2+'.nei')
+indata2=load_fvcom_files('/home/moe46/Desktop/dfo/data/misc/bathymetry/sj_harbour/redepth_folder/sjh_hr/makerun_1/sjh_hr_v1/input/',grid2)
+neifile=load_neifile('/home/moe46/Desktop/dfo/data/misc/bathymetry/sj_harbour/redepth_folder/sjh_hr/makerun_1/sjh_hr_v1/input/'+grid2+'.nei')
 indata2.update(neifile)
 indata2=ncdatasort(indata2)
 

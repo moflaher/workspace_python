@@ -30,6 +30,7 @@ def makeregions():
     tl=np.vstack([tl,        [[-64.42, -64.38, 45.35, 45.38],'blackrock_fld','Black Rock']])
     tl=np.vstack([tl,        [[-64.43, -64.4085, 45.361, 45.372],'blackrock_ebb','Black Rock']])
     tl=np.vstack([tl,        [[-64.89, -64.66, 45.125, 45.36],'capedor','capedor']])
+    tl=np.vstack([tl,        [[-65.05, -64.5, 45.425, 45.75],'capeenrage','capeenrage']])
     tl=np.vstack([tl,        [[-65.03, -64.221, 45.43, 46.15],'northgrid','northgrid']])
     tl=np.vstack([tl,        [[-64.91, -64.64, 45.45, 45.675],'northgrid_cape','northgrid_cape']])
     tl=np.vstack([tl,        [[-66.35, -65.95, 45.0, 45.3],'sjr','sjr']])
