@@ -62,7 +62,7 @@ def prettyplot_ll(axin,**kwargs):
     cblabel=None
     skinny=False
     fontsize=12
-    ticksout=False
+    ticksin=True
     axlabels=True
 
     if kwargs is not None:
@@ -80,8 +80,8 @@ def prettyplot_ll(axin,**kwargs):
                 colorax=value    
             if (key=='fontsize'):
                 fontsize=value 
-            if (key=='ticksout'):
-                ticksout=value 
+            if (key=='ticksin'):
+                ticksin=value 
             if (key=='axlabels'):
                 axlabels=value
                
@@ -104,8 +104,8 @@ def prettyplot_ll(axin,**kwargs):
     for label in axin.get_xticklabels() +axin.get_yticklabels():
         label.set_fontsize(fontsize)
         
-    if ticksout:
-        axin.tick_params(direction='out')
+    if ticksin:
+        axin.tick_params(direction='in')
 
 
     aspect=axin.get_aspect()
@@ -142,8 +142,8 @@ def get_data_ratio(region):
         region - a region as defined in regions.py
     """
 
-    xsize = np.max(np.fabs(region['region'][1] - region['region'][0]), 1e-30)
-    ysize = np.max(np.fabs(region['region'][3] - region['region'][2]), 1e-30)
+    xsize = np.max(np.hstack([np.fabs(region['region'][1] - region['region'][0]), 1e-30]))
+    ysize = np.max(np.hstack([np.fabs(region['region'][3] - region['region'][2]), 1e-30]))
 
     return ysize / xsize
 
@@ -230,6 +230,7 @@ def plotcoast(axin,**kwargs):
     fcolor='0.75'
     fill=False
     filepath=[]
+    zorder=1
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():            
@@ -246,7 +247,9 @@ def plotcoast(axin,**kwargs):
             if (key=='fcolor'):
                 fcolor=value
             if (key=='filepath'):
-                filepath=value            
+                filepath=value     
+            if (key=='zorder'):
+                zorder=value 
     if filepath==[]:
         _base_dir = os.path.realpath(inspect.stack()[0][1])
         idx=_base_dir.rfind('/')
@@ -261,9 +264,9 @@ def plotcoast(axin,**kwargs):
     tmparray=[list(zip(sl['lon'][sl['start'][i]:(sl['start'][i]+sl['count'][i])],sl['lat'][sl['start'][i]:(sl['start'][i]+sl['count'][i])])) for i in range(0,len(sl['start']))]
 
     if fill==True:
-        coastseg=PC(tmparray,facecolor = fcolor,edgecolor=color,linewidths=lw)
+        coastseg=PC(tmparray,facecolor = fcolor,edgecolor=color,linewidths=lw,zorder=zorder)
     else:
-        coastseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        coastseg=LC(tmparray,linewidths = lw,linestyles=ls,color=color,zorder=zorder)
 
 
 
@@ -475,7 +478,7 @@ def ppll_sub(axin,**kwargs):
     cbticksize=8
     llfontsize=12
     cbtickrotation=0
-    ticksout=False
+    ticksin=True
 
     if kwargs is not None:
         for key, value in kwargs.iteritems():
@@ -502,16 +505,16 @@ def ppll_sub(axin,**kwargs):
                 llfontsize=value 
             if (key=='cbtickrotation'):
                 cbtickrotation=value 
-            if (key=='ticksout'):
-                ticksout=value 
+            if (key=='ticksin'):
+                ticksin=value 
                
     f=axin[0].get_figure()
     figW, figH = f.get_size_inches()
     fa = figH / figW
     
-    if ticksout:
+    if ticksin:
         for ax in axin:
-            ax.tick_params(direction='out')
+            ax.tick_params(direction='in')
     
 
     aspect=axin[0].get_aspect()
@@ -546,7 +549,7 @@ def ppll_sub(axin,**kwargs):
     
    
     if (cblabel != None):
-        plt.draw()
+        f.canvas.draw()
         if np.shape(colorax)==np.shape(axin):
             if (aspect>=1/fa):
                 for i,ax in enumerate(axin):

@@ -39,10 +39,10 @@ grid='sfm5m_sjr'
 datatype='2d'
 regionname='stjohn_harbour'
 starttime=120
-endtime=1200
+endtime=288
 spacing=1
 cmin=0
-cmax=1
+cmax=28
 
 
 ### load the .nc file #####
@@ -51,11 +51,11 @@ print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
 
-vectorflag=False
+vectorflag=True
 coastflag=True
 uniformvectorflag=False
-vector_spacing=300
-vector_scale=300
+vector_spacing=500
+vector_scale=150
 
 #vector_spacing=600
 #vector_scale=150
@@ -81,40 +81,42 @@ region=regions(regionname)
 vidx=equal_vectors(data,region,vector_spacing)
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed_with_wd/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/salinity_layers/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 def speed_plot(i):
-    print(i)
-    f=plt.figure()
-    ax=plt.axes([.125,.1,.775,.8])
-    if coastflag==True:
-        plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='0.75', fill=True,zorder=100)
-        
-    triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
+    print(i) 
     
-    if np.shape(cages)!=():   
-        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-        ax.add_collection(lseg_t) 
-    if vectorflag==True:
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
-    if uniformvectorflag==True:
-        norm=np.sqrt(data['ua'][i,vidx]**2+data['va'][i,vidx]**2)
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['ua'][i,vidx],norm),np.divide(data['va'][i,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
-            
-    sand=np.argwhere(data['wet_cells'][i,:]==0)
-    tmparray=[list(zip(data['nodell'][data['nv'][j,[0,1,2]],0],data['nodell'][data['nv'][j,[0,1,2]],1])) for j in sand ]
-    lseg_sand=PC(tmparray,facecolor = '0.75',edgecolor='0.75')
-    ax.add_collection(lseg_sand) 
-        
-    prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    f,ax=place_axes(region,2)  
+    triax0=ax[0].tripcolor(data['trigrid'],data['salinity'][i,0,:],vmin=cmin,vmax=cmax)
+    triax1=ax[1].tripcolor(data['trigrid'],data['salinity'][i,-1,:],vmin=cmin,vmax=cmax)
+    ppll_sub(ax,setregion=region,cb=triax0,cblabel=r'Salinity',llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
+    ABC=['A','B']
+    figW, figH = f.get_size_inches()
+    f.canvas.draw()    
+
+    Q0=ax[0].quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['u'][i,0,vidx],data['v'][i,0,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
+    Q1=ax[1].quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['u'][i,-1,vidx],data['v'][i,-1,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
+
+
+    for j,axi in enumerate(ax):
+        if coastflag:
+            plotcoast(ax[j],filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5,zorder=100)
+        axbb=ax[j].get_axes().get_position().bounds
+        ax[j].annotate(ABC[j],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+        sand=np.argwhere(data['wet_cells'][i,:]==0)
+        tmparray=[list(zip(data['nodell'][data['nv'][k,[0,1,2]],0],data['nodell'][data['nv'][k,[0,1,2]],1])) for k in sand ]
+        lseg_sand=PC(tmparray,facecolor = 'tan',edgecolor='tan')
+        ax[j].add_collection(lseg_sand) 
+
+           
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_salinity_' + ("%04d" %(i)) + '.png',dpi=150)
     plt.close(f)
 
 
 
-pool = multiprocessing.Pool()
+pool = multiprocessing.Pool(20)
 pool.map(speed_plot,range(starttime,endtime,spacing))
 
 

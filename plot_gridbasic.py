@@ -18,13 +18,13 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='vhhigh_v3_smoothed_dhh_1.00_loop_5'
-grid='vhhigh_v3'
+name='sjh_hr_v1_20150701-20150907'
+grid='sjh_hr_v1'
 regionlist=regions()
 #regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
 #regionlist=['kelp_channel']
 regionlist=['gp','pp','gp_tight','dg','dg_upper','sfmwhole','bof','mp','pp','blackrock','blackrock_ebb','blackrock_fld','capedor','northgrid','northgrid_cape']
-regionlist=['secondnarrows']
+regionlist=['sfmwhole','stjohn_harbour']
 datatype='2d'
 
 
@@ -33,7 +33,7 @@ datatype='2d'
 #data=load_fvcom_files('runs/'+grid+'/'+name+'/input',grid)
 #data.update(loadnei('runs/'+grid+'/'+name+'/input/' +grid+ '.nei'))
 #data=loadnei('runs/'+grid+'/2012-02-01_2012-03-01/input/' +name+ '.nei')
-data=load_neifile('data/grid_stuff/' +name+ '.nei')
+data=load_neifile('runs/sjh_hr_v1/sjh_hr_v1_20150701-20150907/input/sjh_hr_v1.nei')
 #data=load_neifile('/home/moe46/Desktop/school/bathymetry_data/redepth_folder/voucher_after_jiggle/' +name+ '.nei')
 data['x'],data['y'],proj=lcc(data['lon'],data['lat'])
 data=get_nv(data)
@@ -71,7 +71,7 @@ for regionname in regionlist:
     ax=plt.axes([.125,.1,.775,.8])
     ax.triplot(data['trigrid'],lw=.1,color='k')
     prettyplot_ll(ax,setregion=region)
-    plotcoast(ax,filename='pacific_harbour_20160320.nc',color='0.75',fill=True)
+    plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='0.75',fill=True)
     f.savefig(savepath + grid + '_' + regionname +'_grid_pretty.png',dpi=300)
     plt.close(f)
 
