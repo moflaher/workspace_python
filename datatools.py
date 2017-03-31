@@ -170,6 +170,10 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     data['uvnodell'] = uvnodell
     data['nodell'] = nodell
     data['nodexy'] = nodexy
+    if 'lonc' not in data:
+        data['lonc'] = uvnodell[:,0]
+    if 'latc' not in data:
+        data['latc'] = uvnodell[:,1]
 
     if ('time' in data):
         data['time']=data['time']+678576
