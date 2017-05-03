@@ -44,8 +44,8 @@ from scipy.io import netcdf
 import scipy.io as sio
 import mmap
 import os
-from osgeo import ogr
-from osgeo import osr
+#from osgeo import ogr
+#from osgeo import osr
 import netCDF4 as n4
 
 
@@ -117,11 +117,11 @@ def loadnc(datadir, singlename=[], fvcom=True):
                     data['lat'] = data['y']
 
                 
-        if ('nv' in data):
-            if 'lon' in data and 'lat' in data:
-                data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
-            if 'x' in data and 'y' in data:
-                data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
+        #if ('nv' in data):
+        #    if 'lon' in data and 'lat' in data:
+        #        data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
+        #    if 'x' in data and 'y' in data:
+        #        data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
   
         
     return data

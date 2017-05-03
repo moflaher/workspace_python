@@ -12,7 +12,7 @@ import misctools as mt
 import projtools as pjt
 import os
 import inspect
-from osgeo import osr, gdal
+#from osgeo import osr, gdal
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.ticker import FuncFormatter
 import matplotlib.path as path

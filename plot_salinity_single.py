@@ -26,21 +26,24 @@ global savepath
 global data
 global cmin
 global cmax
-
+global vectorflag
+global uniformvectorflag
+global coastflag
+global vidx
+global vector_scale
 
 
 # Define names and types of data
-name='sjh_hr_v2_test_barotropic_0.5'
+name='sjh_hr_v2_test_nf_1.5'
 grid='sjh_hr_v2'
 datatype='2d'
-regionname='stjohn_harbour'
+regionname='sjr_kl'
 starttime=0
-endtime=1200
-cmin=0
-cmax=1
-layer='da'
-
-
+endtime=99
+cmin=10
+cmax=25
+layer=0 
+ 
 ### load the .nc file #####
 data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 data['lon']=data['lon']-360
@@ -50,21 +53,20 @@ data = ncdatasort(data)
 print('done sort')
 
 
-
-
-
+coast=False
 
 region=regions(regionname)
 
 
-savepath='{}timeseries/{}_{}/speed/{}_{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,name,region['regionname'],layer,cmin,cmax)
+savepath='{}timeseries/{}_{}/salinity/{}_{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,name,region['regionname'],layer,cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 
 f=plt.figure()
 ax=plt.axes([.125,.1,.775,.8]) 
-#plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='darkgreen', fill=True)  
+if coast:
+    plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='darkgreen', fill=True)  
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax.yaxis.set_major_formatter(_formatter)
 ax.xaxis.set_major_formatter(_formatter)
@@ -84,57 +86,25 @@ if cbarwidth>1.0:
     box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-resize,box.ymax]]))
     ax.set_position(box)
     f.canvas.draw()
-    
+
+
 box=ax.get_position()
 cax=f.add_axes([box.xmax + .025, box.ymin, .025, box.height])
 
 i=starttime
-if layer is 'da':
-    speed=np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2)
-else:
-    speed=np.sqrt(data['u'][i,layer,:]**2+data['v'][i,layer,:]**2)
-triax=ax.tripcolor(data['trigrid'],speed,vmin=cmin,vmax=cmax)
+triax=ax.tripcolor(data['trigrid'],data['salinity'][i,layer,:],vmin=cmin,vmax=cmax)
 cb=plt.colorbar(triax,cax=cax)
-cb.set_label(r'Speed (ms$^{-1}$)',fontsize=10)
+cb.set_label(r'Salinity',fontsize=10)
 
 f.canvas.draw()
 background = f.canvas.copy_from_bbox(ax.bbox)
- 
+
 for i in range(starttime+1,endtime):
     print(i)
     f.canvas.restore_region(background)
-    if layer is 'da':
-        speed=np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2)
-    else:
-        speed=np.sqrt(data['u'][i,layer,:]**2+data['v'][i,layer,:]**2)    
-    triax.set_array(speed)
+    fcolors=np.mean(data['salinity'][i,layer,data['nv']],axis=1)
+    triax.set_array(fcolors)
     ax.draw_artist(triax)
     f.canvas.blit(ax.bbox)
-    f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=600)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    f.savefig('{}{}_{}_salinity_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=600)
 
