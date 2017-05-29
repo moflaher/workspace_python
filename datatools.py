@@ -62,67 +62,39 @@ def loadnc(datadir, singlename=[], fvcom=True):
         **fvcom** -- True/False - is the ncfile an fvcom file. 
     """
     if singlename==[]:
-        singlename=glob.glob('*.nc')[0]
+        singlename = glob.glob('*.nc')[0]
 
     # Initialize a dictionary for the data.
     data = {}
     #does the datadir end in / if not append it
     if (len(datadir)>0) and (not datadir.endswith('/')):
-        datadir=datadir+'/'
-    # Store the filepath in case it is needed in the future
+        datadir = datadir + '/'
+    # Store the filepath and data dir in case it is needed in the future
+    data['datadir'] = datadir
     data['filepath'] = datadir + singlename
     
+    try:
+        # Load data with scipy netcdf
+        ncid = netcdf.netcdf_file(data['filepath'], 'r', mmap=True)
 
-    # Load data with scipy netcdf
-    ncid = netcdf.netcdf_file(data['filepath'], 'r', mmap=True)
-
-    for key in ncid.variables.keys():
-        data[key]=ncid.variables[key].data   
+        for key in ncid.variables.keys():
+            data[key] = ncid.variables[key].data   
+        
+        data['dims'] = {}
+        for key in ncid.dimensions.keys():
+            data['dims'][key] = ncid.dimensions[key]
+    except TypeError:
+        print('File is netcdf4 type')
+        ncid = n4.Dataset(data['filepath'])
+        data = ncid.variables      
+            
 
     if fvcom:
-        if ('nv' in data):
-            data['nv']=data['nv'].astype(int).T-1
-        if ('nbe' in data):
-            data['nbe']=data['nbe'].astype(int).T-1
-        if ('nele' in ncid.dimensions):    
-            data['nele'] = ncid.dimensions['nele']
-        if ('node' in ncid.dimensions):
-            data['node'] = ncid.dimensions['node']
-       
-
-        #Now we get the long/lat data.  Note that this method will search
-        #for long/lat files in the datadir and in all equal levels
-        #the datadir.
-        if (('lon' in data) and ('x' in data)):
-            if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
-                long_matches = []
-                lat_matches = []
-
-                if glob.glob(datadir + "*_long.dat"):
-                    long_matches.append(glob.glob(datadir + "*_long.dat")[0])
-                if glob.glob(datadir + "*_lat.dat"):
-                    lat_matches.append(glob.glob(datadir + "*_lat.dat")[0])                    
-                if glob.glob(datadir + "../input/*_long.dat"):
-                    long_matches.append(glob.glob(datadir + "../*/*_long.dat")[0])
-                if glob.glob(datadir + "../input/*_lat.dat"):
-                    lat_matches.append(glob.glob(datadir + "../*/*_lat.dat")[0])
-
-                    #let's make sure that long/lat files were found.
-                if (len(long_matches) > 0 and len(lat_matches) > 0):
-                    data['lon'] = np.loadtxt(long_matches[0])
-                    data['lat'] = np.loadtxt(lat_matches[0])        
-                else:        
-                    print("No long/lat files found. Long/lat set to x/y")
-                    data['lon'] = data['x']
-                    data['lat'] = data['y']
-
-                
-        #if ('nv' in data):
-        #    if 'lon' in data and 'lat' in data:
-        #        data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])   
-        #    if 'x' in data and 'y' in data:
-        #        data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])
-  
+        if 'nv' in data:
+            data['nv'] = data['nv'].astype(int).T-1
+        if 'nbe' in data:
+            data['nbe'] = data['nbe'].astype(int).T-1
+        data = ncdatasort(data)  
         
     return data
 
@@ -136,201 +108,66 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     :Returns: **data** -- Python data dictionary updated to include uvnode and uvnodell
     """
 
-    nodexy = np.zeros((len(data['x']),2))
-    nodexy[:,0]
+    #Now we get the long/lat data.  Note that this method will search
+    #for long/lat files in the datadir and in all equal levels
+    #the datadir.
+    if (('lon' in data) and ('x' in data)):
+        if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
+            long_matches = []
+            lat_matches = []
 
-    x = data['x']
-    y = data['y']
-    nv = data['nv']
-    lon = data['lon']
-    lat = data['lat']
+            if glob.glob(data['datadir'] + "*_long.dat"):
+                long_matches.append(glob.glob(data['datadir'] + "*_long.dat")[0])
+            if glob.glob(datadir + "*_lat.dat"):
+                lat_matches.append(glob.glob(data['datadir'] + "*_lat.dat")[0])                    
+            if glob.glob(datadir + "../input/*_long.dat"):
+                long_matches.append(glob.glob(data['datadir'] + "../*/*_long.dat")[0])
+            if glob.glob(datadir + "../input/*_lat.dat"):
+                lat_matches.append(glob.glob(data['datadir'] + "../*/*_lat.dat")[0])
 
-    #make uvnodes by averaging the values of ua/va over the nodes of
-    #an element
-    nodexy = np.empty((len(lon),2))
-    nodexy[:,0] = x
-    nodexy[:,1] = y
-    uvnode = np.empty((len(nv[:,0]),2))
-    uvnode[:,0] = (x[nv[:,0]] + x[nv[:,1]] + x[nv[:,2]]) / 3.0
-    uvnode[:,1] = (y[nv[:,0]] + y[nv[:,1]] + y[nv[:,2]]) / 3.0
+                #let's make sure that long/lat files were found.
+            if (len(long_matches) > 0 and len(lat_matches) > 0):
+                data['lon'] = np.loadtxt(long_matches[0])
+                data['lat'] = np.loadtxt(lat_matches[0])        
+            else:        
+                print("No long/lat files found. Long/lat set to x/y")
+                data['lon'] = data['x']
+                data['lat'] = data['y']
 
-    nodell = np.empty((len(lon),2))
-    nodell[:,0] = lon
-    nodell[:,1] = lat
-    uvnodell = np.empty((len(nv[:,0]),2))
-    uvnodell[:,0] = (lon[nv[:,0]] + lon[nv[:,1]] + lon[nv[:,2]]) / 3.0
-    uvnodell[:,1] = (lat[nv[:,0]] + lat[nv[:,1]] + lat[nv[:,2]]) / 3.0
-   
-    if (uvhset==True):
-        uvh= np.empty((len(nv[:,0]),1))   
-        uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
-        data['uvh']=uvh
 
-    data['uvnode'] = uvnode
-    data['uvnodell'] = uvnodell
-    data['nodell'] = nodell
-    data['nodexy'] = nodexy
+    data['nodell'] = np.vstack([data['lon'],data['lat']]).T
+    data['nodexy'] = np.vstack([data['x'],data['y']]).T
+    data['uvnodell'] = data['nodell'][data['nv'],:].mean(axis=1)
+    data['uvnodexy'] = data['nodexy'][data['nv'],:].mean(axis=1)
+    
     if 'lonc' not in data:
         data['lonc'] = uvnodell[:,0]
     if 'latc' not in data:
         data['latc'] = uvnodell[:,1]
+    if 'nele' in data['dims']:    
+        data['nele'] = data['dims']['nele']
+    if 'node' in data['dims']:
+        data['node'] = data['dims']['node']
 
-    if ('time' in data):
+    if 'time' in data:
         data['time']=data['time']+678576
-
-    if ('trigrid' in data)==False:
+        
+    if 'trigrid' not in data:
         if (('nv' in data) and('lon' in data) and ('lat' in data)):
-            data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])  
-    
-    if ('trigridxy' in data)==False:
+            data['trigrid'] = mplt.Triangulation(data['lon'], data['lat'],data['nv'])      
+    if 'trigridxy' not in data:
         if (('nv' in data) and('x' in data) and ('y' in data)):
             data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])  
 
-    if trifinder==True:
-        data['trigrid_finder']=data['trigrid'].get_trifinder()
-        data['trigridxy_finder']=data['trigridxy'].get_trifinder()
+    if uvhset:
+        uvh= np.empty((len(nv[:,0]),1))   
+        uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
+        data['uvh']=uvh
 
-    return data
+    if trifinder:
+        data['trigrid_finder'] = data['trigrid'].get_trifinder()
+        data['trigridxy_finder'] = data['trigridxy'].get_trifinder()
 
-
-def closest_node(data, locations):
-    """
-    Given long\lat points, find the nearest nodes, and return the node indexs.  
-    """
-
-    #make the locations at least 2d so that the code works for a single location
-    locations=np.atleast_2d(locations)
-
-
-    #this is just a list comprehension of 
-    #idx=np.argmin((data['nodell'][:,0]-location[0])**2+(data['nodell'][:,1]-location[1])**2)
-    idx=np.array([np.argmin((data['nodell'][:,0]-locations[i,0])**2+(data['nodell'][:,1]-locations[i,1])**2) for i in range(len(locations))])
-
-    #if locations only had one point return the value instead of array of the value.
-    #this is so that the multipoint function acts like the only one when given a single point
-    if idx.size==1:
-        idx=idx[0]
-    
-    return idx
-
-
-def closest_element(data, locations):
-    """
-    Given long\lat points, find the nearest elements, and return the element indexs.  
-    """
-
-    #make the locations at least 2d so that the code works for a single location
-    locations=np.atleast_2d(locations)
-
-
-    #this is just a list comprehension of 
-    #idx=np.argmin((data['uvnodell'][:,0]-location[0])**2+(data['uvnodell'][:,1]-location[1])**2)
-    idx=np.array([np.argmin((data['uvnodell'][:,0]-locations[i,0])**2+(data['uvnodell'][:,1]-locations[i,1])**2) for i in range(len(locations))])
-
-    #if locations only had one point return the value instead of array of the value.
-    #this is so that the multipoint function acts like the only one when given a single point
-    if idx.size==1:
-        idx=idx[0]
-    
-    return idx
-
-
-def get_elements(data, region):
-    """
-    Takes uvnodes and a  region (specified by the corners of a
-    rectangle) and determines the elements of uvnode that lie within the
-    region
-    """
-    elements = np.where((data['uvnodell'][:,0] >= region['region'][0]) & (data['uvnodell'][:,0] <= region['region'][1]) & (data['uvnodell'][:,1] >= region['region'][2]) & (data['uvnodell'][:,1] <= region['region'][3]))[0]
-
-    return elements
-
-
-def get_elements_xy(data, region):
-    """
-    Takes uvnodes and a  region (specified by the corners of a
-    rectangle) and determines the elements of uvnode that lie within the
-    region
-    """
-    elements = np.where((data['uvnode'][:,0] >= region['region'][0]) & (data['uvnode'][:,0] <= region['region'][1]) & (data['uvnode'][:,1] >= region['region'][2]) & (data['uvnode'][:,1] <= region['region'][3]))[0]
-
-    return elements
-
-
-def get_nodes(data, region):
-    """
-    Takes nodexy and a region (specified by the corners of a rectangle)
-    and determines the nodes that lie in the region
-    """
-   
-    nodes = np.where((data['nodell'][:,0] >= region['region'][0]) & (data['nodell'][:,0] <= region['region'][1]) & (data['nodell'][:,1] >= region['region'][2]) & (data['nodell'][:,1] <= region['region'][3]))[0]
-    return nodes
-
-
-def get_nodes_xy(data, region):
-    """
-    Takes nodexy and a region (specified by the corners of a rectangle)
-    and determines the nodes that lie in the region
-    """
-   
-    nodes = np.where((data['nodexy'][:,0] >= region['region'][0]) & (data['nodexy'][:,0] <= region['region'][1]) & (data['nodexy'][:,1] >= region['region'][2]) & (data['nodexy'][:,1] <= region['region'][3]))[0]
-    return nodes
-
-
-def calc_speed(data):
-    """
-    Calculates the speed from ua and va
-
-    :Parameters:
-        **data** -- the standard python data dictionary
-
-    .. note:: We use numexpr here because, with multiple threads, it is\
-    about 30 times faster than direct calculation.
-    """
-    #name required variables
-    ua = data['ua']
-    va = data['va']
-
-    #we can take advantage of multiple cores to do this calculation
-    ne.set_num_threads(ne.detect_number_of_cores())
-    #calculate the speed at each point.
-    data['speed'] = ne.evaluate("sqrt(ua*ua + va*va)")
-    return data
-
-
-def calc_energy(data):
-    """Calculate the energy of the entire system.
-
-    :Parameters: **data** -- the standard python data dictionary
-    """
-    #name relevant variables
-    x = data['x']
-    y = data['y']
-    nv = data['nv']
-    rho = 1000 #density of water
-    #initialize EK to zero
-    l = nv.shape[0]
-    area = np.zeros(l)
-    for i in xrange(l):
-        #first, calculate the area of the triangle
-        xCoords = x[nv[i,:]]
-        yCoords = y[nv[i,:]]
-        #Compute two vectors for the area calculation.
-        v1x = xCoords[1] - xCoords[0]
-        v2x = xCoords[2] - xCoords[0]
-        v1y = yCoords[1] - yCoords[0]
-        v2y = yCoords[2] - yCoords[0]
-        #calculate the area as the determinant
-        area[i] = abs(v1x*v2y - v2x*v1y)
-    #get a vector of speeds.
-    sdata = calc_speed(data)
-    speed = sdata['speed']
-
-    #calculate EK, use numexpr for speed (saves ~15 seconds)
-    ne.set_num_threads(ne.detect_number_of_cores())
-    ek = ne.evaluate("sum(rho * area * speed * speed, 1)")
-    ek = ek / 4
-    data['ek'] = ek
     return data
 
 
@@ -918,60 +755,6 @@ def loadslev(filename):
         rd['time']=dates.datestr2num(rd['timestr'])
         
     return rd
-
-def linReg(mod,obs, alpha=0.05):
-        '''
-        Does linear regression on the model data vs. recorded data.
-
-        Gives a 100(1-alpha)% confidence interval for the slope
-        '''
-
-        obs_mean = np.mean(obs)
-        mod_mean = np.mean(mod)
-        n = mod.size
-        df = n - 2
-
-        # calculate square sums
-        SSxx = np.sum(mod**2) - np.sum(mod)**2 / n
-        SSyy = np.sum(obs**2) - np.sum(obs)**2 / n
-        SSxy = np.sum(mod * obs) - np.sum(mod) * np.sum(obs) / n
-        SSE = SSyy - SSxy**2 / SSxx
-        MSE = SSE / df
-
-        # estimate parameters
-        slope = SSxy / SSxx
-        intercept = obs_mean - slope * mod_mean
-        sd_slope = np.sqrt(MSE / SSxx)
-        r_squared = 1 - SSE / SSyy
-
-        # calculate 100(1 - alpha)% CI for slope
-        width = stats.t.isf(0.5 * alpha, df) * sd_slope
-        lower_bound = slope - width
-        upper_bound = slope + width
-        slope_CI = (lower_bound, upper_bound)
-
-        # calculate 100(1 - alpha)% CI for intercept
-        lower_intercept = obs_mean - lower_bound * mod_mean
-        upper_intercept = obs_mean - upper_bound * mod_mean
-        intercept_CI = (lower_intercept, upper_intercept)
-
-        # estimate 100(1 - alpha)% CI for predictands
-        predictands = slope * mod + intercept
-        sd_resid = np.std(obs - predictands)
-        y_CI_width = stats.t.isf(0.5 * alpha, df) * sd_resid * \
-            np.sqrt(1 - 1 / n)
-
-        # return data in a dictionary
-        data = {}
-        data['slope'] = slope
-        data['intercept'] = intercept
-        data['r_2'] = r_squared
-        data['slope_CI'] = slope_CI
-        data['intercept_CI'] = intercept_CI
-        data['pred_CI_width'] = y_CI_width
-        data['conf_level'] = 100 * (1 - alpha)
-        
-        return data     
         
         
 def save_poly_shp(data,varLabel,filename):
@@ -981,8 +764,6 @@ def save_poly_shp(data,varLabel,filename):
     lat = data['lat']
     trinodes = data['nv']
     var=data[varLabel]
-
-
 
     driver = ogr.GetDriverByName('ESRI Shapefile')
     shapeData = driver.CreateDataSource(filename)
