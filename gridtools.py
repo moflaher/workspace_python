@@ -21,7 +21,7 @@ import collections
 import copy
 
 import pyproj as pyp
-from osgeo import ogr
+#from osgeo import ogr
 
 
 """

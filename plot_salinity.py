@@ -1,6 +1,7 @@
 from __future__ import division,print_function
 import matplotlib as mpl
 import scipy as sp
+from folderpath import *
 from datatools import *
 from gridtools import *
 from plottools import *
@@ -32,27 +33,29 @@ global vidx
 global vector_scale
 
 
-
 # Define names and types of data
-name='sfm5m_sjr_baroclinic_20150615-20150905'
-grid='sfm5m_sjr'
+name='sjh_hr_v2_test_03'
+grid='sjh_hr_v2'
 datatype='2d'
 regionname='stjohn_harbour'
-starttime=120
-endtime=288
-spacing=1
-cmin=0
-cmax=28
-
-
+starttime=768
+endtime=864
+cmin=25
+cmax=30
+layer=-1 
+ 
 ### load the .nc file #####
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data['lon']=data['lon']-360
+data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
-data = ncdatasort(data,trifinder=False,uvhset=False)
+data = ncdatasort(data)
 print('done sort')
 
-vectorflag=True
-coastflag=True
+
+
+vectorflag=False
+coastflag=False
 uniformvectorflag=False
 vector_spacing=500
 vector_scale=150
@@ -81,7 +84,7 @@ region=regions(regionname)
 vidx=equal_vectors(data,region,vector_spacing)
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/salinity/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_' + datatype + '/salinity/' + name + '_' + region['regionname'] + '_' +'{}'.format(layer)+'_'+("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -92,7 +95,7 @@ def speed_plot(i):
     if coastflag==True:
         plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='0.75', fill=True,zorder=100,lw=.5)
         
-    triax=ax.tripcolor(data['trigrid'],data['salinity'][i,0,:],vmin=cmin,vmax=cmax)
+    triax=ax.tripcolor(data['trigrid'],data['salinity'][i,layer,:],vmin=cmin,vmax=cmax)
     
     if np.shape(cages)!=():   
         lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
@@ -109,13 +112,15 @@ def speed_plot(i):
     ax.add_collection(lseg_sand) 
         
     prettyplot_ll(ax,setregion=region,cblabel=r'Salinity',cb=triax,axlabels=False)
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_salinity_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_salinity_' + ("%04d" %(i)) + '.png',dpi=600)
     plt.close(f)
 
 
 
-pool = multiprocessing.Pool(20)
-pool.map(speed_plot,range(starttime,endtime,spacing))
+#pool = multiprocessing.Pool(1)
+#pool.map(speed_plot,range(starttime,endtime,spacing))
+for i in range(starttime,endtime):
+    speed_plot(i)
 
 
 

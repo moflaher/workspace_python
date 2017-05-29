@@ -25,16 +25,18 @@ global nidx
 
 
 # Define names and types of data
-name='2011-08-25_2011-09-08'
-grid='acadia_force_3d'
+name='sjh_hr_v2_test_03'
+grid='sjh_hr_v2'
 datatype='2d'
-regionname='mp'
-starttime=-20
-endtime=-1
+regionname='stjohn_harbour'
+starttime=768
+endtime=864
 
 
 ### load the .nc file #####
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/'+grid+'/'+name+'/output',singlename=grid + '_0001.nc')
+data['lon']=data['lon']-360
+data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
 data = ncdatasort(data)
 print('done sort')
@@ -66,16 +68,17 @@ def zeta_plot(i):
 #        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 #        ax.add_collection(lseg_t) 
     prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
-    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=600)
     plt.close(f)
 
 
 trange=range(len(data['time']))
 starttime=trange[starttime]
 endtime=trange[endtime]
-pool = multiprocessing.Pool(2)
-pool.map(zeta_plot,range(starttime,endtime))
-
+#pool = multiprocessing.Pool(1)
+#pool.map(zeta_plot,range(starttime,endtime))
+for i in range(starttime,endtime):
+    zeta_plot(i)
 
 
 
