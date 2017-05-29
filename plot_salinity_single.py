@@ -34,15 +34,15 @@ global vector_scale
 
 
 # Define names and types of data
-name='sjh_hr_v2_test_nf_1.5'
+name='sjh_hr_v2_fixednf_0.5'
 grid='sjh_hr_v2'
 datatype='2d'
-regionname='sjr_kl'
-starttime=0
-endtime=99
-cmin=10
-cmax=25
-layer=0 
+regionname='stjohn_harbour'
+starttime=2900
+endtime=3900
+cmin=8
+cmax=31
+layer=10
  
 ### load the .nc file #####
 data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')

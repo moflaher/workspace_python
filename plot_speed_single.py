@@ -30,15 +30,15 @@ global cmax
 
 
 # Define names and types of data
-name='sjh_hr_v2_test_barotropic_0.5'
+name='sjh_hr_v2_fixednf_0.5'
 grid='sjh_hr_v2'
 datatype='2d'
 regionname='stjohn_harbour'
-starttime=0
-endtime=1200
+starttime=2900
+endtime=3900
 cmin=0
-cmax=1
-layer='da'
+cmax=3
+layer=0
 
 
 ### load the .nc file #####
@@ -64,7 +64,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 f=plt.figure()
 ax=plt.axes([.125,.1,.775,.8]) 
-#plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='darkgreen', fill=True)  
+plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',filepath=coastpath, color='k', fcolor='darkgreen', fill=True)  
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax.yaxis.set_major_formatter(_formatter)
 ax.xaxis.set_major_formatter(_formatter)
