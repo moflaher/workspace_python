@@ -12,25 +12,6 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-from matplotlib.collections import LineCollection as LC
-from matplotlib.collections import PolyCollection as PC
-import multiprocessing
-
-
-global name
-global grid
-global regionname
-global region
-global tmparray
-global savepath
-global data
-global cmin
-global cmax
-global vectorflag
-global uniformvectorflag
-global coastflag
-global vidx
-global vector_scale
 
 
 # Define names and types of data

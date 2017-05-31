@@ -30,15 +30,15 @@ global cmax
 
 
 # Define names and types of data
-name='sjh_hr_v2_fixednf_0.5'
+name='sjh_hr_v2_newriver_0.5'
 grid='sjh_hr_v2'
 datatype='2d'
 regionname='stjohn_harbour'
-starttime=2900
-endtime=3900
+starttime=0
+endtime=2000
 cmin=0
 cmax=3
-layer=0
+layer='da'
 
 
 ### load the .nc file #####

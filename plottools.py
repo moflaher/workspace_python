@@ -253,9 +253,9 @@ def plotcoast(axin,**kwargs):
     if filepath==[]:
         _base_dir = os.path.realpath(inspect.stack()[0][1])
         idx=_base_dir.rfind('/')
-        sl=dt.loadnc(_base_dir[:idx],singlename='/data/shorelines/'+filename)
+        sl=dt.loadnc(_base_dir[:idx],singlename='/data/shorelines/'+filename, fvcom=False)
     else:
-        sl=dt.loadnc(filepath,singlename=filename)
+        sl=dt.loadnc(filepath,singlename=filename, fvcom=False)
 
     idx=np.where(sl['count']!=0)[0]
     sl['count']=sl['count'][idx]
