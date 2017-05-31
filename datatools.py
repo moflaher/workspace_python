@@ -160,9 +160,7 @@ def ncdatasort(data,trifinder=False,uvhset=True):
             data['trigridxy'] = mplt.Triangulation(data['x'], data['y'],data['nv'])  
 
     if uvhset:
-        uvh= np.empty((len(nv[:,0]),1))   
-        uvh[:,0] = (data['h'][nv[:,0]] + data['h'][nv[:,1]] + data['h'][nv[:,2]]) / 3.0
-        data['uvh']=uvh
+        data['uvh']=data['h'][data['nv']].mean(axis=1)
 
     if trifinder:
         data['trigrid_finder'] = data['trigrid'].get_trifinder()
