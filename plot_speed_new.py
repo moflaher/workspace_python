@@ -1,6 +1,8 @@
 from __future__ import division,print_function
 import matplotlib as mpl
+mpl.use('Agg')
 import scipy as sp
+from folderpath import *
 from datatools import *
 from gridtools import *
 from plottools import *
@@ -34,12 +36,12 @@ global vector_scale
 
 
 # Define names and types of data
-name='sfm5m_sjr_baroclinic_20150615-20150905'
-grid='sfm5m_sjr'
+name='sjh_hr_v1_20150701-20150907'
+grid='sjh_hr_v1'
 datatype='2d'
 regionname='stjohn_harbour_tight'
 starttime=1000
-endtime=2000
+endtime=1500
 cmin=0
 cmax=1
 
@@ -65,12 +67,12 @@ vector_scale=50
 #vector_spacing=125
 #vector_scale=750
 
-cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
-if np.shape(cages)!=():
-    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-    color='g'
-    lw=.2
-    ls='solid'
+#cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
+#if np.shape(cages)!=():
+    #tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
+    #color='g'
+    #lw=.2
+    #ls='solid'
 
 
 region=regions(regionname)
@@ -89,13 +91,13 @@ def speed_plot(i):
     f=plt.figure()
     ax=plt.axes([.125,.1,.775,.8])    
     if coastflag==True:
-        plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',color='k', fcolor='darkgreen', fill=True)
-        
+        plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',filepath=coastpath,color='k', fcolor='darkgreen', fill=True)
+
     triax=ax.tripcolor(data['trigrid'],np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2),vmin=cmin,vmax=cmax)
     
-    if np.shape(cages)!=():   
-        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
-        ax.add_collection(lseg_t) 
+    #if np.shape(cages)!=():   
+        #lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
+        #ax.add_collection(lseg_t) 
     if vectorflag==True:
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
     if uniformvectorflag==True:
@@ -104,12 +106,12 @@ def speed_plot(i):
             
         
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)
     plt.close(f)
 
 
 
-pool = multiprocessing.Pool()
+pool = multiprocessing.Pool(24)
 pool.map(speed_plot,range(starttime,endtime))
 
 

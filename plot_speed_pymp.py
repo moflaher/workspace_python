@@ -1,5 +1,6 @@
 from __future__ import division,print_function
 import matplotlib as mpl
+mpl.use('Agg')
 import scipy as sp
 from folderpath import *
 from datatools import *
@@ -36,15 +37,15 @@ global vector_scale
 
 
 # Define names and types of data
-name='2011-08-25_2011-09-08_0.0025'
-grid='acadia_force_2d'
+name='sjh_hr_v1_20150701-20150907'
+grid='sjh_hr_v1'
 datatype='2d'
-regionname='mp'
-starttime=0
-endtime=100
+regionname='stjohn_harbour_tight'
+starttime=1000
+endtime=1500
 layer='da'
 cmin=0
-cmax=4
+cmax=1
 
 
 
@@ -90,7 +91,7 @@ def speed_plot(i):
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['ua'][i,vidx],norm),np.divide(data['va'][i,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
         
     prettyplot_ll(ax,setregion=region,cblabel=r'Speed (ms$^{-1}$)',cb=triax)
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_speed_' + ("%04d" %(i)) + '.png',dpi=300)
     plt.close(f)
 
 
@@ -98,7 +99,7 @@ def speed_plot(i):
 #pool = multiprocessing.Pool()
 #pool.map(speed_plot,range(starttime,endtime))
 
-with pymp.Parallel(4) as p:
+with pymp.Parallel(24) as p:
     for i in p.range(starttime,endtime):
         speed_plot(i)
 

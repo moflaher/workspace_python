@@ -136,18 +136,22 @@ def ncdatasort(data,trifinder=False,uvhset=True):
 
 
     data['nodell'] = np.vstack([data['lon'],data['lat']]).T
-    data['nodexy'] = np.vstack([data['x'],data['y']]).T
     data['uvnodell'] = data['nodell'][data['nv'],:].mean(axis=1)
-    data['uvnodexy'] = data['nodexy'][data['nv'],:].mean(axis=1)
+    data['lonc'] = data['uvnodell'][:,0]
+    data['latc'] = data['uvnodell'][:,1]
     
-    if 'lonc' not in data:
-        data['lonc'] = uvnodell[:,0]
-    if 'latc' not in data:
-        data['latc'] = uvnodell[:,1]
-    if 'nele' in data['dims']:    
-        data['nele'] = data['dims']['nele']
-    if 'node' in data['dims']:
-        data['node'] = data['dims']['node']
+    data['nodexy'] = np.vstack([data['x'],data['y']]).T
+    data['uvnodexy'] = data['nodexy'][data['nv'],:].mean(axis=1)
+    data['xc'] = data['uvnodexy'][:,0]
+    data['yc'] = data['uvnodexy'][:,1]
+    
+    try:
+        if 'nele' in data['dims']:    
+            data['nele'] = data['dims']['nele']
+        if 'node' in data['dims']:
+            data['node'] = data['dims']['node']
+    except KeyError:
+        pass
 
     if 'time' in data:
         data['time']=data['time']+678576

@@ -36,15 +36,15 @@ global vector_scale
 
 
 # Define names and types of data
-name='2011-08-25_2011-09-08_0.0025'
-grid='acadia_force_2d'
+name='sjh_hr_v1_20150701-20150907'
+grid='sjh_hr_v1'
 datatype='2d'
-regionname='mp'
-starttime=0
-endtime=100
+regionname='stjohn_harbour_tight'
+starttime=1000
+endtime=1500
 layer='da'
 cmin=0
-cmax=4
+cmax=1
 
 
 
@@ -113,7 +113,7 @@ def speed_plot(i):
     f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=300)
 
 
-with pymp.Parallel(4) as p:
+with pymp.Parallel(24) as p:
     for i in p.range(starttime,endtime):
         speed_plot(i)
 

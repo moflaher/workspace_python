@@ -1,5 +1,6 @@
 from __future__ import division,print_function
 import matplotlib as mpl
+mpl.use('Agg')
 import scipy as sp
 from folderpath import *
 from datatools import *
@@ -30,23 +31,23 @@ global cmax
 
 
 # Define names and types of data
-name='sjh_hr_v2_newriver_0.5'
-grid='sjh_hr_v2'
+name='sjh_hr_v1_20150701-20150907'
+grid='sjh_hr_v1'
 datatype='2d'
-regionname='stjohn_harbour'
-starttime=0
-endtime=2000
+regionname='stjohn_harbour_tight'
+starttime=1000
+endtime=1500
 cmin=0
-cmax=3
+cmax=1
 layer='da'
 
 
 ### load the .nc file #####
 data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data['lon']=data['lon']-360
-data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+#data['lon']=data['lon']-360
+#data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
-del data['trigrid']
+#del data['trigrid']
 data = ncdatasort(data)
 print('done sort')
 
@@ -111,7 +112,7 @@ for i in range(starttime+1,endtime):
     triax.set_array(speed)
     ax.draw_artist(triax)
     f.canvas.blit(ax.bbox)
-    f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=600)
+    f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=300)
 
 
 
