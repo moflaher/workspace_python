@@ -46,6 +46,7 @@ data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
 data['lon']=data['lon']-360
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
+del data['trigrid']
 data = ncdatasort(data)
 print('done sort')
 
@@ -64,7 +65,7 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 f=plt.figure()
 ax=plt.axes([.125,.1,.775,.8]) 
-plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',filepath=coastpath, color='k', fcolor='darkgreen', fill=True)  
+plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc',filepath=coastpath, color='k', fcolor='0.75', fill=True)  
 _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
 ax.yaxis.set_major_formatter(_formatter)
 ax.xaxis.set_major_formatter(_formatter)

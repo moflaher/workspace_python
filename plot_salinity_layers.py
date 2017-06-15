@@ -1,10 +1,12 @@
 from __future__ import division,print_function
 import matplotlib as mpl
+mpl.use('Agg')
 import scipy as sp
 from datatools import *
 from gridtools import *
 from plottools import *
 from projtools import *
+from folderpath import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
@@ -34,19 +36,22 @@ global vector_scale
 
 
 # Define names and types of data
-name='sfm5m_sjr_baroclinic_20150615-20150905'
-grid='sfm5m_sjr'
+name='sjh_hr_v2_newriver_0.5'
+grid='sjh_hr_v2'
 datatype='2d'
 regionname='stjohn_harbour'
-starttime=120
-endtime=288
+starttime=600
+endtime=1000
 spacing=1
 cmin=0
 cmax=28
 
 
 ### load the .nc file #####
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data['lon']=data['lon']-360
+data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+del data['trigrid']
 print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
@@ -66,12 +71,6 @@ vector_scale=150
 #vector_spacing=125
 #vector_scale=750
 
-cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
-if np.shape(cages)!=():
-    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-    color='g'
-    lw=.2
-    ls='solid'
 
 
 region=regions(regionname)
@@ -81,7 +80,7 @@ region=regions(regionname)
 vidx=equal_vectors(data,region,vector_spacing)
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/salinity_layers/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='{}timeseries/{}_{}/salinity_topbottom/{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,name,region['regionname'],cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -98,26 +97,30 @@ def speed_plot(i):
 
     Q0=ax[0].quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['u'][i,0,vidx],data['v'][i,0,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
     Q1=ax[1].quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['u'][i,-1,vidx],data['v'][i,-1,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.0025)    
-
-
+    Qkey0=ax[0].quiverkey(Q0,.9,.85,1.0, r'1.0 ms$^{-1}$',fontproperties={'size':8})
+    Qkey1=ax[1].quiverkey(Q1,.9,.85,1.0, r'1.0 ms$^{-1}$',fontproperties={'size':8})
+    
     for j,axi in enumerate(ax):
         if coastflag:
-            plotcoast(ax[j],filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5,zorder=100)
+            plotcoast(ax[j],filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5,zorder=100,filepath=coastpath)
         axbb=ax[j].get_axes().get_position().bounds
         ax[j].annotate(ABC[j],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
         sand=np.argwhere(data['wet_cells'][i,:]==0)
         tmparray=[list(zip(data['nodell'][data['nv'][k,[0,1,2]],0],data['nodell'][data['nv'][k,[0,1,2]],1])) for k in sand ]
         lseg_sand=PC(tmparray,facecolor = 'tan',edgecolor='tan')
         ax[j].add_collection(lseg_sand) 
-
            
-    f.savefig(savepath + grid + '_' + region['regionname'] +'_salinity_' + ("%04d" %(i)) + '.png',dpi=150)
+    f.savefig(savepath + grid + '_' + region['regionname'] +'_salinity_' + ("%04d" %(i)) + '.png',dpi=300)
     plt.close(f)
 
 
 
-pool = multiprocessing.Pool(20)
+pool = multiprocessing.Pool(4)
 pool.map(speed_plot,range(starttime,endtime,spacing))
+
+
+#for i in range(starttime,endtime,spacing):
+#    speed_plot(i)
 
 
 

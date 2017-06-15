@@ -576,14 +576,14 @@ def equal_vectors(data,region,spacing):
     lon,lat = proj(xv.flatten(),yv.flatten(),inverse=True)
     host=data['trigrid'].get_trifinder().__call__(lon,lat)
 
-    idx=dt.get_elements(data,region)
+    idx=get_elements(data,region)
     common=np.in1d(host,idx)
 
     return np.unique(host[common].flatten())
 
 
 def regioner(data,region,subset=False):    
-    nidx=dt.get_nodes(data,region)
+    nidx=get_nodes(data,region)
 
     idx0=np.in1d(data['nv'][:,0],nidx)
     idx1=np.in1d(data['nv'][:,1],nidx)
