@@ -442,7 +442,7 @@ def save_stationfile(sdata,outname):
         return data
         
 
-    fp.write('%s' % sdata['header'] )        
+    fp.write('%s' % " No           X        Y      Node (Cell)        Station Name\n" )        
     for i in range(0,len(sdata['x'])):
         fp.write('%d %f %f %d %f %s\n'% (sdata['station_num'][i],sdata['x'][i],sdata['y'][i],sdata['cell'][i],sdata['h'][i],sdata['station_name'][i] )   )
 
