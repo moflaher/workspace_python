@@ -107,39 +107,40 @@ def ncdatasort(data,trifinder=False,uvhset=True):
 
     :Returns: **data** -- Python data dictionary updated to include uvnode and uvnodell
     """
+    lond=False
+    latd=False
+    try:
+        #load lon/lat from files and use it
+        if glob.glob(data['datadir'] + "../input/*_lon.dat"):        
+            data['lon'] = np.loadtxt(glob.glob(data['datadir'] + "../input/*_lon.dat")[0])
+            lond=True
+        if glob.glob(data['datadir'] + "../input/*_lat.dat"):
+            data['lat'] = np.loadtxt(glob.glob(data['datadir'] + "../input/*_lat.dat")[0])
+            latd=True
+    except:
+        pass
 
-    #Now we get the long/lat data.  Note that this method will search
-    #for long/lat files in the datadir and in all equal levels
-    #the datadir.
-    if (('lon' in data) and ('x' in data)):
-        if ((data['lon'].sum()==0).all() or (data['x']==data['lon']).all()):
-            long_matches = []
-            lat_matches = []
+    lonx=False
+    if 'lon' not in data:
+        print("No lon found. Lon set to x")
+        data['lon'] = data['x']
+        lonx=True
+    latx=False
+    if 'lat' not in data:
+        print("No lat found. Lat set to y")
+        data['lat'] = data['y']
+        latx=True
 
-            if glob.glob(data['datadir'] + "*_long.dat"):
-                long_matches.append(glob.glob(data['datadir'] + "*_long.dat")[0])
-            if glob.glob(datadir + "*_lat.dat"):
-                lat_matches.append(glob.glob(data['datadir'] + "*_lat.dat")[0])                    
-            if glob.glob(datadir + "../input/*_long.dat"):
-                long_matches.append(glob.glob(data['datadir'] + "../*/*_long.dat")[0])
-            if glob.glob(datadir + "../input/*_lat.dat"):
-                lat_matches.append(glob.glob(data['datadir'] + "../*/*_lat.dat")[0])
-
-                #let's make sure that long/lat files were found.
-            if (len(long_matches) > 0 and len(lat_matches) > 0):
-                data['lon'] = np.loadtxt(long_matches[0])
-                data['lat'] = np.loadtxt(lat_matches[0])        
-            else:        
-                print("No long/lat files found. Long/lat set to x/y")
-                data['lon'] = data['x']
-                data['lat'] = data['y']
-
+    
+    if ('lonc' not in data) or lond or lonx:    
+        data['lonc'] = data['lon'][data['nv']].mean(axis=1)
+    if ('latc' not in data) or latd or latx:   
+        data['latc'] = data['lat'][data['nv']].mean(axis=1)
 
     data['nodell'] = np.vstack([data['lon'],data['lat']]).T
-    data['uvnodell'] = data['nodell'][data['nv'],:].mean(axis=1)
-    data['lonc'] = data['uvnodell'][:,0]
-    data['latc'] = data['uvnodell'][:,1]
-    
+    data['uvnodell'] = np.vstack([data['lonc'],data['latc']]).T
+
+        
     data['nodexy'] = np.vstack([data['x'],data['y']]).T
     data['uvnodexy'] = data['nodexy'][data['nv'],:].mean(axis=1)
     data['xc'] = data['uvnodexy'][:,0]
