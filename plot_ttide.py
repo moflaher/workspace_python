@@ -1,8 +1,11 @@
 from __future__ import division,print_function
 import matplotlib as mpl
+mpl.use('Agg')
 import scipy as sp
 from datatools import *
 from gridtools import *
+from projtools import *
+from folderpath import *
 from plottools import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
@@ -13,76 +16,64 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-grid='sfm6_musq2'
-regionname='musq_cage'
+name='sjh_hr_v2_newwind'
+grid='sjh_hr_v2'
 datatype='2d'
+regionname='bof_nemo'
+starttime=960
+endtime=3744
+
+
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/My Book/cages/' + name + '/output/',singlename=grid + '_0001.nc')
+data = loadnc('/home/mif001/scratch/susan/sjh_hr_v2/runs/sjh_hr_v2_newwind/output/',singlename=grid + '_0001.nc')
+data['lon']=data['lon']-360
+data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
+del data['trigrid']
 data = ncdatasort(data)
 print('done sort')
 
 
 region=regions(regionname)
 nidx=get_nodes(data,region)
-eidx=get_elements(data,region)
 
 
-savepathe='figures/png/' + grid + '_' + datatype + '/ttide/' + name + '_' + regionname + '/el/'
-savepathc='figures/png/' + grid + '_' + datatype + '/ttide/' + name + '_' + regionname + '/currents/'
-if not os.path.exists(savepathe): os.makedirs(savepathe)
-if not os.path.exists(savepathc): os.makedirs(savepathc)
-plt.close()
 
 
-el=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_el.npy')
+savepath='{}png/{}_{}/ttide/zeta/{}/'.format(figpath,grid,datatype,name)
+if not os.path.exists(savepath): os.makedirs(savepath)
+
+
+el=np.load('{}{}_{}/ttide/{}/ttide_grid_el_all.npy'.format(datapath,grid,datatype,name))
 el=el[()]
-uv=np.load('/home/moflaher/Desktop/workspace_python/data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
-uv=uv[()]
-
-# Plot ttide amp and phase
-plt.tripcolor(data['trigrid'],el['tidecon'][:,3,0],vmin=el['tidecon'][nidx,3,0].min(),vmax=el['tidecon'][nidx,3,0].max())
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Elevation Amplitude (m)')
-plt.savefig(savepathe + grid + '_' + regionname +'_el_m2_amp',dpi=600)
-plt.close()
-
-plt.tripcolor(data['trigrid'],el['tidecon'][:,3,2],vmin=el['tidecon'][nidx,3,2].min(),vmax=el['tidecon'][nidx,3,2].max(),cmap=plt.cm.hsv)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Elevation Phase ($^{\circ}$)')
-plt.savefig(savepathe + grid + '_' + regionname +'_el_m2_phase',dpi=600)
-plt.close()
 
 
+def plot_field(con):
+    print(con)
 
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,0],vmin=uv['tidecon'][nidx,3,0].min(),vmax=uv['tidecon'][nidx,3,0].max())
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Amplitude Major (m)')
-plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_major_amp',dpi=600)
-plt.close()
+    conidx=np.argwhere(el['nameu']==con)[0][0]
+    print(conidx)
 
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,2],vmin=uv['tidecon'][nidx,3,2].min(),vmax=uv['tidecon'][nidx,3,2].max())
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Amplitude Minor (m)')
-plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_minor_phase',dpi=600)
-plt.close()
+    f,ax,cax = setplot(region)
+    clim = np.percentile(el['tidecon'][nidx,conidx,0],[5,99])
+    triax=ax.tripcolor(data['trigrid'],el['tidecon'][:,conidx,0],vmin=clim[0],vmax=clim[1])
+    cb=plt.colorbar(triax,cax=cax)
+    cb.set_label(r'Amp.',fontsize=10)
+    f.savefig('{}{}_{}_amp_{}.png'.format(savepath,grid,region['regionname'],con.replace(' ','') ),dpi=600)
+    plt.close(f)
 
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,4],vmin=0,vmax=360,cmap=plt.cm.hsv)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Direction ($^{\circ}$)')
-plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_inc',dpi=600)
-plt.close()
-
-plt.tripcolor(data['trigrid'],uv['tidecon'][:,3,6],vmin=0,vmax=360,cmap=plt.cm.hsv)
-prettyplot_ll(plt.gca(),setregion=region,grid=True,cblabel=r'M2 Current Phase ($^{\circ}$)')
-plt.savefig(savepathc + grid + '_' + regionname +'_uv_m2_phase',dpi=600)
-plt.close()
-
-
+    f,ax,cax = setplot(region)
+    triax=ax.tripcolor(data['trigrid'],el['tidecon'][:,conidx,2],vmin=0,vmax=360,cmap=mpl.cm.hsv,shading='gouraud')
+    cb=plt.colorbar(triax,cax=cax)
+    cb.set_label(r'Phase.',fontsize=10)
+    f.savefig('{}{}_{}_Phase_{}.png'.format(savepath,grid,region['regionname'],con.replace(' ','') ),dpi=600)
+    plt.close(f)
 
 
-
-
-
-
-
+cons=['M2  ','N2  ','S2  ','K1  ','O1  ']
+for con in cons:
+    plot_field(con)
 
 
 

@@ -134,6 +134,41 @@ def prettyplot_ll(axin,**kwargs):
         cb.set_label(cblabel,fontsize=10)
 
 
+def setplot(region):
+    """
+    Setup the figure, axes, and colorbar location for a plot.
+    
+    Takes a region
+    """
+    f=plt.figure()
+    ax=plt.axes([.125,.1,.775,.8])   
+    _formatter = mpl.ticker.ScalarFormatter(useOffset=False)
+    ax.yaxis.set_major_formatter(_formatter)
+    ax.xaxis.set_major_formatter(_formatter)
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: -1*x))
+    ax.set_xlabel(r'Longitude ($^{\circ}$W)')
+    ax.set_ylabel(r'Latitude ($^{\circ}$N)')
+    ax.axis(region['region'])
+    #ax.set_aspect(get_aspectratio(region),anchor='SW')
+    f.canvas.draw()
+
+    #Find the bounding box and if its too big for a colorbar then reduce size
+    box=ax.get_position()
+    cbarwidth=box.xmax+0.1+0.1
+    if cbarwidth>1.0:
+        resize=cbarwidth-1.0+.01
+        box.set_points(np.array([[box.xmin,box.ymin],[box.xmax-resize,box.ymax]]))
+        ax.set_position(box)
+        f.canvas.draw()
+        
+    box=ax.get_position()
+    cax=f.add_axes([box.xmax + .025, box.ymin, .025, box.height])    
+    
+    
+    return f,ax,cax
+
+
+
 def get_data_ratio(region):
     """
     Returns the aspect ratio of the region data.
@@ -903,7 +938,7 @@ def box2ax(axbox,axregion,region,letter,**kwargs):
     return
     
     
-def plottri(data, field, minmax=[],show=True):
+def plottri(data, field, minmax=[],show=True,cm=mpl.cm.viridis):
     """
     Plot an FE data field.
     """
@@ -911,9 +946,9 @@ def plottri(data, field, minmax=[],show=True):
     f=plt.figure()
     ax=f.add_axes([0.125,.1,.775,.8])
     if minmax==[]:
-        triax=ax.tripcolor(data['trigrid'],field)
+        triax=ax.tripcolor(data['trigrid'],field,cmap=cm)
     else:
-        triax=ax.tripcolor(data['trigrid'],field,vmin=minmax[0],vmax=minmax[1])
+        triax=ax.tripcolor(data['trigrid'],field,vmin=minmax[0],vmax=minmax[1],cmap=cm)
     plt.colorbar(triax)
     
     if show==True:

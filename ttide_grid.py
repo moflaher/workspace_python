@@ -3,86 +3,54 @@ import matplotlib as mpl
 import scipy as sp
 from datatools import *
 from gridtools import *
+from projtools import *
+from folderpath import *
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-from ttide.t_tide import t_tide
+from ttide import t_tide
 
 
 
 # Define names and types of data
-name='sfm6_musq2_all_cages'
-grid='sfm6_musq2'
+name='sjh_hr_v2_newwind'
+grid='sjh_hr_v2'
 datatype='2d'
-starttime=0
-endtime=721
+starttime=960
+endtime=3744
 
 
 
 ### load the .nc file #####
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/home/mif001/scratch/susan/sjh_hr_v2/runs/sjh_hr_v2_newwind/output/',singlename=grid + '_0001.nc')
+data['lon']=data['lon']-360
+data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
+del data['trigrid']
 data = ncdatasort(data)
 print('done sort')
 
-data['time']=data['time']-678576+733631.0
+
+savepath='{}/{}_{}/ttide/{}/'.format(datapath,grid,datatype,name)
+if not os.path.exists(savepath): os.makedirs(savepath)
 
 dt=np.diff(data['time'])[0]*24
 
-test=np.load('data/interp_currents/sfm6_musq2_sfm6_musq2_all_cages_1m.npy')
-test=test[()]
 
-
-tidecon_uv=np.empty([len(data['uvnodell'][:,0]),29,8])
-for i in range(0,len(data['uvnodell'][:,0])):
-    print(i)
-    [nameu, freq, tidecon_uv[i,], xout]=t_tide(test['u'][starttime:endtime,i]+1j*test['v'][starttime:endtime,i],stime=data['time'][starttime],lat=data['uvnodell'][i,1],output=False,synth=-1,dt=dt)
+tidecon_el=np.empty([len(data['nodell'][:,0]),29,4])
+for j in range(0,len(data['nodell'][:,0])):
+    print(j)
+    out=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['nodell'][j,1],synth=-1,out_style=None,dt=.25)
+    tidecon_el[j,]=out['tidecon']
 
 tidesave={}
-tidesave['nameu']=nameu
-tidesave['freq']=freq
-tidesave['tidecon']=tidecon_uv
-np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_1m_currents_all.npy',tidesave)
-
-
-
-#tidecon_uv=np.empty([len(data['uvnodell'][:,0]),29,8])
-#for i in range(0,len(data['uvnodell'][:,0])):
-    #print(i)
-    #[nameu, freq, tidecon_uv[i,], xout]=t_tide(data['u'][starttime:endtime,-1,i]+1j*data['v'][starttime:endtime,-1,i],stime=data['time'][starttime],lat=data['uvnodell'][i,1],output=False,synth=-1,dt=dt)
-
-#tidesave={}
-#tidesave['nameu']=nameu
-#tidesave['freq']=freq
-#tidesave['tidecon']=tidecon_uv
-#np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_bottom_currents_all.npy',tidesave)
-
-
-#tidecon_uv=np.empty([len(data['uvnodell'][:,0]),29,8])
-#for i in range(0,len(data['uvnodell'][:,0])):
-    #print(i)
-    #[nameu, freq, tidecon_uv[i,], xout]=t_tide(data['ua'][starttime:endtime,i]+1j*data['va'][starttime:endtime,i],stime=data['time'][starttime],lat=data['uvnodell'][i,1],output=False,synth=-1,dt=dt)
-
-#tidesave={}
-#tidesave['nameu']=nameu
-#tidesave['freq']=freq
-#tidesave['tidecon']=tidecon_uv
-#np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy',tidesave)
-
-
-#tidecon_el=np.empty([len(data['nodell'][:,0]),29,4])
-#for j in range(0,len(data['nodell'][:,0])):
-    #print(j)
-    #[nameu, freq, tidecon_el[j,], xout]=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['nodell'][j,1],synth=-1,output=False,dt=dt)
-
-#tidesave={}
-#tidesave['nameu']=nameu
-#tidesave['freq']=freq
-#tidesave['tidecon']=tidecon_el
-#np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_el_all.npy',tidesave)
+tidesave['nameu']=out['nameu']
+tidesave['freq']=out['freq']
+tidesave['tidecon']=tidecon_el
+np.save('{}ttide_grid_el_all.npy'.format(savepath))
 
 
 
