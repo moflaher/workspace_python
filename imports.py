@@ -4,6 +4,8 @@ import sys
 sys.path.append('/home/moflaher/Desktop/workspace_python/')
 sys.path.append('/home/moe46/Desktop/workspace_python/')
 sys.path.append('/home/mif001/workspace_python/')
+sys.path.append('/home/moflaher/src/workspace_python/')
+
 
 import numpy as np
 import scipy as sp
