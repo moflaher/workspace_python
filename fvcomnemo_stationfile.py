@@ -18,13 +18,13 @@ import pandas as pd
 
 
 
-data=loadnc('/media/moflaher/runs/sjh_hr_v2/sjh_hr_v2_2_0.5/output','sjh_hr_v2_0001.nc')
+data=load_nei2fvcom('../dfo/grids/stj_harbour/add_dn/6_makerun/sjh_hr_v3_clean/input/sjh_hr_v3.nei')
 
 
 station=collections.OrderedDict()
 
 
-obsloc=pd.read_csv('/mnt/drive_1/obs_data/NEMO-FVCOM_SaintJohn_BOF_Observations_clean.csv')
+obsloc=pd.read_csv('data/misc/NEMO-FVCOM_SaintJohn_BOF_Observations_clean.csv')
 
 for i,iid in enumerate(obsloc.InstrumentID):
     name=iid
@@ -49,7 +49,7 @@ for key in station:
     station[key]+=[tidx,data['uvh'][tidx]]
     
     
-save_stationfile(station,'sjh_hr_v2_stationfile.dat')
+save_stationfile(station,'../dfo/grids/stj_harbour/add_dn/6_makerun/sjh_hr_v3_clean/input/sjh_hr_v3_stationfile.dat')
     
     
     

@@ -385,14 +385,19 @@ def save_nodfile(segfile,filename=None,bnum=[]):
 
    
     return 
+        
+def save_array(data,filename=None):
+    """
+    Saves a array as a file. 
+    """
     
-def save_llz(data,filename=None):
-    """
-    Saves a llz array as a file. Takes an Nx3 array 
-    """
+    if len(data.shape)==1:
+        data=np.atleast_2d(data).T
+    if len(data.shape)>2:
+        print('Cannot print 3d+ array')
     
     if filename==None:
-        print('save_llz requires a filename to save.')
+        print('save_array requires a filename to save.')
         return
     try:
         fp=open(filename,'w')
@@ -400,30 +405,13 @@ def save_llz(data,filename=None):
         print('Can''t make ' + filename)
         return
 
-    for i in range(len(data)):
-        fp.write('%f %f %f\n' % (data[i,0],data[i,1],data[i,2] ) )
-
-    fp.close()
-
-
-def save_nv(data,filename=None):
-    """
-    Saves a nv array as a file.
-
- 
-    """
-    
-    if filename==None:
-        print('save_nv requires a filename to save.')
-        return
-    try:
-        fp=open(filename,'w')
-    except IOError:
-        print('Can''t make ' + filename)
-        return
+    sout = ''
+    for i in range(data.shape[1]):
+        sout += '{} '
+    sout = sout[:-1] + '\n'
 
     for i in range(len(data)):
-        fp.write('%d %d %d\n' % (data[i,0],data[i,1],data[i,2] ) )
+        fp.write(sout.format(*data[i,:]))
 
     fp.close()
     
