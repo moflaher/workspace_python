@@ -953,11 +953,42 @@ def plottri(data, field, minmax=[],show=True,cm=mpl.cm.viridis):
     
     if show==True:
         f.show()
-        return
+        return f,ax
     else:
         return f,ax
     
     
+def plot_zetares(zeta1, zeta2, dt=1, minmax=[0,-1],show=True, tidecon=None):
+    """
+    Plot timeseries and residual.
+    """
+    ittide=True
+    try:
+        import ttide
+    except ImportError:
+        print("ttide is not installed, please install tide.")
+        ittide=False
+    
+    f,ax=plt.subplots(2,1)
+    ax[0].plot(zeta1[minmax[0]:minmax[1]],'r',lw=2)
+    ax[0].plot(zeta2[minmax[0]:minmax[1]],'b',lw=.5)
+    
+    if ittide:        
+        if tidecon is None:
+            out1=ttide.t_tide(zeta1[minmax[0]:minmax[1]],dt=dt)
+            out2=ttide.t_tide(zeta2[minmax[0]:minmax[1]],dt=dt)
+        else:
+            out1=ttide.t_tide(zeta1[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)
+            out2=ttide.t_tide(zeta2[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)  
+        
+        ax[1].plot(zeta1[minmax[0]:minmax[1]]-out1(range(len(zeta1[minmax[0]:minmax[1]]))),'r',lw=2)
+        ax[1].plot(zeta2[minmax[0]:minmax[1]]-out2(range(len(zeta2[minmax[0]:minmax[1]]))),'b',lw=.5)
+            
+    if show==True:
+        f.show()
+        return f,ax
+    else:
+        return f,ax
     
 def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
     """
