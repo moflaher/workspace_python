@@ -981,8 +981,8 @@ def plot_zetares(zeta1, zeta2, dt=1, minmax=[0,-1],show=True, tidecon=None):
             out1=ttide.t_tide(zeta1[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)
             out2=ttide.t_tide(zeta2[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)  
         
-        ax[1].plot(zeta1[minmax[0]:minmax[1]]-out1(range(len(zeta1[minmax[0]:minmax[1]]))),'r',lw=2)
-        ax[1].plot(zeta2[minmax[0]:minmax[1]]-out2(range(len(zeta2[minmax[0]:minmax[1]]))),'b',lw=.5)
+        ax[1].plot(zeta1[minmax[0]:minmax[1]]-out1(np.arange(len(zeta1[minmax[0]:minmax[1]]))),'r',lw=2)
+        ax[1].plot(zeta2[minmax[0]:minmax[1]]-out2(np.arange(len(zeta2[minmax[0]:minmax[1]]))),'b',lw=.5)
             
     if show==True:
         f.show()
