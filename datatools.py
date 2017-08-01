@@ -154,8 +154,11 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     except KeyError:
         pass
 
-    if 'time' in data:
-        data['time']=data['time']+678576
+    if 'Times' in data:
+	data['Time']=np.empty((len(data['Times']),),dtype='|S26')
+	for i in range(len(data['Times'])):
+    		data['Time'][i]=''.join(data['Times'][i,])
+	data['time']=dates.datestr2num(data['Time'])	
         
     if 'trigrid' not in data:
         if (('nv' in data) and('lon' in data) and ('lat' in data)):

@@ -16,16 +16,16 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 
 # Define names and types of data
-name='sjh_hr_v2_barotropic'
-grid='sjh_hr_v2'
+name='sjh_hr_v3_test_2.0'
+grid='sjh_hr_v3'
 datatype='2d'
-starttime=0
+starttime=960
 endtime=-1
 
 
 ### load the .nc file #####
 #data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/home/mif001/scratch/test_dme/sjh_hr_v2_barotropic/output/',singlename=grid + '_0001.nc')
+data = loadnc('/home/mif001/scratch/sjh_hr_v3/sjh_hr_v3_test_2.0/output/',singlename=grid + '_0001.nc')
 data['lon']=data['lon']-360
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
@@ -86,7 +86,7 @@ for i,loc in enumerate(locations):
     zetac=data['zeta'][starttime:endtime,node]
 
     df=pd.DataFrame(np.vstack([tclean,zetac]).T,columns=['time','zeta'])
-    df.to_csv('{}{}_{}_{}_dist_{:.2f}.csv'.format(savepath,loc[0].astype(int),loc[2],loc[1],dist[node]))
+    df.to_csv('{}{}_{}_{}_dist_{:.2f}_{}.csv'.format(savepath,loc[0].astype(int),loc[2],loc[1],dist[node],node))
 
 
 

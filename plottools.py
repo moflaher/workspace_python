@@ -958,7 +958,7 @@ def plottri(data, field, minmax=[],show=True,cm=mpl.cm.viridis):
         return f,ax
     
     
-def plot_zetares(zeta1, zeta2, dt=1, minmax=[0,-1],show=True, tidecon=None):
+def plot_zetares(time1, zeta1, time2, zeta2,show=True, tidecon=None):
     """
     Plot timeseries and residual.
     """
@@ -969,26 +969,26 @@ def plot_zetares(zeta1, zeta2, dt=1, minmax=[0,-1],show=True, tidecon=None):
         print("ttide is not installed, please install tide.")
         ittide=False
     
-    f,ax=plt.subplots(2,1)
-    ax[0].plot(zeta1[minmax[0]:minmax[1]],'r',lw=2)
-    ax[0].plot(zeta2[minmax[0]:minmax[1]],'b',lw=.5)
+    f,ax=plt.subplots(2,1,sharex=True)
+    ax[0].plot(time1, zeta1,'r',lw=2)
+    ax[0].plot(time2, zeta2,'b',lw=.5)
     
     if ittide:        
         if tidecon is None:
-            out1=ttide.t_tide(zeta1[minmax[0]:minmax[1]],dt=dt)
-            out2=ttide.t_tide(zeta2[minmax[0]:minmax[1]],dt=dt)
+            out1=ttide.t_tide(zeta1,stime=time1[0],dt=24*(time1[1]-time1[0]))
+            out2=ttide.t_tide(zeta2,stime=time2[0],dt=24*(time2[1]-time2[0]))
         else:
-            out1=ttide.t_tide(zeta1[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)
-            out2=ttide.t_tide(zeta2[minmax[0]:minmax[1]],dt=dt,constitnames=tidecon)  
+            out1=ttide.t_tide(zeta1,stime=time1[0],dt=24*(time1[1]-time1[0]),constitnames=tidecon)
+            out2=ttide.t_tide(zeta2,stime=time2[0],dt=24*(time2[1]-time2[0]),constitnames=tidecon)
         
-        ax[1].plot(zeta1[minmax[0]:minmax[1]]-out1(np.arange(len(zeta1[minmax[0]:minmax[1]]))),'r',lw=2)
-        ax[1].plot(zeta2[minmax[0]:minmax[1]]-out2(np.arange(len(zeta2[minmax[0]:minmax[1]]))),'b',lw=.5)
+        ax[1].plot(time1, zeta1-out1(time1),'r',lw=2)
+        ax[1].plot(time2, zeta2-out2(time2),'b',lw=.5)
             
     if show==True:
         f.show()
-        return f,ax
+        return f,ax,out1,out2
     else:
-        return f,ax
+        return f,ax,out1,out2
     
 def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
     """
