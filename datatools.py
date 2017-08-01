@@ -810,6 +810,41 @@ def save_poly_shp(data,varLabel,filename):
     shapeData.Destroy()
     
     
+def load_wlev(filename):
+    
+    with open(filename) as fp:
+        wlev={}
+        wlev['tidecon']={}
+        
+        control=False
+        days=False     
+            
+        for i,line in enumerate(fp.readlines()):
+            line=line.replace('\r','').replace('\n','')#.replace('\t',' ')
+            sline = line.split()
+
+            if control:
+                wlev['tidecon'][sline[0]]=np.hstack([float(sline[1]),float(sline[2]),float(sline[3])])
+            if days:
+                wlev['days']=int(sline[1][:-4])
+                days=False
+            if 'MComputed' in line:
+                wlev['lon']=-1*(float(sline[4])+float(sline[5])/60.0)
+                wlev['lat']=float(sline[1])+float(sline[2])/60.0
+                wlev['offset']=float(sline[7])
+                days=True
+            if 'WaterLevConstit' in line:
+                wlev['snum']=sline[1]
+                wlev['sname']='_'.join(sline[2:-2])
+            if 'Reference' in line:
+                wlev['ref']=sline[1]
+            if 'Control' in line:
+                control = True
+            
+    fp.close()
+    
+    return wlev
+    
 def mdate2pydate(date):
     return date-366.0
     
