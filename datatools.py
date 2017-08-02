@@ -814,32 +814,37 @@ def load_wlev(filename):
     
     with open(filename) as fp:
         wlev={}
-        wlev['tidecon']={}
-        
-        control=False
+        wlev['tidecon']=np.empty((0,3))
+	wlev['name']=np.array([])        
+
         days=False     
-            
+    
         for i,line in enumerate(fp.readlines()):
             line=line.replace('\r','').replace('\n','')#.replace('\t',' ')
             sline = line.split()
 
-            if control:
-                wlev['tidecon'][sline[0]]=np.hstack([float(sline[1]),float(sline[2]),float(sline[3])])
+            if '||' not in line:
+		wlev['name']=np.append(wlev['name'],sline[0])
+                wlev['tidecon']=np.vstack([wlev['tidecon'],np.hstack([float(sline[1]),float(sline[2]),float(sline[3])])])
             if days:
                 wlev['days']=int(sline[1][:-4])
                 days=False
-            if 'MComputed' in line:
-                wlev['lon']=-1*(float(sline[4])+float(sline[5])/60.0)
-                wlev['lat']=float(sline[1])+float(sline[2])/60.0
-                wlev['offset']=float(sline[7])
+            if 'Computed' in line:
+                s=0
+		if 'N' in sline[2] or 'n' in sline[2]:
+		    s=-1
+		wlev['lat']=float(sline[1])+float(sline[2].replace('N','').replace('n',''))/60.0
+		wlev['lon']=-1*(float(sline[4+s])+float(sline[5+s].replace('W','').replace('w',''))/60.0)
+                wlev['offset']=float(sline[7+2*s])
                 days=True
             if 'WaterLevConstit' in line:
-                wlev['snum']=sline[1]
-                wlev['sname']='_'.join(sline[2:-2])
+		a=1
+                if '00000m' in line:
+		    a=0
+		wlev['snum']=sline[1]
+                wlev['sname']='_'.join(sline[2:(-2+a)])
             if 'Reference' in line:
                 wlev['ref']=sline[1]
-            if 'Control' in line:
-                control = True
             
     fp.close()
     
