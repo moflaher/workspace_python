@@ -36,12 +36,12 @@ global vector_scale
 
 
 # Define names and types of data
-name='sjh_hr_v1_20150701-20150907'
-grid='sjh_hr_v1'
+name='sjh_hr_v3_0.03_newnest'
+grid='sjh_hr_v3'
 datatype='2d'
-regionname='stjohn_harbour_tight'
-starttime=1000
-endtime=1500
+regionname='stjohn_harbour'
+starttime=500
+endtime=1000
 layer='da'
 cmin=0
 cmax=1
@@ -49,7 +49,7 @@ cmax=1
 
 
 ### load the .nc file #####
-data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/home/mif001/scratch/sjh_hr_v3/test_bfric2/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 data = ncdatasort(data,trifinder=False,uvhset=False)
 print('done sort')
@@ -113,7 +113,7 @@ def speed_plot(i):
     f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=300)
 
 
-with pymp.Parallel(24) as p:
+with pymp.Parallel(4) as p:
     for i in p.range(starttime,endtime):
         speed_plot(i)
 

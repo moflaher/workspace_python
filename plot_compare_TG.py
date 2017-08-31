@@ -17,7 +17,7 @@ import pandas as pd
 import ttide
 
 # Define names and types of data
-name='sjh_hr_v3_0.02'
+name='sjh_hr_v3_0.0175_shallow'
 grid='sjh_hr_v3'
 datatype='2d'
 starttime=1008
@@ -28,7 +28,7 @@ region2=regions('bof_nemo')
 savepath='{}/png/{}_{}/compare_TG/{}_{}_{}/'.format(figpath,grid,datatype,name,starttime,endtime)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-save=np.load('dataout/sjh_hr_v3_2d/compare_TG/sjh_hr_v3_0.02_1008_-1/tg_compare_out_5con.npy')
+save=np.load('dataout/sjh_hr_v3_2d/compare_TG/{}_1008_-1/tg_compare_out_allcon.npy'.format(name))
 save=save[()]
 
 cons=['M2  ','N2  ','S2  ','K1  ','O1  ']

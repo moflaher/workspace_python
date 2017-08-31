@@ -17,23 +17,18 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 
 # Define names and types of data
-name='sjh_hr_v2_noriver'
-grid='sjh_hr_v2'
+name='sjh_hr_v3_0.03_newnest'
+grid='sjh_hr_v3'
 regionname='sfmwhole'
 datatype='2d'
-starttime=960
-endtime=-1
+starttime=1008
+endtime=3761
 
 
 ### load the .nc file #####
 #data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/home/mif001/scratch/susan/sjh_hr_v2/runs/sjh_hr_v2_noriver/output/',singlename=grid + '_0001.nc')
-data['lon']=data['lon']-360
-data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+data = loadnc('/home/mif001/scratch/sjh_hr_v3/test_bfric2/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
-del data['trigrid']
-data = ncdatasort(data)
-print('done sort')
 
 region=regions(regionname)
 sst=loadnc('data/','A20153352015365.L3m_MO_SST_sst_4km.nc',fvcom=False)
@@ -47,7 +42,7 @@ XX,YY=np.meshgrid(sst['lon'],sst['lat'])
 xx=np.ravel(XX)
 yy=np.ravel(YY)
 
-mtemp=data['temp'][960:-1,0,:].mean(axis=0)
+mtemp=data['temp'][1004:-1,0,:].mean(axis=0)
 
 pidx=np.argwhere((xx>=region['region'][0])&(xx<=region['region'][1])&(yy>=region['region'][2])&(yy<=region['region'][3]))
 

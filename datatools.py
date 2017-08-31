@@ -114,6 +114,9 @@ def ncdatasort(data,trifinder=False,uvhset=True):
         if glob.glob(data['datadir'] + "../input/*_lon.dat"):        
             data['lon'] = np.loadtxt(glob.glob(data['datadir'] + "../input/*_lon.dat")[0])
             lond=True
+        if glob.glob(data['datadir'] + "../input/*_long.dat"):        
+            data['lon'] = np.loadtxt(glob.glob(data['datadir'] + "../input/*_long.dat")[0])
+            lond=True
         if glob.glob(data['datadir'] + "../input/*_lat.dat"):
             data['lat'] = np.loadtxt(glob.glob(data['datadir'] + "../input/*_lat.dat")[0])
             latd=True

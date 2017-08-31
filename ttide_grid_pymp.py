@@ -12,7 +12,7 @@ import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 from ttide import t_tide
-
+import pymp
 
 
 # Define names and types of data
@@ -35,12 +35,17 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 dt=np.diff(data['time'])[0]*24
 
 
-out=np.empty((len(data['nodell'][:,0]),),dtype=object)
-for j in range(0,len(data['nodell'][:,0])):
-    print(j)
-    out[j]=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['lat'][j],synth=-1,out_style=None,dt=.25)
+out=pymp.shared.array((len(data['nodell'][:,0]),35,4))
+with pymp.Parallel(48) as p:
+    for j in p.range(len(data['nodell'][:,0])):
+        print(j)
+        out[j,]=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['lat'][j],synth=-1,out_style=None,dt=.25)['tidecon']
 
-np.save('{}{}_{}_{}_ttide_grid_el_all.npy'.format(savepath,name,starttime,endtime),out)
+outall=t_tide(data['zeta'][starttime:endtime,j],stime=data['time'][starttime],lat=data['lat'][j],synth=-1,out_style=None,dt=.25)
+
+
+np.save('{}{}_{}_{}_ttide_grid_tidecon_el_all_pymp.npy'.format(savepath,name,starttime,endtime),out)
+np.save('{}{}_{}_{}_ttide_grid_singleout_el_all_pymp.npy'.format(savepath,name,starttime,endtime),outall)
 
 
 

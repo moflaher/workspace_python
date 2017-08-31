@@ -64,4 +64,25 @@ def myprint(d):
     else:
       print("{0} : {1}".format(k, v))
 
+def tg2csv(npyfile,outname):
+    data=np.load(npyfile)
+    data=data[()]
+
+    mykeys=['00065','00060','00055','00053','00046','00129']
+    cons=['M2  ','N2  ','S2  ','K1  ','O1  ','M4  ']
+    consout=['M2 A','M2 P','N2 A','N2 P','S2 A','S2 P','K1 A','K1 P','O1 A','O1 P','M4 A','M4 P']
+    
+    tidecon=np.empty((6,12))
+    for i in range(6):
+        for j in range(6):
+            tidecon[i,2*j]=data[mykeys[i]]['df'].lookup([cons[j]],['Amp diff'])
+            tidecon[i,(2*j)+1]=data[mykeys[i]]['df'].lookup([cons[j]],['Phase diff'])    
+
+    df=pd.DataFrame(tidecon,columns=consout,index=mykeys)
+    df.to_csv(outname)
+
+
+
+
+
 
