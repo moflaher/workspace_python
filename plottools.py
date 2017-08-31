@@ -997,10 +997,11 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
     """
     
     data = gt.load_nei2fvcom(filename)
+    data = gt.get_dhh(data)
     if regionname is not None:
         region = pjt.regions(regionname)
-        nidx = dt.get_nodes(data,region)
-        eidx = dt.get_elements(data,region)
+        nidx = gt.get_nodes(data,region)
+        eidx = gt.get_elements(data,region)
     filename=filename.split('.')[0]
     
     # Plot grid
@@ -1045,6 +1046,21 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600):
     else:
         f.savefig(filename+'_depth.png',dpi=dpi)
     
+    # Plot dhh
+    f = plt.figure()
+    ax=f.add_axes([.1, .125, .775, .8])
+    if regionname is not None:
+        cs=np.percentile(data['dhh'][eidx],percentiles)
+    else:
+        cs=np.percentile(data['dhh'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['dhh'],vmin=cs[0],vmax=cs[1])
+    cb=plt.colorbar(triax)
+    cb.set_label('dhh')
+    if regionname is not None:
+        ax.axis(region['region'])
+        f.savefig(filename+'_'+regionname+'_dhh.png',dpi=dpi)
+    else:
+        f.savefig(filename+'_dhh.png',dpi=dpi)
 
 def llz_click_remove(data,crange=None,s=10,region=None,pretty=False):
 
