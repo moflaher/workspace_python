@@ -25,29 +25,17 @@ global nidx
 
 
 # Define names and types of data
-name='sjh_hr_v2_test_03'
-grid='sjh_hr_v2'
+name='sjh_hr_v3_year_nest'
+grid='sjh_hr_v3'
 datatype='2d'
-regionname='stjohn_harbour'
-starttime=768
-endtime=864
+regionname='reversing_falls'
+starttime=0
+endtime=430
 
 
 ### load the .nc file #####
-data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/'+grid+'/'+name+'/output',singlename=grid + '_0001.nc')
-data['lon']=data['lon']-360
-data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_hr_v3/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
-data = ncdatasort(data)
-print('done sort')
-
-cages=loadcage('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat')
-if cages!=None:
-    tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2,0]],0],data['nodell'][data['nv'][i,[0,1,2,0]],1])) for i in cages ]
-    color='g'
-    lw=.2
-    ls='solid'
-
 
 region=regions(regionname)
 nidx=get_nodes(data,region)
@@ -67,18 +55,17 @@ def zeta_plot(i):
 #    if cages!=None:   
 #        lseg_t=LC(tmparray,linewidths = lw,linestyles=ls,color=color)
 #        ax.add_collection(lseg_t) 
-    prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
+    cb=plt.colorbar(triax)
+    ax.axis(region['region'])
+    #prettyplot_ll(ax,setregion=region,cblabel='Elevation (m)',cb=triax)
     f.savefig(savepath + grid + '_' + regionname +'_zeta_' + ("%04d" %(i)) + '.png',dpi=600)
     plt.close(f)
 
 
-trange=range(len(data['time']))
-starttime=trange[starttime]
-endtime=trange[endtime]
-#pool = multiprocessing.Pool(1)
-#pool.map(zeta_plot,range(starttime,endtime))
-for i in range(starttime,endtime):
-    zeta_plot(i)
+pool = multiprocessing.Pool(4)
+pool.map(zeta_plot,range(starttime,endtime))
+#for i in range(starttime,endtime):
+#    zeta_plot(i)
 
 
 

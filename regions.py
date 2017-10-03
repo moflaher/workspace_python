@@ -37,7 +37,8 @@ def makeregions():
     tl=np.vstack([tl,        [[-66.25, -66.1, 45.075, 45.2],'seaview','seaview']])
     tl=np.vstack([tl,        [[-66.3, -65.75, 45.05, 45.7],'sjr_kl','sjr_kl']])
     tl=np.vstack([tl,        [[-66.3, -65.9, 45.3, 45.6],'longreach','longreach']])
-
+    tl=np.vstack([tl,        [[-66.1055, -66.055, 45.2475, 45.290],'reversing_falls','reversing_falls']])
+    
     #fishcage and slr
     tl=np.vstack([tl,        [[-65.5, -63.25, 44, 46],'slr_upperbof','slr_upperbof']])
     tl=np.vstack([tl,        [[-67.5, -66, 44.5, 45.3],'musq','musq']])

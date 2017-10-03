@@ -36,26 +36,25 @@ global vector_scale
 
 
 # Define names and types of data
-name='sjh_lr_v1_jul2015_nest_noriverspg'
-grid='sjh_lr_v1'
+name='jul2015_nest_lowdif'
+grid='sjh_hr_v3'
 datatype='2d'
-regionname='stjohn_harbour'
-starttime=500
-endtime=550
-layer='da'
-cmin=0
-cmax=5
+regionname='bof_nemo'
+starttime=1008
+endtime=1508
+cmin=-200
+cmax=600
 
 
 
 ### load the .nc file #####
-data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
+data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_hr_v3_clean/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 
 region=regions(regionname)
 
 
-savepath='{}timeseries/{}_{}/speed/{}_{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,name,region['regionname'],layer,cmin,cmax)
+savepath='{}timeseries/{}_{}/netheat/{}_{}_{}_{}/'.format(figpath,grid,datatype,name,region['regionname'],cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -69,7 +68,7 @@ ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: -1*x))
 ax.set_xlabel(r'Longitude ($^{\circ}$W)')
 ax.set_ylabel(r'Latitude ($^{\circ}$N)')
 ax.axis(region['region'])
-ax.set_aspect(get_aspectratio(region),anchor='SW')
+#ax.set_aspect(get_aspectratio(region),anchor='SW')
 f.canvas.draw()
 
 
@@ -86,13 +85,10 @@ box=ax.get_position()
 cax=f.add_axes([box.xmax + .025, box.ymin, .025, box.height])
 
 i=starttime
-if layer is 'da':
-    speed=np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2)
-else:
-    speed=np.sqrt(data['u'][i,layer,:]**2+data['v'][i,layer,:]**2)
-triax=ax.tripcolor(data['trigrid'],speed,vmin=cmin,vmax=cmax)
+heat=data['net_heat_flux'][i,:]
+triax=ax.tripcolor(data['trigrid'],heat,vmin=cmin,vmax=cmax)
 cb=plt.colorbar(triax,cax=cax)
-cb.set_label(r'Speed (ms$^{-1}$)',fontsize=10)
+cb.set_label(r'Net Heat Flux',fontsize=10)
 
 f.canvas.draw()
 background = f.canvas.copy_from_bbox(ax.bbox)
@@ -101,14 +97,11 @@ background = f.canvas.copy_from_bbox(ax.bbox)
 def speed_plot(i):
     print(i)
     f.canvas.restore_region(background)
-    if layer is 'da':
-        speed=np.sqrt(data['ua'][i,:]**2+data['va'][i,:]**2)
-    else:
-        speed=np.sqrt(data['u'][i,layer,:]**2+data['v'][i,layer,:]**2)    
-    triax.set_array(speed)
+    heat=np.mean(data['net_heat_flux'][i,data['nv']],axis=1)
+    triax.set_array(heat)
     ax.draw_artist(triax)
     f.canvas.blit(ax.bbox)
-    f.savefig('{}{}_{}_speed_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=300)
+    f.savefig('{}{}_{}_netheatflux_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=300)
 
 
 with pymp.Parallel(4) as p:

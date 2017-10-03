@@ -16,11 +16,11 @@ from ttide import t_tide
 
 
 # Define names and types of data
-namelist=['sjh_hr_v3_0.02_newnest','sjh_hr_v3_0.025_newnest','sjh_hr_v3_0.03_newnest','sjh_hr_v3_0.035_newnest']
-grid='sjh_hr_v3'
+namelist=['sjh_lr_v1_jul2015_origbc_uniforms_jcool1_bric005']
+grid='sjh_lr_v1'
 datatype='2d'
-starttime=672
-endtime=3744
+starttime=912
+endtime=2334#3984
 
 savepath='{}/png/{}_{}/compare_tg_timeseries/'.format(figpath,grid,datatype)
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -29,12 +29,14 @@ tg65=np.load('/home/mif001/scratch/obs/tg/tg65_clean.npy')
 
 for name in namelist:
     ### load the .nc file #####
-    data = loadnc('/home/mif001/scratch/sjh_hr_v3/test_bfric2/{}/output/'.format(name),singlename=grid + '_0001.nc')
+    data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output_dt20_mindepth01/'.format(name),singlename=grid + '_0001.nc')
     print('done load')
 
     time=data['time'][starttime:endtime]-4/24.0
     zeta=data['zeta'][starttime:endtime,25086]-np.mean(data['zeta'][starttime:endtime,25086])
-
+    zeta=data['zeta'][starttime:endtime,55468]-np.mean(data['zeta'][starttime:endtime,55468])
+     
+    
     idx=np.argwhere((tg65[:,0]>=(time[0]-1/24.0)) & (tg65[:,0]<=(time[-1]+1/24.0)))
 
     tgtime=tg65[idx,0]

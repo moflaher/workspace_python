@@ -18,23 +18,25 @@ import ttide
 
 # Define names and types of data
 #name='sjh_hr_v3_nest1'
-grid='sjh_hr_v3'
+grid='sjh_lr_v1'
 datatype='2d'
-starttime=672
-endtime=3744
+starttime=912
+endtime=3984
 
 #namelist=['sjh_hr_v3_0.015','sjh_hr_v3_0.015_shallow','sjh_hr_v3_0.02','sjh_hr_v3_0.03','sjh_hr_v3_0.035','sjh_hr_v3_0.04','sjh_hr_v3_0.045','sjh_hr_v3_0.05']
-namelist=['sjh_hr_v3_0.02_newnest','sjh_hr_v3_0.025_newnest','sjh_hr_v3_0.03_newnest','sjh_hr_v3_0.035_newnest']
-
+#namelist=['sjh_hr_v3_0.02_newnest','sjh_hr_v3_0.025_newnest','sjh_hr_v3_0.03_newnest','sjh_hr_v3_0.035_newnest']
+namelist=['geometric_gotm_wd','geometric_gotm_wet_v2','geometric_my25_wd','uniform_gotm_wd','uniform_my25_wd','geometric_gotm_wet','geometric_gotm_wet_v3','geometric_my25_wet','uniform_gotm_wet','uniform_my25_wet']
 
 for name in namelist:
     
     ### load the .nc file #####
-    data = loadnc('/home/mif001/scratch/sjh_hr_v3/test_bfric2/{}/output/'.format(name),singlename=grid + '_0001.nc')
-    #data = loadnc('/home/suh001/scratch/sjh_hr_v3_clean/runs/sjh_hr_v3_nest1/output/',singlename=grid + '_0001.nc')
+    #data = loadnc('/home/mif001/scratch/sjh_lr_v1/{}/output/'.format(name),singlename=grid + '_0001.nc')
+    try:
+        data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/jul2015_runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
+    except:
+        continue
     print('done load')
-    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])    
-    
+    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
     
     filenames=glob.glob('/home/mif001/scratch/obs/wlev/*.wlev')
     wlev={}
@@ -52,17 +54,17 @@ for name in namelist:
         dist=np.sqrt((data['x']-xloc)**2+(data['y']-yloc)**2)
         asort=np.argsort(dist)
         close=0
-        while np.sum(data['wet_nodes'][:,asort[close]])<len(data['time']):
-            close+=1
+        #while np.sum(data['wet_nodes'][:,asort[close]])<len(data['time']):
+        #    close+=1
     
         node=asort[close]
-        if dist[node]>5000:
+        if dist[node]>10000:
             continue
         
         zetac=data['zeta'][starttime:endtime,node]
         timec=data['time'][starttime:endtime]
-    
-        out=ttide.t_tide(zetac,stime=timec[0]-4/24.0,dt=.25,synth=-1,out_style=None,lat=data['lat'][node])             
+        print(np.diff(data['time'])[0]*24)
+        out=ttide.t_tide(zetac,stime=timec[0]-4/24.0,dt=np.diff(data['time'])[0]*24,synth=-1,out_style=None,lat=data['lat'][node])             
         
         idxw=np.array([],dtype=int)
         idx=np.array([],dtype=int)
