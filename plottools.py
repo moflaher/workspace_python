@@ -16,7 +16,8 @@ import inspect
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.ticker import FuncFormatter
 import matplotlib.path as path
-
+import pandas as pd
+import matplotlib.dates as dates
 
 """
 Front Matter
@@ -1118,8 +1119,27 @@ def llz_click_remove(data,crange=None,s=10,region=None,pretty=False):
     
     
     
+def plot_idntown(data):
+    """
+    Plot timeseries of model and data at indian town gauge.
+    """
+
+    df=pd.read_csv('/home/mif001/workspace_python/data/01AP005_20150101-20161231_WLp_UVp.csv',header=2)
+    times=np.array([t for t in df['Date-Time']])
+    time=dates.datestr2num(times)
+    lon=-1*(66+5/60.+20/3600.)
+    lat=45+16/60.+24/3600.
+    aa=(data['lon']-lon)**2+(data['lat']-lat)**2
+    idx=np.argmin(aa)
+    k=np.argwhere((time>=data['time'].min())&(time<=data['time'].max()))
+    zeta=np.array([z for z in df.Value])
+
+    f=plt.figure()
+    ax=f.add_axes([.125,.1,.775,.8])
+    ax.plot(time[k]+4/24.0,zeta[k]-.7,'r.',lw=2,label='Obs.')	
+    ax.plot(data['time'],data['zeta'][:,idx],'b',lw=.5,label='Model')
     
+    ax.set_xlim([data['time'].min(),data['time'].max()])
 
-
-
-
+    f.show()
+    return f,ax

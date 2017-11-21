@@ -16,11 +16,11 @@ from ttide import t_tide
 
 
 # Define names and types of data
-namelist=['sjh_lr_v1_jul2015_origbc_uniforms_jcool1_bric005']
+namelist=['sjh_lr_v1_jul2015_wet_riverspg_geometric_wu_origdep']
 grid='sjh_lr_v1'
 datatype='2d'
-starttime=912
-endtime=2334#3984
+starttime=900
+endtime=-1
 
 savepath='{}/png/{}_{}/compare_tg_timeseries/'.format(figpath,grid,datatype)
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -29,7 +29,7 @@ tg65=np.load('/home/mif001/scratch/obs/tg/tg65_clean.npy')
 
 for name in namelist:
     ### load the .nc file #####
-    data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output_dt20_mindepth01/'.format(name),singlename=grid + '_0001.nc')
+    data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
     print('done load')
 
     time=data['time'][starttime:endtime]-4/24.0

@@ -12,22 +12,22 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-
+import pymp
 
 # Define names and types of data
-name='sjh_hr_v2_fixednf_0.5'
-grid='sjh_hr_v2'
+name='sjh_lr_v1_year_origbc_wet_hfx100'
+grid='sjh_lr_v1'
 datatype='2d'
-regionname='stjohn_harbour'
-starttime=2900
-endtime=3900
+regionname='bof_nemo'
+starttime=0
+endtime=10909
 cmin=8
 cmax=31
-layer=10
- 
+layer=0
+
+
 ### load the .nc file #####
-data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data['lon']=data['lon']-360
+data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
 data = ncdatasort(data)
@@ -80,7 +80,8 @@ cb.set_label(r'Salinity',fontsize=10)
 f.canvas.draw()
 background = f.canvas.copy_from_bbox(ax.bbox)
 
-for i in range(starttime+1,endtime):
+#for i in range(starttime+1,endtime):
+def plot_salinity(i):
     print(i)
     f.canvas.restore_region(background)
     fcolors=np.mean(data['salinity'][i,layer,data['nv']],axis=1)
@@ -88,4 +89,10 @@ for i in range(starttime+1,endtime):
     ax.draw_artist(triax)
     f.canvas.blit(ax.bbox)
     f.savefig('{}{}_{}_salinity_{:05d}.png'.format(savepath,grid,region['regionname'],i),dpi=600)
+
+with pymp.Parallel(4) as p:
+    for i in p.range(starttime+1,endtime):
+        plot_salinity(i)
+
+
 

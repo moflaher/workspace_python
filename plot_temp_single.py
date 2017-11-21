@@ -15,18 +15,18 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='sjh_lr_v1_year_origbc_wetish'
+name='sjh_lr_v1_jul2015_wet_riverspg_geometric'
 grid='sjh_lr_v1'
 datatype='2d'
 regionname='bof_nemo'
 starttime=0
-endtime=306
-cmin=-20
+endtime=600
+cmin=0
 cmax=20
 layer=0
  
 ### load the .nc file #####
-data = loadnc('/home/mif001/scratch/sjh_lr_v1/{}/output/'.format(name),singlename=grid + '_0001.nc')
+data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 
 
@@ -69,7 +69,7 @@ box=ax.get_position()
 cax=f.add_axes([box.xmax + .025, box.ymin, .025, box.height])
 
 i=starttime
-triax=ax.tripcolor(data['trigrid'],data['temp'][i,layer,:],vmin=cmin,vmax=cmax,cmap=mpl.cm.seismic)
+triax=ax.tripcolor(data['trigrid'],data['temp'][i,layer,:],vmin=cmin,vmax=cmax)#,cmap=mpl.cm.seismic)
 cb=plt.colorbar(triax,cax=cax)
 cb.set_label(r'Temp',fontsize=10)
 

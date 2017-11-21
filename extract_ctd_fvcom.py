@@ -20,18 +20,18 @@ import matplotlib.dates as dates
 
 
 # Define names and types of data
-name='sjh_lr_v1_jul2015_nogotm_jcool1'
+name='sjh_lr_v1_year_wet_lowervert'
 grid='sjh_lr_v1'
 datatype='2d'
 
 
 ### load the .nc file #####
 #data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1/{}/output/'.format(name),singlename=grid + '_0001.nc')
+data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1/testing/{}/output/'.format(name),singlename=grid + '_0001.nc')
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
 
-ctd=pd.read_csv('~/R_scripts/ctd.txt')
+ctd=pd.read_csv('/fs/vnas_Hdfo/odis/mif001/scratch/R_scripts/ctd.txt')
 
 
 deploy=ctd.deploy.astype(int)

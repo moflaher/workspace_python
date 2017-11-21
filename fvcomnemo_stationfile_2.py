@@ -19,20 +19,19 @@ import pandas as pd
 
 
 #data=load_nei2fvcom('/media/moflaher/data/grids/stj_harbour/add_dn/9_makerun_fixcoastline/sjh_hr_v3_fixcoastdepth_dclean_2.nei')
-data=loadnc('/home/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_jul2015_nest_noriverspg/output/','sjh_lr_v1_0001.nc')
+data=loadnc('/home/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_jul2015_wet_riverspg_geometric_wu_origdep/output/','sjh_lr_v1_0001.nc')
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 data['xc']=data['x'][data['nv']].mean(axis=1)
 data['yc']=data['y'][data['nv']].mean(axis=1)
+et=-1
 
 
 station=collections.OrderedDict()
 
 
-obsloc=pd.read_csv('NEMO-FVCOM_SaintJohn_BOF_Observations_timeseries.txt',delimiter=' ')
-obsloc2=pd.read_csv('NEMO-FVCOM_SaintJohn_BOF_Observations_ctd.txt',delimiter=' ')
-print('before')
+obsloc=pd.read_csv('data/NEMO-FVCOM_SaintJohn_BOF_Observations_oct2017_phase1.csv',delimiter=',')
 
-for i,iid in enumerate(obsloc.deploy):
+for i,iid in enumerate(obsloc.Num):
     name=iid
     #if 'Tide Gauge' in obsloc.Cat[i]:
         #name='TG_{}'.format(iid)
@@ -41,44 +40,32 @@ for i,iid in enumerate(obsloc.deploy):
     #if 'River' in obsloc.Cat[i]:
         #name='RG_{}'.format(iid) 
     
-    name=name.replace(' ','_').replace('(','').replace(')','')
+    #name=name.replace(' ','_').replace('(','').replace(')','')
     
-    station[name]=[obsloc.lon[i],obsloc.lat[i]]
+    station[str(name)]=[obsloc.Lon[i],obsloc.Lat[i]]
     
-    
-print('a')
-for i,iid in enumerate(obsloc2.deploy):
-    name=iid
-    #if 'Tide Gauge' in obsloc.Cat[i]:
-        #name='TG_{}'.format(iid)
-    #if 'ADCP' in obsloc.Cat[i]:
-        #name='ADCP_{}'.format(iid)
-    #if 'River' in obsloc.Cat[i]:
-        #name='RG_{}'.format(iid) 
-    
-    name=name.replace(' ','_').replace('(','').replace(')','')
-    
-    station[name]=[obsloc2.lon[i],obsloc2.lat[i]]
         
 print('after')    
 
-station2={} 
+
+
+station2=collections.OrderedDict() 
  
 for key in station:
     print(key)
-    if 'TC' in key:
-        xloc,yloc = data['proj'](station[key][0],station[key][1])
-        dist=np.sqrt((data['xc']-xloc)**2+(data['yc']-yloc)**2)
-        asort=np.argsort(dist)
-        close=0
-        while np.sum(data['wet_cells'][:,asort[close]])<len(data['time']):
-            close+=1 
-        cell=asort[close]
-        station2[key+'W']=station[key]+[cell,data['uvh'][cell]]
+    xloc,yloc = data['proj'](station[key][0],station[key][1])
+    dist=np.sqrt((data['x']-xloc)**2+(data['y']-yloc)**2)
+    asort=np.argsort(dist)
+    close=0
+    while np.sum(data['wet_nodes'][:et,asort[close]])<len(data['time'][:et]):
+        close+=1 
+    cell=asort[close]
 
-    tidx=np.argmin((data['lonc']-station[key][0])**2+(data['latc']-station[key][1])**2)
-    station2[key]=station[key]+[tidx,data['uvh'][tidx]]
+    tidx=np.argmin((data['lon']-station[key][0])**2+(data['lat']-station[key][1])**2)
+    if cell!=tidx:
+        station2[key+'W']=station[key]+[(cell+1),data['h'][cell]]
+    station2[key]=station[key]+[(tidx+1),data['h'][tidx]]
     
     
-save_stationfile(station2,'sjh_lr_v1_stationfile_all.dat')
+save_stationfile(station2,'sjh_lr_v1_nov8_wet_nodupe.dat')
  

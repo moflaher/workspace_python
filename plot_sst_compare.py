@@ -17,17 +17,17 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 
 # Define names and types of data
-name='jul2015_nest_lowdif'
-grid='sjh_hr_v3'
+name='sjh_lr_v1_year_origbc_wet'
+grid='sjh_lr_v1'
 regionname='sfmwhole'
 datatype='2d'
-starttime=1008
-endtime=3984
+starttime=3588
+endtime=4332
 
 
 ### load the .nc file #####
 #data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_hr_v3_clean/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
+data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 
 region=regions(regionname)
@@ -42,7 +42,7 @@ XX,YY=np.meshgrid(sst['lon'],sst['lat'])
 xx=np.ravel(XX)
 yy=np.ravel(YY)
 
-mtemp=data['temp'][1004:-1,0,:].mean(axis=0)
+mtemp=data['temp'][starttime:endtime,0,:].mean(axis=0)
 
 pidx=np.argwhere((xx>=region['region'][0])&(xx<=region['region'][1])&(yy>=region['region'][2])&(yy<=region['region'][3]))
 
@@ -92,9 +92,9 @@ f.savefig('{}{}_{}_temp_compare_month_mean_difference.png'.format(savepath,name,
 
 
 
-
-
-mtemp=data['temp'][1004:-1,1,:].mean(axis=0)
+regionname='sfmwhole'
+region=regions(regionname)
+mtemp=data['temp'][starttime:endtime,1,:].mean(axis=0)
 
 pidx=np.argwhere((xx>=region['region'][0])&(xx<=region['region'][1])&(yy>=region['region'][2])&(yy<=region['region'][3]))
 

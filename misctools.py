@@ -81,6 +81,42 @@ def tg2csv(npyfile,outname):
     df=pd.DataFrame(tidecon,columns=consout,index=mykeys)
     df.to_csv(outname)
 
+
+
+
+def tg2csv_nodiff(npyfile,outname):
+    data=np.load(npyfile)
+    data=data[()]
+
+    mykeys=['00065','00060','00055','00053','00046']#,'00129']
+    cons=['M2  ','N2  ','S2  ','K1  ','O1  ','M4  ']
+    consout=['M2 O','M2 M','M2 D','N2 O','N2 M','N2 D','S2 O','S2 M','S2 D','K1 O','K1 M','K1 D','O1 O','O1 M','O1 D','M4 O','M4 M','M4 D']
+    
+    tidecon=np.empty((5,18))
+    for i in range(5):
+        for j in range(6):
+            idx=np.argwhere(data[mykeys[i]]['df'].index==cons[j])
+            tidecon[i,3*j]=data[mykeys[i]]['wlevc'][idx,0]
+            tidecon[i,(3*j)+1]=data[mykeys[i]]['outc'][idx,0]
+            tidecon[i,(3*j)+2]=data[mykeys[i]]['df'].lookup([cons[j]],['Amp diff'])
+
+    df=pd.DataFrame(tidecon,columns=consout,index=mykeys)
+    df.to_csv(outname+'_amp.csv')
+
+
+    tidecon=np.empty((5,18))
+    for i in range(5):
+        for j in range(6):
+            idx=np.argwhere(data[mykeys[i]]['df'].index==cons[j])
+            tidecon[i,3*j]=data[mykeys[i]]['wlevc'][idx,1]
+            tidecon[i,(3*j)+1]=data[mykeys[i]]['outc'][idx,1]
+            tidecon[i,(3*j)+2]=data[mykeys[i]]['df'].lookup([cons[j]],['Phase diff'])
+
+    df=pd.DataFrame(tidecon,columns=consout,index=mykeys)
+    df.to_csv(outname+'_phase.csv')
+
+
+
 def checkrestart():
     import glob
     filenames=glob.glob('*restart*')

@@ -15,25 +15,37 @@ import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 import ttide
+import subprocess
 
 # Define names and types of data
 #name='sjh_hr_v3_nest1'
-grid='sjh_hr_v3'
+grid='sjh_lr_v1'
 datatype='2d'
-starttime=2124
-endtime=-1
+starttime=912
+endtime=3984
 
 #namelist=['sjh_hr_v3_0.015','sjh_hr_v3_0.015_shallow','sjh_hr_v3_0.02','sjh_hr_v3_0.03','sjh_hr_v3_0.035','sjh_hr_v3_0.04','sjh_hr_v3_0.045','sjh_hr_v3_0.05']
 #namelist=['sjh_hr_v3_0.02_newnest','sjh_hr_v3_0.025_newnest','sjh_hr_v3_0.03_newnest','sjh_hr_v3_0.035_newnest']
 namelist=['geometric_gotm_wd','geometric_gotm_wet_v2','geometric_my25_wd','uniform_gotm_wd','uniform_my25_wd','geometric_gotm_wet','geometric_gotm_wet_v3','geometric_my25_wet','uniform_gotm_wet','uniform_my25_wet']
-namelist=['sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib2']
-namelist=['sjh_hr_v3_year_wet']
+namelist=[]
+
+for d in os.listdir('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/jul2015_runs/'):
+    line = subprocess.check_output(['tail', '-1', "/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/jul2015_runs/{}/run_output".format(d)])
+    if 'TADA' in line:
+	namelist+=[d]
+    else:
+        print('Nope {}'.format(d))
+
+
+
+
+
 for name in namelist:
     
     ### load the .nc file #####
     #data = loadnc('/home/mif001/scratch/sjh_lr_v1/{}/output/'.format(name),singlename=grid + '_0001.nc')
     try:
-        data = loadnc('/home/suh001/scratch/sjh_hr_v3_clean/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
+        data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/jul2015_runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
     except:
         continue
     print('done load')

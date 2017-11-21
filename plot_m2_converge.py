@@ -47,6 +47,8 @@ n=55468
 
 m2amp=np.empty((5000,))
 m2amp_tg=np.empty((5000,))
+m2amp_cur=np.empty((5000,))
+
 for i in range(5000):
     print(i)
     out=ttide.t_tide(data['zeta'][starttime+i:endtime+i,n],stime=time[starttime+i],dt=np.diff(data['time'])[0]*24,synth=-1,out_style=None,lat=data['lat'][n])#,constitnames=np.array(['M2  ']))
@@ -59,6 +61,10 @@ for i in range(5000):
     amp=out['tidecon'][idx,0]
     m2amp_tg[i]=amp
 
+    out=ttide.t_tide(data['ua'][starttime+i:endtime+i,n]+1j*data['va'][starttime+1:endtime+1,n],stime=time[starttime+i],dt=np.diff(data['time'])[0]*24,synth=-1,out_style=None,lat=data['lat'][n])#,constitnames=np.array(['M2  ']))
+    idx=np.argwhere(out['nameu']=='M2  ')
+    amp=out['tidecon'][idx,0]
+    m2amp_cur[i]=amp
 
 
 
@@ -74,6 +80,16 @@ ax.axis([-5,200,0,3.5])
 
 f.savefig('{}m2_converge_100.png'.format(savepath),dpi=300)
 
+f=plt.figure()
+ax=f.add_axes([.125,.1,.775,.8])
+ax.plot(m2amp_cur,'r',lw=2,label='Model M2 Amp.')
+ax.set_xlabel('Time (hours)')
+ax.set_ylabel('M2 Amp. (m)')
+ax.legend()
+f.savefig('{}m2_converge_cur_all.png'.format(savepath),dpi=300)
+ax.axis([-5,200,0,3.5])
+
+f.savefig('{}m2_converge_cur_100.png'.format(savepath),dpi=300)
 
 
 
