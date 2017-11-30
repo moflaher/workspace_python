@@ -14,14 +14,14 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 
 # Define names and types of data
-name='vh_high_test_2'
-grid='vh_high'
+name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_spring'
+grid='sjh_lr_v1'
 regionlist=regions()
 datatype='2d'
 
 
 ### load the .nc file #####
-data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
+data = loadnc('/mnt/drive_1/runs/{}/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
 print('done load')
 data = ncdatasort(data)
 print('done sort')
@@ -40,7 +40,8 @@ for i in range(0,len(regionlist)):
         f=plt.figure()
         ax=plt.axes([.125,.1,.8,.8])
         ax.triplot(data['trigrid'],lw=.5)
-        prettyplot_ll(ax,setregion=region,grid=True)
+        ax.axis(region['region'])
+        #prettyplot_ll(ax,setregion=region,grid=True)
         f.savefig(savepath + grid + '_' + regionname +'_mesh.png',dpi=150)
         #f.savefig(savepath + grid + '_' + regionname +'_mesh.png',dpi=300)
         plt.close(f)
