@@ -38,8 +38,8 @@ global vector_scale
 
 
 # Define names and types of data
-name='sjh_hr_v3_year_wet_15mins'
-grid='sjh_hr_v3'
+name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0_summer'
+grid='sjh_lr_v1'
 datatype='2d'
 regionname='stjohn_harbour'
 starttime=0
@@ -53,7 +53,7 @@ region['region']=np.array([-66.45,-65.55,44.9,45.325])
 region['regionname']='nemofvcom_100m_grid'
 
 ### load the .nc file #####
-data = loadnc('/mnt/drive_1/runs/{}/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
+data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 
 if endtime==-1:
@@ -107,7 +107,7 @@ def plot_fun(i):
 #pool = multiprocessing.Pool()
 #pool.map(speed_plot,range(starttime,endtime))
 
-with pymp.Parallel(24) as p:
+with pymp.Parallel(4) as p:
     for i in p.range(starttime,endtime):
         plot_fun(i)
 

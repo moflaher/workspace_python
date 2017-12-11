@@ -22,8 +22,8 @@ import seawater as sw
 
 
 # Define names and types of data
-name='sjh_hr_v3_year_wet_15mins'
-grid='sjh_hr_v3'
+name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0_summer'
+grid='sjh_lr_v1'
 datatype='2d'
 starttime=0
 endtime=-1
@@ -31,7 +31,7 @@ endtime=-1
 
 
 ### load the .nc file #####
-data = loadnc('/mnt/drive_1/runs/{}/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
+data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
 print('done load')
 trifinder=data['trigrid'].get_trifinder()
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
@@ -46,18 +46,18 @@ time=data['Time']
 
 
 ##single node
-#node=48549
+node=48549
 
-#temp=data['temp'][:,:,node]
-#sal=data['salinity'][:,:,node]
-#zeta=data['zeta'][:,node]
+temp=data['temp'][:,:,node]
+sal=data['salinity'][:,:,node]
+zeta=data['zeta'][:,node]
 
-#save_array(time,'{}{}_time.dat'.format(savepath,name))
-#save_array(temp,'{}{}_temperature_{}.dat'.format(savepath,name,node))
-#save_array(sal,'{}{}_salinity_{}.dat'.format(savepath,name,node))
-#save_array(zeta,'{}{}_zeta_{}.dat'.format(savepath,name,node))
-##save_array(np.array(data['h'][node]),'{}{}_h_{}.dat'.format(savepath,name,node))
-
+save_array(time,'{}{}_time.dat'.format(savepath,name))
+save_array(temp,'{}{}_temperature_{}.dat'.format(savepath,name,node))
+save_array(sal,'{}{}_salinity_{}.dat'.format(savepath,name,node))
+save_array(zeta,'{}{}_zeta_{}.dat'.format(savepath,name,node))
+#save_array(np.array(data['h'][node]),'{}{}_h_{}.dat'.format(savepath,name,node))
+print(data['h'][node])
 
 ##spec lines
 

@@ -20,7 +20,7 @@ import matplotlib.dates as dates
 
 
 # Define names and types of data
-name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib2'
+name='sjh_lr_v1_year_coare3'
 #name='sjh_hr_v3_year_wet'
 grid='sjh_lr_v1'
 datatype='2d'
@@ -56,7 +56,7 @@ deploy=np.append(ctdbio['deploy'],ctdsabs['deploy'])
 Time=np.append(['{} {}'.format(ctdbio['date'][i],ctdbio['time'][i]) for i in range(len(ctdbio['lon']))],
                 ['{} {}'.format(ctdsabs['date'][i],ctdsabs['time'][i]) for i in range(len(ctdsabs['lon']))])
 time=dates.datestr2num(Time)
-kill
+
 
 savepath='{}/{}_{}/ctd/{}/'.format(datapath,grid,datatype,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
