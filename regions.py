@@ -11,21 +11,8 @@ import numpy as np
 from collections import OrderedDict
 def makeregions():
     
-    #print to dict code
-    #for r in rr:
-        #print("")
-        #print("regions['{}'] = ".format(r)+"{}")
-        #print("regions['{}']['regionname'] = '{}'".format(r, r))
-        #print("regions['{}']['regionnameP'] = '{}'".format(r, regions(r)['passageP']))
-        #print("regions['{}']['region'] = np.array([{}, {}, {}, {}])".format(r, regions(r)['region'][0], regions(r)['region'][1], regions(r)['region'][2], regions(r)['region'][3]))
-    #for r in rr:
-        #print("")
-        #print("allregions['{}'] = ".format(r)+"{"+"'regionname' : '{}', 'region' : [{}, {}, {}, {}]".format(r,regions(r)['region'][0], regions(r)['region'][1], regions(r)['region'][2], regions(r)['region'][3])+"}")
-    ##print to csv
-    ##for r in rr:
-        ##print('"{}", "{}", "{}", "{}", "{}"'.format(r, regions(r)['region'], regions(r)['passageP'], '', ''))
-    
-    #tl=np.empty((1, 3), dtype=object)    
+   
+
     
     ##bof
     #tl=np.vstack([tl, [[-66.225, -66.195, 44.37, 44.41], 'pp','']])
@@ -131,6 +118,10 @@ def makeregions():
 
 
     allregions=OrderedDict()    
+    
+    #BOF
+
+
     allregions['doubleisland'] = {'regionname' : 'doubleisland', 'region' : [-129.85, -129.25, 52.9, 53.225]}
     allregions['sfmwhole'] = {'regionname' : 'sfmwhole', 'region' : [-71.5, -57.5, 37.5, 46.5]}
     allregions['gp'] = {'regionname' : 'gp', 'region' : [-66.38, -66.29, 44.213, 44.32]}
