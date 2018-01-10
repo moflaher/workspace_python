@@ -11,7 +11,6 @@ import datatools as dt
 import plottools as pt
 from regions import makeregions
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
-from regions import makeregions
 import seawater as sw
 
 """
@@ -113,22 +112,40 @@ def regionll2xy(data,region):
     return region
 
 
-def regions(regionname=None):
+def regions(region=None, group=None):
     """Returns region locations and full names
 
     :Parameters:
     	regionname
-
- 
     """
 
     allregions=makeregions()
 
-    if regionname==None:
+    #list all regions
+    if region==None and group=='all':
         print('Valid regions are')
-        return allregions.keys()        
-    else:
-        tmpregion=allregions[regionname]
+        return allregions.keys() 
+        
+    #list all groups
+    if region==None and group==None:
+        tmp=[]
+        for key in allregions:
+            tmp+=[allregions[key]['group']]
+        print('Valid groups are')
+        return np.unique(np.array(tmp)).tolist()
+        
+    #list all regions in a group
+    if group!=None and group!='all' and region==None:
+        tmp=[]
+        for key in allregions:
+            if group in allregions[key]['group']:
+                tmp+=[key]
+        print('Valid regions in group {} are'.format(group))
+        return tmp
+        
+    #return a region
+    if region!=None:
+        tmpregion=allregions[region]
         tmpregion['center']=[(tmpregion['region'][0]+tmpregion['region'][1])/2,(tmpregion['region'][2]+tmpregion['region'][3])/2]
         return tmpregion
 

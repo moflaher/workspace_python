@@ -1149,3 +1149,60 @@ def plot_idntown(data):
 
     f.show()
     return f,ax
+
+
+def select_field(data, field, i, layer=None):
+    """
+    Helper function to select the correct field and name for the field
+    """
+    
+    fn = {'temp' : r'Temperature ($^{\circ}$)',
+          'salinity' : r'Salinity (PSU)',
+          'speed' : r'Speed (m/s)',
+          'u' : r'U-Velocity (m/s)',
+          'v' : r'V-Velocity (m/s)',
+          'vorticity' : r'Vorticity',
+          'density' : r'Density (kg m$^{3}$)',
+          'zeta' : 'Elevation (m)'}    
+    
+    
+    if 'speed' in field:
+        if layer==None:
+            fieldout = np.sqrt(data['ua'][i,:]**2 + data['va'][i,:]**2)
+        else:
+            fieldout = np.sqrt(data['u'][i,layer,:]**2 + data['v'][i,layer,:]**2)
+            
+    elif 'vorticity' in field:
+        if layer==None:
+            dudy = data['a2u'][0,:]*data['u'][i,layer,:]+data['a2u'][1,:]*data['u'][i,layer,data['nbe'][:,0]] +\
+                   data['a2u'][2,:]*data['u'][i,layer,data['nbe'][:,1]]+data['a2u'][3,:]*data['u'][i,layer,data['nbe'][:,2]]
+            dvdx = data['a1u'][0,:]*data['v'][i,layer,:]+data['a1u'][1,:]*data['v'][i,layer,data['nbe'][:,0]] +\
+                   data['a1u'][2,:]*data['v'][i,layer,data['nbe'][:,1]]+data['a1u'][3,:]*data['v'][i,layer,data['nbe'][:,2]]
+        else:
+            dudy = data['a2u'][0,:]*data['ua'][i,:]+data['a2u'][1,:]*data['ua'][i,data['nbe'][:,0]] +\
+                   data['a2u'][2,:]*data['ua'][i,data['nbe'][:,1]]+data['a2u'][3,:]*data['ua'][i,data['nbe'][:,2]]
+            dvdx = data['a1u'][0,:]*data['va'][i,:]+data['a1u'][1,:]*data['va'][i,data['nbe'][:,0]] +\
+                   data['a1u'][2,:]*data['va'][i,data['nbe'][:,1]]+data['a1u'][3,:]*data['va'][i,data['nbe'][:,2]]
+        fieldout = dvdx - dudy   
+        
+    elif 'density' in field:
+        if layer==None:
+            print("Can't get density for layer None. Using layer=0.")
+            layer = 0
+        pres = sw.pres(data['h']+data['zeta'][i,:],data['lat'])
+        fieldout = sw.dens(data['salinity'][i,layer,:],data['temp'][i,layer,:],pres)
+        
+    else:
+        if layer==None:
+            fieldout = data[field][i,:]
+        else:
+            fieldout = data[field][i,layer,:]
+           
+            
+    
+    try:     
+        fieldname = fn[field]
+    except KeyError:
+        fieldname = field
+    
+    return fieldout, fieldname
