@@ -51,7 +51,7 @@ import netCDF4 as n4
 
 
 
-def loadnc(datadir, singlename=[], fvcom=True):
+def loadnc(datadir, singlename=[], fvcom=True, suppress=False):
     """
     Loads a .nc  data file
 
@@ -84,7 +84,8 @@ def loadnc(datadir, singlename=[], fvcom=True):
         for key in ncid.dimensions.keys():
             data['dims'][key] = ncid.dimensions[key]
     except TypeError:
-        print('File is netcdf4 type')
+        if not suppress:
+            print('File is netcdf4 type')
         ncid = n4.Dataset(data['filepath'])
         data = ncid.variables      
             

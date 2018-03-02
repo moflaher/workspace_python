@@ -10,7 +10,7 @@ sys.path.append('/home/moflaher/src/workspace_python/')
 import numpy as np
 import scipy as sp
 import matplotlib as mpl
-mpl.use('Agg')
+#mpl.use('Agg')
 #mpl.use('Qt4Agg')
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt

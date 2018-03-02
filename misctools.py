@@ -15,14 +15,8 @@ import pandas as pd
 
 def runstats(datain=None):
     """Takes an array and returns basic stats on it. Max,Min,Mean,Std
-
-    :Parameters:
-    
-
- 
+    :Parameters:    
     """
-
-   
 
     if datain==None:
         print('Need to pass in data array')
@@ -51,11 +45,11 @@ def dic_shape(indic):
 def speeder(ua,va):
     return np.sqrt(ua**2+va**2)
 
+
 def myprint(d):
   """
     Print nested dictionaries in a readable manner.
-    Code from Stack overflow - Scharron
-    
+    Code from Stack overflow - Scharron    
   """  
     
   for k, v in d.iteritems():
@@ -63,6 +57,7 @@ def myprint(d):
       myprint(v)
     else:
       print("{0} : {1}".format(k, v))
+      
 
 def tg2csv(npyfile,outname):
     data=np.load(npyfile)
@@ -80,8 +75,6 @@ def tg2csv(npyfile,outname):
 
     df=pd.DataFrame(tidecon,columns=consout,index=mykeys)
     df.to_csv(outname)
-
-
 
 
 def tg2csv_nodiff(npyfile,outname):
@@ -116,7 +109,6 @@ def tg2csv_nodiff(npyfile,outname):
     df.to_csv(outname+'_phase.csv')
 
 
-
 def checkrestart():
     import glob
     filenames=glob.glob('*restart*')
@@ -127,6 +119,17 @@ def checkrestart():
         print(data['zeta'][:,1000].max())
 	print(data['Time'])
 	print('='*30)
+    
+    
+def boxminmax(arr):
+    """
+    Returns the min max for all columns of the array.
+    """
+    
+    llmin = np.min(arr,axis=0)
+    llmax = np.max(arr,axis=0)
+    
+    return [llmin[0], llmax[0], llmin[1], llmax[1]]
 
 
 

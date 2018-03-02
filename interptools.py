@@ -12,11 +12,13 @@ import gridtools as gt
 import datatools as dt
 import plottools as pt
 import projtools as pjt
+import misctools as mt
 from matplotlib.collections import LineCollection as LC
 import seawater as sw
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import bisect
 import scipy.interpolate as spitp
+import matplotlib.path as path
 
 
 """
@@ -492,3 +494,136 @@ def interp1d(in_time, in_data, out_time, kind='linear'):
     return out_data
 
 
+def get_riops_weights(ri,locations):
+    """
+    Function to calculate interpolation weights for riops to points.
+    """
+
+    print('Processing weights')
+    
+    lon=ri['nav_lon'][:]-360
+    lat=ri['nav_lat'][:]
+
+    lo,la,proj=pjt.lcc(lon,lat)
+    ll=np.array(proj(locations[:,0],locations[:,1])).T
+    bll=mt.boxminmax(ll)
+
+    idx=np.empty((len(locations),2),dtype=int)
+    weights=np.empty((len(locations[:,0]),4))
+
+    for i in range(ri['nav_lon'].shape[0]-1):
+        for j in range(ri['nav_lon'].shape[1]-1):
+            a=np.array([lo[i,j],lo[i,j+1],lo[i+1,j+1],lo[i+1,j]])
+            b=np.array([la[i,j],la[i,j+1],la[i+1,j+1],la[i+1,j]])
+            if b.max()<np.min(bll[2:]) or b.min()>np.max(bll[2:]):
+                continue
+            if a.min()>np.max(bll[:2]) or a.max()<np.min(bll[:2]):
+                continue   
+            
+            p=path.Path(np.vstack([a,b]).T)
+            tidx=p.contains_points(ll)
+            
+            if np.sum(tidx)>0:
+                for k in range(len(tidx)):
+                    if tidx[k]:
+                        idx[k,]=np.array([i,j])
+                    
+    for k,tt in enumerate(idx):
+        i=tt[0]
+        j=tt[1]
+        a=np.array([lo[i,j],lo[i,j+1],lo[i+1,j+1],lo[i+1,j]])
+        b=np.array([la[i,j],la[i,j+1],la[i+1,j+1],la[i+1,j]])
+        
+        dist=np.sqrt((a-ll[k,0])**2+(b-ll[k,1])**2)
+        weights[k,:]=(dist**2)*np.sum(1/dist**2)
+        
+    print('Done processing weights')
+        
+    return weights, idx
+    
+
+def interp_riops(field, weights, idx):
+    """
+    Interpolate riops using weights.
+    """
+     
+    try:
+        import pyximport; pyximport.install()
+        import interp_riops as ir
+        
+        out=ir.interp_riops_c(field,weights,idx)
+        return out  
+    except:
+        print('There was an issue with during using cython falling back to python.')     
+        
+        out=np.empty((len(idx),))    
+            
+        for k,tt in enumerate(idx):
+            i=tt[0]
+            j=tt[1]
+            vals=np.array([field[i,j],field[i,j+1],field[i+1,j+1],field[i+1,j]])
+            out[k]=np.nansum(vals/weights[k,:])    
+        return out
+    
+
+def spread_field(fieldin):
+    """
+    Spread a gridded field down and then out.
+    """
+    
+    fs=np.array(fieldin.shape)
+    
+    if len(fs)==3:
+        field=fieldin[0,].reshape(-1)
+    else:
+        field=fieldin.reshape(-1)
+        
+
+
+    try:
+        import pyximport; pyximport.install()
+        import interp_riops as ir
+        
+        field=ir.spread_field_c(field, fs[1], fs[2])
+ 
+    except:
+        print('There was an issue with during using cython falling back to python.')  
+        
+        while np.sum(field.mask)>0:
+            for i in range(1,fs[1]-1):
+                for j in range(1,fs[2]-1):
+                    if field.mask[i*fs[2]+j]:
+                        idx=np.array([(i-1)*fs[2]+(j-1),(i-1)*fs[2]+(j),(i-1)*fs[2]+(j+1),
+                                  (i)*fs[2]+(j-1),(i)*fs[2]+(j+1),
+                                  (i+1)*fs[2]+(j-1),(i+1)*fs[2]+(j),(i+1)*fs[2]+(j+1)])
+                        if np.sum(~field.mask[idx])>0:
+                            ridx=idx[~field.mask[idx]]
+                            pmean=field[ridx]
+                            field[i*fs[2]+j]=np.mean(pmean)
+        
+            i=0
+            for j in range(0,fs[2]):             
+                if field.mask[i*fs[2]+j] and not field.mask[(i+1)*fs[2]+j]:
+                    field[i*fs[2]+j]=field[(i+1)*fs[2]+j]    
+            i=fs[1]-1
+            for j in range(0,fs[2]):             
+                if field.mask[i*fs[2]+j] and not field.mask[(i-1)*fs[2]+j]:
+                    field[i*fs[2]+j]=field[(i-1)*fs[2]+j]  
+            j=0
+            for i in range(0,fs[1]):             
+                if field.mask[i*fs[2]+j] and not field.mask[i*fs[2]+(j+1)]:
+                    field[i*fs[2]+j]=field[i*fs[2]+(j+1)]    
+            j=fs[2]-1
+            for i in range(0,fs[1]):             
+                if field.mask[i*fs[2]+j] and not field.mask[i*fs[2]+(j-1)]:
+                    field[i*fs[2]+j]=field[i*fs[2]+(j-1)] 
+        
+    
+    if len(fs)==3:
+        fieldin[0,:]=field.reshape(fs[1],fs[2])    
+        for i in range(1,fieldin.shape[0]):
+            fieldin[i,fieldin.mask[i,]]=fieldin[i-1,fieldin.mask[i,]]
+    else:        
+        fieldin=field.reshape(fs)
+    
+    return fieldin

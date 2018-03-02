@@ -564,3 +564,31 @@ def save_cagefile(filename=None,nodes=None,drag=None,depth=None):
 
     
     fp.close()
+    
+
+def sigma_levlay(ltype='geometric', layers=21, power=2):
+    """
+    Create fvcom sigma layer spacing
+    """
+    
+    z=np.empty((layers,))
+    
+    if 'uniform' in ltype:
+        ltype = 'geometric'
+        power = 1
+        
+    
+    if 'geometric' in ltype:
+        if power==1:
+            for k in range(1,layers+1):
+                z[k-1] = -((k-1)/(layers-1))**power
+        else:
+            for k in range(1,int((layers+1)/2)):
+                z[k-1] = -((k-1)/((layers+1)/2.0-1))**power/2.0
+            for k in range(int((layers+1)/2),layers+1):
+                z[k-1] = -1+((layers-k)/((layers+1)/2.0-1))**power/2.0
+
+        return z,(z[:-1]+z[1:])/2.0
+    
+
+    
