@@ -20,16 +20,16 @@ import matplotlib.dates as dates
 
 
 # Define names and types of data
-name='sjh_lr_v1_year_precip'
+name='sjh_lr_v1_test_wu'
 #name='sjh_hr_v3_year_wet'
 grid='sjh_lr_v1'
 datatype='2d'
 print(name)
 
 ### load the .nc file #####
-#data = loadnc(runpath+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
-#data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_hr_v3_clean/runs/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
-data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+#data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1_sub/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+#data = loadnc('/gpfs/fs1/dfo/dfo_odis/yow001/BoF/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 data['lon']=data['lon']-360
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 

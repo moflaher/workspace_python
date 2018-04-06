@@ -16,10 +16,10 @@ from ttide import t_tide
 
 
 # Define names and types of data
-namelist=['sjh_lr_v1_jul2015_wet_riverspg_geometric_wu_origdep']
-grid='sjh_lr_v1'
+namelist=['test_1']
+grid='sjh_lr_v1_sub'
 datatype='2d'
-starttime=900
+starttime=750
 endtime=-1
 
 savepath='{}/png/{}_{}/compare_tg_timeseries/'.format(figpath,grid,datatype)
@@ -29,12 +29,14 @@ tg65=np.load('/home/mif001/scratch/obs/tg/tg65_clean.npy')
 
 for name in namelist:
     ### load the .nc file #####
-    data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
+    data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1_sub/runs/{}/output/'.format(name),singlename=grid + '_0001.nc')
     print('done load')
 
+    loc=np.array([-66.059980,45.254460])
+    idx=closest_node(data,loc)
+
     time=data['time'][starttime:endtime]-4/24.0
-    zeta=data['zeta'][starttime:endtime,25086]-np.mean(data['zeta'][starttime:endtime,25086])
-    zeta=data['zeta'][starttime:endtime,55468]-np.mean(data['zeta'][starttime:endtime,55468])
+    zeta=data['zeta'][starttime:endtime,idx]-np.mean(data['zeta'][starttime:endtime,idx])
      
     
     idx=np.argwhere((tg65[:,0]>=(time[0]-1/24.0)) & (tg65[:,0]<=(time[-1]+1/24.0)))

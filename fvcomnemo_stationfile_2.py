@@ -19,7 +19,7 @@ import pandas as pd
 
 
 #data=load_nei2fvcom('/media/moflaher/data/grids/stj_harbour/add_dn/9_makerun_fixcoastline/sjh_hr_v3_fixcoastdepth_dclean_2.nei')
-data=loadnc('/home/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_jul2015_wet_riverspg_geometric_wu_origdep/output/','sjh_lr_v1_0001.nc')
+data=loadnc('/home/mif001/scratch/sjh_lr_v1_sub/old/sjh_lr_v1_sub_baroclinic_2/output/','sjh_lr_v1_sub_0001.nc')
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 data['xc']=data['x'][data['nv']].mean(axis=1)
 data['yc']=data['y'][data['nv']].mean(axis=1)
@@ -67,5 +67,5 @@ for key in station:
     station2[key]=station[key]+[(tidx+1),data['h'][tidx]]
     
     
-save_stationfile(station2,'sjh_lr_v1_nov8_wet_nodupe.dat')
+save_stationfile(station2,'sjh_lr_v1_sub_feb19_wet_nodupe.dat')
  
