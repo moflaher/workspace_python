@@ -486,7 +486,7 @@ def interp1d(in_time, in_data, out_time, kind='linear'):
 
 
     # generate interpolation functions using linear interpolation
-    f = spitp.interp1d(in_time, in_data, kind=kind)
+    f = spitp.interp1d(in_time, in_data, kind=kind, bounds_error=False)
 
     # Create output data
     out_data = f(out_time)

@@ -18,36 +18,62 @@ import netCDF4 as n4
 import copy
 import matplotlib.dates as dates
 
-
 # Define names and types of data
-name1='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1'
+#namelist=['sjh_lr_v1_year_coare3','sjh_lr_v1_year_coare3_wu_mixing','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0']
+namelist=['sjh_lr_v1_year_sigma_uniform_61']
 grid='sjh_lr_v1'
 datatype='2d'
 
-### load the .nc file #####
-data1 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name1),grid + '_station_timeseries.nc',False)
 
-data2 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0/output/',grid + '_station_timeseries.nc',False)
-data3 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_origriver_jcool0/output/',grid + '_station_timeseries.nc',False)
-data4 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_origriver_jcool1/output/',grid + '_station_timeseries.nc',False)
-data5 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_year_wet_phase1b/output/',grid + '_station_timeseries.nc',False)
-data6 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/sjh_lr_v1_year_origbc_wet_hfx100/output/',grid + '_station_timeseries.nc',False)
+st=2208
+st=0
+cut=13700
+df=pd.read_csv('~/scratch/obs/misc/SA_Saint_John_Buoy_03152015_04302016.csv')
+time=np.array(dates.datestr2num(df.values[st:cut,0].astype(str)))
+temp=df.values[st:cut,8].astype(float)
 
+months = dates.MonthLocator()
+monthsFmt = dates.DateFormatter('%b')
 
-f=plt.figure(figsize=(15,5))
-ax=f.add_axes([.125,.1,.775,.8])
-ax.plot(data1['temp'][::900,0,0],'k',label='newriver_jcool1')
-ax.plot(data2['temp'][::900,0,0],'b',label='newriver_jcool0')
-ax.plot(data3['temp'][::900,0,0],'r',label='oldriver_jcool0')
-ax.plot(data4['temp'][::900,0,0],'g',label='oldriver_jcool1')
-ax.plot(data5['temp'][::900,0,0],'m',label='wet_phase1b')
-ax.plot(data6['temp'][::900,0,0],'y',label='wet_phase1a')
-ax.legend()
-f.savefig('figures/misc/buoy_runs.png',dpi=300)
+for name in namelist:
+    try:
+        print('')
+        print(name)
 
+        savepath='{}png/{}_{}/buoy/{}/'.format(figpath,grid,datatype,name)
+	if not os.path.exists(savepath): os.makedirs(savepath)
+	
+        
+        inpath='{}/{}_{}/buoy/{}/'.format(datapath,grid,datatype,name)
+        out=np.load('{}{}_buoy_temp.npy'.format(inpath,name))
+        out=out[()]
 
+        
+        idx=np.argwhere((out['time']>=time[0])&(out['time']<=time[-1]))
+        timed=out['time'][idx]        
+        tempd=out['temp'][idx]
 
+        itemp=ipt.interp1d(time[~np.isnan(temp)],temp[~np.isnan(temp)],timed)
 
+        f=plt.figure(figsize=(15,5))
+        ax=f.add_axes([.125,.1,.775,.8])
+        ax.plot(timed, itemp,'k',label='Buoy')
+        ax.plot(timed,tempd,lw=.5,label=name)
+        ax.xaxis.set_major_locator(months)
+	ax.xaxis.set_major_formatter(monthsFmt)
+	ax.legend()
+	#ax.set_ylabel('SST ($^{\circ}C$)')
+	#ax.set_xlabel('2015-2016')
+        f.savefig('{}{}_buoy_compare.png'.format(savepath,name),dpi=300)
+
+	diff=itemp-tempd
+
+	print(np.fabs(diff).mean())
+	print(diff.mean())
+
+    except:
+        continue
+	
 
 
 

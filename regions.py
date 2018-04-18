@@ -127,6 +127,10 @@ def makeregions():
     allregions['beaufort3_oilmap_1'] = {'regionname' : 'beaufort3_oilmap_1', 'group' : 'arctic', 'region' : [-138.0, -132.5, 68.5, 70.0]}
     allregions['beaufort3'] = {'regionname' : 'beaufort3', 'group' : 'arctic', 'region' : [-152.51, -106.04, 68.65, 79.34]}
    
+   
+    #idealchannel
+    allregions['ideal_channel_whole'] = {'regionname' : 'ideal_channel_whole', 'group' : 'ideal_channel', 'region' : [1.88, 2.12, 1.975, 2.025]}
+    
       
     eastgroups=['bof','upperbof','aquaculture','stjohn','digbyneck']
     westgroups=['vhfr','kit4']

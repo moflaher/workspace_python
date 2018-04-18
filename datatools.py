@@ -860,12 +860,53 @@ def mdate2pydate(date):
 def pydate2mdate(date):
     return date+366.0
     
+
+def load_ctd_obs(filename):
+    tmp=np.genfromtxt(filename,dtype=str)
+    
+    out={}
+    out[tmp[0,0]]=tmp[1,0].astype(int)
+    out[tmp[0,1]]=tmp[1,1]
+    out['time']=dates.datestr2num(tmp[1,1])
+    out[tmp[0,2]]=tmp[1,2].astype(float)
+    out[tmp[0,3]]=tmp[1,3].astype(float)
+    out[tmp[0,4]]=tmp[1:,4].astype(float)
+    out[tmp[0,5]]=tmp[1:,5].astype(float)
+    out[tmp[0,6]]=tmp[1:,6].astype(float)
+    out[tmp[0,7]]=tmp[1:,7].astype(float)
+    
+    return out
     
     
+def load_ctd_mod(filename):
+    tmp=np.genfromtxt(filename,dtype=str)
     
+    out={}
+    out[tmp[0,0]]=tmp[1,0].astype(int)
+    out[tmp[0,1]]=tmp[1:,1].astype(int)    
+    out[tmp[0,2]]=tmp[1,2].astype(float)
+    out[tmp[0,3]]=tmp[1,3].astype(float)    
+    out["{}{}".format(tmp[0,4],tmp[0,5])]=np.array(["{} {}".format(d,t) for d,t in zip(tmp[1:,4],tmp[1:,5])])
+    out['time']=dates.datestr2num(out["{}{}".format(tmp[0,4],tmp[0,5])])
+    out[tmp[0,6]]=tmp[1:,6].astype(float)
+    out[tmp[0,7]]=tmp[1:,7].astype(float)
+    out[tmp[0,8]]=tmp[1:,8].astype(float)
     
+    uit=np.unique(out['it'])
     
+    for i,it in enumerate(uit):
+        if i==0:
+            idx=np.argwhere(out['it']==it)
+        else:
+            idx=np.hstack([idx,np.argwhere(out['it']==it)])
+    aout={}
+    for key in out:
+        if idx.shape[0]*idx.shape[1] == np.atleast_2d(out[key]).shape[0]*np.atleast_2d(out[key]).shape[1]:
+            aout[key]=out[key][idx]
+            
+    out['arrays']=aout
     
+    return out
     
     
     

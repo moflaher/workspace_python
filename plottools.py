@@ -10,6 +10,7 @@ import gridtools as gt
 import datatools as dt
 import misctools as mt
 import projtools as pjt
+from folderpath import *
 import os
 import inspect
 #from osgeo import osr, gdal
@@ -1167,22 +1168,22 @@ def select_field(data, field, i, layer=None):
     
     
     if 'speed' in field:
-        if layer==None:
+        if layer=='da':
             fieldout = np.sqrt(data['ua'][i,:]**2 + data['va'][i,:]**2)
         else:
             fieldout = np.sqrt(data['u'][i,layer,:]**2 + data['v'][i,layer,:]**2)
             
     elif 'vorticity' in field:
-        if layer==None:
-            dudy = data['a2u'][0,:]*data['u'][i,layer,:]+data['a2u'][1,:]*data['u'][i,layer,data['nbe'][:,0]] +\
-                   data['a2u'][2,:]*data['u'][i,layer,data['nbe'][:,1]]+data['a2u'][3,:]*data['u'][i,layer,data['nbe'][:,2]]
-            dvdx = data['a1u'][0,:]*data['v'][i,layer,:]+data['a1u'][1,:]*data['v'][i,layer,data['nbe'][:,0]] +\
-                   data['a1u'][2,:]*data['v'][i,layer,data['nbe'][:,1]]+data['a1u'][3,:]*data['v'][i,layer,data['nbe'][:,2]]
-        else:
+        if layer=='da':
             dudy = data['a2u'][0,:]*data['ua'][i,:]+data['a2u'][1,:]*data['ua'][i,data['nbe'][:,0]] +\
                    data['a2u'][2,:]*data['ua'][i,data['nbe'][:,1]]+data['a2u'][3,:]*data['ua'][i,data['nbe'][:,2]]
             dvdx = data['a1u'][0,:]*data['va'][i,:]+data['a1u'][1,:]*data['va'][i,data['nbe'][:,0]] +\
                    data['a1u'][2,:]*data['va'][i,data['nbe'][:,1]]+data['a1u'][3,:]*data['va'][i,data['nbe'][:,2]]
+        else:
+            dudy = data['a2u'][0,:]*data['u'][i,layer,:]+data['a2u'][1,:]*data['u'][i,layer,data['nbe'][:,0]] +\
+                   data['a2u'][2,:]*data['u'][i,layer,data['nbe'][:,1]]+data['a2u'][3,:]*data['u'][i,layer,data['nbe'][:,2]]
+            dvdx = data['a1u'][0,:]*data['v'][i,layer,:]+data['a1u'][1,:]*data['v'][i,layer,data['nbe'][:,0]] +\
+                   data['a1u'][2,:]*data['v'][i,layer,data['nbe'][:,1]]+data['a1u'][3,:]*data['v'][i,layer,data['nbe'][:,2]]
         fieldout = dvdx - dudy   
         
     elif 'density' in field:
@@ -1206,3 +1207,85 @@ def select_field(data, field, i, layer=None):
         fieldname = field
     
     return fieldout, fieldname
+
+
+
+def plot_tsmap(mod,obs,other):
+    
+    tidx=other['tidx']
+    num=other['num']
+
+    
+    f=plt.figure(figsize=(8,12))
+    axm=f.add_axes([.125,.5,.775,.45])
+    axt=f.add_axes([.125,.05,.325,.4])
+    axs=f.add_axes([.575,.05,.325,.4])
+    
+    plotcoast(axm,filename='mid_nwatl6c_sjh_lr.nc', filepath=coastpath, color='k', fill=True)
+    axm.plot(obs['Lon'],obs['Lat'],'*r',markersize=10)
+    axm.plot(mod['longitue'],mod['latitude'],'.',color='lawngreen',markersize=5)
+    axm.axis([-67.5,-65,44.9,45.8])
+    
+    axt.plot(mod['arrays']['temperature'],mod['arrays']['depth'],'b',lw=.75)
+    axt.plot(obs['Temp'],-1*obs['Depth'],'r',lw=2.5)
+    axt.plot(mod['arrays']['temperature'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+    
+    axs.plot(mod['arrays']['salinity'],mod['arrays']['depth'],'b',lw=.75)
+    axs.plot(obs['Salinity'],-1*obs['Depth'],'r',lw=2.5)
+    axs.plot(mod['arrays']['salinity'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+
+    axm.text(.075,.9,'{}'.format(obs['TimeStamp'].replace('T',' ')),transform=axm.transAxes)
+    f.suptitle('{}\n{} - {}'.format(num,other['grid'],other['name']))
+    
+    axm.set_ylabel('Latitude')
+    axm.set_xlabel('Longitude')
+    axt.set_ylabel('depth')
+    axt.set_xlabel('T')
+    axs.set_ylabel('depth')
+    axs.set_xlabel('S')
+    
+    
+    f.savefig(other['filename'],dpi=100)
+    plt.close(f)
+    
+    
+def plot_tsmap2(mod,obs,other):
+    
+    tidx=other['tidx']
+    num=other['num']
+
+    
+    f=plt.figure(figsize=(12,8))
+    axm=f.add_axes([.1,.3,.35,.6])
+    axz=f.add_axes([.1,.1,.35,.15])
+    axt=f.add_axes([.55,.4,.15,.5])
+    axs=f.add_axes([.8,.4,.15,.5])
+    
+    f.show()
+    
+    plotcoast(axm,filename='mid_nwatl6c_sjh_lr.nc', filepath=coastpath, color='k', fill=True)
+    axm.plot(obs['Lon'],obs['Lat'],'*r',markersize=10)
+    axm.plot(mod['longitue'],mod['latitude'],'.',color='lawngreen',markersize=5)
+    axm.axis([-67.5,-65,44.9,45.8])
+    
+    axt.plot(mod['arrays']['temperature'],mod['arrays']['depth'],'b',lw=.75)
+    axt.plot(obs['Temp'],-1*obs['Depth'],'r',lw=2.5)
+    axt.plot(mod['arrays']['temperature'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+    
+    axs.plot(mod['arrays']['salinity'],mod['arrays']['depth'],'b',lw=.75)
+    axs.plot(obs['Salinity'],-1*obs['Depth'],'r',lw=2.5)
+    axs.plot(mod['arrays']['salinity'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+
+    axm.text(.075,.9,'{}'.format(obs['TimeStamp'].replace('T',' ')),transform=axm.transAxes)
+    f.suptitle('{}\n{} - {}'.format(num,other['grid'],other['name']))
+    
+    axm.set_ylabel('Latitude')
+    axm.set_xlabel('Longitude')
+    axt.set_ylabel('depth')
+    axt.set_xlabel('T')
+    axs.set_ylabel('depth')
+    axs.set_xlabel('S')
+    
+    
+    f.savefig(other['filename'],dpi=100)
+    plt.close(f)
