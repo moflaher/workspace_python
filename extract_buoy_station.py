@@ -20,7 +20,7 @@ import matplotlib.dates as dates
 
 
 # Define names and types of data
-namelist=['sjh_lr_v1_test_wu']
+namelist=['test_fvcom41_spechum']
 grid='sjh_lr_v1'
 datatype='2d'
 
@@ -36,8 +36,11 @@ for name in namelist:
         savepath='{}/{}_{}/buoy/{}/'.format(datapath,grid,datatype,name)
         if not os.path.exists(savepath): os.makedirs(savepath)
 
+	if 'time_JD' in data.keys():
+            out['time']=678576+data['time_JD']+data['time_second']/(24*3600.0)
+	else:
+	    out['time']=678576+data['time']
 
-        out['time']=678576+data['time_JD']+data['time_second']/(24*3600.0)
 	out['temp']=data['temp'][:,0,0]
 	np.save('{}{}_buoy_temp.npy'.format(savepath,name),out)
     except:

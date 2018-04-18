@@ -20,14 +20,14 @@ import matplotlib.dates as dates
 
 
 # Define names and types of data
-name='sjh_lr_v1_test_wu'
+name='test_fvcom41_spechum'
 #name='sjh_hr_v3_year_wet'
 grid='sjh_lr_v1'
 datatype='2d'
 print(name)
 
 ### load the .nc file #####
-data = loadnc('/home/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),grid + '_station_timeseries.nc',False)
 #data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1_sub/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 #data = loadnc('/gpfs/fs1/dfo/dfo_odis/yow001/BoF/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 data['lon']=data['lon']-360
@@ -39,12 +39,19 @@ print('processing time')
 #for j in range(int((len(data['time_JD'])/10000)+1)):
 #    test=np.divide(data['time_second'][j*10000:(j+1)*10000],86400.0)
 #    print(j)
-num=int(len(data['time_JD'])/len(np.arange(0,86400,60)))
-ts=np.append(np.arange(data['time_second'][0],86400,60)/86400.0,np.tile(np.arange(0,86400,60)/86400.0,num))
-lmin=np.hstack([len(data['time_JD']),len(ts)]).min()-10
-data['time']=data['time_JD'][:lmin]+ts[:lmin]+678576
-data['dTimes']=dates.num2date(data['time'])
-data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
+if 'time_JD' in data.keys():
+    num=int(len(data['time_JD'])/len(np.arange(0,86400,60)))
+    ts=np.append(np.arange(data['time_second'][0],86400,60)/86400.0,np.tile(np.arange(0,86400,60)/86400.0,num))
+    lmin=np.hstack([len(data['time_JD']),len(ts)]).min()-10
+    data['time']=data['time_JD'][:lmin]+ts[:lmin]+678576
+    data['dTimes']=dates.num2date(data['time'])
+    data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
+else:
+    data['time']=data['time']+678576
+    data['dTimes']=dates.num2date(data['time'])
+    data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
+
+
 print('done time')
 
 ctdbio=pd.read_csv('/home/suh001/data/NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_BIO.txt',delimiter=' ')
