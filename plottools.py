@@ -19,6 +19,8 @@ from matplotlib.ticker import FuncFormatter
 import matplotlib.path as path
 import pandas as pd
 import matplotlib.dates as dates
+from collections import OrderedDict
+
 
 """
 Front Matter
@@ -1249,7 +1251,7 @@ def plot_tsmap(mod,obs,other):
     plt.close(f)
     
     
-def plot_tsmap2(mod,obs,other):
+def plot_tsmap2(mod,obs,zeta,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
     
     tidx=other['tidx']
     num=other['num']
@@ -1257,22 +1259,49 @@ def plot_tsmap2(mod,obs,other):
     
     f=plt.figure(figsize=(12,8))
     axm=f.add_axes([.1,.3,.35,.6])
-    axz=f.add_axes([.1,.1,.35,.15])
+    axz=f.add_axes([.1,.075,.35,.15])
     axt=f.add_axes([.55,.4,.15,.5])
     axs=f.add_axes([.8,.4,.15,.5])
+    axdfT=f.add_axes([.55+.005,.075,.15,.05])
+    axdfS=f.add_axes([.8+.005,.075,.15,.05])
     
-    f.show()
+    axdfT.xaxis.set_visible(False)  
+    axdfT.yaxis.set_visible(False)  
+    axdfT.set_frame_on(False)
+
+    axdfS.xaxis.set_visible(False)  
+    axdfS.yaxis.set_visible(False)  
+    axdfS.set_frame_on(False)
+    
+    #f.show()
     
     plotcoast(axm,filename='mid_nwatl6c_sjh_lr.nc', filepath=coastpath, color='k', fill=True)
     axm.plot(obs['Lon'],obs['Lat'],'*r',markersize=10)
     axm.plot(mod['longitue'],mod['latitude'],'.',color='lawngreen',markersize=5)
     axm.axis([-67.5,-65,44.9,45.8])
     
+    axz.plot(zeta['time'],zeta['zeta'],'k')
+    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,0]))
+    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.b')
+    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,-1]))
+    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.b')
+    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,tidx]))
+    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.',color='lawngreen')
+    axz.set_xlim([zeta['time'][pidx]-18/24.0,zeta['time'][pidx]+18/24.0])
+    axz.set_xticks([zeta['time'][pidx]-12/24.0,zeta['time'][pidx]-6/24.0,zeta['time'][pidx]-3/24.0,zeta['time'][pidx],zeta['time'][pidx]+3/24.0,zeta['time'][pidx]+6/24.0,zeta['time'][pidx]+12/24.0])
+    axz.set_xticklabels([str(a) for a in np.round(24*(axz.get_xticks()-zeta['time'][pidx]))])
+
+    
+    #print(tidx)
+    #print(mod['time'][0],mod['time'][tidx],mod['time'][-1])
+    
     axt.plot(mod['arrays']['temperature'],mod['arrays']['depth'],'b',lw=.75)
+    axt.plot(mod['arrays']['temperature'][:,Tidx],mod['arrays']['depth'][:,Tidx],color='dodgerblue',lw=.75)
     axt.plot(obs['Temp'],-1*obs['Depth'],'r',lw=2.5)
     axt.plot(mod['arrays']['temperature'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
     
     axs.plot(mod['arrays']['salinity'],mod['arrays']['depth'],'b',lw=.75)
+    axs.plot(mod['arrays']['salinity'][:,Sidx],mod['arrays']['depth'][:,Sidx],color='dodgerblue',lw=.75)
     axs.plot(obs['Salinity'],-1*obs['Depth'],'r',lw=2.5)
     axs.plot(mod['arrays']['salinity'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
 
@@ -1286,6 +1315,28 @@ def plot_tsmap2(mod,obs,other):
     axs.set_ylabel('depth')
     axs.set_xlabel('S')
     
+    Tin=OrderedDict()
+    Tin[str(num)]=np.append(Tstats[str(num)].values(),ht)
+    Tin['Time (m)']=np.append((np.round(other['dt']*(Tidx-180))).astype(int),ht)
+    Tin['Best']=np.append(bTstats[np.arange(7),Tidx],ht)
+    
+    Sin=OrderedDict()
+    Sin[str(num)]=Sstats[str(num)].values()
+    Sin['Time (m)']=(np.round(other['dt']*(Sidx-180))).astype(int)
+    Sin['Best']=bSstats[np.arange(7),Sidx]
+    
+    dfT=pd.DataFrame(Tin,columns=[str(num),'Time (m)','Best']).round(2)
+    #dfT=dfT[['meansl','stdsl','rmsesl','relaverr','corsl','skewsl','skill']].T.round(2)
+    dfS=pd.DataFrame(Sin,columns=[str(num),'Time (m)','Best']).round(2)
+    #dfS=dfS[['meansl','stdsl','rmsesl','relaverr','corsl','skewsl','skill']].T.round(2)
+    
+    rl=['Bias','Std','RMSE','RAE','Corr','Skew','Skill','ht']
+    rs=['Bias','Std','RMSE','RAE','Corr','Skew','Skill']
+    tbT=pd.plotting.table(axdfT,dfT, loc='lower left',colWidths=[0.3]*len(dfT.columns),rowLabels=rl)
+    tbS=pd.plotting.table(axdfS,dfS, loc='lower left',colWidths=[0.3]*len(dfS.columns),rowLabels=rs)
+    
+    tbT.scale(1,1.5)
+    tbS.scale(1,1.5)
     
     f.savefig(other['filename'],dpi=100)
     plt.close(f)

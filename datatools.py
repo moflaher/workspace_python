@@ -909,6 +909,18 @@ def load_ctd_mod(filename):
     return out
     
     
+def load_ctd_zeta_mod(filename):
+    tmp=np.genfromtxt(filename,dtype=str)
     
+    out={}
+    out[tmp[0,0]]=tmp[1,0].astype(int)
+    out[tmp[0,1]]=tmp[1:,1].astype(int)    
+    out[tmp[0,2]]=tmp[1,2].astype(float)
+    out[tmp[0,3]]=tmp[1,3].astype(float)    
+    out["{}{}".format(tmp[0,4],tmp[0,5])]=np.array(["{} {}".format(d,t) for d,t in zip(tmp[1:,4],tmp[1:,5])])
+    out['time']=dates.datestr2num(out["{}{}".format(tmp[0,4],tmp[0,5])])
+    out[tmp[0,6]]=tmp[1:,6].astype(float)
+    
+    return out
     
     

@@ -320,7 +320,7 @@ def load_elefile(filename=None):
 
 def save_neifile(neifilename=None,neifile=None):
     """
-    Loads a .nei file and returns the data as a dictionary.
+    Save an .neifile 
 
  
     """
@@ -488,6 +488,42 @@ def save_seg2nc(segfile,outname):
 
     ncid.close()
 
+
+
+def save_mshfile(neifile=None, outfile=None):
+    """
+    Saves a grid in gmsh format.
+
+ 
+    """
+    print('This doesnt work right. Need to figure out element ordering stuff.')
+    return
+    
+    if outfile==None:
+        print('save_mshfile requires a filename to save.')
+        return
+    try:
+        fp=open(outfile,'w')
+    except IOError:
+        print('Can''t make ' + outfile)
+        return
+
+    if neifile==None:
+        print('No neifile dict given.')
+        return
+
+
+
+    fp.write('$MeshFormat\n2.2 0 8\n$EndMeshFormat\n$Nodes\n')
+    fp.write('{}\n'.format(neifile['nnodes']))
+    for i in range(neifile['nnodes']):
+        fp.write('{} {} {} {}\n'.format(i+1, neifile['nodell'][i,0], neifile['nodell'][i,1], neifile['h'][i]))
+    fp.write('$EndNodes\n$Elements\n')
+    fp.write('{}\n'.format(len(neifile['nv'])))
+    for i in range(len(neifile['nv'])):
+        fp.write('{} 1 2 0 {} {} {}\n'.format(i+1, neifile['nv'][i,0], neifile['nv'][i,1], neifile['nv'][i,2]))
+    fp.write('$EndElements\n')
+    fp.close()
 
 
 ################################################################################
