@@ -994,7 +994,7 @@ def plot_zetares(time1, zeta1, time2, zeta2,show=True, tidecon=None):
     else:
         return f,ax,out1,out2
     
-def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600,crange=None):
+def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600,crange={}):
     """
     Plots a grid and its sidelength and bathymetry for a region.
     If not region then plots the whole grid.
@@ -1021,13 +1021,12 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600,crange=
     # Plot sidelength
     f = plt.figure()
     ax=f.add_axes([.1, .125, .775, .8])
-    if regionname is not None:
-        cs=np.percentile(data['sl'][eidx],percentiles)
-    else:
-        cs=np.percentile(data['sl'],percentiles)
-    if crange is not None:
-        cs=crange[:2]
-    triax=ax.tripcolor(data['trigrid'], data['sl'],vmin=cs[0],vmax=cs[1])
+    if 'sl' not in crange:
+        if regionname is not None:
+            crange['sl']=np.percentile(data['sl'][eidx],percentiles)
+        else:
+            crange['sl']=np.percentile(data['sl'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['sl'],vmin=crange['sl'][0],vmax=crange['sl'][1])
     cb=plt.colorbar(triax)
     cb.set_label('Sidelength (m)')
     if regionname is not None:
@@ -1039,13 +1038,12 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600,crange=
     # Plot bathymetry
     f = plt.figure()
     ax=f.add_axes([.1, .125, .775, .8])
-    if regionname is not None:
-        cs=np.percentile(data['h'][nidx],percentiles)
-    else:
-        cs=np.percentile(data['h'],percentiles)
-    if crange is not None:
-        cs=crange[2:4]
-    triax=ax.tripcolor(data['trigrid'], data['h'],vmin=cs[0],vmax=cs[1])
+    if 'h' not in crange:
+        if regionname is not None:
+            crange['h']=np.percentile(data['h'][nidx],percentiles)
+        else:
+            crange['h']=np.percentile(data['h'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['h'],vmin=crange['h'][0],vmax=crange['h'][1])
     cb=plt.colorbar(triax)
     cb.set_label('Depth (m)')
     if regionname is not None:
@@ -1057,13 +1055,12 @@ def plot_gridsummary(filename,regionname=None,percentiles=[5,95],dpi=600,crange=
     # Plot dhh
     f = plt.figure()
     ax=f.add_axes([.1, .125, .775, .8])
-    if regionname is not None:
-        cs=np.percentile(data['dhh'][eidx],percentiles)
-    else:
-        cs=np.percentile(data['dhh'],percentiles)
-    if crange is not None:
-        cs=crange[4:]
-    triax=ax.tripcolor(data['trigrid'], data['dhh'],vmin=cs[0],vmax=cs[1])
+    if 'dhh' not in crange:
+        if regionname is not None:
+            crange['dhh']=np.percentile(data['dhh'][eidx],percentiles)
+        else:
+            crange['dhh']=np.percentile(data['dhh'],percentiles)
+    triax=ax.tripcolor(data['trigrid'], data['dhh'],vmin=crange['dhh'][0],vmax=crange['dhh'][1])
     cb=plt.colorbar(triax)
     cb.set_label('dhh')
     if regionname is not None:
