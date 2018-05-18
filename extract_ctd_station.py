@@ -21,8 +21,8 @@ import matplotlib.dates as dates
 
 # Define names and types of data
 name='test_fvcom41_spechum'
-#name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v1'
+name='test_1'
+grid='sjh_lr_v1_sub'
 datatype='2d'
 print(name)
 
@@ -82,6 +82,7 @@ for i,dep in enumerate(deploy):
     print(node)
     print(dist[node])
 
+    #extract timeseries
     tidx=np.argwhere((data['time']>=time[i]-3/24.0) &(data['time']<=time[i]+3/24.0) )
     temp=data['temp'][tidx,:,node]
     sal=data['salinity'][tidx,:,node]
@@ -95,7 +96,7 @@ for i,dep in enumerate(deploy):
     fp.close()
 
 
-
+    #extract single profile
     tidx=np.argmin(np.fabs(data['time']-time[i]))
     temp=data['temp'][tidx,:,node]
     sal=data['salinity'][tidx,:,node]
@@ -109,6 +110,15 @@ for i,dep in enumerate(deploy):
 
 
 
+    #extract zeta
+    tidx=np.argwhere((data['time']>=time[i]-1.0) &(data['time']<=time[i]+1.0) )
+    z=data['zeta'][tidx,node]
+    print(z.shape)
+    fp=open('{}ctd_zeta_{}.txt'.format(savepath,deploy[i]),'w')
+    fp.write('node it latitude longitue date time zeta\n')
+    for k,t in enumerate(tidx):
+        fp.write('{} {} {} {} {} {} {}\n'.format(node+1,t[0],data['lat'][node],data['lon'][node],data['Time'][t[0]][:10],data['Time'][t[0]][11:19],z[k][0]))
+    fp.close()
 
 
 

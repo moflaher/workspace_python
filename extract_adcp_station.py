@@ -21,15 +21,15 @@ from collections import OrderedDict
 
 
 # Define names and types of data
-name='sjh_lr_v1_year_origbc_wet_hfx100'
+name='year_fvcom41'
 #name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v1'
+grid='sjh_lr_v3'
 datatype='2d'
 print(name)
 
 ### load the .nc file #####
-data = loadnc('/mnt/drive_0/misc/gpscrsync/sjh_lr_v1_year_origbc_wet_hfx100/output/',grid + '_station_timeseries.nc',False)
-#data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1_sub/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+#data = loadnc('/mnt/drive_0/misc/gpscrsync/sjh_lr_v1_year_origbc_wet_hfx100/output/',grid + '_station_timeseries.nc',False)
+data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),grid + '_station_timeseries.nc',False)
 #data = loadnc('/gpfs/fs1/dfo/dfo_odis/yow001/BoF/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 data['lon']=data['lon']-360
 data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
@@ -56,7 +56,7 @@ else:
 
 print('done time')
 
-filenames=glob.glob('/mnt/drive_1/obs_data/east/adcp/*.npy')
+filenames=glob.glob('/fs/vnas_Hdfo/odis/mif001/scratch/obs/adcp/*.npy')
 filenames.sort()
 
 savepath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
@@ -78,15 +78,16 @@ for i,filename in enumerate(filenames):
     
     #idx=np.argmin(((data['lon']-lon)**2 + (data['lat']-lat)**2))
     try:
-        idx=np.argwhere(names=='ADCP_{}'.format(adcp['metadata']['ADCP_number']))[0,0]
+        idx=np.argwhere(names=='{}'.format(adcp['metadata']['ADCP_number']))[0,0]
     except:
-        continue
+	print('ADCP not found')        
+	continue
     #expand time window by +-3 hours, should means this works for ctd as well
     tidx=np.argwhere((data['time']>=(time[0]-(3.0/24.0)))&(data['time']<=(time[-1]+(3.0/24.0))))
     
     name=''.join(data['name_station'][idx,:])
     print(name)
-    if name[5:8]!=str(adcp['metadata']['ADCP_number']):
+    if name[:3]!=str(adcp['metadata']['ADCP_number']):
         print('Bad ADCP_number match skipping')
         continue
     
@@ -118,9 +119,9 @@ for i,filename in enumerate(filenames):
     for key in out:
         out[key]=np.squeeze(out[key])
     
-    savepath2='{}{}'.format(savepath,''.join(data['name_station'][idx,:]).strip())
+    savepath2='{}ADCP_{}'.format(savepath,''.join(data['name_station'][idx,:]).strip())
     if not os.path.exists(savepath2): os.makedirs(savepath2)
-    np.save('{}/{}_model_ministation.npy'.format(savepath2,''.join(data['name_station'][idx,:]).strip()),out)
+    np.save('{}/ADCP_{}_model_ministation.npy'.format(savepath2,''.join(data['name_station'][idx,:]).strip()),out)
     print('Saved')
 
 

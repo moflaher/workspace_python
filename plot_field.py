@@ -19,33 +19,33 @@ import seawater as sw
 
 
 # Define names and types of data
-name='ideal_channel_large_test_2'
-grid='ideal_channel_large'
+name='test_fvcom41_spechum'
+grid='sjh_lr_v1'
 datatype='2d'
-regionname='ideal_channel_whole'
-starttime=0
-endtime=-1
+regionname='nemofvcom_100m_grid'
+starttime=1500
+endtime=2000
 layer='da'
-cmin=0.6
-cmax=1.4
+cmin=0
+cmax=2
 field='speed'
 
-coastflag=False
+coastflag=True
 vectorflag=True
 uniformvectorflag=False
-vector_spacing=400
+vector_spacing=800
 vector_scale=100
 
 
 ### load the .nc file #####
-data = loadnc('/media/moflaher/runs/{}/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
+data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
 print('done load')
 
 if endtime==-1:
     endtime=len(data['time'])
     print('Plotting {} timesteps'.format(endtime-starttime))
 region=regions(regionname)
-region['region']=np.array([1.5,2.5,1.9,2.1])
+#region['region']=np.array([1.5,2.5,1.9,2.1])
 vidx=equal_vectors(data,region,vector_spacing)
 
 savepath='{}timeseries/{}_{}/{}/{}/{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,field,name,region['regionname'],layer,cmin,cmax)
@@ -85,7 +85,7 @@ def plot_fun(i):
 
 
 
-pool = multiprocessing.Pool(5)
+pool = multiprocessing.Pool(4)
 pool.map(plot_fun,range(starttime,endtime))
 
 #with pymp.Parallel(4) as p:

@@ -20,7 +20,7 @@ import matplotlib.dates as dates
 
 # Define names and types of data
 #namelist=['sjh_lr_v1_year_coare3','sjh_lr_v1_year_coare3_wu_mixing','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0']
-namelist=['sjh_lr_v1_year_sigma_uniform_61']
+namelist=['test_fvcom41_spechum']
 grid='sjh_lr_v1'
 datatype='2d'
 

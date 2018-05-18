@@ -23,14 +23,14 @@ import ttide
 
 
 # Define names and types of data
-name='sjh_lr_v1_year_origbc_wet_hfx100'
+name='year_fvcom41'
 #name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v1'
+grid='sjh_lr_v3'
 datatype='2d'
 print(name)
 
 
-filenames=glob.glob('/mnt/drive_1/obs_data/east/adcp/*.npy')
+filenames=glob.glob('/fs/vnas_Hdfo/odis/mif001/scratch/obs/adcp/*.npy')
 filenames.sort()
 loadpath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 dt=dates.datetime.timedelta(0,60)
@@ -65,6 +65,7 @@ for i,filename in enumerate(filenames):
         obs['ru'][i,]=ipt.interp1d(adcp['pres']['topheight'][i,:],adcp['data']['east_vel'][i,:],lvl)
 
     mod['rtime']=model['time']
+    mod['rzeta']=model['zeta']
     mod['rv']=np.empty((len(mod['rtime']),len(lvl)))
     mod['ru']=np.empty((len(mod['rtime']),len(lvl)))  
     for i in range(len(mod['rtime'])):
@@ -86,8 +87,9 @@ for i,filename in enumerate(filenames):
             
             mv=ipt.interp1d(mod['rtime'],mod['rv'][:,j],timeshift)
             mu=ipt.interp1d(mod['rtime'],mod['ru'][:,j],timeshift)
+            zeta=ipt.interp1d(mod['rtime'],mod['rzeta'],timeshift)
             
-            nidx=np.isnan(ov)
+	    nidx=np.isnan(ov)
             mv[nidx]=np.nan
             mu[nidx]=np.nan
         
@@ -128,7 +130,7 @@ for i,filename in enumerate(filenames):
             rstats=pd.DataFrame([r1u,r1v,r2u,r2v],index=['u_stats','v_stats','u_res_stats','v_res_stats'])
             rstats.to_csv('{}ADCP_{}_timeseries_stats_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level))
             
-            df=pd.DataFrame([timeshift,ou,ov,mu,mv,np.real(oout2(timeshift)),np.imag(oout2(timeshift)),np.real(mout2(timeshift)),np.imag(mout2(timeshift))],index=['time','obs_u','obs_v','mod_u','mod_v','obs_u_res','obs_v_res','mod_u_res','mod_v_res']).T
+            df=pd.DataFrame([timeshift,zeta,ou,ov,mu,mv,np.real(oout2(timeshift)),np.imag(oout2(timeshift)),np.real(mout2(timeshift)),np.imag(mout2(timeshift))],index=['time','zeta','obs_u','obs_v','mod_u','mod_v','obs_u_res','obs_v_res','mod_u_res','mod_v_res']).T
             df.to_csv('{}ADCP_{}_timeseries_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level),na_rep='NaN')
             
             ostr,odf='{}ADCP_{}_obs_ttide_output_at_{}m.txt'.format(lpath,adcp['metadata']['ADCP_number'],level),'{}ADCP_{}_obs_ttide_tidecon_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level)        
