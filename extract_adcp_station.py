@@ -118,7 +118,9 @@ for i,filename in enumerate(filenames):
     for key in out:
         out[key]=np.squeeze(out[key])
     
-    np.save('{}{}_model_ministation.npy'.format(savepath,''.join(data['name_station'][idx,:]).strip()),out)
+    savepath2='{}{}'.format(savepath,''.join(data['name_station'][idx,:]).strip())
+    if not os.path.exists(savepath2): os.makedirs(savepath2)
+    np.save('{}/{}_model_ministation.npy'.format(savepath2,''.join(data['name_station'][idx,:]).strip()),out)
     print('Saved')
 
 

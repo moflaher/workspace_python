@@ -47,7 +47,8 @@ for i,filename in enumerate(filenames):
     adcp = np.load(filename)
     adcp = adcp[()]
     try:
-        model = np.load('{}ADCP_{}_model_ministation.npy'.format(loadpath,adcp['metadata']['ADCP_number']))
+        lpath='{}ADCP_{}/'.format(loadpath,adcp['metadata']['ADCP_number'])
+        model = np.load('{}ADCP_{}_model_ministation.npy'.format(lpath,adcp['metadata']['ADCP_number']))
         model = model[()]
     except:
         continue
@@ -125,15 +126,15 @@ for i,filename in enumerate(filenames):
 
             #save it all here
             rstats=pd.DataFrame([r1u,r1v,r2u,r2v],index=['u_stats','v_stats','u_res_stats','v_res_stats'])
-            rstats.to_csv('{}ADCP_{}_timeseries_stats_at_{}m.csv'.format(loadpath,adcp['metadata']['ADCP_number'],level))
+            rstats.to_csv('{}ADCP_{}_timeseries_stats_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level))
             
             df=pd.DataFrame([timeshift,ou,ov,mu,mv,np.real(oout2(timeshift)),np.imag(oout2(timeshift)),np.real(mout2(timeshift)),np.imag(mout2(timeshift))],index=['time','obs_u','obs_v','mod_u','mod_v','obs_u_res','obs_v_res','mod_u_res','mod_v_res']).T
-            df.to_csv('{}ADCP_{}_timeseries_at_{}m.csv'.format(loadpath,adcp['metadata']['ADCP_number'],level),na_rep='NaN')
+            df.to_csv('{}ADCP_{}_timeseries_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level),na_rep='NaN')
             
-            ostr,odf='{}ADCP_{}_obs_ttide_output_at_{}m.txt'.format(loadpath,adcp['metadata']['ADCP_number'],level),'{}ADCP_{}_obs_ttide_tidecon_at_{}m.csv'.format(loadpath,adcp['metadata']['ADCP_number'],level)        
+            ostr,odf='{}ADCP_{}_obs_ttide_output_at_{}m.txt'.format(lpath,adcp['metadata']['ADCP_number'],level),'{}ADCP_{}_obs_ttide_tidecon_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level)        
             oout2.pandas_style(ostr,odf)
 
-            mstr,mdf='{}ADCP_{}_mod_ttide_output_at_{}m.txt'.format(loadpath,adcp['metadata']['ADCP_number'],level),'{}ADCP_{}_mod_ttide_tidecon_at_{}m.csv'.format(loadpath,adcp['metadata']['ADCP_number'],level)
+            mstr,mdf='{}ADCP_{}_mod_ttide_output_at_{}m.txt'.format(lpath,adcp['metadata']['ADCP_number'],level),'{}ADCP_{}_mod_ttide_tidecon_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level)
             mout2.pandas_style(mstr,mdf)
 
         except:
