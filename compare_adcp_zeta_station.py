@@ -23,9 +23,9 @@ import ttide
 
 
 # Define names and types of data
-name='year_fvcom41'
+name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0'
 #name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v3'
+grid='sjh_lr_v1'
 datatype='2d'
 print(name)
 
@@ -51,7 +51,9 @@ for i,filename in enumerate(filenames):
         model = np.load('{}ADCP_{}_model_ministation.npy'.format(lpath,adcp['metadata']['ADCP_number']))
         model = model[()]
     except:
+        print('Failed to load {}'.format(adcp['metadata']['ADCP_number']))
         continue
+        
     
     obs={}
     mod={}    
@@ -72,6 +74,9 @@ for i,filename in enumerate(filenames):
         
         nidx=np.isnan(oz)
         mz[nidx]=np.nan
+        
+        oz=oz-np.nanmean(oz)
+        mz=mz-np.nanmean(mz)
 
     
         r1z=residual_stats(mz[~nidx],oz[~nidx])

@@ -6,3 +6,4 @@ from gridtools import *
 from plottools import *
 from projtools import *
 from misctools import *
+from stattools import *

@@ -23,14 +23,14 @@ import ttide
 
 
 # Define names and types of data
-name='year_fvcom41'
+name='year_fvcom41_wet'
 #name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v3'
+grid='sjh_lr_v2_double'
 datatype='2d'
 print(name)
 
 
-filenames=glob.glob('/fs/vnas_Hdfo/odis/mif001/scratch/obs/adcp/*.npy')
+filenames=glob.glob('/mnt/drive_1/obs_data/east/adcp/*.npy')
 filenames.sort()
 loadpath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 dt=dates.datetime.timedelta(0,60)
@@ -51,6 +51,7 @@ for i,filename in enumerate(filenames):
         model = np.load('{}ADCP_{}_model_ministation.npy'.format(lpath,adcp['metadata']['ADCP_number']))
         model = model[()]
     except:
+        print('Failed to load {}'.format(adcp['metadata']['ADCP_number']))
         continue
     
     obs={}
@@ -89,7 +90,7 @@ for i,filename in enumerate(filenames):
             mu=ipt.interp1d(mod['rtime'],mod['ru'][:,j],timeshift)
             zeta=ipt.interp1d(mod['rtime'],mod['rzeta'],timeshift)
             
-	    nidx=np.isnan(ov)
+            nidx=np.isnan(ov)
             mv[nidx]=np.nan
             mu[nidx]=np.nan
         
