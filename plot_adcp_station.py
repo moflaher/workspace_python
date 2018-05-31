@@ -14,17 +14,28 @@ import copy
 import matplotlib.dates as dates
 from collections import OrderedDict
 import ttide
+import argparse
 
 
-# Define names and types of data
-name='year_fvcom41_wet'
-#name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v2_double'
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
+
+## Define names and types of data
+#name='year_fvcom41_wet'
+##name='sjh_hr_v3_year_wet'
+#grid='sjh_lr_v2_double'
 datatype='2d'
-print(name)
+#print(name)
 
-
-filenames=glob.glob('/mnt/drive_1/obs_data/east/adcp/*.npy')
+filenames=glob.glob('{}east/adcp/*.npy'.format(obspath))
 filenames.sort()
 loadpath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 dt=dates.datetime.timedelta(0,60)
@@ -113,57 +124,70 @@ for i,filename in enumerate(filenames):
 
         ################################################################
         #u vs v
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.1
+        amax=np.nanmax([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.obs_u,df.obs_v,'r.',label='Obs',markersize=.5,alpha=.3)
         ax.plot(df.mod_u,df.mod_v,'b.',label='Mod',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_vs_v_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+
+        amin=np.nanmin([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.1
+        amax=np.nanmax([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.obs_u_res,df.obs_v_res,'r.',label='Obs',markersize=.5,alpha=.3)
         ax.plot(df.mod_u_res,df.mod_v_res,'b.',label='Mod',markersize=.5,alpha=.3)   
         leg=ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_res_vs_v_res_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
 
         ################################################################
         #u vs v ebbfld for obs
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.obs_u,df.obs_v])*1.1
+        amax=np.nanmax([df.obs_u,df.obs_v])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.obs_u[ztf],df.obs_v[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.obs_u[~ztf],df.obs_v[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_vs_v_ebbfld_obs_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.obs_u_res,df.obs_v_res])*1.1
+        amax=np.nanmax([df.obs_u_res,df.obs_v_res])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.obs_u_res[ztf],df.obs_v_res[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.obs_u_res[~ztf],df.obs_v_res[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_res_vs_v_res_ebbfld_obs_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
 
         ################################################################
-        #u vs v ebbfld for obs
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+        #u vs v ebbfld for obs        
+        amin=np.nanmin([df.mod_u,df.mod_v])*1.1
+        amax=np.nanmax([df.mod_u,df.mod_v])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.mod_u[ztf],df.mod_v[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.mod_u[~ztf],df.mod_v[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_vs_v_ebbfld_mod_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
-        f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.mod_u_res,df.mod_v_res])*1.1
+        amax=np.nanmax([df.mod_u_res,df.mod_v_res])*1.1
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
         ax.plot(df.mod_u_res[ztf],df.mod_v_res[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.mod_u_res[~ztf],df.mod_v_res[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis('equal')
+        ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_res_vs_v_res_ebbfld_mod_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 

@@ -20,17 +20,31 @@ import copy
 import matplotlib.dates as dates
 from collections import OrderedDict
 import ttide
+import argparse
 
 
-# Define names and types of data
-name='year_fvcom41_wet'
-#name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v2_double'
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("--noplot", help="call plotting script afterwards", action="store_false", default=True)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
+
+
+## Define names and types of data
+#name='year_fvcom41_wet'
+##name='sjh_hr_v3_year_wet'
+#grid='sjh_lr_v2_double'
 datatype='2d'
-print(name)
+#print(name)
+np.random.seed(25938123)
 
-
-filenames=glob.glob('/mnt/drive_1/obs_data/east/adcp/*.npy')
+filenames=glob.glob('{}east/adcp/*.npy'.format(obspath))
 filenames.sort()
 loadpath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 dt=dates.datetime.timedelta(0,60)
@@ -59,6 +73,7 @@ for i,filename in enumerate(filenames):
     
     lvl=np.array([2,5,10])
     obs['rtime']=dates.datestr2num(adcp['time']['Times'])
+    obs['rzeta']=adcp['pres']['surf']
     obs['rv']=np.empty((len(obs['rtime']),len(lvl)))
     obs['ru']=np.empty((len(obs['rtime']),len(lvl)))
     for i in range(len(obs['rtime'])):
@@ -80,6 +95,66 @@ for i,filename in enumerate(filenames):
     
 
     timeshift=dates.drange(dates.num2date(obs['rtime'][0]),dates.num2date(obs['rtime'][-1]),dt)
+    try:
+        oz=ipt.interp1d(obs['rtime'],obs['rzeta'],timeshift)
+
+        mz=ipt.interp1d(mod['rtime'],mod['rzeta'],timeshift)
+        
+        nidx=np.isnan(oz)
+        mz[nidx]=np.nan
+        
+        oz=oz-np.nanmean(oz)
+        mz=mz-np.nanmean(mz)
+
+    
+        r1z=residual_stats(mz[~nidx],oz[~nidx])
+
+    
+        print('T_tide zeta obs')
+        oout=ttide.t_tide(oz,dt=60.0/3600.0,stime=timeshift[0],lat=adcp['lat'],out_style=None)
+        osnr=0
+        clist=oout['nameu'][oout['snr']>2]
+        nsnr=len(clist)
+        while(osnr!=nsnr):
+            #print('looping')
+            oout2=ttide.t_tide(oz,dt=60.0/3600.0,stime=timeshift[0],lat=adcp['lat'],constitnames=clist,out_style=None)
+            osnr=nsnr
+            clist=oout2['nameu'][oout2['snr']>2]
+            nsnr=len(clist)
+
+        
+        print('T_tide zeta mod')
+        mout=ttide.t_tide(mz,dt=60.0/3600.0,stime=timeshift[0],lat=model['lat'],out_style=None)
+        osnr=0
+        clist=mout['nameu'][mout['snr']>2]
+        nsnr=len(clist)
+        while(osnr!=nsnr):
+            #print('looping')
+            mout2=ttide.t_tide(mz,dt=60.0/3600.0,stime=timeshift[0],lat=model['lat'],constitnames=clist,out_style=None)
+            osnr=nsnr
+            clist=mout2['nameu'][mout2['snr']>2]
+            nsnr=len(clist)
+        
+        nidx=np.isnan(oout2['xres'])
+        r2z=residual_stats(mout2['xres'][~nidx],oout2['xres'][~nidx])
+        
+
+        #save it all here
+        rstats=pd.DataFrame([r1z,r2z],index=['zeta_stats','zeta_res_stats'])
+        rstats.to_csv('{}ADCP_{}_zeta_timeseries_stats.csv'.format(lpath,adcp['metadata']['ADCP_number']))
+        
+        df=pd.DataFrame([timeshift,oz,mz],index=['time','obs_zeta','mod_zeta']).T
+        df.to_csv('{}ADCP_{}_zeta_timeseries.csv'.format(lpath,adcp['metadata']['ADCP_number']),na_rep='NaN')
+        
+        ostr,odf='{}ADCP_{}_obs_zeta_ttide_output.txt'.format(lpath,adcp['metadata']['ADCP_number']),'{}ADCP_{}_obs_zeta_ttide_tidecon.csv'.format(lpath,adcp['metadata']['ADCP_number'])        
+        oout2.pandas_style(ostr,odf)
+
+        mstr,mdf='{}ADCP_{}_mod_zeta_ttide_output.txt'.format(lpath,adcp['metadata']['ADCP_number']),'{}ADCP_{}_mod_zeta_ttide_tidecon.csv'.format(lpath,adcp['metadata']['ADCP_number'])
+        mout2.pandas_style(mstr,mdf)
+    except:
+        print('Failed zeta for ADCP {}'.format(adcp['metadata']['ADCP_number']))
+
+    
     for j,level in enumerate(lvl):
         try:
             print('calculating level {}'.format(level))
@@ -125,7 +200,7 @@ for i,filename in enumerate(filenames):
             nidx=np.isnan(oout2['xres'])
             r2v=residual_stats(np.imag(mout2['xres'])[~nidx],np.imag(oout2['xres'])[~nidx])
             r2u=residual_stats(np.real(mout2['xres'])[~nidx],np.real(oout2['xres'])[~nidx])
-            
+            kill
 
             #save it all here
             rstats=pd.DataFrame([r1u,r1v,r2u,r2v],index=['u_stats','v_stats','u_res_stats','v_res_stats'])
@@ -144,3 +219,6 @@ for i,filename in enumerate(filenames):
             print('could not calculate level {}'.format(level))
 
 
+
+if args.plot:
+    os.system("python plot_adcp_station.py {} {}".format(grid,name))
