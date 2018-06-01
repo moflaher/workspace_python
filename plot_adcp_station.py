@@ -20,6 +20,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("levels", help="levels to look at in meters ex. 2 5 10", nargs='+', type=int)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -27,6 +28,8 @@ print(args)
 
 name=args.name
 grid=args.grid
+lvl=args.levels
+
 
 ## Define names and types of data
 #name='year_fvcom41_wet'
@@ -64,7 +67,7 @@ for i,filename in enumerate(filenames):
         print('Failed to load {}'.format(adcp['metadata']['ADCP_number']))
         continue
     
-    lvl=np.array([2,5,10])
+    #lvl=np.array([10])
     for j,level in enumerate(lvl):
         try:    
             df=pd.read_csv('{}ADCP_{}_timeseries_at_{}m.csv'.format(lpath,adcp['metadata']['ADCP_number'],level))
@@ -91,6 +94,8 @@ for i,filename in enumerate(filenames):
             ax.legend()
             #ax.xaxis.set_major_locator(months)
             ax.xaxis.set_major_formatter(monthsFmt)
+            ax.set_xlabel('Time')
+            ax.set_ylabel('{} (m/s)'.format(pname.replace("_"," ")))
             f.savefig('{}{}_timeseries_at_{}m.png'.format(savepath,pname,level),dpi=150)
             ax.set_xlim([st,et])
             f.savefig('{}{}_timeseries_at_{}m_subset.png'.format(savepath,pname,level),dpi=150)
@@ -105,6 +110,8 @@ for i,filename in enumerate(filenames):
         ax.legend()
         #ax.xaxis.set_major_locator(months)
         ax.xaxis.set_major_formatter(monthsFmt)
+        ax.set_xlabel('Time')
+        ax.set_ylabel('Speed (m/s)')
         f.savefig('{}speed_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         ax.set_xlim([st,et])
         f.savefig('{}speed_timeseries_at_{}m_subset.png'.format(savepath,level),dpi=150)
@@ -116,6 +123,8 @@ for i,filename in enumerate(filenames):
         ax.legend()
         #ax.xaxis.set_major_locator(months)
         ax.xaxis.set_major_formatter(monthsFmt)
+        ax.set_xlabel('Time')
+        ax.set_ylabel('Speed res (m/s)')
         f.savefig('{}speed_res_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         ax.set_xlim([st,et])
         f.savefig('{}speed_res_timeseries_at_{}m_subset.png'.format(savepath,level),dpi=150)
@@ -124,85 +133,134 @@ for i,filename in enumerate(filenames):
 
         ################################################################
         #u vs v
-        amin=np.nanmin([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.1
-        amax=np.nanmax([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.2
+        amax=np.nanmax([df.obs_u,df.obs_v,df.mod_u,df.mod_v])*1.2
+        omin=np.nanmin([df.obs_u,df.obs_v])*1.2
+        omax=np.nanmax([df.obs_u,df.obs_v])*1.2
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.obs_u,df.obs_v,'r.',label='Obs',markersize=.5,alpha=.3)
         ax.plot(df.mod_u,df.mod_v,'b.',label='Mod',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
+        ax.set_xlabel('u (m/s)')
+        ax.set_ylabel('v (m/s)')
         ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_vs_v_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
+        ax.axis([omin,omax,omin,omax])
+        f.savefig('{}u_vs_v_timeseries_at_{}m_obszoom.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
 
-        amin=np.nanmin([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.1
-        amax=np.nanmax([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.2
+        amax=np.nanmax([df.obs_u_res,df.obs_v_res,df.mod_u_res,df.mod_v_res])*1.2
+        ormin=np.nanmin([df.obs_u_res,df.obs_v_res])*1.2
+        ormax=np.nanmax([df.obs_u_res,df.obs_v_res])*1.2
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.obs_u_res,df.obs_v_res,'r.',label='Obs',markersize=.5,alpha=.3)
         ax.plot(df.mod_u_res,df.mod_v_res,'b.',label='Mod',markersize=.5,alpha=.3)   
         leg=ax.legend(markerscale=20)
+        ax.set_xlabel('u res (m/s)')
+        ax.set_ylabel('v res (m/s)')
         ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_res_vs_v_res_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
+        ax.axis([ormin,ormax,ormin,ormax])
+        f.savefig('{}u_res_vs_v_res_timeseries_at_{}m_obszoom.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
 
         ################################################################
         #u vs v ebbfld for obs
-        amin=np.nanmin([df.obs_u,df.obs_v])*1.1
-        amax=np.nanmax([df.obs_u,df.obs_v])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.obs_u[ztf],df.obs_v[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.obs_u[~ztf],df.obs_v[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis([amin,amax,amin,amax])
+        ax.set_xlabel('u (m/s)')
+        ax.set_ylabel('v (m/s)')
+        ax.axis([omin,omax,omin,omax])
         f.savefig('{}u_vs_v_ebbfld_obs_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
-        amin=np.nanmin([df.obs_u_res,df.obs_v_res])*1.1
-        amax=np.nanmax([df.obs_u_res,df.obs_v_res])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.175,.175,.75,.75])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.obs_u_res[ztf],df.obs_v_res[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.obs_u_res[~ztf],df.obs_v_res[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
-        ax.axis([amin,amax,amin,amax])
+        ax.set_xlabel('u res (m/s)')
+        ax.set_ylabel('v res (m/s)')
+        ax.axis([ormin,ormax,ormin,ormax])
         f.savefig('{}u_res_vs_v_res_ebbfld_obs_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
 
         ################################################################
         #u vs v ebbfld for obs        
-        amin=np.nanmin([df.mod_u,df.mod_v])*1.1
-        amax=np.nanmax([df.mod_u,df.mod_v])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.mod_u,df.mod_v])*1.2
+        amax=np.nanmax([df.mod_u,df.mod_v])*1.2
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.mod_u[ztf],df.mod_v[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.mod_u[~ztf],df.mod_v[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
+        ax.set_xlabel('u (m/s)')
+        ax.set_ylabel('v (m/s)')
         ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_vs_v_ebbfld_mod_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
+        ax.axis([omin,omax,omin,omax])
+        f.savefig('{}u_vs_v_ebbfld_mod_timeseries_at_{}m_obszoom.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
-        amin=np.nanmin([df.mod_u_res,df.mod_v_res])*1.1
-        amax=np.nanmax([df.mod_u_res,df.mod_v_res])*1.1
-        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.125,.1,.775,.8])
+        amin=np.nanmin([df.mod_u_res,df.mod_v_res])*1.2
+        amax=np.nanmax([df.mod_u_res,df.mod_v_res])*1.2
+        f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+        ax.axvline(0,linestyle='--',color='k',lw=.5)
+        ax.axhline(0,linestyle='--',color='k',lw=.5)
         ax.plot(df.mod_u_res[ztf],df.mod_v_res[ztf],'m.',label='Flood',markersize=.5,alpha=.3)
         ax.plot(df.mod_u_res[~ztf],df.mod_v_res[~ztf],'g.',label='Ebb',markersize=.5,alpha=.3)   
         ax.legend(markerscale=20)
+        ax.set_xlabel('u res (m/s)')
+        ax.set_ylabel('v res (m/s)')
         ax.axis([amin,amax,amin,amax])
         f.savefig('{}u_res_vs_v_res_ebbfld_mod_timeseries_at_{}m.png'.format(savepath,level),dpi=150)
+        ax.axis([ormin,ormax,ormin,ormax])
+        f.savefig('{}u_res_vs_v_res_ebbfld_mod_timeseries_at_{}m_obszoom.png'.format(savepath,level),dpi=150)
         plt.close(f)
 
     
         ################################################################
         #zeta
-        plots=['zeta']        
+        plots=['zeta','zeta_res']        
         for pname in plots:
+            gz=~np.isnan(zdf['obs_zeta'])
             f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8]);
-            ax.plot(zdf.time,zdf['obs_{}'.format(pname)],'r',label='Obs')
-            ax.plot(zdf.time,zdf['mod_{}'.format(pname)],'b',lw=.5,label='Mod')   
+            ax.plot(zdf.time[gz],zdf['obs_{}'.format(pname)][gz],'r',label='Obs')
+            ax.plot(zdf.time[gz],zdf['mod_{}'.format(pname)][gz],'b',lw=.5,label='Mod')   
             ax.legend()
             #ax.xaxis.set_major_locator(months)
             ax.xaxis.set_major_formatter(monthsFmt)
-            f.savefig('{}{}_timeseries_at_{}m.png'.format(savepath,pname,level),dpi=150)
+            ax.set_xlabel('Time')
+            ax.set_ylabel('{} (m/s)'.format(pname))
+            f.savefig('{}{}_timeseries.png'.format(savepath,pname),dpi=150)
             ax.set_xlim([st,et])
-            f.savefig('{}{}_timeseries_at_{}m_subset.png'.format(savepath,pname,level),dpi=150)
+            f.savefig('{}{}_timeseries_subset.png'.format(savepath,pname),dpi=150)
+            plt.close(f)
+            
+            
+            amin=np.nanmin([zdf['obs_{}'.format(pname)]])*1.2
+            amax=np.nanmax([zdf['obs_{}'.format(pname)]])*1.2            
+            f=plt.figure(figsize=(4,4)); ax=f.add_axes([.2,.175,.725,.725])
+            ax.plot([-10,10],[-10,10],'k--',lw=.5)
+            ax.plot(zdf['mod_{}'.format(pname)][gz],zdf['obs_{}'.format(pname)][gz],'r.')
+            ax.legend()
+            ax.set_xlabel('zeta mod (m)')
+            ax.set_ylabel('zeta obs (m)')
+            ax.axis([amin, amax, amin, amax])
+            f.savefig('{}{}_mod_vs_obs.png'.format(savepath,pname),dpi=150)
             plt.close(f)
