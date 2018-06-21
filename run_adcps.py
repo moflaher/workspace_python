@@ -34,4 +34,4 @@ grids['sjh_lr_v3']=['year_fvcom41']
 
 for i,grid in enumerate(grids):
     for j,name in enumerate(grids[grid]):
-        os.system("python compare_adcp_station.py {} {}&".format(grid,name))
+        os.system("python plot_adcp_density.py {} {} 5&".format(grid,name))

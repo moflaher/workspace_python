@@ -18,23 +18,36 @@ import pandas as pd
 import netCDF4 as n4
 import copy
 import matplotlib.dates as dates
-#from collections import OrderedDict
+import argparse
+
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
+
+
 
 
 # Define names and types of data
-
-name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0'
-grid='sjh_lr_v1'
-name='test_1'
-grid='sjh_lr_v1_sub'
+#name='test_1'
+#grid='sjh_lr_v1_sub'
 #name='sjh_lr_v1_year_sigma_uniform_61'
 #grid='sjh_lr_v1'
 datatype='2d'
 
 
-modpath='/mnt/drive_0/misc/gpscrsync/dataout/{}_{}/ctd/{}/'.format(grid,datatype,name)
-obspath='/mnt/drive_1/obs_data/east/ctd/ctd_wcts/'
-ctdnum=np.genfromtxt(obspath+'NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_SABS.txt',skip_header=1,dtype=int)[:,0]
+modpath='{}/{}_{}/ctd/{}/'.format(datapath,grid,datatype,name)
+obsp='{}east/ctd/ctd_wcts/'.format(obspath)
+ctdnum=np.genfromtxt(obsp+'NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_SABS.txt',skip_header=1,dtype=int)[:,0]
 
 savepath='{}png/{}_{}/ctd2/{}/'.format(figpath,grid,datatype,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -166,6 +179,19 @@ for num in ctdnum:
         print(df[['meansl','stdsl','rmsesl','relaverr','corsl','skewsl','skill']])
         print()
         print()
+        
+        
+        other['filename']='{}ctd_t_vs_s_{}.png'.format(savepath,num)
+        #plot_tsmap2(mod,obs,other,Tstats,Sstats)
+
+        
+        f=plt.figure(figsize=(4,4))
+        ax=f.add_axes([.15,.15,.75,.75])
+        ax.plot(mod['arrays']['temperature'],mod['arrays']['salinity'],'b')
+        ax.plot(obs['Temp'],obs['Salinity'],'r')
+        f.savefig(other['filename'],dpi=300)
+        plt.close('all')
+        
     except:
         print('Pass on {}'.format(num))
         pass

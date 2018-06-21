@@ -19,8 +19,8 @@ import seawater as sw
 
 
 # Define names and types of data
-name='test_fvcom41_spechum'
-grid='sjh_lr_v1'
+name='year_fvcom41'
+grid='sjh_lr_v2_double'
 datatype='2d'
 regionname='nemofvcom_100m_grid'
 starttime=1500
