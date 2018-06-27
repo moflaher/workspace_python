@@ -159,10 +159,10 @@ def ncdatasort(data,trifinder=False,uvhset=True):
         pass
 
     if 'Times' in data:
-	data['Time']=np.empty((len(data['Times']),),dtype='|S26')
-	for i in range(len(data['Times'])):
-    		data['Time'][i]=''.join(data['Times'][i,])
-	data['time']=dates.datestr2num(data['Time'])	
+        data['Time']=np.empty((len(data['Times']),),dtype='|S26')
+    for i in range(len(data['Times'])):
+            data['Time'][i]=''.join(data['Times'][i,])
+    data['time']=dates.datestr2num(data['Time'])    
         
     if 'trigrid' not in data:
         if (('nv' in data) and('lon' in data) and ('lat' in data)):
@@ -819,7 +819,7 @@ def load_wlev(filename):
     with open(filename) as fp:
         wlev={}
         wlev['tidecon']=np.empty((0,3))
-	wlev['name']=np.array([])        
+        wlev['name']=np.array([])        
 
         days=False     
     
@@ -828,27 +828,27 @@ def load_wlev(filename):
             sline = line.split()
 
             if '||' not in line:
-		wlev['name']=np.append(wlev['name'],sline[0])
+                wlev['name']=np.append(wlev['name'],sline[0])
                 wlev['tidecon']=np.vstack([wlev['tidecon'],np.hstack([float(sline[1]),float(sline[2]),float(sline[3])])])
             if days:
                 wlev['days']=int(sline[1][:-4])
                 days=False
             if 'Computed' in line:
                 s=0
-		if 'N' in sline[2] or 'n' in sline[2]:
-		    s=-1
-		wlev['lat']=float(sline[1])+float(sline[2].replace('N','').replace('n',''))/60.0
-		wlev['lon']=-1*(float(sline[4+s])+float(sline[5+s].replace('W','').replace('w',''))/60.0)
-                wlev['offset']=float(sline[7+2*s])
-                days=True
-            if 'WaterLevConstit' in line:
-		a=1
-                if '00000m' in line:
-		    a=0
-		wlev['snum']=sline[1]
-                wlev['sname']='_'.join(sline[2:(-2+a)])
-            if 'Reference' in line:
-                wlev['ref']=sline[1]
+        if 'N' in sline[2] or 'n' in sline[2]:
+            s=-1
+        wlev['lat']=float(sline[1])+float(sline[2].replace('N','').replace('n',''))/60.0
+        wlev['lon']=-1*(float(sline[4+s])+float(sline[5+s].replace('W','').replace('w',''))/60.0)
+        wlev['offset']=float(sline[7+2*s])
+        days=True
+        if 'WaterLevConstit' in line:
+            a=1
+        if '00000m' in line:
+            a=0
+        wlev['snum']=sline[1]
+        wlev['sname']='_'.join(sline[2:(-2+a)])
+        if 'Reference' in line:
+            wlev['ref']=sline[1]
             
     fp.close()
     

@@ -20,7 +20,7 @@ import matplotlib.dates as dates
 
 # Define names and types of data
 #namelist=['sjh_lr_v1_year_coare3','sjh_lr_v1_year_coare3_wu_mixing','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0']
-namelist=['test_fvcom41_spechum']
+namelist=['test_z_level_dt30']
 grid='sjh_lr_v1'
 datatype='2d'
 
@@ -28,7 +28,7 @@ datatype='2d'
 st=2208
 st=0
 cut=13700
-df=pd.read_csv('~/scratch/obs/misc/SA_Saint_John_Buoy_03152015_04302016.csv')
+df=pd.read_csv('/mnt/drive_0/misc/gpscrsync/dataout/misc/SA_Saint_John_Buoy_03152015_04302016.csv')
 time=np.array(dates.datestr2num(df.values[st:cut,0].astype(str)))
 temp=df.values[st:cut,8].astype(float)
 

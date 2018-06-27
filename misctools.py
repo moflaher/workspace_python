@@ -117,8 +117,8 @@ def checkrestart():
         print(filename)
         data=dt.loadnc('',filename)
         print(data['zeta'][:,1000].max())
-	print(data['Time'])
-	print('='*30)
+    print(data['Time'])
+    print('='*30)
     
     
 def boxminmax(arr):

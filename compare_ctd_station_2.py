@@ -66,7 +66,7 @@ for num in ctdnum:
     try:
         mod=load_ctd_mod('{}ctd_timeseries_{}.txt'.format(modpath,num))
         zeta=load_ctd_zeta_mod('{}ctd_zeta_{}.txt'.format(modpath,num))
-        obs=load_ctd_obs('{}{}_ctd.dat'.format(obspath,num))
+        obs=load_ctd_obs('{}{}_ctd.dat'.format(obsp,num))        
         other['dt']=(mod['arrays']['time'][0,1]-mod['arrays']['time'][0,0])*24*60
         other['num']=num
         tidx=np.argmin(np.fabs(mod['arrays']['time'][0,:]-obs['time']))
