@@ -17,17 +17,30 @@ import pandas as pd
 import netCDF4 as n4
 import copy
 import matplotlib.dates as dates
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
 
 
 # Define names and types of data
-name='test_fvcom41_spechum'
-name='test_1'
-grid='sjh_lr_v1_sub'
+#name='test_fvcom41_spechum'
+#name='test_year_wrivers'
+#grid='passbay_v3'
 datatype='2d'
-print(name)
+#print(name)
 
 ### load the .nc file #####
-data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),grid + '_station_timeseries.nc',False)
+data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),grid + '_0001.nc',False)
 #data = loadnc('/fs/vnas_Hdfo/odis/mif001/scratch/sjh_lr_v1_sub/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 #data = loadnc('/gpfs/fs1/dfo/dfo_odis/yow001/BoF/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
 data['lon']=data['lon']-360
