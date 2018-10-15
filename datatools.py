@@ -160,9 +160,9 @@ def ncdatasort(data,trifinder=False,uvhset=True):
 
     if 'Times' in data:
         data['Time']=np.empty((len(data['Times']),),dtype='|S26')
-    for i in range(len(data['Times'])):
-            data['Time'][i]=''.join(data['Times'][i,].astype(str))
-    data['time']=dates.datestr2num(data['Time'])    
+        for i in range(len(data['Times'])):
+                data['Time'][i]=''.join(data['Times'][i,].astype(str))
+        data['time']=dates.datestr2num(data['Time'])    
         
     if 'trigrid' not in data:
         if (('nv' in data) and('lon' in data) and ('lat' in data)):
