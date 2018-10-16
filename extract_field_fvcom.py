@@ -49,16 +49,21 @@ if not os.path.exists(savepath): os.makedirs(savepath)
 
 if args.t is None:
     args.t=np.argmin(np.fabs(data['time']-dates.datestr2num(args.d)))
-else:
-    args.d=data['Time'][args.t]
 
-if args.l is None:
+args.d=data['Time'][args.t]
+
+if len(data[args.f].shape)==2:
     field=data[args.f][args.t,:]
     savepath2='{}field_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.t,args.d)
+elif len(data[args.f].shape)==3:
+    if args.l is not None:
+        field=data[args.f][args.t,args.l,:]
+        savepath2='{}field_{}_layer_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.l,args.t,args.d)
+    else:
+        field=data[args.f][args.t,:,:]
+        savepath2='{}field_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.t,args.d)
 else:
-    field=data[args.f][args.t,args.l,:]
-    savepath2='{}field_{}_layer_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.l,args.t,args.d)
-
+    print('ooops!')
 
 
 save_array(field,savepath2)
