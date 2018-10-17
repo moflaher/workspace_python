@@ -1,66 +1,70 @@
 from __future__ import division,print_function
-import matplotlib as mpl
+import numpy as np
 import scipy as sp
-from folderpath import *
-from datatools import *
-from gridtools import *
-from plottools import *
-from projtools import *
-import interptools as ipt
-import matplotlib.tri as mplt
+from mytools import *
+import matplotlib as mpl
 import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
-import os as os
-import sys
+import os, sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
-import netCDF4 as n4
-import copy
 import matplotlib.dates as dates
+import argparse
 from collections import OrderedDict
 
 
-# Define names and types of data
-name='year_fvcom41'
-#name='sjh_hr_v3_year_wet'
-grid='sjh_lr_v3'
+
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("--fvcom", help="switch to fvcom instead of station", type=bool, default=False,action='store_true')
+parser.add_argument("-ncfile", help="manual specify ncfile", type=str, default=None)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
 datatype='2d'
-print(name)
+
 
 ### load the .nc file #####
-#data = loadnc('/mnt/drive_0/misc/gpscrsync/sjh_lr_v1_year_origbc_wet_hfx100/output/',grid + '_station_timeseries.nc',False)
-data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),grid + '_station_timeseries.nc',False)
-#data = loadnc('/gpfs/fs1/dfo/dfo_odis/yow001/BoF/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
-data['lon']=data['lon']-360
-data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+if args.fvcom:
+    tag='0001.nc'
+else:
+    tag='station_timeseries.nc'
 
+if args.ncfile is None:
+    args.ncfile='{}/{}/runs/{}/output/{}_{}'.format(grid,tag)
+
+ncfile=args.ncfile
+ncloc=ncfile.rindex('/')
+
+if args.fvcom:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
+else:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:],False)
+    data['lon']=data['lon']-360
+    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 print('done load')
 
-print('processing time')
-#for j in range(int((len(data['time_JD'])/10000)+1)):
-#    test=np.divide(data['time_second'][j*10000:(j+1)*10000],86400.0)
-#    print(j)
 if 'time_JD' in data.keys():
-    #num=int(len(data['time_JD'])/len(np.arange(0,86400,60)))
-    #ts=np.append(np.arange(data['time_second'][0],86400,60)/86400.0,np.tile(np.arange(0,86400,60)/86400.0,num))
-    #lmin=np.hstack([len(data['time_JD']),len(ts)]).min()-10
-    #data['time']=data['time_JD'][:lmin]+ts[:lmin]+678576
     data['time']=data['time_JD']+(data['time_second']/86400.0)+678576
-    data['dTimes']=dates.num2date(data['time'])
-    data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
 else:
     data['time']=data['time']+678576
+    
+if not 'Time' in data.keys():
     data['dTimes']=dates.num2date(data['time'])
     data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
-
-
 print('done time')
 
-filenames=glob.glob('/fs/vnas_Hdfo/odis/mif001/scratch/obs/adcp/*.npy')
+filenames=glob.glob('{}/adcp/*.npy'.format(obspath))
 filenames.sort()
+
 
 savepath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
+
 
 names=np.array([''.join(data['name_station'][j,:]).strip() for j,n in enumerate(data['name_station'])])
 

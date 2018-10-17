@@ -20,14 +20,14 @@ import pandas as pd
 
 
 name='template'
-grid='sjh_lr_v2_double'
+grid='passbay_v3'
 
 
 
 dry=True
 
 if dry:
-    data=load_nei2fvcom('/home/suh001/scratch/{}/runs/{}/input/{}.nei'.format(grid,name,grid))
+    data=load_nei2fvcom('/media/moflaher/data/grids/100m_pass_2/add_stuff_cleanup_3/makerun_1/passbay_v3/input/passbay_v3.nei')
 else:
     data=loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),'{}_0001.nc'.format(grid))
     st=0

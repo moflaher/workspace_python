@@ -19,16 +19,16 @@ import seawater as sw
 
 
 # Define names and types of data
-name='year_fvcom41'
-grid='sjh_lr_v2_double'
+name='test_1'
+grid='passbay_v1'
 datatype='2d'
 regionname='nemofvcom_100m_grid'
-starttime=1500
-endtime=2000
-layer='da'
-cmin=0
-cmax=2
-field='speed'
+starttime=0
+endtime=386
+layer=0
+cmin=-.005
+cmax=.005
+field='vorticity'
 
 coastflag=True
 vectorflag=True
@@ -38,9 +38,9 @@ vector_scale=100
 
 
 ### load the .nc file #####
-data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
+data = loadnc('/mnt/drive_1/runs/{}/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
 print('done load')
-
+k
 if endtime==-1:
     endtime=len(data['time'])
     print('Plotting {} timesteps'.format(endtime-starttime))
@@ -48,7 +48,7 @@ region=regions(regionname)
 #region['region']=np.array([1.5,2.5,1.9,2.1])
 vidx=equal_vectors(data,region,vector_spacing)
 
-savepath='{}timeseries/{}_{}/{}/{}/{}_{}_{:.3f}_{:.3f}/'.format(figpath,grid,datatype,field,name,region['regionname'],layer,cmin,cmax)
+savepath='{}timeseries/{}_{}/{}/{}/{}_{}_{:.4f}_{:.4f}/'.format(figpath,grid,datatype,field,name,region['regionname'],layer,cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -63,7 +63,7 @@ def plot_fun(i):
     if coastflag:
         plotcoast(ax,filename=region['coast'], filepath=coastpath, color='k', fill=True)   
     
-    triax=ax.tripcolor(data['trigrid'],fieldout,vmin=cmin,vmax=cmax)    
+    triax=ax.tripcolor(data['trigrid'],fieldout,vmin=cmin,vmax=cmax,cmap=mpl.cm.seismic)    
     
     if vectorflag:
         Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
@@ -85,7 +85,7 @@ def plot_fun(i):
 
 
 
-pool = multiprocessing.Pool(4)
+pool = multiprocessing.Pool(30)
 pool.map(plot_fun,range(starttime,endtime))
 
 #with pymp.Parallel(4) as p:

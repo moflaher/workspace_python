@@ -1,50 +1,77 @@
 from __future__ import division,print_function
-import matplotlib as mpl
+import numpy as np
 import scipy as sp
-from folderpath import *
-from datatools import *
-from gridtools import *
-from plottools import *
-from projtools import *
-import interptools as ipt
-import matplotlib.tri as mplt
+from mytools import *
+import matplotlib as mpl
 import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
-import os as os
-import sys
+import os, sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
-import netCDF4 as n4
-import copy
 import matplotlib.dates as dates
+import argparse
 
 
-# Define names and types of data
-namelist=['test_fvcom41_spechum']
-grid='sjh_lr_v1'
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("--fvcom", help="switch to fvcom instead of station", type=bool, default=False,action='store_true')
+parser.add_argument("-ncfile", help="manual specify ncfile", type=str, default=None)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
+
+name=args.name
+grid=args.grid
 datatype='2d'
 
 
+### load the .nc file #####
+if args.fvcom:
+    tag='0001.nc'
+else:
+    tag='station_timeseries.nc'
 
-for name in namelist:
-    print('')
-    print(name)	
-    try:
-	out={}
-        data = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name),grid + '_station_timeseries.nc',False)
+if args.ncfile is None:
+    args.ncfile='{}/{}/runs/{}/output/{}_{}'.format(grid,tag)
 
-        savepath='{}/{}_{}/buoy/{}/'.format(datapath,grid,datatype,name)
-        if not os.path.exists(savepath): os.makedirs(savepath)
+ncfile=args.ncfile
+ncloc=ncfile.rindex('/')
 
-	if 'time_JD' in data.keys():
-            out['time']=678576+data['time_JD']+data['time_second']/(24*3600.0)
-	else:
-	    out['time']=678576+data['time']
+if args.fvcom:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
+else:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:],False)
+    data['lon']=data['lon']-360
+    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
+print('done load')
 
-	out['temp']=data['temp'][:,0,0]
-	np.save('{}{}_buoy_temp.npy'.format(savepath,name),out)
-    except:
-        continue
+if 'time_JD' in data.keys():
+    data['time']=data['time_JD']+(data['time_second']/86400.0)+678576
+else:
+    data['time']=data['time']+678576
+    
+if not 'Time' in data.keys():
+    data['dTimes']=dates.num2date(data['time'])
+    data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
+print('done time')
+
+
+savepath='{}/{}_{}/buoy/{}/'.format(datapath,grid,datatype,name)
+if not os.path.exists(savepath): os.makedirs(savepath)
+
+
+
+out={}
+out['time']=data['time']
+
+loc=np.array([-66.0968,45.20865])
+idx=np.argmin((data['lon']-loc[0])**2+(data['lat']-loc[1])**2)
+
+out['temp']=data['temp'][:,0,idx]
+
+np.save('{}{}_buoy_temp.npy'.format(savepath,name),out)
+
 	
 
 

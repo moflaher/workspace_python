@@ -25,15 +25,22 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
-parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("name", help="name of the run", type=str,default=None, nargs='?')
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
 print(args)
 
-name=args.name
-grid=args.grid
 
+grid=args.grid
+if args.name is None:
+    tempa='ls {}/{}_{}/ctd/'.format(datapath,grid,'2d')
+    print('\n Model names available:')
+    os.system('{}'.format(tempa))
+    print('\n')
+    sys.exit()
+else:
+    name=args.name
 
 
 
