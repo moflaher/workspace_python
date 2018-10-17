@@ -14,7 +14,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str)
-parser.add_argument("--fvcom", help="switch to fvcom instead of station", type=bool, default=False,action='store_true')
+parser.add_argument("--fvcom", help="switch to fvcom instead of station", default=False,action='store_true')
 parser.add_argument("-ncfile", help="manual specify ncfile", type=str, default=None)
 args = parser.parse_args()
 
