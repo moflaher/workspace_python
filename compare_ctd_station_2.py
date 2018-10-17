@@ -43,12 +43,6 @@ else:
     name=args.name
 
 
-
-# Define names and types of data
-#name='test_1'
-#grid='sjh_lr_v1_sub'
-#name='sjh_lr_v1_year_sigma_uniform_61'
-#grid='sjh_lr_v1'
 datatype='2d'
 
 
