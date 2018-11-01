@@ -60,7 +60,7 @@ elif len(data[args.f].shape)==3:
         field=data[args.f][args.t,args.l,:]
         savepath2='{}field_{}_layer_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.l,args.t,args.d)
     else:
-        field=data[args.f][args.t,:,:]
+        field=data[args.f][args.t,:,:].T
         savepath2='{}field_{}_timestep_{}_date_{}.dat'.format(savepath,args.f,args.t,args.d)
 else:
     print('ooops!')
