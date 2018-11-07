@@ -58,7 +58,7 @@ if not 'Time' in data.keys():
     data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
 print('done time')
 
-filenames=glob.glob('{}/adcp/*.npy'.format(obspath))
+filenames=glob.glob('{}east/adcp/*.npy'.format(obspath))
 filenames.sort()
 
 
