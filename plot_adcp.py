@@ -40,7 +40,7 @@ datatype='2d'
 
 filenames=glob.glob('{}east/adcp/*.npy'.format(obspath))
 filenames.sort()
-loadpath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
+loadpath='{}{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)
 dt=dates.datetime.timedelta(0,60)
 
 #savepath='{}/{}_{}/adcp/{}/'.format(datapath,grid,datatype,name)

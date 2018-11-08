@@ -48,8 +48,8 @@ st=2208
 st=0
 cut=13700
 df=pd.read_csv('{}/misc/SA_Saint_John_Buoy_03152015_04302016.csv'.format(obspath))
-time=np.array(dates.datestr2num(df.values[:,0].astype(str)))
-temp=df.values[:,8].astype(float)
+time=np.array(dates.datestr2num(df.values[st:cut,0].astype(str)))
+temp=df.values[st:cut,8].astype(float)
 
 months = dates.MonthLocator()
 monthsFmt = dates.DateFormatter('%b')
