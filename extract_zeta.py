@@ -48,6 +48,7 @@ ncloc=ncfile.rindex('/')
 
 if args.fvcom:
     data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
+    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
 else:
     data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:],False)
     data['lon']=data['lon']-360
