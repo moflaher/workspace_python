@@ -110,7 +110,7 @@ for i,loc in enumerate(locations):
 
     #zeta=ipt.interpN_at_loc(data,'zeta',[loc[2],loc[1]])
     #zetac=zeta[starttime:endtime]
-    zetac=zeta[starttime:endtime,node]
+    zetac=zeta[:,node]
 
     df=pd.DataFrame(np.vstack([tclean,zetac]).T,columns=['time','zeta'])
     df.to_csv('{}{}_{}_{}_dist_{:.2f}_{}.csv'.format(savepath,loc[0].astype(int),loc[2],loc[1],dist[node],node))
