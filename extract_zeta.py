@@ -70,8 +70,7 @@ time=data['time'][:]
 zeta=data['zeta'][:]
 locations=np.loadtxt('tcon.csv')
 
-
-savepath='{}/{}_{}/zeta/{}_{}_{}/'.format(datapath,grid,datatype,name,starttime,endtime)
+savepath='{}/{}_{}/zeta/{}/'.format(datapath,grid,datatype,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
