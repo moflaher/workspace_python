@@ -20,7 +20,7 @@ name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
 regionname='kit4_ftb'
-datatype='2d'
+
 starttime=384
 spacing=750
 divider=50
@@ -38,7 +38,7 @@ print('done sort')
 
 region=regions(regionname)
 
-savepath='figures/png/' + grid + '_' + datatype + '/ellipses_compare/' + name + '_'+ name2 + '/'
+savepath='figures/png/' + grid + '_'  + '/ellipses_compare/' + name + '_'+ name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 regionname='vh_whole'
-datatype='2d'
+
 starttime=0
 
 
@@ -44,12 +44,12 @@ data = ncdatasort(data)
 print('done sort')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/residual_mean_spatial/'
+savepath='figures/png/' + grid + '_'  + '/residual_mean_spatial/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 
-uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+'_uv_all.npy')
 uv1=uv1[()]
 
 

@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name='try16'
 grid='beaufort3'
 regionname='beaufort3_southcoast'
-datatype='2d'
+
 starttime=0
 endtime=400
 offset=0
@@ -53,7 +53,7 @@ data = ncdatasort(data)
 print('done sort')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres/'
+savepath='figures/png/' + grid + '_'  + '/ebbfldres/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

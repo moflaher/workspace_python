@@ -24,7 +24,7 @@ from collections import OrderedDict
 #namelist=['sjh_lr_v1_year_coare3','sjh_lr_v1_year_coare3_wu_mixing','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1','sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0']
 name='test_1'
 grid='sjh_lr_v1_sub'
-datatype='2d'
+
 
 
 st=2208

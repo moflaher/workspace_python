@@ -20,7 +20,7 @@ import shutil
 # Define names and types of data
 name_old='kit4_kelp_20m_0.018'
 grid_old='kit4'
-datatype='2d'
+
 ### load the .nc file #####
 data_old = loadnc('runs/'+grid_old+'/'+name_old+'/output/',singlename=grid_old + '_0001.nc')
 print('done load')
@@ -31,7 +31,7 @@ print('done sort')
 # Define names and types of data
 name_new='kit4_kelp_20m_drag_0.018'
 grid_new='kit4_kelp'
-datatype='2d'
+
 ### load the .nc file #####
 data_new = loadnc('runs/'+grid_new+'/'+name_new+'/output/',singlename=grid_new + '_0001.nc')
 print('done load')

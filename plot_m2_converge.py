@@ -17,7 +17,7 @@ import ttide
 # Define names and types of data
 name='sjh_lr_v1_year_origbc_wet_hfx100'
 grid='sjh_lr_v1'
-datatype='2d'
+
 starttime=0
 endtime=25
 
@@ -30,7 +30,7 @@ print('done load')
 tg65=np.load('/home/mif001/scratch/obs/tg/tg65_clean.npy')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/m2_converge/' + name + '/'
+savepath='figures/png/' + grid + '_'  + '/m2_converge/' + name + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 time=data['time']-4/24.0

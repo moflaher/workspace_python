@@ -36,7 +36,7 @@ global vector_scale
 # Define names and types of data
 name='sfm5m_sjr_baroclinic_20150615-20150905'
 grid='sfm5m_sjr'
-datatype='2d'
+
 regionname='stjohn_harbour'
 starttime=120
 endtime=1200
@@ -81,7 +81,7 @@ region=regions(regionname)
 vidx=equal_vectors(data,region,vector_spacing)
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed_with_wd/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/speed_with_wd/' + name + '_' + region['regionname'] + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

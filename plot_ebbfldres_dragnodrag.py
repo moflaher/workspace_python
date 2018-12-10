@@ -22,7 +22,7 @@ from matplotlib.collections import PolyCollection as PC
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 regionname='kit4_kelp_tight5'
 starttime=384
 offset=0
@@ -59,7 +59,7 @@ print('done sort')
 cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres_dragnodrag/'
+savepath='figures/png/' + grid + '_'  + '/ebbfldres_dragnodrag/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
@@ -68,9 +68,9 @@ lsegf=PC(tmparray,facecolor = fcolor,edgecolor='None')
 lsege=PC(tmparray,facecolor = fcolor,edgecolor='None')
 lsegr=PC(tmparray,facecolor = fcolor,edgecolor='None')
 
-uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+'_uv.npy')
 uv1=uv1[()]
-uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+'_uv.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)

@@ -19,7 +19,7 @@ import ttide
 # Define names and types of data
 #name='sjh_hr_v3_nest1'
 grid='sjh_hr_v3'
-datatype='2d'
+
 starttime=2124
 endtime=-1
 

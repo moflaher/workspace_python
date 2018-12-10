@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_45days_3'
 grid='kit4'
 regionname='kit4_area3'
-datatype='2d'
+
 starttime=384
 spacing=500
 interpheight=1
@@ -31,7 +31,7 @@ print('done sort')
 region=regions(regionname)
 sidx=equal_vectors(data,region,spacing)
 
-savepath='figures/png/' + grid + '_' + datatype + '/currents_' + ("%d" %interpheight)+ 'm/'
+savepath='figures/png/' + grid + '_'  + '/currents_' + ("%d" %interpheight)+ 'm/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 base_dir = os.path.dirname(__file__)

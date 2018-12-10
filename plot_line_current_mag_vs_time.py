@@ -26,7 +26,7 @@ name_change3='kit4_kelp_20m_drag_0.007'
 #name_change2='kit4_kelp_20m_0.011'
 #name_change3='kit4_kelp_20m_0.007'
 grid='kit4_kelp'
-datatype='2d'
+
 regionname='kit4_kelp_tight5'
 starttime=400
 endtime=520
@@ -48,7 +48,7 @@ cages=(cages[:,0]-1).astype(int)
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/line_current_mag_vs_time/'
+savepath='figures/png/' + grid + '_'  + '/line_current_mag_vs_time/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

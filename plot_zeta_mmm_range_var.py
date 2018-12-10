@@ -19,7 +19,7 @@ name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
 regionlist=['firstnarrows','secondnarrows']
 regionlist=['vh_whole']
-datatype='2d'
+
 starttime=0
 endtime=2785
 clim_min=10
@@ -44,7 +44,7 @@ if np.shape(cages)!=():
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/zeta_mmm_range_var/' + name + '/'
+savepath='figures/png/' + grid + '_'  + '/zeta_mmm_range_var/' + name + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 zdiff=data['zeta'][starttime:(endtime+1),:]

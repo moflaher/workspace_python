@@ -23,7 +23,7 @@ name_change='kit4_kelp_20m_0.018'
 name_change2='kit4_kelp_20m_0.011'
 name_change3='kit4_kelp_20m_0.007'
 grid='kit4'
-datatype='2d'
+
 regionname='kit4_kelp_tight5'
 starttime=400
 endtime=520
@@ -45,7 +45,7 @@ cages=(cages[:,0]-1).astype(int)
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/line_uv_std_vs_time/'
+savepath='figures/png/' + grid + '_'  + '/line_uv_std_vs_time/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

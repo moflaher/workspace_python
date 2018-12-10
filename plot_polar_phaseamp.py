@@ -21,12 +21,12 @@ import pandas as pd
 
 
 grid='sfm6_musq'
-datatype='2d'
+
 datadir='data/misc/slr_base/'
 
 files = ['M2_comp_mod2.75.out','N2_comp_mod2.75.out','S2_comp_mod2.75.out']
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 f,ax = plt.subplots(nrows=1,ncols=3, subplot_kw=dict(polar=True))

@@ -23,7 +23,7 @@ name='sfm6_musq2_all_cages'
 name2='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_large'
-datatype='2d'
+
 starttime=0
 offset=1008
 
@@ -50,15 +50,15 @@ print('done sort')
 cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
-savepath='figures/png/' + grid + '_' + datatype + '/res_dragnodrag_spatial/'
+savepath='figures/png/' + grid + '_'  + '/res_dragnodrag_spatial/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
 lsegr=PC(tmparray,facecolor = fcolor,edgecolor='None')
 
-uv1=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name+'_'+'_uv.npy')
 uv1=uv1[()]
-uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+datatype+'_uv.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name2+'_'+'_uv.npy')
 uv2=uv2[()]
 
 nidx=get_nodes(data,region)

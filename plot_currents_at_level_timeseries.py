@@ -21,7 +21,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_cage'
-datatype='2d'
+
 offset=0
 starttime=1008
 endtime=1080
@@ -42,11 +42,11 @@ sidx=equal_vectors(data,region,spacing)
 nidx=get_nodes(data,region)
 
 if datatype=='2d':
-    savepath='figures/timeseries/' + grid + '_' + datatype + '/currents_at_level/' + name + '_' + regionname + '/DA/'
+    savepath='figures/timeseries/' + grid + '_'  + '/currents_at_level/' + name + '_' + regionname + '/DA/'
     newu=data['ua'][starttime:,:]
     newv=data['va'][starttime:,:]
 else:
-    savepath='figures/timeseries/' + grid + '_' + datatype + '/currents_at_level/' + name + '_' + regionname + '/'+("%d",level)+'/'
+    savepath='figures/timeseries/' + grid + '_'  + '/currents_at_level/' + name + '_' + regionname + '/'+("%d",level)+'/'
     newu=data['u'][starttime:,level,:]
     newv=data['v'][starttime:,level,:]
 if not os.path.exists(savepath): os.makedirs(savepath)

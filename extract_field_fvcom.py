@@ -33,7 +33,7 @@ ncfile=args.ncfile
 ncloc=ncfile.rindex('/')
 
 
-datatype='2d'
+
 
 
 ### load the .nc file #####

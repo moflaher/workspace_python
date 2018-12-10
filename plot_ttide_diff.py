@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 grid='kit4'
-datatype='2d'
+
 regionname='kit4_kelp_tight2'
 
 
@@ -36,17 +36,17 @@ nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/ttide_diff/' + name_orig + '_' + name_change + '/'
+savepath='figures/png/' + grid + '_'  + '/ttide_diff/' + name_orig + '_' + name_change + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 
 base_dir = os.path.dirname(__file__)
 
-uv_orig=np.load(base_dir +'/data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv.npy')
+uv_orig=np.load(base_dir +'/data/ttide/'+grid+'_'+name_orig+'_'+'_uv.npy')
 uv_orig=uv_orig[()]
 
-uv_change=np.load(base_dir +'/data/ttide/'+grid+'_'+name_change+'_'+datatype+'_uv.npy')
+uv_change=np.load(base_dir +'/data/ttide/'+grid+'_'+name_change+'_'+'_uv.npy')
 uv_change=uv_change[()]
 
 

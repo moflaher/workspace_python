@@ -16,7 +16,7 @@ import bisect
 # Define names and types of data
 name='kit4_kelp_20m_0.018'
 grid='kit4'
-datatype='2d'
+
 regionname='kit4'
 
 

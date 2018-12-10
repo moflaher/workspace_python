@@ -17,7 +17,7 @@ import scipy.signal as spsig
 name='kit4_kelp_20m_drag_0.018_2d_5min'
 grid='kit4_kelp'
 regionname='kit4_kelp_tight2_kelpfield'
-datatype='2d'
+
 starttime=4608
 endtime=12961
 
@@ -34,7 +34,7 @@ eidx=get_elements(data,region)
 nidx=get_nodes(data,region)
 region=regionll2xy(data,region)
 
-savepath='figures/png/' + grid + '_' + datatype + '/excursion/'
+savepath='figures/png/' + grid + '_'  + '/excursion/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -23,7 +23,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='sfm6_musq2_half_cages'
 grid='sfm6_musq2'
-datatype='2d'
+
 
 
 ### load the .nc file #####
@@ -68,7 +68,7 @@ while (len(cagesleft)>0):
 sortedcages=sortedcages[0:cagecnt,:]
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

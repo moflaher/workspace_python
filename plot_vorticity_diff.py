@@ -17,7 +17,7 @@ name1='kit4_kelp_nodrag'
 name2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 regionname='kit4_kelp_tight2_kelpfield'
-datatype='2d'
+
 starttime=400
 endtime=450
 cmin=-0.01
@@ -44,7 +44,7 @@ with open('runs/'+grid+'/' +name2+ '/input/' +grid+ '_cage.dat') as f_in:
 
 region=regions(regionname)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/curl_diff/' + name1+ '_'+ name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/curl_diff/' + name1+ '_'+ name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 

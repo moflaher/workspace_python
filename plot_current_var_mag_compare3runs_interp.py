@@ -20,7 +20,7 @@ name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 name_change2='kit4_kelp_20m_0.007'
 grid='kit4'
-datatype='2d'
+
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['kit4_kelp_tight2_small']
@@ -59,7 +59,7 @@ for regionname in regionlist:
 
 
 
-    savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot3runs_interp/' + name_orig + '_' + name_change + '/'
+    savepath='figures/png/' + grid + '_'  + '/current_var_mag_subplot3runs_interp/' + name_orig + '_' + name_change + '/'
     if not os.path.exists(savepath): os.makedirs(savepath)
 
     start = time.clock()

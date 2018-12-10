@@ -18,7 +18,7 @@ import pandas as pd
 # Define names and types of data
 name='sjh_hr_v2_spg_100x'
 grid='sjh_hr_v2'
-datatype='2d'
+
 starttime=960
 endtime=-1
 

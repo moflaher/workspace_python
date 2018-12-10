@@ -23,7 +23,7 @@ name='sfm6_musq2_all_cages'
 name2='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_large'
-datatype='3d'
+
 starttime=0
 offset=1008
 
@@ -59,7 +59,7 @@ print('done sort')
 cages=np.genfromtxt('runs/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)
 cages=(cages[:,0]-1).astype(int)
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres_dragnodrag/'
+savepath='figures/png/' + grid + '_'  + '/ebbfldres_dragnodrag/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]

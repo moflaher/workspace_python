@@ -42,7 +42,7 @@ import sys
 name='kit4_kelp_newbathy_test'
 grid='kit4_kelp'
 regionname='kit4_4island'
-datatype='2d'
+
 starttime=0
 plotspeed=False
 
@@ -79,7 +79,7 @@ maxdepth=20
 mindepth=5
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/fakekelp/'
+savepath='figures/png/' + grid + '_'  + '/fakekelp/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 region=regions(regionname)

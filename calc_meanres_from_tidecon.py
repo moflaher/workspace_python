@@ -18,7 +18,7 @@ from t_predic import t_predic
 # Define names and types of data
 name='sfm6_musq2_half_cages'
 grid='sfm6_musq2'
-datatype='2d'
+
 starttime=0
 
 
@@ -30,7 +30,7 @@ print('done sort')
 
 
 
-ttidein=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_surface_currents_all.npy')
+ttidein=np.load('data/ttide/'+grid+'_'+name+'_'+'_uv_surface_currents_all.npy')
 ttidein=ttidein[()]
 
 tidecon=ttidein['tidecon']
@@ -53,7 +53,7 @@ resmean['resumean']=resu.mean(axis=1)
 resmean['resvmean']=resv.mean(axis=1)
 
 
-np.save('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_surface_currents_all_mean.npy',resmean)
+np.save('data/ttide/'+grid+'_'+name+'_'+'_uv_surface_currents_all_mean.npy',resmean)
 
 
 

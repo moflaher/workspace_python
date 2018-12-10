@@ -18,7 +18,7 @@ name1='kit4_kelp_nodrag'
 name2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 regionname='kit4_kelp_tight2_kelpfield'
-datatype='2d'
+
 starttime=400
 endtime=450
 #offset its to account for different starttimes
@@ -43,7 +43,7 @@ cages=(cages[:,0]-1).astype(int)
 region=regions(regionname)
 nidx=get_nodes(data1,region)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed_diff/' + name1 + '_' +name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/speed_diff/' + name1 + '_' +name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

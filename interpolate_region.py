@@ -22,7 +22,7 @@ import netCDF4 as n4
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 region={}
 #vh_high
 #region['region']=np.array([-123.17,-122.96,49.26,49.33])

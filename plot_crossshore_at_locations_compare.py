@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_45days_3'
 name2='kit4_kelp_20m_0.018'
 grid='kit4'
-datatype='2d'
+
 starttime=384
 endtime=624
 offset=0
@@ -87,7 +87,7 @@ locations=[85049,77563]
 #a2=A-a1
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/shore_current_at_locations/'
+savepath='figures/png/' + grid + '_'  + '/shore_current_at_locations/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

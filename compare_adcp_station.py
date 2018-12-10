@@ -42,7 +42,7 @@ lvl=args.levels
 #name='year_fvcom41_wet'
 ##name='sjh_hr_v3_year_wet'
 #grid='sjh_lr_v2_double'
-datatype='2d'
+
 #print(name)
 np.random.seed(25938123)
 

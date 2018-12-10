@@ -18,7 +18,7 @@ from scipy.stats.stats import pearsonr
 # Define names and types of data
 name='voucher_2d_repmonth'
 grid='voucher'
-datatype='2d'
+
 regionname='mp'
 
 
@@ -31,7 +31,7 @@ print('done sort')
 region=regions(regionname)
 eidx=get_elements(data,region)
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 speed=speeder(data['ua'],data['va'])**3

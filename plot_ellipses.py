@@ -17,7 +17,7 @@ from t_tide import t_tide
 # Define names and types of data
 name='sfm5m_sjr_basicrun'
 grid='sfm5m_sjr'
-datatype='2d'
+
 regionname='stjohn_harbour_tight'
 starttime=0
 spacing=1500
@@ -32,7 +32,7 @@ print('done sort')
 
 region=regions(regionname)
 
-savepath='figures/png/' + grid + '_' + datatype + '/ellipses/' + name + '_' + regionname + '/'
+savepath='figures/png/' + grid + '_'  + '/ellipses/' + name + '_' + regionname + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

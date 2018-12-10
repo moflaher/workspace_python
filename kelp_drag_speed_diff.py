@@ -29,7 +29,7 @@ name1='kit4_45days_3'
 name2='kit4_kelp_0.1'
 grid='kit4'
 regionname='mostchannels'
-datatype='2d'
+
 starttime=130
 endtime=160
 
@@ -45,7 +45,7 @@ region=regions(regionname)
 nidx=get_nodes(data1,region)
 
 
-#savepath='figures/png/' + grid + '_' + datatype + '/kelp_drag_speed/'
+#savepath='figures/png/' + grid + '_'  + '/kelp_drag_speed/'
 #if not os.path.exists(savepath): os.makedirs(savepath)
 
 

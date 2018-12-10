@@ -24,7 +24,7 @@ name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 regionlist=['kit4_kelp_tight2_kelpfield']#,'kit4_kelp_tight2_small']#,'kit4_kelp_tight5']
-datatype='2d'
+
 starttime=384
 offset=0
 fontsize=6
@@ -47,13 +47,13 @@ if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
     color='g'
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfldres_dragnodrag_subplot/'
+savepath='figures/png/' + grid + '_'  + '/ebbfldres_dragnodrag_subplot/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-uv1=np.load('data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv_all.npy')
+uv1=np.load('data/ttide/'+grid+'_'+name_orig+'_'+'_uv_all.npy')
 uv1=uv1[()]
-uv2=np.load('data/ttide/'+grid+'_'+name_change+'_'+datatype+'_uv_all.npy')
+uv2=np.load('data/ttide/'+grid+'_'+name_change+'_'+'_uv_all.npy')
 uv2=uv2[()]
 
 

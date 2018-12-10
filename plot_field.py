@@ -21,7 +21,7 @@ import seawater as sw
 # Define names and types of data
 name='test_1'
 grid='passbay_v1'
-datatype='2d'
+
 regionname='nemofvcom_100m_grid'
 starttime=0
 endtime=386

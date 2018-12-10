@@ -17,7 +17,7 @@ name='try16'
 grid='beaufort3'
 #regionlist=['kelparea2','kit4_crossdouble','kit4_ftb','kit4_kelp_tight','kit4_kelp_tight2_small','kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['beaufort3_southcoast']
-datatype='2d'
+
 starttime=0
 cmin=-1
 cmax=1
@@ -50,7 +50,7 @@ ve=np.nanmean(vatmp,axis=0)
 
 efs=np.divide(np.sqrt(uf**2+vf**2)-np.sqrt(ue**2+ve**2),np.sqrt(uf**2+vf**2)+np.sqrt(ue**2+ve**2))
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_symmetry/'+name+'/'
+savepath='figures/png/' + grid + '_'  + '/ebbfld_symmetry/'+name+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 

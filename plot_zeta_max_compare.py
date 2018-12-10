@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 grid='kit4'
-datatype='2d'
+
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 starttime=384
@@ -33,7 +33,7 @@ data = ncdatasort(data)
 print('done sort')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/zeta_max_subplot/' + name_orig + '_' + name_change + '/'
+savepath='figures/png/' + grid + '_'  + '/zeta_max_subplot/' + name_orig + '_' + name_change + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -17,7 +17,7 @@ name1='kit4_45days_3'
 name2='kit4_kelp_0.05'
 grid='kit4'
 regionname='cross_shore_1'
-datatype='2d'
+
 starttime=384
 endtime=400
 
@@ -53,7 +53,7 @@ snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
 #a2=A-a1
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/shore_current_compare/' + name1 + '_' +name2+ '/'
+savepath='figures/timeseries/' + grid + '_'  + '/shore_current_compare/' + name1 + '_' +name2+ '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -19,7 +19,7 @@ import ttide
 # Define names and types of data
 name='sjh_hr_v3_0.0175_shallow'
 grid='sjh_hr_v3'
-datatype='2d'
+
 starttime=1008
 endtime=-1
 region=regions('sfmwhole')

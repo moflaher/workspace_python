@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name_orig='kit4_45days_3'
 name_change='kit4_kelp_20m_0.018'
 grid='kit4'
-datatype='2d'
+
 regionname='kit4_kelp_tight4'
 starttime=384
 
@@ -42,7 +42,7 @@ eidx=get_elements(data,region)
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_subplot/' + name_orig + '_' + name_change + '/'
+savepath='figures/png/' + grid + '_'  + '/current_var_mag_subplot/' + name_orig + '_' + name_change + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 uvar_o=data['ua'][starttime:,:].var(axis=0)

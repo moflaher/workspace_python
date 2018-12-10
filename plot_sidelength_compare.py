@@ -29,7 +29,7 @@ regionlist=regions()
 #regionlist=['kelp_channel']
 regionlist=['gp','pp','gp_tight','dg','dg_upper','sfmwhole','bof','mp','pp','blackrock','blackrock_ebb','blackrock_fld','capedor','northgrid','northgrid_cape']
 regionlist=['stjohn_harbour']#,'sjr_kl']#,'stjohn_harbour']
-datatype='2d'
+
 
 
 

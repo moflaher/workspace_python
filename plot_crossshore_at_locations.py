@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_kelp_0.05'
 grid='kit4'
 regionname='cross_shore_1'
-datatype='2d'
+
 starttime=384
 endtime=0
 
@@ -48,7 +48,7 @@ snv=(vectorend-vectorstart)/np.linalg.norm(vectorend-vectorstart)
 #a2=A-a1
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/shore_current_at_locations/'
+savepath='figures/png/' + grid + '_'  + '/shore_current_at_locations/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

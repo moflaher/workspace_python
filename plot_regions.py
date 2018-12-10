@@ -16,7 +16,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_kelp_20m_0.018'
 grid='kit4'
 regionlist=['kit4_kelp_tight3','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
-datatype='2d'
+
 starttime=384
 endtime=450
 cmin=0
@@ -31,7 +31,7 @@ print('done sort')
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/regions/'
+savepath='figures/png/' + grid + '_'  + '/regions/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 

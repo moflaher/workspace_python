@@ -23,7 +23,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 # Define names and types of data
 name='vh_high_3d_profile'
 grid='vh_high'
-datatype='2d'
+
 
 
 
@@ -43,7 +43,7 @@ mtrans=np.load('data/misc/vhfr_obs/transects/VH_5x1m_corrected_model_vh_high_2.n
 mtrans=mtrans[()]
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/transects_compare/'
+savepath='figures/png/' + grid + '_'  + '/transects_compare/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

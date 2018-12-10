@@ -18,7 +18,7 @@ name1='kit4_kelp_nodrag'
 name2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_kelp_tight2_kelpfield']
-datatype='2d'
+
 starttime=621
 endtime=1081
 
@@ -43,7 +43,7 @@ if np.shape(cages)!=():
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/zeta_diff_mmm/' + name1 + '_' +name2 + '/'
+savepath='figures/png/' + grid + '_'  + '/zeta_diff_mmm/' + name1 + '_' +name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 zdiff=data1['zeta'][starttime:(endtime+1),:]-data2['zeta'][starttime:(endtime+1),:]

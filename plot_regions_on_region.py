@@ -22,7 +22,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_45days_3'
 grid='kit4'
 regionname='mostchannels'
-datatype='2d'
+
 regionsub=['kit4_area1','kit4_area2','kit4_area3','kit4_area4']
 
 
@@ -34,7 +34,7 @@ print('done sort')
 
 
 region=regions(regionname)
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

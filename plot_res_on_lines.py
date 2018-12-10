@@ -24,7 +24,7 @@ import seawater as sw
 # Define names and types of data
 name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_15mins'
 grid='sjh_lr_v1'
-datatype='2d'
+
 starttime=0
 endtime=-1
 #name='sjh_hr_v3_year_wet_15mins'

@@ -21,7 +21,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_45days_3'
 grid='kit4'
-datatype='2d'
+
 starttime=96
 interpheight=2
 regionname='douglaslarge'
@@ -39,7 +39,7 @@ print('done sort')
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/interp_max/'
+savepath='figures/png/' + grid + '_'  + '/interp_max/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

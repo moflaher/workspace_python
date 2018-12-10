@@ -18,7 +18,7 @@ from ttide import t_tide
 # Define names and types of data
 name='sjh_hr_v3_0.03_newnest'
 grid='sjh_hr_v3'
-datatype='2d'
+
 starttime=672
 endtime=3744
 

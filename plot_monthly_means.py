@@ -25,7 +25,7 @@ import seawater as sw
 # Define names and types of data
 name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1'
 grid='sjh_lr_v1'
-datatype='2d'
+
 regionname='stjohn_harbour'
 
 region={}

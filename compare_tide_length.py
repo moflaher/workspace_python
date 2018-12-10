@@ -20,7 +20,7 @@ name_change='kit4_kelp_20m_0.018'
 name_orig='kit4_45days_3'
 grid='kit4'
 regionname='kit4_kelp_tight2_small'
-datatype='2d'
+
 starttime=384
 
 
@@ -32,7 +32,7 @@ data = ncdatasort(data)
 print('done sort')
 data['time']=data['time']-678576
 
-savepath='figures/png/' + grid + '_' + datatype + '/tide_length/' + name_orig + '_' + name_change + '/' +regionname +'/'
+savepath='figures/png/' + grid + '_'  + '/tide_length/' + name_orig + '_' + name_change + '/' +regionname +'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 region=regions(regionname)

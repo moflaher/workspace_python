@@ -18,7 +18,7 @@ name1='voucher_2d_test'
 name2='voucher_2d_test_wd'
 grid='voucher'
 regionname='mp'
-datatype='2d'
+
 starttime=1390
 endtime=1441
 cmin=-0.5
@@ -53,7 +53,7 @@ except:
 region=regions(regionname)
 nidx=get_nodes(data1,region)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/zeta_diff/' + name1 + '_' +name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/zeta_diff/' + name1 + '_' +name2 + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

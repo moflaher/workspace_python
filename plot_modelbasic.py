@@ -21,7 +21,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='sfm5m_sjr_basicrun'
 grid='sfm5m_sjr'
-datatype='2d'
+
 regionlist=['sfmwhole']
 starttime=0
 plotgrid=False
@@ -38,7 +38,7 @@ print('done sort')
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/modelbasic/'
+savepath='figures/png/' + grid + '_'  + '/modelbasic/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

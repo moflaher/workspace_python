@@ -37,7 +37,7 @@ global color
 name_orig='kit4_kelp_baroclinic_nodrag'
 name_change='kit4_kelp_baroclinic_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 regionname='kit4_kelp_tight5'
 starttime=400
 endtime=640
@@ -64,7 +64,7 @@ if cages!=None:
 
 region=regions(regionname)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/speed_difference_relative/' + name_orig + '_' +name_change + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/speed_difference_relative/' + name_orig + '_' +name_change + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

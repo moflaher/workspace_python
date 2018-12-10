@@ -21,7 +21,7 @@ name='sfm6_musq2_all_cages'
 name2='sfm6_musq2_no_cages'
 grid='sfm6_musq2'
 regionname='musq_cage_tight2'
-datatype='2d'
+
 starttime=384
 endtime=400
 offset=1008
@@ -46,7 +46,7 @@ data = ncdatasort(data)
 print('done sort')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebb_fld_res_cage_no_cage/' + name + '_' + name2 + '/'
+savepath='figures/png/' + grid + '_'  + '/ebb_fld_res_cage_no_cage/' + name + '_' + name2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 #cages=np.genfromtxt('/media/moflaher/MB_3TB/'+grid+'/' +name+ '/input/' +grid+ '_cage.dat',skiprows=1)

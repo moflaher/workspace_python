@@ -46,7 +46,7 @@ locs=np.array(args.l).astype(float)
 # Define names and types of data
 #name='test01'
 #grid='sjh_lr_v1'
-datatype='2d'
+
 
 
 ### load the .nc file #####

@@ -22,7 +22,7 @@ from matplotlib.collections import LineCollection as LC
 name='sfm6_musq2_old_cages'
 grid='sfm6_musq2'
 regionname='musq_cage_tight2'
-datatype='3d'
+
 starttime=0
 spacing=125
 scaleset=50
@@ -43,11 +43,11 @@ nidx=get_nodes(data,region)
 for level in range(0,19):
 
     if datatype=='2d':
-        savepath='figures/png/' + grid + '_' + datatype + '/currents_at_level/DA/'
+        savepath='figures/png/' + grid + '_'  + '/currents_at_level/DA/'
         newu=data['ua']
         newv=data['va']
     else:
-        savepath='figures/png/' + grid + '_' + datatype + '/currents_at_level/'
+        savepath='figures/png/' + grid + '_'  + '/currents_at_level/'
         newu=data['u'][starttime:,level,:]
         newv=data['v'][starttime:,level,:]
     if not os.path.exists(savepath): os.makedirs(savepath)

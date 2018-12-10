@@ -25,7 +25,7 @@ regionlist=regions()
 #regionlist=['kelp_channel']
 regionlist=['gp','pp','gp_tight','dg','dg_upper','sfmwhole','bof','mp','pp','blackrock','blackrock_ebb','blackrock_fld','capedor','northgrid','northgrid_cape']
 regionlist=['sfmwhole','stjohn_harbour']
-datatype='2d'
+
 
 
 
@@ -41,7 +41,7 @@ data=ncdatasort(data)
 data=get_sidelength(data)
 data=get_dhh(data)
 
-savepath='figures/png/' + grid + '_' + datatype + '/gridbasic/' +name + '/'
+savepath='figures/png/' + grid + '_'  + '/gridbasic/' +name + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -22,7 +22,7 @@ import collections
 # Define names and types of data
 name='vh_high_3d_profile'
 grid='vh_high'
-datatype='2d'
+
 
 
 
@@ -42,7 +42,7 @@ mtrans=np.load('data/misc/vhfr_obs/transects/VH_5x1m_corrected_model_vh_high.npy
 mtrans=mtrans[()]
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/transects/'
+savepath='figures/png/' + grid + '_'  + '/transects/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

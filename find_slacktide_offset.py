@@ -17,7 +17,7 @@ import scipy.signal as spsig
 # Define names and types of data
 name='kit4_kelp_20m_drag_0.018_2d_5min'
 grid='kit4_kelp'
-datatype='2d'
+
 starttime=4608
 endtime=starttime+1225#5503
 regionname='douglas'
@@ -32,7 +32,7 @@ print('done sort')
 
 region=regions(regionname)
 
-savepath='figures/png/' + grid + '_' + datatype + '/slacktide_offset/'
+savepath='figures/png/' + grid + '_'  + '/slacktide_offset/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

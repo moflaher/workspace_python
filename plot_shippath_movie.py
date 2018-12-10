@@ -21,12 +21,12 @@ from matplotlib.colors import LinearSegmentedColormap
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 region={}
 region['region']=np.array([-123.19,-123.09,49.27,49.34])
 stime=100
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/shippath/'
+savepath='figures/timeseries/' + grid + '_'  + '/shippath/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 ### load the .nc file #####

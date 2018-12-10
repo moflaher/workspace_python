@@ -22,7 +22,7 @@ import matplotlib.dates as dates
 # Define names and types of data
 name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0'
 grid='sjh_lr_v1'
-datatype='2d'
+
 
 
 ### load the .nc file #####

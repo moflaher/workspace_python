@@ -23,7 +23,7 @@ namek='kit4_kelp_0.1'
 name='kit4_45days_3'
 grid='kit4'
 regionname='kelparea'
-datatype='2d'
+
 
 
 ### load the .nc file #####
@@ -37,7 +37,7 @@ cages=(cages[:,0]-1).astype(int)
 
 
 region=regions(regionname)
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

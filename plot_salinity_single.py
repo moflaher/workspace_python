@@ -17,7 +17,7 @@ import pymp
 # Define names and types of data
 name='sjh_lr_v1_year_origbc_wet_hfx100'
 grid='sjh_lr_v1'
-datatype='2d'
+
 regionname='bof_nemo'
 starttime=0
 endtime=10909

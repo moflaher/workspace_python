@@ -19,7 +19,7 @@ mpl.rcParams['contour.negative_linestyle'] = 'solid'
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['kit4_kelp_tight5','kit4_kelp_tight2_kelpfield']
@@ -42,7 +42,7 @@ if cages!=None:
     lw=.1
     ls='solid'
 
-savepath='figures/png/' + grid + '_' + datatype + '/current_var_mag_ratio/' + name_orig + '_' + name_change + '/'
+savepath='figures/png/' + grid + '_'  + '/current_var_mag_ratio/' + name_orig + '_' + name_change + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

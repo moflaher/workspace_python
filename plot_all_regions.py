@@ -17,7 +17,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_spring'
 grid='sjh_lr_v1'
 regionlist=regions()
-datatype='2d'
+
 
 
 ### load the .nc file #####
@@ -26,7 +26,7 @@ print('done load')
 data = ncdatasort(data)
 print('done sort')
 
-savepath='figures/png/' + grid + '_' + datatype + '/regions_all/'
+savepath='figures/png/' + grid + '_'  + '/regions_all/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 

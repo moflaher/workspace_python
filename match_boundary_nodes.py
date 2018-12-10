@@ -19,7 +19,7 @@ import netCDF4 as n4
 # Define names and types of data
 name='2011-08-25_2011-09-08_0.0025'
 grid='acadia_force_2d'
-datatype='2d'
+
 
 ###load old grid stuff
 data = loadnc('runs_acadia/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
@@ -34,7 +34,7 @@ indata['nodell']=data['nodell']
 ###load new grid stuff
 #name2='vhhigh_v3_clean_hpc'
 grid2='sjh_hr_v1'
-datatype='2d'
+
 
 
 #indata2=load_fvcom_files('runs/'+grid2+'/'+name2+'/input',grid2)

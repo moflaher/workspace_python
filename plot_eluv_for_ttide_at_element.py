@@ -20,7 +20,7 @@ from t_predic import t_predic
 name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
-datatype='2d'
+
 starttime=384
 plotlength=72
 elements=[77566,80184,80168]
@@ -36,7 +36,7 @@ data = ncdatasort(data)
 print('done sort')
 data['time']=data['time']-678576
 
-savepath='figures/png/' + grid + '_' + datatype + '/eluv_for_ttide_at_element/'
+savepath='figures/png/' + grid + '_'  + '/eluv_for_ttide_at_element/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 base_dir = os.path.dirname(__file__)
 

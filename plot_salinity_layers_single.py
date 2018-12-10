@@ -19,7 +19,7 @@ from matplotlib.collections import PolyCollection as PC
 # Define names and types of data
 name='sjh_hr_v2_newriver_0.5'
 grid='sjh_hr_v2'
-datatype='2d'
+
 regionname='stjohn_harbour'
 starttime=600
 endtime=1000

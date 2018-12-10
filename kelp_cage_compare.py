@@ -24,7 +24,7 @@ from matplotlib.collections import PolyCollection as PC
 name='kit4_45days_3'
 grid='kit4'
 regionname='kit4_kelp_tight2'
-datatype='2d'
+
 
 
 
@@ -34,7 +34,7 @@ print('done load')
 data = ncdatasort(data)
 print('done sort')
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

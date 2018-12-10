@@ -22,7 +22,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name='kit4_baroclinic_new_322'
 grid='kit4'
 regionname='kit4_area5'
-datatype='2d'
+
 starttime=0
 endtime=50
 interpheight=1
@@ -37,7 +37,7 @@ print('done sort')
 region=regions(regionname)
 
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/currents_' + ("%d" %interpheight)+ 'm/' +region['regionname']+'/'
+savepath='figures/timeseries/' + grid + '_'  + '/currents_' + ("%d" %interpheight)+ 'm/' +region['regionname']+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 print('Loading old interpolated currents')

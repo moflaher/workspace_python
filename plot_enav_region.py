@@ -25,7 +25,7 @@ grid='sfm5m_sjr'
 name='psj_basicrun'
 grid='psj'
 
-datatype='2d'
+
 regionname='stjohn_harbour_tight'
 gtiff='data/enav/Saint_John_ENC_edited.tif'
 
@@ -34,7 +34,7 @@ gtiff='data/enav/Saint_John_ENC_edited.tif'
 
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 
 regionname='secondnarrows'
 gtiff='data/enav/combetest_10000_1200.tif'
@@ -48,7 +48,7 @@ starttime=0
 endtime=96
 useKnots=True
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/enav_region/' + regionname + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/enav_region/' + regionname + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 ### load the .nc file #####

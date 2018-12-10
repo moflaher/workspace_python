@@ -21,7 +21,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='test_interp_bathymetry'
 grid='smallcape_force'
-datatype='2d'
+
 
 
 regionname='blackrock_fld'
@@ -52,7 +52,7 @@ eidx=get_elements(data,region)
 vidx=equal_vectors(data,region,vector_spacing)
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

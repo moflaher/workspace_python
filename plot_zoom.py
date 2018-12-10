@@ -20,7 +20,7 @@ name='1978-03-04_1978-04-06'
 grid='fr_high'
 regionname1='vhfr_whole'
 regionname2='fr_mouth'
-datatype='2d'
+
 #spacing must be even
 spacing=250
 stype='tanh'
@@ -38,7 +38,7 @@ if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
     color='g'
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/zoom/'+regionname1+'_'+regionname2+'_'+stype+'_'+("%d"%spacing)+'/'
+savepath='figures/timeseries/' + grid + '_'  + '/zoom/'+regionname1+'_'+regionname2+'_'+stype+'_'+("%d"%spacing)+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

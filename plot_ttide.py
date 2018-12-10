@@ -18,7 +18,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='sjh_hr_v2_newwind'
 grid='sjh_hr_v2'
-datatype='2d'
+
 regionname='bof_nemo'
 starttime=960
 endtime=3744

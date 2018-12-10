@@ -18,7 +18,7 @@ import scipy.fftpack as fftp
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 starttime=384
 endtime=432
 endtime=456
@@ -43,7 +43,7 @@ if np.shape(cages)!=():
     tmparray=[list(zip(data['nodell'][data['nv'][i,[0,1,2]],0],data['nodell'][data['nv'][i,[0,1,2]],1])) for i in cages ]
     color='g'
 
-savepath='figures/png/' + grid + '_' + datatype + '/vvv_for_kelp/'
+savepath='figures/png/' + grid + '_'  + '/vvv_for_kelp/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -40,7 +40,7 @@ global vector_scale
 # Define names and types of data
 name='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_spring'
 grid='sjh_lr_v1'
-datatype='2d'
+
 regionname='stjohn_harbour'
 starttime=0
 endtime=-1

@@ -15,7 +15,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_20m_drag_0.007'
 grid='kit4_kelp'
-datatype='2d'
+
 regionname='kit4_kelp_tight2_kelpfield'
 starttime=621
 endtime=1081
@@ -73,7 +73,7 @@ us=data['u'].shape
 numlay=us[1]
 
 
-savepath='figures/png/'+grid+'_'+datatype+'/m2s-1_transect/'#+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
+savepath='figures/png/'+grid+'_'+'/m2s-1_transect/'#+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

@@ -17,7 +17,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='sjh_lr_v1_jul2015_wet_riverspg_geometric'
 grid='sjh_lr_v1'
-datatype='2d'
+
 regionname='bof_nemo'
 starttime=0
 endtime=600

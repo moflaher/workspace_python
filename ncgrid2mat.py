@@ -39,7 +39,7 @@ import sys
 # Define names and types of data
 name='kit4_baroclinic_new_322'
 grid='kit4'
-datatype='2d'
+
 starttime=96
 interpheight=1
 

@@ -15,7 +15,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_kelp_tight2_kelpfield']
 starttime=621
 endtime=1081
@@ -35,7 +35,7 @@ if cages!=None:
     lw=.2
     ls='solid'
 
-savepath='figures/png/' + grid + '_' + datatype + '/curl/'
+savepath='figures/png/' + grid + '_'  + '/curl/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 plt.close()
 

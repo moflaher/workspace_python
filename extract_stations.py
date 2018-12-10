@@ -20,7 +20,7 @@ import copy
 # Define names and types of data
 name='sjh_hr_v3_year_reduce_0'
 grid='sjh_hr_v3'
-datatype='2d'
+
 starttime=0
 endtime=-1
 

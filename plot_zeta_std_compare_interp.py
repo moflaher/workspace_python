@@ -21,7 +21,7 @@ name_orig='kit4_kelp_nodrag'
 name_change1='kit4_kelp_20m_drag_0.007'
 name_change2='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['kit4_kelp_tight5']#,'kit4_kelp_tight2_kelpfield']
@@ -59,7 +59,7 @@ for regionname in regionlist:
     eidx=get_elements(data,region)
 
 
-    savepath='figures/png/' + grid + '_' + datatype + '/zeta_std_subplot_interp/' + name_orig + '_' + name_change1 + '_' + name_change2 + '/'
+    savepath='figures/png/' + grid + '_'  + '/zeta_std_subplot_interp/' + name_orig + '_' + name_change1 + '_' + name_change2 + '/'
     if not os.path.exists(savepath): os.makedirs(savepath)
 
     start = time.clock()

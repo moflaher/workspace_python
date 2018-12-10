@@ -23,7 +23,7 @@ name='kit4_baroclinic_new_322'
 grid='kit4'
 #regionname='douglaslarge'
 regionlist=['douglaslarge','gilisland_tight','kit4_area5']
-datatype='2d'
+
 starttime=384
 interpheight=1
 
@@ -34,7 +34,7 @@ data = ncdatasort(data)
 print('done sort')
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/maxcurrents_' + ("%d" %interpheight)+ 'm/'
+savepath='figures/png/' + grid + '_'  + '/maxcurrents_' + ("%d" %interpheight)+ 'm/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 print('Loading interpolated currents')

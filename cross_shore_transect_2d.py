@@ -19,7 +19,7 @@ namelist=['kit4_kelp_20m_drag_0.018','kit4_kelp_20m_drag_0.007']
 
 for name in namelist:
     grid='kit4_kelp'
-    datatype='2d'
+    
 
 
     ### load the .nc file #####
@@ -68,7 +68,7 @@ for name in namelist:
     savepath='data/cross_shore_transect/'
     if not os.path.exists(savepath): os.makedirs(savepath)
 
-    plotpath='figures/png/'+grid+'_'+datatype+'/cross_shore_transect/'
+    plotpath='figures/png/'+grid+'_'+'/cross_shore_transect/'
     if not os.path.exists(plotpath): os.makedirs(plotpath)
 
 

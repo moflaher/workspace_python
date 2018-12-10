@@ -21,7 +21,7 @@ baserun='kit4_45days_3'
 dragrunlist=['kit4_kelp_20m_0.018','kit4_kelp_20m_0.011','kit4_kelp_20m_0.007']
 grid='kit4'
 regionlist=['kit4_crossdouble','kit4_ftb','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_kelp_tight6']
-datatype='2d'
+
 starttime=384
 endtime=400
 offset=0

@@ -21,7 +21,7 @@ grid='kit4_kelp'
 #regionname='kit4_kelp_tight2'
 regionlist=['kit4_ftb','kit4_kelp_tight2_small','kit4_kelp_tight5','kit4_kelp_tight2_kelpfield']
 #regionlist=['kit4_kelp_tight2_kelpfield']
-datatype='2d'
+
 starttime=384
 cmin=-1
 cmax=1
@@ -43,7 +43,7 @@ color='g'
 lw=.1
 ls='solid'
 
-savepath='figures/png/' + grid + '_' + datatype + '/ebbfld_instant_asymmetry_subplots_interp/'+name+'_'+name_change+'/'
+savepath='figures/png/' + grid + '_'  + '/ebbfld_instant_asymmetry_subplots_interp/'+name+'_'+name_change+'/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

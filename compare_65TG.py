@@ -20,7 +20,7 @@ import subprocess
 # Define names and types of data
 #name='sjh_hr_v3_nest1'
 grid='sjh_lr_v1'
-datatype='2d'
+
 starttime=912
 endtime=3984
 

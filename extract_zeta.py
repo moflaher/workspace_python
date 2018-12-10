@@ -31,7 +31,7 @@ print(args)
 
 name=args.name
 grid=args.grid
-datatype='2d'
+
 
 
 ### load the .nc file #####

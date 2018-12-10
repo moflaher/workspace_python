@@ -15,7 +15,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_45days_3'
 grid='kit4'
-datatype='3d'
+
 regionname='kit4_area5'
 
 
@@ -72,7 +72,7 @@ numlay=us[1]
 
 
 
-plotpath='figures/timeseries/'+grid+'_'+datatype+'/cross_shore_transect/'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
+plotpath='figures/timeseries/'+grid+'_'+'/cross_shore_transect/'+name+'_'+('%f'%vectorx[0])+'_'+('%f'%vectorx[1])+'_'+('%f'%vectory[0])+'_'+('%f'%vectory[1])+'_'+('%d'%numlay)+'_'+('%d'%len(xi))+'/'
 if not os.path.exists(plotpath): os.makedirs(plotpath)
 
 region=regions(regionname)

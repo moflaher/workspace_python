@@ -19,7 +19,7 @@ import ttide
 # Define names and types of data
 name='tg_yar'
 grid='obs'
-datatype='2d'
+
 starttime=0
 intv=29
 window=intv*24*60

@@ -46,7 +46,7 @@ grid='kit4_kelp'
 #name='kit4_45days_3'
 #grid='kit4'
 regionname='kit4_4island'
-datatype='2d'
+
 starttime=0
 plotspeed=False
 

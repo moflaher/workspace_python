@@ -19,12 +19,12 @@ from scipy.interpolate import interp1d
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 region={}
 region['region']=np.array([-123.19,-123.09,49.27,49.34])
 stime=100
 
-savepath='figures/png/' + grid + '_' + datatype + '/shippath/'
+savepath='figures/png/' + grid + '_'  + '/shippath/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 ### load the .nc file #####

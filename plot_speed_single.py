@@ -33,7 +33,7 @@ global cmax
 # Define names and types of data
 name='sjh_hr_v1_20150701-20150907'
 grid='sjh_hr_v1'
-datatype='2d'
+
 regionname='stjohn_harbour_tight'
 starttime=1000
 endtime=1500

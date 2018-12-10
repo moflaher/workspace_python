@@ -22,7 +22,7 @@ import matplotlib.dates as dates
 # Define names and types of data
 name1='sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1'
 grid='sjh_lr_v1'
-datatype='2d'
+
 
 ### load the .nc file #####
 data1 = loadnc('/fs/vnas_Hdfo/odis/suh001/scratch/sjh_lr_v1/runs/{}/output/'.format(name1),grid + '_station_timeseries.nc',False)

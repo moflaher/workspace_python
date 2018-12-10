@@ -18,7 +18,7 @@ from matplotlib.collections import PolyCollection as PC
 name='2012-02-01_2012-03-01'
 grid='fr_high'
 regionlist=['fr_mouth']
-datatype='2d'
+
 starttime=0
 endtime=2785
 clim_min=2
@@ -43,7 +43,7 @@ if np.shape(cages)!=():
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/max_speed/' + name + '/'
+savepath='figures/png/' + grid + '_'  + '/max_speed/' + name + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

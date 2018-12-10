@@ -43,7 +43,7 @@ else:
     name=args.name
 
 
-datatype='2d'
+
 
 
 modpath='{}/{}_{}/ctd/{}/'.format(datapath,grid,datatype,name)

@@ -44,7 +44,7 @@ grid='kit4_kelp'
 #name='kit4_45days_3'
 #grid='kit4'
 regionname='kit4_4island'
-datatype='2d'
+
 starttime=0
 plotspeed=False
 
@@ -62,7 +62,7 @@ maxdepth=20
 mindepth=5
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 region=regions(regionname)

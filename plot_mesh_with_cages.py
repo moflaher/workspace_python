@@ -22,7 +22,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 # Define names and types of data
 name='kit4_kelp_0.05'
 grid='kit4'
-datatype='2d'
+
 regionname='kelparea'
 
 region=regions(regionname)
@@ -45,7 +45,7 @@ cages=(cages[:,0]-1).astype(int)
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/misc/'
+savepath='figures/png/' + grid + '_'  + '/misc/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 #create plot and plot whole sfm grid with contours (make it look like jasons gmt)

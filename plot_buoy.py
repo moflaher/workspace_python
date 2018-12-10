@@ -42,7 +42,7 @@ if args.name is None:
 else:
     name=args.name
 
-datatype='2d'
+
 
 
 st=2208

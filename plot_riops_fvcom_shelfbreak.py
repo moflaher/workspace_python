@@ -25,7 +25,7 @@ import seawater as sw
 # Define names and types of data
 name='sjh_lr_v1_year_coare3_hormix'
 grid='sjh_lr_v1'
-datatype='2d'
+
 starttime=0
 endtime=-1
 

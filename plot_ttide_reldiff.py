@@ -17,7 +17,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 name_orig='kit4_kelp_nodrag'
 name_change='kit4_kelp_20m_drag_0.018'
 grid='kit4_kelp'
-datatype='2d'
+
 #regionname='kit4_kelp_tight6'
 regionlist=['kit4_ftb','kit4_crossdouble','kit4_kelp_tight2_small','kit4_kelp_tight2','kit4_kelp_tight4','kit4_kelp_tight5','kit4_kelp_tight6']
 regionlist=['kit4_kelp_tight2_kelpfield','kit4_kelp_tight5']
@@ -37,21 +37,21 @@ print('done sort')
 
 
 
-savepath='figures/png/' + grid + '_' + datatype + '/ttide_reldiff/' + name_orig + '_' + name_change + '/'
+savepath='figures/png/' + grid + '_'  + '/ttide_reldiff/' + name_orig + '_' + name_change + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
 
 
 
-#uv_orig=np.load('data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_uv.npy')
+#uv_orig=np.load('data/ttide/'+grid+'_'+name_orig+'_'+'_uv.npy')
 #uv_orig=uv_orig[()]
-#uv_change=np.load('data/ttide/'+grid+'_'+name_change+'_'+datatype+'_uv.npy')
+#uv_change=np.load('data/ttide/'+grid+'_'+name_change+'_'+'_uv.npy')
 #uv_change=uv_change[()]
 
-el_orig=np.load('data/ttide/'+grid+'_'+name_orig+'_'+datatype+'_el_all.npy')
+el_orig=np.load('data/ttide/'+grid+'_'+name_orig+'_'+'_el_all.npy')
 el_orig=el_orig[()]
-el_change=np.load('data/ttide/'+grid+'_'+name_change+'_'+datatype+'_el_all.npy')
+el_change=np.load('data/ttide/'+grid+'_'+name_change+'_'+'_el_all.npy')
 el_change=el_change[()]
 
 for regionname in regionlist:

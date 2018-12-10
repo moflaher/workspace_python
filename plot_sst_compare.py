@@ -20,7 +20,7 @@ import pandas as pd
 name='sjh_lr_v1_year_origbc_wet'
 grid='sjh_lr_v1'
 regionname='sfmwhole'
-datatype='2d'
+
 starttime=3588
 endtime=4332
 

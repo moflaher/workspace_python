@@ -15,7 +15,7 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 
 name='drifter_2015-10-07'
 grid='sjh_lr_v1'
-datatype='2d'
+
 regionname='stjohn_harbour'
 starttime=0
 endtime=2851

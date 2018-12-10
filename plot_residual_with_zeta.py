@@ -22,7 +22,7 @@ import multiprocessing
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 regionname='secondnarrows'
 starttime=0
 endtime=1000
@@ -58,11 +58,11 @@ nidx=get_nodes(data,region)
 eidx=get_elements(data,region)
 vidx=equal_vectors(data,region,vector_spacing)
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/residual_with_zeta/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
+savepath='figures/timeseries/' + grid + '_'  + '/residual_with_zeta/' + name + '_' + regionname + '_' +("%f" %cmin) + '_' + ("%f" %cmax) + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-uv=np.load('data/ttide/'+grid+'_'+name+'_'+datatype+'_uv_all.npy')
+uv=np.load('data/ttide/'+grid+'_'+name+'_'+'_uv_all.npy')
 uv=uv[()]
 
 resu=np.zeros((data['nele'],len(data['time'][starttime:(endtime+1)])))

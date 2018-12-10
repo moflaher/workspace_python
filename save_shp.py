@@ -18,7 +18,7 @@ from osgeo import osr
 # Define names and types of data
 name='2012-02-01_2012-03-01_0.01_0.001'
 grid='vh_high'
-datatype='2d'
+
 regionname='fr_whole'
 region=regions(regionname)
 

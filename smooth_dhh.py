@@ -21,7 +21,7 @@ import copy
 # Define names and types of data
 name='dormerge_36_16_chigbay.nei'
 grid='acadia_bof_v2_2d'
-datatype='2d'
+
 cutoff=0.5
 smoothing=50
 

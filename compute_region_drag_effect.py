@@ -24,7 +24,7 @@ name='kit4_kelp_20m_0.018'
 name2='kit4_45days_3'
 grid='kit4'
 regionname='kit4_kelp_tight'
-datatype='2d'
+
 starttime=384
 endtime=400
 offset=0

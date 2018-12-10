@@ -22,7 +22,7 @@ import collections
 # Define names and types of data
 name='vhhigh_v2_3d_profile'
 grid='vhhigh_v2'
-datatype='2d'
+
 
 ### load the .nc file #####
 data = loadnc('runs/'+grid+'/'+name+'/output/',singlename=grid + '_0001.nc')
@@ -35,7 +35,7 @@ sigh=data['siglay'][:,0]
 trans=np.load('data/misc/vhfr_obs/transects/VH_5x1m_corrected.npy')
 trans=trans[()]
 
-savepath='figures/timeseries/' + grid + '_' + datatype + '/transects/'
+savepath='figures/timeseries/' + grid + '_'  + '/transects/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
