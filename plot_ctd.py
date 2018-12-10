@@ -47,7 +47,7 @@ datatype='2d'
 
 
 modpath='{}/{}_{}/ctd/{}/'.format(datapath,grid,datatype,name)
-obsp='{}east/ctd/ctd_wcts/'.format(obspath)
+obsp='{}east/ctd/'.format(obspath)
 ctdnum=np.genfromtxt(obsp+'NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_SABS.txt',skip_header=1,dtype=int)[:,0]
 
 savepath='{}png/{}_{}/ctd2/{}/'.format(figpath,grid,datatype,name)
@@ -197,7 +197,7 @@ for num in ctdnum:
         print('Pass on {}'.format(num))
         pass
 
-
+    
 
 #f.show()
     

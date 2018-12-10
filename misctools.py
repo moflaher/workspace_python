@@ -42,6 +42,29 @@ def dic_shape(indic):
     print(df)
 
 
+def dic_shape2(d,parent=''):
+    for k, v in d.iteritems():
+        if isinstance(v, dict):
+            if parent!='':
+                k= '{} - {}'.format(parent,k)
+            dic_shape2(v,k)
+        else:
+            if parent != '':
+                print("{} - {} : {}".format(parent, k, np.shape(v)))
+            else:
+                print("{0} : {1}".format(k, np.shape(v)))
+
+
+
+def dic_shape3(d,level=0):
+    for k, v in d.iteritems():
+        if isinstance(v, dict):
+            print("    "*level + k+":")
+            dic_shape3(v,level+1)
+        else:
+            print("    "*level +"{0} : {1}".format(k, np.shape(v)))
+
+
 def speeder(ua,va):
     return np.sqrt(ua**2+va**2)
 
@@ -134,8 +157,85 @@ def boxminmax(arr):
 
 
 
+def save_adcpnc(adcp, filename):
+    
+    ncid = n4.Dataset(filename, 'w',format='NETCDF3_CLASSIC')
 
+    #create dimensions
+    ncid.createDimension('time',None)
+    ncid.createDimension('ndepth',len(adcp['uvh']*adcp['siglay']))
+    ncid.createDimension('one',1) 
+    ncid.createDimension('DateStrLen',19)
 
+    #define variables 
+    cast = ncid.createVariable('adcpnumber','i',('one',))  
+    lon = ncid.createVariable('lon','d',('one',))
+    lat = ncid.createVariable('lat','d',('one',))
+    time = ncid.createVariable('time','d',('time',))
+    timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))
+    bins = ncid.createVariable('bins','d',('ndepth',))
+    u = ncid.createVariable('u','d',('time','ndepth'))
+    v = ncid.createVariable('v','d',('time','ndepth'))
+    ww = ncid.createVariable('ww','d',('time','ndepth'))
+    ua = ncid.createVariable('ua','d',('time',))
+    va = ncid.createVariable('va','d',('time',))
+    zeta = ncid.createVariable('zeta','d',('time',))    
+       
+    
+    cast[:] = adcp['ADCP_number']   
+    cast.__setattr__('long_name','ADCP Deployment Number matched to model location')
+    
+    lon[:] = adcp['lon']
+    lon.__setattr__('long_name','Longitude')
+    lon.__setattr__('units','degrees')   
+    
+    lat[:] = adcp['lat']   
+    lat.__setattr__('long_name','latitude')
+    lat.__setattr__('units','degrees')  
+      
+    time[:] = adcp['time']
+    time.__setattr__('long_name','time')
+    time.__setattr__('units','days')
+    time.__setattr__('comments','python datenum')  
+      
+    #tstr=dates.num2date(dates.datestr2num(adcp['time']['Times']))
+    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in adcp['Time']])[:]
+    timestamp.__setattr__('long_name','Time string')
+    timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
+            
+    bins[:]=adcp['uvh']*adcp['siglay']    
+    bins.__setattr__('long_name','Depth')
+    bins.__setattr__('units','meters') 
+    
+    u[:] = adcp['u']   
+    u.__setattr__('long_name','Eastward Water Velocity')
+    u.__setattr__('units','meters s-1') 
+    
+    v[:] = adcp['v']  
+    v.__setattr__('long_name','Northward Water Velocity')
+    v.__setattr__('units','meters s-1') 
+     
+    ww[:] = adcp['ww']  
+    ww.__setattr__('long_name','Upward Water Velocity')
+    ww.__setattr__('units','meters s-1') 
+     
+    ua[:] = adcp['ua']   
+    ua.__setattr__('long_name','Depth-Averaged Eastward Water Velocity')
+    ua.__setattr__('units','meters s-1') 
+    
+    va[:] = adcp['va']  
+    va.__setattr__('long_name','Depth-Averaged Northward Water Velocity')
+    va.__setattr__('units','meters s-1') 
+           
+    zeta[:] = adcp['zeta']   
+    zeta.__setattr__('long_name','Water Elevation')
+    zeta.__setattr__('units','meters') 
+
+    ncid.__setattr__('type','ADCP-like ncfile')
+    ncid.__setattr__('history','Created ' +ttime.ctime(ttime.time()) )
+
+    ncid.close()    
 
 
 

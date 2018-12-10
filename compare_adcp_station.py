@@ -231,4 +231,4 @@ for i,filename in enumerate(filenames):
 
 
 if args.noplot:
-    os.system("python plot_adcp_station.py {} {}".format(grid,name))
+    os.system("python plot_adcp.py {} {} 2 5 10".format(grid,name))

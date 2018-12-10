@@ -835,20 +835,21 @@ def load_wlev(filename):
                 days=False
             if 'Computed' in line:
                 s=0
-        if 'N' in sline[2] or 'n' in sline[2]:
-            s=-1
-        wlev['lat']=float(sline[1])+float(sline[2].replace('N','').replace('n',''))/60.0
-        wlev['lon']=-1*(float(sline[4+s])+float(sline[5+s].replace('W','').replace('w',''))/60.0)
-        wlev['offset']=float(sline[7+2*s])
-        days=True
-        if 'WaterLevConstit' in line:
-            a=1
-        if '00000m' in line:
-            a=0
-        wlev['snum']=sline[1]
-        wlev['sname']='_'.join(sline[2:(-2+a)])
-        if 'Reference' in line:
-            wlev['ref']=sline[1]
+                if 'N' in sline[2] or 'n' in sline[2]:
+                    s=-1
+                wlev['lat']=float(sline[1])+float(sline[2].replace('N','').replace('n',''))/60.0
+                wlev['lon']=-1*(float(sline[4+s])+float(sline[5+s].replace('W','').replace('w',''))/60.0)
+                wlev['offset']=float(sline[7+2*s])
+                days=True
+            if 'WaterLevConstit' in line:
+                a=1
+                if '00000m' in line:
+                    a=0
+                wlev['snum']=sline[1]
+                wlev['sname']='_'.join(sline[2:(-2+a)])
+                wlev['date']=sline[-1][:-2]
+            if 'Reference' in line:
+                wlev['ref']=sline[1]
             
     fp.close()
     

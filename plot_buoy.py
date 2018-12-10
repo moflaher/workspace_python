@@ -6,6 +6,7 @@ from datatools import *
 from gridtools import *
 from plottools import *
 from projtools import *
+from stattools import *
 import interptools as ipt
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
@@ -47,7 +48,7 @@ datatype='2d'
 st=2208
 st=0
 cut=13700
-df=pd.read_csv('{}/misc/SA_Saint_John_Buoy_03152015_04302016.csv'.format(obspath))
+df=pd.read_csv('{}/east/buoy/SA_Saint_John_Buoy_03152015_04302016.csv'.format(obspath))
 time=np.array(dates.datestr2num(df.values[st:cut,0].astype(str)))
 temp=df.values[st:cut,8].astype(float)
 
@@ -69,6 +70,8 @@ tempd=out['temp'][idx]
 
 itemp=ipt.interp1d(time[~np.isnan(temp)],temp[~np.isnan(temp)],timed)
 
+test=residual_stats(tempd,itemp)
+
 f=plt.figure(figsize=(15,5))
 ax=f.add_axes([.125,.1,.775,.8])
 ax.plot(timed, itemp,'k',label='Buoy')
@@ -76,15 +79,21 @@ ax.plot(timed,tempd,lw=.5,label=name)
 ax.xaxis.set_major_locator(months)
 ax.xaxis.set_major_formatter(monthsFmt)
 ax.legend()
+
+#f.suptitle(pd.DataFrame(test).round(2).T.to_string()[15:].replace(' ','').replace('\n',' '))
+a=pd.DataFrame(test).round(2).T[0]
+f.suptitle('Bias: {}   Std: {}   RMSE: {}   RAE: {}   Corr: {}   Skew: {}   Skill: {}'.format(a[0],a[1],a[2],a[3],a[4],a[5],a[6]))
 #ax.set_ylabel('SST ($^{\circ}C$)')
 #ax.set_xlabel('2015-2016')
 f.savefig('{}{}_buoy_compare.png'.format(savepath,name),dpi=300)
 
-diff=itemp-tempd
+#diff=itemp-tempd
 
-print(np.fabs(diff).mean())
-print(diff.mean())
 
+#print(np.fabs(diff).mean())
+#print(diff.mean())
+
+print(pd.DataFrame(test).round(2).T)
 
 
 

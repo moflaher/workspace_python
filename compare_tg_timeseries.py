@@ -18,11 +18,10 @@ from ttide import t_tide
 # Define names and types of data
 namelist=['test_1']
 grid='sjh_lr_v1_sub'
-datatype='2d'
 starttime=750
 endtime=-1
 
-savepath='{}/png/{}_{}/compare_tg_timeseries/'.format(figpath,grid,datatype)
+savepath='{}/png/{}/compare_tg_timeseries/'.format(figpath,grid)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 tg65=np.load('/home/mif001/scratch/obs/tg/tg65_clean.npy')

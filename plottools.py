@@ -1314,12 +1314,14 @@ def plot_tsmap2(mod,obs,zeta,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
     
     Tin=OrderedDict()
     Tin[str(num)]=np.append(Tstats[str(num)].values(),ht)
-    Tin['Time (m)']=np.append((np.round(other['dt']*(Tidx-180))).astype(int),ht)
+    #print(Tidx)
+    #print(mod['arrays']['time'][0,Tidx])
+    Tin['Time (m)']=np.append((np.round(24*60*(obs['time']-mod['arrays']['time'][0,Tidx]))).astype(int),ht)
     Tin['Best']=np.append(bTstats[np.arange(7),Tidx],ht)
     
     Sin=OrderedDict()
     Sin[str(num)]=Sstats[str(num)].values()
-    Sin['Time (m)']=(np.round(other['dt']*(Sidx-180))).astype(int)
+    Sin['Time (m)']=(np.round(24*60*(obs['time']-mod['arrays']['time'][0,Sidx]))).astype(int)
     Sin['Best']=bSstats[np.arange(7),Sidx]
     
     dfT=pd.DataFrame(Tin,columns=[str(num),'Time (m)','Best']).round(2)
