@@ -144,6 +144,8 @@ def ncdatasort(data,trifinder=False,uvhset=True):
     data['nodell'] = np.vstack([data['lon'],data['lat']]).T
     data['uvnodell'] = np.vstack([data['lonc'],data['latc']]).T
 
+
+    data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
         
     data['nodexy'] = np.vstack([data['x'],data['y']]).T
     data['uvnodexy'] = data['nodexy'][data['nv'],:].mean(axis=1)

@@ -11,6 +11,8 @@ import datatools as dt
 import plottools as pt
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import pandas as pd
+import netCDF4 as n4
+import time as ttime
 
 
 def runstats(datain=None):
@@ -163,7 +165,7 @@ def save_adcpnc(adcp, filename):
 
     #create dimensions
     ncid.createDimension('time',None)
-    ncid.createDimension('ndepth',len(adcp['uvh']*adcp['siglay']))
+    ncid.createDimension('ndepth',len(adcp['h']*adcp['siglay']))
     ncid.createDimension('one',1) 
     ncid.createDimension('DateStrLen',19)
 
@@ -171,9 +173,11 @@ def save_adcpnc(adcp, filename):
     cast = ncid.createVariable('adcpnumber','i',('one',))  
     lon = ncid.createVariable('lon','d',('one',))
     lat = ncid.createVariable('lat','d',('one',))
+    h = ncid.createVariable('h','d',('one',))
     time = ncid.createVariable('time','d',('time',))
     timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))
     bins = ncid.createVariable('bins','d',('ndepth',))
+    siglay = ncid.createVariable('siglay','d',('ndepth',))
     u = ncid.createVariable('u','d',('time','ndepth'))
     v = ncid.createVariable('v','d',('time','ndepth'))
     ww = ncid.createVariable('ww','d',('time','ndepth'))
@@ -204,9 +208,16 @@ def save_adcpnc(adcp, filename):
     timestamp.__setattr__('long_name','Time string')
     timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
             
-    bins[:]=adcp['uvh']*adcp['siglay']    
-    bins.__setattr__('long_name','Depth')
+    bins[:]=adcp['h']*adcp['siglay']    
+    bins.__setattr__('long_name','Level Depth')
     bins.__setattr__('units','meters') 
+    
+    siglay[:]=adcp['siglay']    
+    siglay.__setattr__('long_name','Siglay')
+    
+    h[:]=adcp['h']   
+    h.__setattr__('long_name','Depth')
+    h.__setattr__('units','meters') 
     
     u[:] = adcp['u']   
     u.__setattr__('long_name','Eastward Water Velocity')
