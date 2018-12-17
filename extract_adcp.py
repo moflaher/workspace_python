@@ -109,7 +109,7 @@ for i,filename in enumerate(filenames):
     print('Extracted 3d')
     
     #out['siglev']=data['siglev'][:,idx]
-    out['siglay']=data['siglay'][:,idx]
+    out['siglay']=data['siglay'][:,0]
     out['lon']=lon[idx]
     out['lat']=lat[idx]
     out['ADCP_number']=filename.split('.')[0].split('/')[-1].split('_')[-1]
