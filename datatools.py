@@ -48,7 +48,7 @@ import os
 #from osgeo import osr
 import netCDF4 as n4
 
-
+from projtools import lcc
 
 
 def loadnc(datadir, singlename=[], fvcom=True, suppress=False):

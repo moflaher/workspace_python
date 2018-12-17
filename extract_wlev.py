@@ -20,6 +20,7 @@ parser.add_argument("ncfile", help="specify ncfile", type=str)
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
 parser.add_argument("-snr", help="signal to noise ratio value used for constituent cutoff", type=float,default=2.0)
+parser.add_argument("-days", help="Min. record length for wlev file to be used", type=float, default=2929292929292929292929292929292929292929292929292929292929.0)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -72,6 +73,11 @@ for i,filename in enumerate(filenames):
     lona=wlev['lon']
     lata=wlev['lat'] 
     days=wlev['days']
+
+    if days<args.days:
+	print('Skipping {}, wlev time per is {}, and to short'.format(filename.split('/')[-1],days))
+	continue
+
     wlev['x'],wlev['y']=data['proj'](lona,lata)
 
     dist=np.sqrt((x-wlev['x'])**2+(y-wlev['y'])**2)
@@ -104,7 +110,7 @@ for i,filename in enumerate(filenames):
     
     os={}
     for i in range(dr):
-        print(i)
+#        print(i)
         tidx=np.argwhere((data['time']>=data['time'][0]+14.0+(i*d3)) & (data['time']<=data['time'][0]+14.0+(i*d3)+days)).flatten()
         if data['time'][tidx[-1]]-data['time'][tidx[0]] == days:
             os[str(i)]=dict(run_ttide(data['time'][tidx],data['zeta'][tidx,idx],data['lat'][idx],cons))

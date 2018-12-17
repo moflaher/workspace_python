@@ -14,7 +14,7 @@ import pandas as pd
 import netCDF4 as n4
 import time as ttime
 import ttide
-
+import matplotlib.dates as dates
 
 def runstats(datain=None):
     """Takes an array and returns basic stats on it. Max,Min,Mean,Std
@@ -212,9 +212,9 @@ def save_adcpnc(adcp, filename):
     time.__setattr__('units','days')
     time.__setattr__('comments','python datenum')  
       
-    #tstr=dates.num2date(dates.datestr2num(adcp['time']['Times']))
-    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
-    timestamp[:]=np.array([list(tt) for tt in adcp['Time']])[:]
+    tstr=dates.num2date(dates.datestr2num(adcp['Time']))
+    tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in tnew])[:]
     timestamp.__setattr__('long_name','Time string')
     timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
             
@@ -299,9 +299,9 @@ def save_tgnc(tg, filename):
     time.__setattr__('units','days')
     time.__setattr__('comments','python datenum')  
       
-    #tstr=dates.num2date(dates.datestr2num(tg['time']['Times']))
-    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
-    timestamp[:]=np.array([list(tt) for tt in tg['Time']])[:]
+    tstr=dates.num2date(dates.datestr2num(tg['Time']))
+    tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in tnew])[:]
     timestamp.__setattr__('long_name','Time string')
     timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
             
@@ -380,9 +380,9 @@ def save_wlevnc(wlev, filename):
     time.__setattr__('units','days')
     time.__setattr__('comments','python datenum')  
       
-    #tstr=dates.num2date(dates.datestr2num(wlev['time']['Times']))
-    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
-    timestamp[:]=np.array([list(tt) for tt in wlev['Time']])[:]
+    tstr=dates.num2date(dates.datestr2num(wlev['Time']))
+    tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in tnew])[:]
     timestamp.__setattr__('long_name','Time string')
     timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
             
@@ -501,9 +501,9 @@ def save_ctdnc(ctd, filename):
     time.__setattr__('units','days')
     time.__setattr__('comments','python datenum')  
       
-    #tstr=dates.num2date(dates.datestr2num(ctd['time']['Times']))
-    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
-    timestamp[:]=np.array([list(tt) for tt in ctd['Time']])[:]
+    tstr=dates.num2date(dates.datestr2num(ctd['Time']))
+    tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in tnew])[:]
     timestamp.__setattr__('long_name','Time string')
     timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
             
