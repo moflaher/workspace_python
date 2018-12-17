@@ -9,14 +9,16 @@ np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 import matplotlib.dates as dates
 import argparse
+from collections import OrderedDict
 
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str)
-parser.add_argument("--fvcom", help="switch to fvcom instead of station", default=False,action='store_true')
-parser.add_argument("-ncfile", help="manual specify ncfile", type=str, default=None)
+parser.add_argument("ncfile", help="specify ncfile", type=str)
+parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
+parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -24,105 +26,94 @@ print(args)
 
 name=args.name
 grid=args.grid
-
-
-
-### load the .nc file #####
-if args.fvcom:
-    tag='0001.nc'
-else:
-    tag='station_timeseries.nc'
-
-if args.ncfile is None:
-    args.ncfile='{}/{}/runs/{}/output/{}_{}'.format(grid,tag)
-
 ncfile=args.ncfile
 ncloc=ncfile.rindex('/')
 
-if args.fvcom:
-    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
-else:
+if args.station:
     data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:],False)
     data['lon']=data['lon']-360
     data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
-print('done load')
-
-if 'time_JD' in data.keys():
-    data['time']=data['time_JD']+(data['time_second']/86400.0)+678576
-else:
-    data['time']=data['time']+678576
-    
-if not 'Time' in data.keys():
+    x,y=data['x'],data['y']
+    lon,lat=data['lon'],data['lat']
+    tag='station'
+    if 'time' in data:
+        data['time']=data['time']+678576
+    #older station files    
+    if 'time_JD' in data:
+        data['time']=data['time_JD']+(data['time_second']/86400.0)+678576        
     data['dTimes']=dates.num2date(data['time'])
     data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
-print('done time')
+else:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
+    lon,lat=data['lon'],data['lat']
+    x,y=data['x'],data['y']
+    tag='fvcom'   
 
+print('done load')
 
-ctdbio=pd.read_csv('/home/suh001/data/NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_BIO.txt',delimiter=' ')
-ctdsabs=pd.read_csv('/home/suh001/data/NEMO-FVCOM_SaintJohn_BOF_Observations_ctd_SABS.txt',delimiter=' ')
+# find adcp ncfiles
+filenames=glob.glob('{}east/all/ctd_*.nc'.format(obspath))
+filenames.sort()
 
-lon=np.append(ctdbio['lon'],ctdsabs['lon'])
-lat=np.append(ctdbio['lat'],ctdsabs['lat'])
-deploy=np.append(ctdbio['deploy'],ctdsabs['deploy'])
-Time=np.append(['{} {}'.format(ctdbio['date'][i],ctdbio['time'][i]) for i in range(len(ctdbio['lon']))],
-                ['{} {}'.format(ctdsabs['date'][i],ctdsabs['time'][i]) for i in range(len(ctdsabs['lon']))])
-time=dates.datestr2num(Time)
-
-
-savepath='{}/{}_{}/ctd/{}/'.format(datapath,grid,datatype,name)
+#create location to save model ncfiles
+savepath='{}/{}/ctd/{}/'.format(datapath,grid,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-for i,dep in enumerate(deploy):
+for i,filename in enumerate(filenames):
     print('='*80)
     print(i)
-    print(dep)
-    xloc,yloc = data['proj'](lon[i],lat[i])
-
-    dist=np.sqrt((data['x']-xloc)**2+(data['y']-yloc)**2)
-    asort=np.argsort(dist)
-    node=asort[0]
-
-    print(node)
-    print(dist[node])
-
-    #extract timeseries
-    tidx=np.argwhere((data['time']>=time[i]-3/24.0) &(data['time']<=time[i]+3/24.0) )
-    temp=data['temp'][tidx,:,node]
-    sal=data['salinity'][tidx,:,node]
-    d=(data['zeta'][tidx,node]+data['h'][node])*data['siglay'][:,0]
+    print(filename)
     
-    fp=open('{}ctd_timeseries_{}.txt'.format(savepath,deploy[i]),'w')
-    fp.write('node it latitude longitue date time depth temperature salinity\n')
-    for k,t in enumerate(tidx):
-        for j,tem in enumerate(temp[k,0,]):
-            fp.write('{} {} {} {} {} {} {} {} {}\n'.format(node+1,t[0],data['lat'][node],data['lon'][node],data['Time'][t[0]][:10],data['Time'][t[0]][11:19],d[k,j],temp[k,0,j],sal[k,0,j]))
-    fp.close()
+    adcp = loadnc('',filename,False)
 
+    lona=adcp['lon']
+    lata=adcp['lat'] 
+    time=adcp['time']
+    adcp['x'],adcp['y']=data['proj'](lona,lata)
 
-    #extract single profile
-    tidx=np.argmin(np.fabs(data['time']-time[i]))
-    temp=data['temp'][tidx,:,node]
-    sal=data['salinity'][tidx,:,node]
-    d=(data['zeta'][tidx,node]+data['h'][node])*data['siglay'][:,0]
+    dist=np.sqrt((x-adcp['x'])**2+(y-adcp['y'])**2)
+    idx=np.argmin(dist)
+
+    #expand time window by +-3 hours, to ensure we have all we need
+    tidx=np.argwhere((data['time']>=(time[0]-(3.0/24.0)))&(data['time']<=(time[-1]+(3.0/24.0))))
     
-    fp=open('{}ctd_{}.txt'.format(savepath,deploy[i]),'w')
-    fp.write('node latitude longitue date time depth temperature salinity\n')
-    for j,tem in enumerate(temp):
-        fp.write('{} {} {} {} {} {} {} {}\n'.format(node+1,data['lat'][node],data['lon'][node],data['Time'][tidx][:10],data['Time'][tidx][11:19],d[j],temp[j],sal[j]))
-    fp.close()
+    #skip observation if no matching time or to far away
+    if dist[idx]>args.dist:
+        print('Skipping {}, over {} away'.format(filename.split('/')[-1],args.dist))
+        continue
+    if len(tidx)==0:
+        print('Skipping {}, no time match'.format(filename.split('/')[-1]))
+        continue
+    
+    out=OrderedDict()
+    out['time']=data['time'][tidx]
+    out['Time']=data['Time'][tidx]
+    print('Extracted time')
+    
+    out['h']=data['h'][idx].mean()
+    out['zeta']=data['zeta'][tidx,idx].mean(axis=1)
+    print('Extracted 2d')
+    
+    out['temp']=data['temp'][tidx,:,idx].mean(axis=1)
+    out['salinity']=data['salinity'][tidx,:,idx].mean(axis=1)
+    print('Extracted 3d')
 
+    out['siglay']=data['siglay'][:,idx]
+    out['lon']=lon[idx]
+    out['lat']=lat[idx]
+    out['CTD_number']=filename.split('.')[0].split('/')[-1].split('_')[-1]
+    out['dist']=dist[idx]    
+    print('Extracted misc')
+    
+    for key in out:
+        out[key]=np.squeeze(out[key])
+    
+    savepath2='{}{}_{}.nc'.format(savepath,filename.split('.')[0].split('/')[-1],tag)
+    save_ctdnc(out,savepath2)
+    
+    print('Saved')
 
-
-    #extract zeta
-    tidx=np.argwhere((data['time']>=time[i]-1.0) &(data['time']<=time[i]+1.0) )
-    z=data['zeta'][tidx,node]
-    print(z.shape)
-    fp=open('{}ctd_zeta_{}.txt'.format(savepath,deploy[i]),'w')
-    fp.write('node it latitude longitue date time zeta\n')
-    for k,t in enumerate(tidx):
-        fp.write('{} {} {} {} {} {} {}\n'.format(node+1,t[0],data['lat'][node],data['lon'][node],data['Time'][t[0]][:10],data['Time'][t[0]][11:19],z[k][0]))
-    fp.close()
 
 
 

@@ -34,7 +34,7 @@ print(args)
 
 grid=args.grid
 if args.name is None:
-    tempa='ls {}/{}_{}/ctd/'.format(datapath,grid,'2d')
+    tempa='ls {}{}/buoy/'.format(datapath,grid)
     print('\n Model names available:')
     os.system('{}'.format(tempa))
     print('\n')
@@ -55,11 +55,11 @@ temp=df.values[st:cut,8].astype(float)
 months = dates.MonthLocator()
 monthsFmt = dates.DateFormatter('%b')
 
-savepath='{}png/{}_{}/buoy/{}/'.format(figpath,grid,datatype,name)
+savepath='{}png/{}/buoy/{}/'.format(figpath,grid,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
-inpath='{}/{}_{}/buoy/{}/'.format(datapath,grid,datatype,name)
+inpath='{}/{}/buoy/{}/'.format(datapath,grid,name)
 out=np.load('{}{}_buoy_temp.npy'.format(inpath,name))
 out=out[()]
 

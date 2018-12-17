@@ -13,6 +13,7 @@ np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import pandas as pd
 import netCDF4 as n4
 import time as ttime
+import ttide
 
 
 def runstats(datain=None):
@@ -157,6 +158,14 @@ def boxminmax(arr):
     return [llmin[0], llmax[0], llmin[1], llmax[1]]
 
 
+def run_ttide(time,zeta,lat,constitnames=None):
+    
+    if constitnames is None:
+        out=ttide.t_tide(zeta,stime=time[0],dt=np.diff(time)[0]*24,synth=-1,out_style=None,lat=lat)
+    else:
+        out=ttide.t_tide(zeta,stime=time[0],dt=np.diff(time)[0]*24,synth=-1,out_style=None,lat=lat,constitnames=constitnames)
+
+    return out
 
 
 def save_adcpnc(adcp, filename):
@@ -174,6 +183,7 @@ def save_adcpnc(adcp, filename):
     lon = ncid.createVariable('lon','d',('one',))
     lat = ncid.createVariable('lat','d',('one',))
     h = ncid.createVariable('h','d',('one',))
+    dist = ncid.createVariable('dist','d',('one',))
     time = ncid.createVariable('time','d',('time',))
     timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))
     bins = ncid.createVariable('bins','d',('ndepth',))
@@ -219,6 +229,10 @@ def save_adcpnc(adcp, filename):
     h.__setattr__('long_name','Depth')
     h.__setattr__('units','meters') 
     
+    dist[:]=adcp['dist']   
+    dist.__setattr__('long_name','Distance between obs and model')
+    dist.__setattr__('units','meters') 
+    
     u[:] = adcp['u']   
     u.__setattr__('long_name','Eastward Water Velocity')
     u.__setattr__('units','meters s-1') 
@@ -249,6 +263,278 @@ def save_adcpnc(adcp, filename):
     ncid.close()    
 
 
+def save_tgnc(tg, filename):
+    
+    ncid = n4.Dataset(filename, 'w',format='NETCDF3_CLASSIC')
+
+    #create dimensions
+    ncid.createDimension('time',None)
+    ncid.createDimension('one',1) 
+    ncid.createDimension('DateStrLen',19)
+
+    #define variables 
+    cast = ncid.createVariable('tgnumber','i',('one',))  
+    lon = ncid.createVariable('lon','d',('one',))
+    lat = ncid.createVariable('lat','d',('one',))
+    h = ncid.createVariable('h','d',('one',))
+    dist = ncid.createVariable('dist','d',('one',))
+    time = ncid.createVariable('time','d',('time',))
+    timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))
+    zeta = ncid.createVariable('zeta','d',('time',))    
+       
+    
+    cast[:] = tg['tg_number']   
+    cast.__setattr__('long_name','TG Deployment Number matched to model location')
+    
+    lon[:] = tg['lon']
+    lon.__setattr__('long_name','Longitude')
+    lon.__setattr__('units','degrees')   
+    
+    lat[:] = tg['lat']   
+    lat.__setattr__('long_name','latitude')
+    lat.__setattr__('units','degrees')  
+      
+    time[:] = tg['time']
+    time.__setattr__('long_name','time')
+    time.__setattr__('units','days')
+    time.__setattr__('comments','python datenum')  
+      
+    #tstr=dates.num2date(dates.datestr2num(tg['time']['Times']))
+    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in tg['Time']])[:]
+    timestamp.__setattr__('long_name','Time string')
+    timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
+            
+    h[:]=tg['h']   
+    h.__setattr__('long_name','Depth')
+    h.__setattr__('units','meters') 
+    
+    dist[:]=tg['dist']   
+    dist.__setattr__('long_name','Distance between obs and model')
+    dist.__setattr__('units','meters') 
+               
+    zeta[:] = tg['zeta']   
+    zeta.__setattr__('long_name','Water Elevation')
+    zeta.__setattr__('units','meters') 
+
+    ncid.__setattr__('type','TG-like ncfile')
+    ncid.__setattr__('history','Created ' +ttime.ctime(ttime.time()) )
+
+    ncid.close()    
+
+
+def save_wlevnc(wlev, filename):
+    
+    ncid = n4.Dataset(filename, 'w',format='NETCDF3_CLASSIC')
+
+    #create dimensions
+    ncid.createDimension('time',None)
+    ncid.createDimension('one',1) 
+    ncid.createDimension('four',4) 
+    ncid.createDimension('DateStrLen',19)
+    ncid.createDimension('allnamelen',len(wlev['ttideall']['nameu']))
+    ncid.createDimension('rnamelen',len(wlev['rtide']['0']['nameu']))
+
+    #define variables 
+    cast = ncid.createVariable('wlevnumber','i',('one',))  
+    lon = ncid.createVariable('lon','d',('one',))
+    lat = ncid.createVariable('lat','d',('one',))
+    h = ncid.createVariable('h','d',('one',))
+    dist = ncid.createVariable('dist','d',('one',))
+    snr = ncid.createVariable('snr','d',('one',))
+    time = ncid.createVariable('time','d',('time',))
+    timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))    
+    zeta = ncid.createVariable('zeta','d',('time',))    
+    
+    all_name = ncid.createVariable('all_name','c',('allnamelen','four'))
+    all_freq = ncid.createVariable('all_freq','d',('allnamelen',))
+    all_tidecon = ncid.createVariable('all_tidecon','d',('allnamelen','four')) 
+    all_z0 = ncid.createVariable('all_z0','d',('one',)) 
+    
+    mmm_name = ncid.createVariable('min_name','c',('rnamelen','four'))
+    mmm_freq = ncid.createVariable('min_freq','d',('rnamelen',))
+    
+    min_tidecon = ncid.createVariable('min_tidecon','d',('rnamelen','four')) 
+    min_z0 = ncid.createVariable('min_z0','d',('one',)) 
+
+    max_tidecon = ncid.createVariable('max_tidecon','d',('rnamelen','four')) 
+    max_z0 = ncid.createVariable('max_z0','d',('one',))
+    
+    mean_tidecon = ncid.createVariable('mean_tidecon','d',('rnamelen','four')) 
+    mean_z0 = ncid.createVariable('mean_z0','d',('one',))
+    
+    
+    cast[:] = wlev['wlev_number']   
+    cast.__setattr__('long_name','Wlev Deployment Number matched to model location')
+    
+    lon[:] = wlev['lon']
+    lon.__setattr__('long_name','Longitude')
+    lon.__setattr__('units','degrees')   
+    
+    lat[:] = wlev['lat']   
+    lat.__setattr__('long_name','latitude')
+    lat.__setattr__('units','degrees')  
+      
+    time[:] = wlev['time']
+    time.__setattr__('long_name','time')
+    time.__setattr__('units','days')
+    time.__setattr__('comments','python datenum')  
+      
+    #tstr=dates.num2date(dates.datestr2num(wlev['time']['Times']))
+    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in wlev['Time']])[:]
+    timestamp.__setattr__('long_name','Time string')
+    timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
+            
+    h[:]=wlev['h']   
+    h.__setattr__('long_name','Depth')
+    h.__setattr__('units','meters') 
+    
+    dist[:]=wlev['dist']   
+    dist.__setattr__('long_name','Distance between obs and model')
+    dist.__setattr__('units','meters') 
+               
+    snr[:]=wlev['snr']   
+    snr.__setattr__('long_name','Signal to noise ratio for tidal constituent cutoff')
+
+    zeta[:] = wlev['zeta']   
+    zeta.__setattr__('long_name','Water Elevation')
+    zeta.__setattr__('units','meters') 
+    
+    all_name[:] = np.array([list(name) for name in wlev['ttideall']['nameu']])
+    all_name.__setattr__('long_name','Names of tidal contituents for entire run')
+
+    all_freq[:] = wlev['ttideall']['fu']
+    all_freq.__setattr__('long_name','Frequencies of tidal contituents for entire run')
+    
+    all_tidecon[:] = wlev['ttideall']['tidecon']
+    all_tidecon.__setattr__('long_name','Results of tidal contituents analysis for entire run')
+    all_tidecon.__setattr__('units','meters and degrees')
+    all_tidecon.__setattr__('comments','amp amp_err phase phase_err')
+    
+    all_z0[:] =wlev['ttideall']['z0']
+    all_z0.__setattr__('long_name','Mean offset (z0) for entire run')
+    all_z0.__setattr__('units','meters')
+    
+    
+    rtide=np.stack([wlev['rtide'][key]['tidecon'] for key in wlev['rtide']])    
+    rz0=np.stack([wlev['rtide'][key]['z0'] for key in wlev['rtide']])
+    
+    mmm_name[:] = np.array([list(name) for name in wlev['rtide']['0']['nameu']])
+    mmm_name.__setattr__('long_name','Names of tidal contituents for wlev length runs')
+
+    mmm_freq[:] = wlev['rtide']['0']['fu']
+    mmm_freq.__setattr__('long_name','Frequencies of tidal contituents for wlev length runs')
+    
+    min_tidecon[:] = rtide.min(axis=0)
+    min_tidecon.__setattr__('long_name','Results of tidal contituents analysis for wlev length run (min)')
+    min_tidecon.__setattr__('units','meters and degrees')
+    min_tidecon.__setattr__('comments','amp amp_err phase phase_err')
+    
+    min_z0[:] = rz0.min(axis=0)
+    min_z0.__setattr__('long_name','Mean offset (z0) for wlev length run (min)')
+    min_z0.__setattr__('units','meters')
+    
+    max_tidecon[:] = rtide.max(axis=0)
+    max_tidecon.__setattr__('long_name','Results of tidal contituents analysis for wlev length run (max)')
+    max_tidecon.__setattr__('units','meters and degrees')
+    max_tidecon.__setattr__('comments','amp amp_err phase phase_err')
+    
+    max_z0[:] = rz0.max(axis=0)
+    max_z0.__setattr__('long_name','Mean offset (z0) for wlev length run (max)')
+    max_z0.__setattr__('units','meters')
+    
+    mean_tidecon[:] = rtide.mean(axis=0)
+    mean_tidecon.__setattr__('long_name','Results of tidal contituents analysis for wlev length run (mean)')
+    mean_tidecon.__setattr__('units','meters and degrees')
+    mean_tidecon.__setattr__('comments','amp amp_err phase phase_err')
+    
+    mean_z0[:] = rz0.mean(axis=0)
+    mean_z0.__setattr__('long_name','Mean offset (z0) for wlev length run (mean)')
+    mean_z0.__setattr__('units','meters')
+
+    ncid.__setattr__('type','Wlev-like ncfile')
+    ncid.__setattr__('history','Created ' +ttime.ctime(ttime.time()) )
+
+    ncid.close()    
 
 
 
+def save_ctdnc(ctd, filename):
+    
+    ncid = n4.Dataset(filename, 'w',format='NETCDF3_CLASSIC')
+
+    #create dimensions
+    ncid.createDimension('time',None)
+    ncid.createDimension('ndepth',len(ctd['h']*ctd['siglay']))
+    ncid.createDimension('one',1) 
+    ncid.createDimension('DateStrLen',19)
+
+    #define variables 
+    cast = ncid.createVariable('ctdnumber','i',('one',))  
+    lon = ncid.createVariable('lon','d',('one',))
+    lat = ncid.createVariable('lat','d',('one',))
+    h = ncid.createVariable('h','d',('one',))
+    dist = ncid.createVariable('dist','d',('one',))
+    time = ncid.createVariable('time','d',('time',))
+    timestamp = ncid.createVariable('Times','c',('time','DateStrLen'))
+    bins = ncid.createVariable('bins','d',('ndepth',))
+    siglay = ncid.createVariable('siglay','d',('ndepth',))
+    temp = ncid.createVariable('temp','d',('time','ndepth'))
+    sal = ncid.createVariable('salinity','d',('time','ndepth'))
+    zeta = ncid.createVariable('zeta','d',('time',))    
+       
+    
+    cast[:] = ctd['CTD_number']   
+    cast.__setattr__('long_name','CTD Deployment Number matched to model location')
+    
+    lon[:] = ctd['lon']
+    lon.__setattr__('long_name','Longitude')
+    lon.__setattr__('units','degrees')   
+    
+    lat[:] = ctd['lat']   
+    lat.__setattr__('long_name','latitude')
+    lat.__setattr__('units','degrees')  
+      
+    time[:] = ctd['time']
+    time.__setattr__('long_name','time')
+    time.__setattr__('units','days')
+    time.__setattr__('comments','python datenum')  
+      
+    #tstr=dates.num2date(dates.datestr2num(ctd['time']['Times']))
+    #tnew=np.array([ t.strftime('%Y-%m-%dT%H:%M:%S') for t in tstr])
+    timestamp[:]=np.array([list(tt) for tt in ctd['Time']])[:]
+    timestamp.__setattr__('long_name','Time string')
+    timestamp.__setattr__('units','yyyy-mm-dd HH:MM:SS')   
+            
+    bins[:]=ctd['h']*ctd['siglay']    
+    bins.__setattr__('long_name','Level Depth')
+    bins.__setattr__('units','meters') 
+    
+    siglay[:]=ctd['siglay']    
+    siglay.__setattr__('long_name','Siglay')
+    
+    h[:]=ctd['h']   
+    h.__setattr__('long_name','Depth')
+    h.__setattr__('units','meters') 
+    
+    dist[:]=ctd['dist']   
+    dist.__setattr__('long_name','Distance between obs and model')
+    dist.__setattr__('units','meters') 
+    
+    temp[:] = ctd['temp']   
+    temp.__setattr__('long_name','Temperature')
+    temp.__setattr__('units','degrees') 
+    
+    sal[:] = ctd['salinity']  
+    sal.__setattr__('long_name','Salinity')
+    sal.__setattr__('units','PSU') 
+               
+    zeta[:] = ctd['zeta']   
+    zeta.__setattr__('long_name','Water Elevation')
+    zeta.__setattr__('units','meters') 
+
+    ncid.__setattr__('type','CTD-like ncfile')
+    ncid.__setattr__('history','Created ' +ttime.ctime(ttime.time()) )
+
+    ncid.close()    

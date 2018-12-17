@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str)
 parser.add_argument("ncfile", help="specify ncfile", type=str)
-parser.add_argument("--station", help="switch to station output instead of fvcom output", default=True,action='store_false')
+parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
 args = parser.parse_args()
 
@@ -91,8 +91,12 @@ for i,filename in enumerate(filenames):
     out['Time']=data['Time'][tidx]
     print('Extracted time')
     
-    out['h']=data['h'][data['nv'][:,idx]].mean()
-    out['zeta']=data['zeta'][tidx,data['nv'][:,idx]].mean(axis=1)
+    if 'station' in tag:
+        out['h']=data['h'][idx].mean()
+        out['zeta']=data['zeta'][tidx,idx].mean(axis=1   
+    else:
+        out['h']=data['h'][data['nv'][:,idx]].mean()
+        out['zeta']=data['zeta'][tidx,data['nv'][:,idx]].mean(axis=1)
     out['ua']=data['ua'][tidx,idx]
     out['va']=data['va'][tidx,idx]
     print('Extracted 2d')
@@ -107,9 +111,9 @@ for i,filename in enumerate(filenames):
     #out['siglev']=data['siglev'][:,idx]
     out['siglay']=data['siglay'][:,idx]
     out['lon']=lon[idx]
-    out['lat']=lon[idx]
+    out['lat']=lat[idx]
     out['ADCP_number']=filename.split('.')[0].split('/')[-1].split('_')[-1]
-    
+    out['dist']=dist[idx]    
     print('Extracted misc')
     
     for key in out:
@@ -120,7 +124,6 @@ for i,filename in enumerate(filenames):
     
     print('Saved')
 
-    kill
 
 
 
