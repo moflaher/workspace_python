@@ -62,6 +62,31 @@ filenames.sort()
 savepath='{}/{}/wlev/{}/'.format(datapath,grid,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
+total=len(filenames)
+used=0
+for i,filename in enumerate(filenames):   
+    wlev = loadnc('',filename,False)
+
+    lona=wlev['lon']
+    lata=wlev['lat'] 
+    days=wlev['days']
+
+    if days<args.days:
+        continue
+
+    wlev['x'],wlev['y']=data['proj'](lona,lata)
+    dist=np.sqrt((x-wlev['x'])**2+(y-wlev['y'])**2)
+    idx=np.argmin(dist)
+
+    #skip observation if no matching time or to far away
+    if dist[idx]>args.dist:
+        continue
+    
+    used+=1
+
+print('='*80)
+print('Using {} of {} wlev files'.format(used,total))
+print('='*80)
 
 for i,filename in enumerate(filenames):
     print('='*80)
