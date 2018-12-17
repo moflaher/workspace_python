@@ -93,10 +93,10 @@ for i,filename in enumerate(filenames):
     
     if 'station' in tag:
         out['h']=data['h'][idx].mean()
-        out['zeta']=data['zeta'][tidx,idx].mean(axis=1   
+        out['zeta']=data['zeta'][tidx,idx].mean(axis=1)   
     else:
-        out['h']=data['h'][data['nv'][:,idx]].mean()
-        out['zeta']=data['zeta'][tidx,data['nv'][:,idx]].mean(axis=1)
+        out['h']=data['h'][data['nv'][idx,:]].mean()
+        out['zeta']=data['zeta'][tidx,data['nv'][idx,:]].mean(axis=1)
     out['ua']=data['ua'][tidx,idx]
     out['va']=data['va'][tidx,idx]
     print('Extracted 2d')
