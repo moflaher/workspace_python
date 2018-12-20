@@ -81,7 +81,7 @@ ax.xaxis.set_major_formatter(monthsFmt)
 ax.legend()
 
 #f.suptitle(pd.DataFrame(test).round(2).T.to_string()[15:].replace(' ','').replace('\n',' '))
-a=pd.DataFrame(test).round(2).T[0]
+a=pd.DataFrame(test,index=[0]).round(2).T[0]
 f.suptitle('Bias: {}   Std: {}   RMSE: {}   RAE: {}   Corr: {}   Skew: {}   Skill: {}'.format(a[0],a[1],a[2],a[3],a[4],a[5],a[6]))
 #ax.set_ylabel('SST ($^{\circ}C$)')
 #ax.set_xlabel('2015-2016')

@@ -1248,11 +1248,17 @@ def plot_tsmap(mod,obs,other):
     plt.close(f)
     
     
-def plot_tsmap2(mod,obs,zeta,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
+def plot_tsmap2(ctdm,ctdo,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
     
     tidx=other['tidx']
     num=other['num']
-
+    zeta=ctdm['zeta']
+    
+    ctdm['depth']=np.outer(ctdm['siglay'],ctdm['h']+ctdm['zeta'])
+    a=''
+    ctdo['Time']=np.array([a.join(b) for b in ctdo['timestamp']])
+    ctdm['temp']=ctdm['temp'].T
+    ctdm['salinity']=ctdm['salinity'].T
     
     f=plt.figure(figsize=(12,8))
     axm=f.add_axes([.1,.3,.35,.6])
@@ -1273,36 +1279,36 @@ def plot_tsmap2(mod,obs,zeta,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
     #f.show()
     
     plotcoast(axm,filename='mid_nwatl6c_sjh_lr.nc', filepath=coastpath, color='k', fill=True)
-    axm.plot(obs['Lon'],obs['Lat'],'*r',markersize=10)
-    axm.plot(mod['longitue'],mod['latitude'],'.',color='lawngreen',markersize=5)
+    axm.plot(ctdo['lon'],ctdo['lat'],'*r',markersize=10)
+    axm.plot(ctdm['lon'],ctdm['lat'],'.',color='lawngreen',markersize=5)
     axm.axis([-67.5,-65,44.9,45.8])
     
-    axz.plot(zeta['time'],zeta['zeta'],'k')
-    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,0]))
-    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.b')
-    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,-1]))
-    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.b')
-    pidx=np.argmin(np.fabs(zeta['time']-mod['arrays']['time'][0,tidx]))
-    axz.plot(zeta['time'][pidx],zeta['zeta'][pidx],'.',color='lawngreen')
-    axz.set_xlim([zeta['time'][pidx]-18/24.0,zeta['time'][pidx]+18/24.0])
-    axz.set_xticks([zeta['time'][pidx]-12/24.0,zeta['time'][pidx]-6/24.0,zeta['time'][pidx]-3/24.0,zeta['time'][pidx],zeta['time'][pidx]+3/24.0,zeta['time'][pidx]+6/24.0,zeta['time'][pidx]+12/24.0])
-    axz.set_xticklabels([str(a) for a in np.round(24*(axz.get_xticks()-zeta['time'][pidx]))])
+    axz.plot(ctdm['time'],zeta,'k')
+    pidx=np.argmin(np.fabs(ctdm['time']-ctdm['time'][0]))
+    axz.plot(ctdm['time'][pidx],zeta[pidx],'.b')
+    pidx=np.argmin(np.fabs(ctdm['time']-ctdm['time'][-1]))
+    axz.plot(ctdm['time'][pidx],zeta[pidx],'.b')
+    pidx=np.argmin(np.fabs(ctdm['time']-ctdm['time'][tidx]))
+    axz.plot(ctdm['time'][pidx],zeta[pidx],'.',color='lawngreen')
+    axz.set_xlim([ctdm['time'][pidx]-18/24.0,ctdm['time'][pidx]+18/24.0])
+    axz.set_xticks([ctdm['time'][pidx]-12/24.0,ctdm['time'][pidx]-6/24.0,ctdm['time'][pidx]-3/24.0,ctdm['time'][pidx],ctdm['time'][pidx]+3/24.0,ctdm['time'][pidx]+6/24.0,ctdm['time'][pidx]+12/24.0])
+    axz.set_xticklabels([str(a) for a in np.round(24*(axz.get_xticks()-ctdm['time'][pidx]))])
 
     
     #print(tidx)
     #print(mod['time'][0],mod['time'][tidx],mod['time'][-1])
     
-    axt.plot(mod['arrays']['temperature'],mod['arrays']['depth'],'b',lw=.75)
-    axt.plot(mod['arrays']['temperature'][:,Tidx],mod['arrays']['depth'][:,Tidx],color='dodgerblue',lw=.75)
-    axt.plot(obs['Temp'],-1*obs['Depth'],'r',lw=2.5)
-    axt.plot(mod['arrays']['temperature'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+    axt.plot(ctdm['temp'],ctdm['depth'],'b',lw=.75)
+    axt.plot(ctdm['temp'][:,Tidx],ctdm['depth'][:,Tidx],color='dodgerblue',lw=.75)
+    axt.plot(ctdo['temp'].T,-1*ctdo['depth'].T,'r',lw=2.5)
+    axt.plot(ctdm['temp'][:,tidx],ctdm['depth'][:,tidx],'lawngreen',lw=2.5)
     
-    axs.plot(mod['arrays']['salinity'],mod['arrays']['depth'],'b',lw=.75)
-    axs.plot(mod['arrays']['salinity'][:,Sidx],mod['arrays']['depth'][:,Sidx],color='dodgerblue',lw=.75)
-    axs.plot(obs['Salinity'],-1*obs['Depth'],'r',lw=2.5)
-    axs.plot(mod['arrays']['salinity'][:,tidx],mod['arrays']['depth'][:,tidx],'lawngreen',lw=2.5)
+    axs.plot(ctdm['salinity'],ctdm['depth'],'b',lw=.75)
+    axs.plot(ctdm['salinity'][:,Sidx],ctdm['depth'][:,Sidx],color='dodgerblue',lw=.75)
+    axs.plot(ctdo['salinity'].T,-1*ctdo['depth'].T,'r',lw=2.5)
+    axs.plot(ctdm['salinity'][:,tidx],ctdm['depth'][:,tidx],'lawngreen',lw=2.5)
 
-    axm.text(.075,.9,'{}'.format(obs['TimeStamp'].replace('T',' ')),transform=axm.transAxes)
+    axm.text(.075,.9,'{}'.format(ctdo['Time'][0].replace('T',' ')),transform=axm.transAxes)
     f.suptitle('{}\n{} - {}'.format(num,other['grid'],other['name']))
     
     axm.set_ylabel('Latitude')
@@ -1315,13 +1321,13 @@ def plot_tsmap2(mod,obs,zeta,other,Tstats,Sstats,bTstats,bSstats,Tidx,Sidx,ht):
     Tin=OrderedDict()
     Tin[str(num)]=np.append(Tstats[str(num)].values(),ht)
     #print(Tidx)
-    #print(mod['arrays']['time'][0,Tidx])
-    Tin['Time (m)']=np.append((np.round(24*60*(obs['time']-mod['arrays']['time'][0,Tidx]))).astype(int),ht)
+    #print(ctdm['time'][0,Tidx])
+    Tin['Time (m)']=np.append((np.round(24*60*(ctdo['time']-ctdm['time'][Tidx]))).astype(int),ht)
     Tin['Best']=np.append(bTstats[np.arange(7),Tidx],ht)
     
     Sin=OrderedDict()
     Sin[str(num)]=Sstats[str(num)].values()
-    Sin['Time (m)']=(np.round(24*60*(obs['time']-mod['arrays']['time'][0,Sidx]))).astype(int)
+    Sin['Time (m)']=(np.round(24*60*(ctdo['time']-ctdm['time'][Sidx]))).astype(int)
     Sin['Best']=bSstats[np.arange(7),Sidx]
     
     dfT=pd.DataFrame(Tin,columns=[str(num),'Time (m)','Best']).round(2)
