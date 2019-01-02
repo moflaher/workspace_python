@@ -26,6 +26,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str,default=None, nargs='?')
+parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -42,6 +43,11 @@ if args.name is None:
 else:
     name=args.name
 
+
+if args.station:
+    tag='station'
+else:
+    tag='fvcom'  
 
 
 
@@ -85,7 +91,7 @@ a=pd.DataFrame(test,index=[0]).round(2).T[0]
 f.suptitle('Bias: {}   Std: {}   RMSE: {}   RAE: {}   Corr: {}   Skew: {}   Skill: {}'.format(a[0],a[1],a[2],a[3],a[4],a[5],a[6]))
 #ax.set_ylabel('SST ($^{\circ}C$)')
 #ax.set_xlabel('2015-2016')
-f.savefig('{}{}_buoy_compare.png'.format(savepath,name),dpi=300)
+f.savefig('{}{}_buoy_compare_{}.png'.format(savepath,name,tag),dpi=300)
 
 #diff=itemp-tempd
 

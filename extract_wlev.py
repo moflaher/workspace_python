@@ -20,7 +20,7 @@ parser.add_argument("ncfile", help="specify ncfile", type=str)
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
 parser.add_argument("-snr", help="signal to noise ratio value used for constituent cutoff", type=float,default=2.0)
-parser.add_argument("-days", help="Min. record length for wlev file to be used", type=float, default=2929292929292929292929292929292929292929292929292929292929.0)
+parser.add_argument("-days", help="Min. record length for wlev file to be used", type=float, default=29.0)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")

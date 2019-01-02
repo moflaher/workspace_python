@@ -14,8 +14,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str)
-parser.add_argument("--fvcom", help="switch to fvcom instead of station", default=False,action='store_true')
-parser.add_argument("-ncfile", help="manual specify ncfile", type=str, default=None)
+parser.add_argument("ncfile", help="specify ncfile", type=str)
+parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -23,37 +23,29 @@ print(args)
 
 name=args.name
 grid=args.grid
-
-
-### load the .nc file #####
-if args.fvcom:
-    tag='0001.nc'
-else:
-    tag='station_timeseries.nc'
-
-if args.ncfile is None:
-    args.ncfile='{}/{}/runs/{}/output/{}_{}'.format(grid,tag)
-
 ncfile=args.ncfile
 ncloc=ncfile.rindex('/')
-
-if args.fvcom:
-    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
-else:
+if args.station:
     data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:],False)
     data['lon']=data['lon']-360
     data['x'],data['y'],data['proj']=lcc(data['lon'],data['lat'])
-print('done load')
-
-if 'time_JD' in data.keys():
-    data['time']=data['time_JD']+(data['time_second']/86400.0)+678576
-else:
-    data['time']=data['time']+678576
-    
-if not 'Time' in data.keys():
+    x,y=data['x'],data['y']
+    lon,lat=data['lon'],data['lat']
+    tag='station'
+    if 'time' in data:
+        data['time']=data['time']+678576
+    #older station files    
+    if 'time_JD' in data:
+        data['time']=data['time_JD']+(data['time_second']/86400.0)+678576        
     data['dTimes']=dates.num2date(data['time'])
     data['Time']=np.array([ct.isoformat(sep=' ')[:19] for ct in data['dTimes']])
-print('done time')
+else:
+    data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
+    lon,lat=data['lon'],data['lat']
+    x,y=data['x'],data['y']
+    tag='fvcom'   
+
+print('done load')
 
 
 savepath='{}/{}/buoy/{}/'.format(datapath,grid,name)
