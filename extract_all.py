@@ -27,24 +27,38 @@ print("The current commandline arguments being used are")
 print(args)
 
 
-mainline='{} {} {}'.format(args.name,args.grid,args.ncfile)
+mainline='{} {} {}'.format(args.grid,args.name,args.ncfile)
 
-if args.dist != 10000:
-    mainline='{} -dist {}'.format(mainline,args.dist)
-if args.snr != 2.0:
-    mainline='{} -snr {}'.format(mainline,args.snr)
-if args.days != 29.0:
-    mainline='{} -days {}'.format(mainline,args.days)
 if args.station:
     mainline='{} --station'.format(mainline)
 
 
 os.system('python extract_buoy.py {}'.format(mainline))
+
+
+if args.dist != 10000:
+    mainline='{} -dist {}'.format(mainline,args.dist)
+
+
 os.system('python extract_tg.py {}'.format(mainline))
 os.system('python extract_ctd.py {}'.format(mainline))
 os.system('python extract_adcp.py {}'.format(mainline))
+
+if args.snr != 2.0:
+    mainline='{} -snr {}'.format(mainline,args.snr)
+if args.days != 29.0:
+    mainline='{} -days {}'.format(mainline,args.days)
+
 os.system('python extract_wlev.py {}'.format(mainline))
 
 
+if args.station:
+    os.system('python plot_buoy.py {} {} --station'.format(args.grid,args.name))
+    os.system('python plot_tg.py {} {} --station'.format(args.grid,args.name))
+    os.system('python plot_ctd.py {} {} --station'.format(args.grid,args.name))
+else:
+    os.system('python plot_buoy.py {} {}'.format(args.grid,args.name))
+    os.system('python plot_tg.py {} {}'.format(args.grid,args.name))
+    os.system('python plot_ctd.py {} {}'.format(args.grid,args.name))
 
 
