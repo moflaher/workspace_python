@@ -12,41 +12,80 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
-import multiprocessing
-import pymp
+#import multiprocessing
+#import pymp
 import seawater as sw
+import argparse
 
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("grid", help="name of the grid", type=str)
+parser.add_argument("name", help="name of the run", type=str)
+parser.add_argument("field", help="field to plot from ncfile", type=str, default=None, nargs='?')
+parser.add_argument("times", help="specify start and end step",type=int,nargs=2)
+parser.add_argument("minmax", help="specify zoom axis",type=float,nargs=2)
+parser.add_argument("ncfile", help="specify ncfile", type=str)
+parser.add_argument("-dpi", help="dpi of plot",type=int, default=150)
+parser.add_argument("-zoom", help="specify zoom axis",type=float,nargs=4,default=None)
+parser.add_argument("-region", help="specify predefined region",type=str,default=None)
+parser.add_argument("-layer", help="specify layer to plot",type=str,default='da')
+parser.add_argument("--coastline", help="disable coastline",type=bool,default=True)
+#parser.add_argument("--vectorflag", help="disable coastline",type=bool,default=True)
+args = parser.parse_args()
+
+print("The current commandline arguments being used are")
+print(args)
 
 
 # Define names and types of data
-name='sjh_lr_v1_sub_fit_N4_test_nest'
-grid='sjh_lr_v1_sub'
+name=args.name
+grid=args.grid
+field=args.field
+starttime=args.times[0]
+endtime=args.times[1]
+cmin=args.minmax[0]
+cmax=args.minmax[1]
+ncfile=args.ncfile
+ncloc=ncfile.rindex('/')
+if 'da' not in args.layer:
+    layer=int(args.layer)
+coastflag=args.coastline
+if field in None:
+    print('Please specify one of the following field:')  
+    print(['temp','salinity','speed','u','v','vorticity','density','zeta'])
+    sys.exit()
+regionname=args.region
 
-regionname='sfmwhole'
-starttime=1000
-endtime=1025
-layer=0
-cmin=0
-cmax=2
-field='speed'
 
-coastflag=True
-vectorflag=False
-uniformvectorflag=False
-vector_spacing=800
-vector_scale=100
+
+# vectorflag=False
+# uniformvectorflag=False
+# vector_spacing=800
+# vector_scale=100
 
 
 ### load the .nc file #####
-data = loadnc('/home/suh001/scratch/{}/runs/{}/output/'.format(grid,name),singlename=grid + '_0001.nc')
+data = loadnc(ncfile[:ncloc+1],ncfile[ncloc+1:])
 print('done load')
 
 if endtime==-1:
     endtime=len(data['time'])
     print('Plotting {} timesteps'.format(endtime-starttime))
-region=regions(regionname)
+    
+if regionname is not None:
+    region=regions(regionname)
+else:
+    if args.zoom is not None:
+        region={'region':np.array([args.zoom])}
+    else:
+        region={'region': np.array([data['lon'].min(),data['lon'].max(),data['lat'].min(),data['lat'].max()])}
+    region['regionname']=array2str(region['region'])
+        
+
 #region['region']=np.array([1.5,2.5,1.9,2.1])
-vidx=equal_vectors(data,region,vector_spacing)
+#vidx=equal_vectors(data,region,vector_spacing)
 
 savepath='{}timeseries/{}/{}/{}/{}_{}_{:.4f}_{:.4f}/'.format(figpath,grid,field,name,region['regionname'],layer,cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
@@ -65,12 +104,12 @@ def plot_fun(i):
     
     triax=ax.tripcolor(data['trigrid'],fieldout,vmin=cmin,vmax=cmax)    
     
-    if vectorflag:
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
-        qaxk=ax.quiverkey(Q1,.775,.9,.5, r'.5 ms$^{-1}$')
-    if uniformvectorflag:
-        norm=np.sqrt(data['u'][i,layer,vidx]**2+data['v'][i,layer,vidx]**2)
-        Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['u'][i,layer,vidx],norm),np.divide(data['v'][i,layer,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
+    # if vectorflag:
+        # Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
+        # qaxk=ax.quiverkey(Q1,.775,.9,.5, r'.5 ms$^{-1}$')
+    # if uniformvectorflag:
+        # norm=np.sqrt(data['u'][i,layer,vidx]**2+data['v'][i,layer,vidx]**2)
+        # Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],np.divide(data['u'][i,layer,vidx],norm),np.divide(data['v'][i,layer,vidx],norm),angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.002,color='k')  
     
     cb=plt.colorbar(triax)
     cb.set_label(fieldname,fontsize=10)    

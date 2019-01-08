@@ -1150,6 +1150,15 @@ def plot_idntown(data):
     f.show()
     return f,ax
 
+def array2str(array_in):
+    """
+    Helper function to convert array in to a string with underscores
+    """
+    
+    str_out=str(array_in)[1:-1].replace('  ',' ').replace(' ','_')
+    
+    return str_out
+
 
 def select_field(data, field, i, layer=None):
     """
