@@ -83,7 +83,7 @@ else:
         region={'region':np.array([args.zoom])}
     else:
         region={'region': np.array([data['lon'].min(),data['lon'].max(),data['lat'].min(),data['lat'].max()])}
-    region['regionname']='zoom_'+array2str(region['region'])
+    region['regionname']='zoom_'+array2str(region['region'])[:-1]
     region['figsize']=(4,3)
     region['axes']=[.125,.1,.775,.8]
     region['coast']='mid_nwatl6c_sjh_lr.nc'
@@ -91,7 +91,7 @@ else:
 #region['region']=np.array([1.5,2.5,1.9,2.1])
 #vidx=equal_vectors(data,region,vector_spacing)
 
-savepath='{}timeseries/{}/{}/{}/{}{}_{:.4f}_{:.4f}/'.format(figpath,grid,field,name,region['regionname'],layer,cmin,cmax)
+savepath='{}timeseries/{}/{}/{}/{}_{}_{:.4f}_{:.4f}/'.format(figpath,grid,field,name,region['regionname'],layer,cmin,cmax)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 

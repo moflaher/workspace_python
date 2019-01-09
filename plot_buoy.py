@@ -50,8 +50,6 @@ if args.station:
 else:
     tag='fvcom'  
 
-figstr='{}{}_buoy_compare_{}.png'.format(savepath,name,tag)
-
 
 st=2208
 st=0
@@ -60,20 +58,21 @@ df=pd.read_csv('{}/east/buoy/SA_Saint_John_Buoy_03152015_04302016.csv'.format(ob
 time=np.array(dates.datestr2num(df.values[st:cut,0].astype(str)))
 temp=df.values[st:cut,8].astype(float)
 
-if args.dates is not None:
-    din=dates.datestr2num(args.dates)
-    idx=np.argwhere((time>=din[0]) & (time<=din[1]))
-    time=np.ravel(time[idx])
-    temp=np.ravel(time[idx])
-    figstr='{}{}_buoy_compare_{}_{}_to_{}.png'.format(savepath,name,tag,args.dates[0],args.dates[1])
-    
-
 
 months = dates.MonthLocator()
 monthsFmt = dates.DateFormatter('%b')
 
 savepath='{}png/{}/buoy/{}/'.format(figpath,grid,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
+
+
+figstr='{}{}_buoy_compare_{}.png'.format(savepath,name,tag)
+if args.dates is not None:
+    din=dates.datestr2num(args.dates)
+    idx=np.argwhere((time>=din[0]) & (time<=din[1]))
+    time=np.ravel(time[idx])
+    temp=np.ravel(temp[idx])
+    figstr='{}{}_buoy_compare_{}_{}_to_{}.png'.format(savepath,name,tag,args.dates[0],args.dates[1])
 
 
 inpath='{}/{}/buoy/{}/'.format(datapath,grid,name)
