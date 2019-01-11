@@ -33,6 +33,7 @@ parser.add_argument("-region", help="specify predefined region",type=str,default
 parser.add_argument("-layer", help="specify layer to plot",type=str,default='da')
 parser.add_argument("--coastline", help="disable coastline",type=bool,default=True)
 #parser.add_argument("--vectorflag", help="disable coastline",type=bool,default=True)
+parser.add_argument("-cmap", help="specify colormap",type=str,default='viridis')
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -106,7 +107,7 @@ def plot_fun(i):
     if coastflag:
         plotcoast(ax,filename=region['coast'], filepath=coastpath, color='k', fill=True)   
     
-    triax=ax.tripcolor(data['trigrid'],fieldout,vmin=cmin,vmax=cmax)    
+    triax=ax.tripcolor(data['trigrid'],fieldout,vmin=cmin,vmax=cmax,cmap=mpl.cm.get_cmap(args.cmap))    
     
     # if vectorflag:
         # Q1=ax.quiver(data['uvnodell'][vidx,0],data['uvnodell'][vidx,1],data['ua'][i,vidx],data['va'][i,vidx],angles='xy',scale_units='xy',scale=vector_scale,zorder=100,width=.001)    
