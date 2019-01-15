@@ -27,6 +27,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("grid", help="name of the grid", type=str)
 parser.add_argument("name", help="name of the run", type=str,default=None, nargs='?')
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
+parser.add_argument("-dates", help="specify start and end date",type=str,nargs=2,default=None)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -68,7 +69,16 @@ for i,filename in enumerate(filenames):
     tgo = loadnc('{}east/all/'.format(obspath),'tg_{:05d}.nc'.format(tgm['tgnumber'][0]),False)
 
 
-    time1,data1,data2=interp_clean_common(tgo['time'],tgo['zeta'],tgm['time'],tgm['zeta'],500,-500)
+    if args.dates is not None:
+        din=dates.datestr2num(args.dates)
+        figstr='{}{}_{}_tg_{:05d}_{}_to_{}.png'.format(savepath,grid,name,tgm['tgnumber'][0],args.dates[0],args.dates[1])
+    else:
+        din=np.array([tgo['time'][0],tgo['time'][-1]])
+        figstr='{}{}_{}_tg_{:05d}.png'.format(savepath,grid,name,tgm['tgnumber'][0])
+        
+    idx=np.argwhere((tgo['time']>=din[0]) & (tgo['time']<=din[1]))
+
+    time1,data1,data2=interp_clean_common(tgo['time'][idx],tgo['zeta'][idx],tgm['time'],tgm['zeta'],500,-500)
     stats=residual_stats(data2-np.mean(data2), data1-np.mean(data1))
     a=pd.DataFrame(stats,index=[0]).round(2).T[0]
 
@@ -78,7 +88,7 @@ for i,filename in enumerate(filenames):
     ax.plot(time1,data2-np.mean(data2),'r',lw=.5,label='{}'.format(name))
     ax.legend()    
     f.suptitle('Removed TG means - Obs: {}     Model: {}\n Bias: {}   Std: {}   RMSE: {}   RAE: {}   Corr: {}   Skew: {}   Skill: {}'.format(np.mean(data1),np.mean(data2),a[0],a[1],a[2],a[3],a[4],a[5],a[6]))
-    f.savefig('{}{}_{}_tg_{:05d}.png'.format(savepath,grid,name,tgm['tgnumber'][0]),dpi=600)
+    f.savefig(figstr,dpi=600)
     
     
     #kill

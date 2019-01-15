@@ -1160,7 +1160,7 @@ def array2str(array_in):
     return str_out
 
 
-def select_field(data, field, i, layer=None):
+def select_field(data, field, i, layer='da'):
     """
     Helper function to select the correct field and name for the field
     """
@@ -1202,7 +1202,7 @@ def select_field(data, field, i, layer=None):
         fieldout = sw.dens(data['salinity'][i,layer,:],data['temp'][i,layer,:],pres)
         
     else:
-        if layer==None:
+        if layer=='da':
             fieldout = data[field][i,:]
         else:
             fieldout = data[field][i,layer,:]
