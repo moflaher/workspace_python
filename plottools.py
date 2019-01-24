@@ -1155,7 +1155,7 @@ def array2str(array_in):
     Helper function to convert array in to a string with underscores
     """
     
-    str_out=str(array_in)[1:-1].replace('  ',' ').replace(' ','_')
+    str_out=str(array_in)[1:-1].replace('  ',' ').replace('  ',' ').replace(' ','_')
     
     return str_out
 
