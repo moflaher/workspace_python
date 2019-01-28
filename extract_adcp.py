@@ -19,6 +19,7 @@ parser.add_argument("name", help="name of the run", type=str)
 parser.add_argument("ncfile", help="specify ncfile", type=str)
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
+parser.add_argument("-fake", help="define a fake adcp", type=float,default=None,nargs=4)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -52,8 +53,11 @@ else:
 print('done load')
 
 # find adcp ncfiles
-filenames=glob.glob('{}east/all/adcp_*.nc'.format(obspath))
-filenames.sort()
+if args.fake is None:
+    filenames=glob.glob('{}east/all/adcp_*.nc'.format(obspath))
+    filenames.sort()
+else:
+    filesnames=['fake_adcp_{}_{}_{}_{}.nc'.format(args.fake[0],args.fake[1],args.fake[2],args.fake[3])]
 
 #create location to save model ncfiles
 savepath='{}/{}/adcp/{}/'.format(datapath,grid,name)
@@ -67,9 +71,14 @@ for i,filename in enumerate(filenames):
     
     adcp = loadnc('',filename,False)
 
-    lona=adcp['lon']
-    lata=adcp['lat'] 
-    time=adcp['time']
+    if args.fake is None:
+        lona=adcp['lon']
+        lata=adcp['lat'] 
+        time=adcp['time']
+    else:
+        lona=args.fake[0]
+        lata=args.fake[1]
+        time=np.array([dates.datestr2num(args.fake[2]),dates.datestr2num(args.fake[3])])
     adcp['x'],adcp['y']=data['proj'](lona,lata)
 
     dist=np.sqrt((x-adcp['x'])**2+(y-adcp['y'])**2)
