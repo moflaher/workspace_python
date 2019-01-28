@@ -70,16 +70,19 @@ for i,filename in enumerate(filenames):
     print(i)
     print(filename)
     
-    adcp = loadnc('',filename,False)
-
-    if args.fake is None:
-        lona=adcp['lon']
-        lata=adcp['lat'] 
-        time=adcp['time']
+    if args.fake is None:    
+        adcp = loadnc('',filename,False)
     else:
-        lona=args.fake[0]
-        lata=args.fake[1]
-        time=np.array([dates.datestr2num(args.fake[2]),dates.datestr2num(args.fake[3])])
+        adcp={}
+        adcp['lon']=args.fake[0]
+        adcp['lat']=args.fake[1]
+        adcp['time']=np.array([dates.datestr2num(args.fake[2]),dates.datestr2num(args.fake[3])])
+    
+    
+    lona=adcp['lon']
+    lata=adcp['lat'] 
+    time=adcp['time']
+
     adcp['x'],adcp['y']=data['proj'](lona,lata)
 
     dist=np.sqrt((x-adcp['x'])**2+(y-adcp['y'])**2)
