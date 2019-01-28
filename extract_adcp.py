@@ -57,7 +57,8 @@ if args.fake is None:
     filenames=glob.glob('{}east/all/adcp_*.nc'.format(obspath))
     filenames.sort()
 else:
-    filesnames=['fake_adcp_{}_{}_{}_{}.nc'.format(args.fake[0],args.fake[1],args.fake[2],args.fake[3])]
+    print('Using specified fake adcp')
+    filenames=['fake_adcp_{}_{}_{}_{}.nc'.format(args.fake[0],args.fake[1],args.fake[2],args.fake[3])]
 
 #create location to save model ncfiles
 savepath='{}/{}/adcp/{}/'.format(datapath,grid,name)
