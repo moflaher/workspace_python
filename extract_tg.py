@@ -19,7 +19,7 @@ parser.add_argument("name", help="name of the run", type=str)
 parser.add_argument("ncfile", help="specify ncfile", type=str)
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
-parser.add_argument("-fake", help="define a fake adcp", type=float,default=None,nargs=4)
+parser.add_argument("-fake", help="define a fake adcp", type=str,default=None,nargs=4)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
