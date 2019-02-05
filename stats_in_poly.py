@@ -22,7 +22,7 @@ import argparse
 import matplotlib.path as path
 
 
-data=loadnc('/mnt/drive_1/runs/sjh_lr_v1/sjh_lr_v1_year_wd_gotm-my25_bathy20171109_dt30_calib1_jcool0_15mins/output','sjh_lr_v1_0001.nc')
+data=loadnc('/home/suh001/scratch/passbay_v4/runs/passbay_v4_sjr_flow_limiter_test.2/output','passbay_v4_0001.nc')
 
 
 farmslat=np.array([[44,39,27.69],
@@ -57,18 +57,30 @@ idx=p.contains_points(np.array([data['lonc'],data['latc']]).T)
 idxa=p.contains_points(np.array([data['lon'],data['lat']]).T)
 
 ua=data['ua'][:,idx]
-print('ua')
-print(ua.min(),ua.max(),ua.mean(),np.percentile(ua,[10,90]))
+#print('ua')
+#print(ua.min(),ua.max(),ua.mean(),np.percentile(ua,[10,90]))
 va=data['va'][:,idx]
-print('va')
+#print('va')
+#print(va.min(),va.max(),va.mean(),np.percentile(va,[10,90]))
+kill
+#zeta=data['zeta'][:,idxa]
+#print('zeta')
+#print(zeta.min(),zeta.max(),zeta.mean(),np.percentile(zeta,[10,90]))
+
+#speed=np.sqrt(ua**2+va**2)
+#print('speed')
+#print(speed.min(),speed.max(),speed.mean(),np.percentile(speed,[10,90]))
+
+ua=data['u'][:,-1,idx]
+print('u')
+print(ua.min(),ua.max(),ua.mean(),np.percentile(ua,[10,90]))
+va=data['v'][:,-1,idx]
+print('v')
 print(va.min(),va.max(),va.mean(),np.percentile(va,[10,90]))
 
-zeta=data['zeta'][:,idxa]
-print('zeta')
-print(zeta.min(),zeta.max(),zeta.mean(),np.percentile(zeta,[10,90]))
-
-
-
+speed=np.sqrt(ua**2+va**2)
+print('speed noda')
+print(speed.min(),speed.max(),speed.mean(),np.percentile(speed,[10,90]))
 
 farmsoldlat=np.array([[44,39,20.34],
 		   [44,39,20.40],
@@ -94,18 +106,32 @@ p=path.Path(np.vstack([lonold,latold]).T)
 idx=p.contains_points(np.array([data['lonc'],data['latc']]).T)    
 idxa=p.contains_points(np.array([data['lon'],data['lat']]).T)
 
-ua=data['ua'][:,idx]
-print('ua')
+#ua=data['ua'][:,idx]
+#print('ua')
+#print(ua.min(),ua.max(),ua.mean(),np.percentile(ua,[10,90]))
+#va=data['va'][:,idx]
+#print('va')
+#print(va.min(),va.max(),va.mean(),np.percentile(va,[10,90]))
+
+#zeta=data['zeta'][:,idxa]
+#print('zeta')
+#print(zeta.min(),zeta.max(),zeta.mean(),np.percentile(zeta,[10,90]))
+
+
+#speed=np.sqrt(ua**2+va**2)
+#print('speed')
+#print(speed.min(),speed.max(),speed.mean(),np.percentile(speed,[10,90]))
+
+ua=data['u'][:,-1,idx]
+print('u')
 print(ua.min(),ua.max(),ua.mean(),np.percentile(ua,[10,90]))
-va=data['va'][:,idx]
-print('va')
+va=data['v'][:,-1,idx]
+print('v')
 print(va.min(),va.max(),va.mean(),np.percentile(va,[10,90]))
 
-zeta=data['zeta'][:,idxa]
-print('zeta')
-print(zeta.min(),zeta.max(),zeta.mean(),np.percentile(zeta,[10,90]))
-
-
+speed=np.sqrt(ua**2+va**2)
+print('speed noda')
+print(speed.min(),speed.max(),speed.mean(),np.percentile(speed,[10,90]))
 
 
 

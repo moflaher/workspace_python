@@ -46,11 +46,11 @@ print(args)
 # Define names and types of data
 name=args.name
 grid=args.grid
-field=args.field
+#field=args.field
 starttime=args.times[0]
 endtime=args.times[1]
-cmin=args.minmax[0]
-cmax=args.minmax[1]
+#cmin=args.minmax[0]
+#cmax=args.minmax[1]
 ncfile=args.ncfile
 ncloc=ncfile.rindex('/')
 if args.layer!='da':
@@ -116,7 +116,7 @@ lonold=np.append(lonold,lonold[0])
 
 # filenames=np.hstack([cellfile,nodefile]).T
 
-
+print(region)
 savepath='{}png/{}/max_speed/{}/{}/'.format(figpath,grid,name,region['regionname'])
 if not os.path.exists(savepath): os.makedirs(savepath)
 
@@ -130,12 +130,14 @@ if coastflag:
 
 idx=get_elements(data,region)
 
-tidx=np.argwhere((data['time']>=data['time'][args.minmax[0]])&(data['time']<=data['time'][args.minmax[1]]))
+tidx=np.argwhere((data['time']>=data['time'][args.times[0]])&(data['time']<=data['time'][args.times[1]]))
 speed=np.sqrt(data['ua'][tidx,:]**2+data['va'][tidx,:]**2)
 maxspeed=speed.max(axis=0)
+print(maxspeed.shape)
 
-clim=np.percentile(maxspeed[idx.flatten()],[5,95])
-triax=ax.tripcolor(data['trigrid'],maxspeed,vmin=clim[0],vmax=clim[1])
+
+clim=np.percentile(maxspeed[0,idx.flatten()],[5,95])
+triax=ax.tripcolor(data['trigrid'],maxspeed[0,],vmin=0,vmax=2)
 ax.plot(-1*lon,lat,'k',lw=2,zorder=100)
 ax.plot(-1*lonold,latold,'r',lw=2,zorder=50)
 
@@ -144,14 +146,14 @@ ax.plot(-1*lonold,latold,'r',lw=2,zorder=50)
     # qaxk=ax.quiverkey(Q1,.775,.9,2, r'2 ms$^{-1}$')
 
 cb=plt.colorbar(triax)
-cb.set_label(field,fontsize=10)    
+cb.set_label('Max Speed (m/s)',fontsize=10)    
 ax.set_xlabel(r'Longitude ($^{\circ}$)')
 ax.set_ylabel(r'Latitude ($^{\circ}$)')
 ax.axis(region['region'])
 #ax.annotate('{}'.format(filename[136:-4]),xy=(.425,.93),xycoords='axes fraction')
 for label in ax.get_xticklabels()[::2]:
     label.set_visible(False)
-f.savefig('{}{}_{}_{}_{}_{:05d}.png'.format(savepath,grid,name,region['regionname'],'maxspeed',i),dpi=300)
+f.savefig('{}{}_{}_{}_{}_{:05d}_{:05d}.png'.format(savepath,grid,name,region['regionname'],'maxspeed',starttime,endtime),dpi=300)
 plt.close(f)
 
 
