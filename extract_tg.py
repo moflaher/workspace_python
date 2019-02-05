@@ -19,6 +19,7 @@ parser.add_argument("name", help="name of the run", type=str)
 parser.add_argument("ncfile", help="specify ncfile", type=str)
 parser.add_argument("--station", help="switch to station output instead of fvcom output", default=False,action='store_true')
 parser.add_argument("-dist", help="max distance from obs to be allowed", type=float,default=10000)
+parser.add_argument("-fake", help="define a fake adcp", type=float,default=None,nargs=4)
 args = parser.parse_args()
 
 print("The current commandline arguments being used are")
@@ -51,9 +52,15 @@ else:
 
 print('done load')
 
-# find tg ncfiles
-filenames=glob.glob('{}east/all/tg_*.nc'.format(obspath))
-filenames.sort()
+
+# find adcp ncfiles
+if args.fake is None:
+    filenames=glob.glob('{}east/all/tg_*.nc'.format(obspath))
+    filenames.sort()
+else:
+    print('Using specified fake tg')
+    filenames=['fake_tg_{}_{}_{}_{}.nc'.format(args.fake[0],args.fake[1],args.fake[2],args.fake[3])]
+
 
 #create location to save model ncfiles
 savepath='{}/{}/tg/{}/'.format(datapath,grid,name)
@@ -65,8 +72,14 @@ for i,filename in enumerate(filenames):
     print(i)
     print(filename)
     
-    tg = loadnc('',filename,False)
-
+    if args.fake is None:    
+        tg = loadnc('',filename,False)
+    else:
+        tg={}
+        tg['lon']=args.fake[0]
+        tg['lat']=args.fake[1]
+        tg['time']=np.array([dates.datestr2num(args.fake[2]),dates.datestr2num(args.fake[3])])
+    
     lona=tg['lon']
     lata=tg['lat'] 
     time=tg['time']
@@ -104,7 +117,7 @@ for i,filename in enumerate(filenames):
     for key in out:
         out[key]=np.squeeze(out[key])
     
-    savepath2='{}{}_{}.nc'.format(savepath,filename.split('.')[0].split('/')[-1],tag)
+    savepath2='{}{}_{}.nc'.format(savepath,filename[:filename.rfind('.')].split('/')[-1],tag)
     save_tgnc(out,savepath2)
     
     print('Saved')

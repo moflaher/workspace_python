@@ -64,6 +64,7 @@ def makeregions():
     allregions['gp_tight'] = {'regionname' : 'gp_tight', 'group' : 'digbyneck', 'region' : [-66.355, -66.32, 44.245, 44.2925]} 
     allregions['gp3'] = {'regionname' : 'gp3', 'group' : 'digbyneck', 'region' : [-66.345, -66.33, 44.26, 44.275]} 
     allregions['abasin'] = {'regionname' : 'abasin', 'group' : 'digbyneck', 'region' : [-65.8262, -65.5813, 44.5651, 44.7855]}
+    allregions['abasin2'] = {'regionname' : 'abasin2', 'group' : 'digbyneck', 'region' : [-65.994, -65.5813, 44.5651, 44.7855]}
     allregions['rattling_beach'] = {'regionname' : 'rattling_beach', 'group' : 'digbyneck', 'region' : [-65.7635, -65.7329, 44.6327, 44.6734]}
     
         

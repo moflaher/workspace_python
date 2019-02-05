@@ -768,6 +768,16 @@ def scalebar(axin,region,dist,**kwargs):
         
         xtmp,ytmp=dinv.transform(ftrans.transform((axbb[0]+axbb[2]-.085,axbb[1]+axbb[3]-.03)))
         axin.plot([xtmp,xtmp+lldist],[ytmp,ytmp],color=color)
+    
+    if loc==3:
+        lldist=pjt.ll_dist(region,dist)
+
+        axbb=axin.get_axes().get_position().bounds
+        t=axin.annotate(label,xy=(axbb[0]+axbb[2]-.075,axbb[1]+axbb[3]-.0925),xycoords='figure fraction',fontsize=fontsize,color=color)
+        t.set_zorder(100)
+        
+        xtmp,ytmp=dinv.transform(ftrans.transform((axbb[0]+axbb[2]-.075,axbb[1]+axbb[3]-.10)))
+        axin.plot([xtmp,xtmp+lldist],[ytmp,ytmp],color=color)
 
 
 

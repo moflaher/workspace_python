@@ -63,6 +63,7 @@ def interp_clean_common(time1,data1,time2,data2,filter_max=1000.0,filter_min=-10
     data22[data2<=filter_min]=np.nan
 
     # interp filtered data2 to dataset1 times
+    #print(time2.shape,data22.shape,time1.shape)
     data21=ipt.interp1d(time2,data22,time1)    
 
     #idx to remove all nans from either dataset
@@ -70,5 +71,19 @@ def interp_clean_common(time1,data1,time2,data2,filter_max=1000.0,filter_min=-10
     
     #return time and data
     return time1[~bidx],data11[~bidx],data21[~bidx]
+   
     
+def interp_common(time1,data1,time2,data2,dt=60):
     
+    # tmin is the biggest small number
+    # tmax is the smallest big number
+    tmin=np.max([time1[0],time2[0]])
+    tmax=np.min([time1[-1],time2[-1]])
+    
+    time=np.arange(tmin,tmax+dt/(24*60*60.0),dt/(24*60*60.0))
+   
+    data1n=ipt.interp1d(time1,data1,time)
+    data2n=ipt.interp1d(time2,data2,time)    
+    
+    #return time and data
+    return time,data1n,data2n
