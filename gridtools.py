@@ -715,7 +715,7 @@ def doubleres_nei(neifile):
                 nnf['bcode']=np.append(nnf['bcode'],0)
             nnf['neighbours'][node,neifile['neighbours'][node,:]==(neighbour+1)]=nnn
             nnf['neighbours'][neighbour,neifile['neighbours'][neighbour,:]==(node+1)]=nnn
-            nnf['neighbours']=np.vstack([nnf['neighbours'],np.zeros((1,neifile['maxnei']))])
+            nnf['neighbours']=np.vstack([nnf['neighbours'],np.zeros((1,neifile['maxnei']),dtype=int)])
             nnf['neighbours'][nnn-1,0]=node+1
             nnf['neighbours'][nnn-1,1]=neighbour+1
             nnf['nodenumber']=np.append(nnf['nodenumber'],nnn)
