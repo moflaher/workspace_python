@@ -927,3 +927,69 @@ def load_ctd_zeta_mod(filename):
     return out
     
     
+    
+def ncfile_clone_regioner(data,oldfile,newfile):
+    
+    
+    
+    
+    ncid = n4.Dataset(oldfile, 'r',format='NETCDF3_CLASSIC')
+    g = n4.Dataset(newfile, 'w',format='NETCDF3_CLASSIC')
+    
+    
+    for attname in ncid.ncattrs():
+        setattr(g,attname,getattr(ncid,attname))
+    
+    for dimname,dim in ncid.dimensions.iteritems():
+        if dimname=='node':
+            g.createDimension(dimname,len(data['nidx_sub']))
+        elif dimname=='nele':
+            g.createDimension(dimname,len(data['eidx_sub']))
+        elif dimname=='time':
+            g.createDimension(dimname,None)
+        else:
+            g.createDimension(dimname,len(dim))
+    
+    
+    for varname,ncvar in ncid.variables.iteritems():
+        var = g.createVariable(varname,ncvar.dtype,ncvar.dimensions)
+        #Proceed to copy the variable attributes
+        for attname in ncvar.ncattrs():  
+           setattr(var,attname,getattr(ncvar,attname))
+           
+        #Finally copy the variable data to the new created variable
+        for varname in data:
+            s=np.array(np.shape(data[varname]))
+            nele=False
+            node=False
+            if data['nele'] in s:
+                idx=np.argwhere(s==data['nele'])
+                nele=True
+                sub=data['eidx_sub']
+            if data['node'] in s:
+                idx=np.argwhere(s==data['node'])
+                node=True
+                sub=data['nidx_sub']
+            print(varname,s,idx[0][0])
+            
+        if s==0 and (nele or node):
+            g.variables[varname][:]=data[varname][sub,] 
+        elif s==1 and (nele or node):
+            g.variables[varname][:]=data[varname][:,sub]
+        elif s==2 and (nele or node):
+            g.variables[varname][:]=data[varname][:,:,sub] 
+        else:
+            var[:] = data['varname'][:]
+    
+    ncid.close()
+    g.close()
+    
+        
+        
+    
+    
+    
+    
+    
+    
+    

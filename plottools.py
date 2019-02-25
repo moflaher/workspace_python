@@ -1132,6 +1132,25 @@ def llz_click_remove(data,crange=None,s=10,region=None,pretty=False):
     return np.vstack([px[~idx], py[~idx], ph[~idx]]).T
 
 
+def get_points_in_path(data,f):
+ 
+    vec=f.ginput(n=-1,timeout=-1)
+
+    #turn selected points into path
+    p=path.Path(vec)   
+    
+
+    px,py=data['lon'],data['lat']
+    idx=p.contains_points(np.array([px,py]).T)  
+
+    px,py=data['lonc'],data['latc']
+    idxc=p.contains_points(np.array([px,py]).T)  
+    
+    #find points in path and remove and return as array
+      
+    return np.arange(len(idx))[idx],np.arange(len(idxc))[idxc]
+
+
     
     
     

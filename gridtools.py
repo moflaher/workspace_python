@@ -606,8 +606,15 @@ def equal_vectors(data,region,spacing):
     return np.unique(host[common].flatten())
 
 
-def regioner(data,region,subset=False):    
-    nidx=get_nodes(data,region)
+def regioner(data,region=None,nidx=None,subset=False):   
+    
+    if region is None and nidx is None:
+        print('Must specify a region or nidx')
+        return
+        
+    if region is not None:     
+        nidx=get_nodes(data,region)
+    
 
     idx0=np.in1d(data['nv'][:,0],nidx)
     idx1=np.in1d(data['nv'][:,1],nidx)
@@ -630,7 +637,7 @@ def regioner(data,region,subset=False):
     
     data['trigrid_sub'] = mplt.Triangulation(data['lon'][nidx_uni], data['lat'][nidx_uni],nv_new)
     data['nidx_sub']=nidx_uni
-    data['eidx_sub']=eidx
+    data['eidx_sub']=np.arange(len(eidx))[eidx]
     data['nv_sub']=nv_new
 
     if subset==True:  
