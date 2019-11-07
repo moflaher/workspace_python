@@ -9,6 +9,7 @@ import os as os
 import gridtools as gt
 import datatools as dt
 import plottools as pt
+import projtools as pjt
 np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
 import pandas as pd
 import netCDF4 as n4
@@ -538,3 +539,39 @@ def save_ctdnc(ctd, filename):
     ncid.__setattr__('history','Created ' +ttime.ctime(ttime.time()) )
 
     ncid.close()    
+    
+    
+def gencirc(rad):
+    '''Generate a circle from a radius.
+    '''    
+    s=.0025    
+    x=rad*np.cos(2*np.pi*np.arange(0,1+s,s))
+    y=rad*np.sin(2*np.pi*np.arange(0,1+s,s))
+
+    return x,y
+
+
+def gencages(ll,rad):
+    '''Generate circles for cages.
+    '''
+    
+    ll=np.atleast_2d(ll)
+    
+    x,y,proj=pjt.lcc(ll[:,0],ll[:,1])
+    
+    xt,yt=gencirc(rad)
+    xl=np.array([]); yl=np.array([])
+    for i in range(len(x)):
+        xl=np.append(xl,x[i]+xt)
+        yl=np.append(yl,y[i]+yt)
+        xl=np.append(xl,np.nan)
+        yl=np.append(yl,np.nan)
+        
+
+    lon,lat=proj(xl,yl,inverse=True)
+    
+    lon[lon>1e20]=np.nan
+    lat[lat>1e20]=np.nan
+
+    return lon,lat
+
