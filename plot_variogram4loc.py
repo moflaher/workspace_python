@@ -14,6 +14,8 @@ name='test_river_utc'
 grid='sjh_lr_v1_sub'
 loc=np.array([-66.723517, 44.718500])
 
+loc=np.array([-66.04, 45.235])
+
 ### load the .nc file #####
 data = loadnc('/media/moflaher/runs/sjh_lr_v1_sub/test_river_utc/output/',singlename=grid + '_0001.nc')
 print('done load')
@@ -43,13 +45,14 @@ ratio=bpspeed/bpspeed[eidx]
 
 f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8])    
 plotcoast(ax,filename='mid_nwatl6c_sjh_lr.nc', filepath=coastpath, color='k', fill=True,zorder=50)   
-triax=ax.tripcolor(data['trigrid'],ratio,vmin=0,vmax=3)    
+triax=ax.tripcolor(data['trigrid'],ratio,vmin=-1,vmax=3,cmap=mpl.cm.seismic)    
 cb=plt.colorbar(triax)
-ax.plot(loc[0],loc[1],'r*')
-
+ax.plot(loc[0],loc[1],'r*',zorder=70)
+ax.plot(data['lon'][data['nv'][eidx,[0,1,2,0]]],data['lat'][data['nv'][eidx,[0,1,2,0]]],'k',lw=2)
 ax.set_xlabel(r'Longitude ($^{\circ}$)')
 ax.set_ylabel(r'Latitude ($^{\circ}$)')
 ax.axis([lon[0],lon[1],lat[0],lat[1]])
+
 #ax.annotate('{} {}'.format(data['Time'][i][:10],data['Time'][i][11:19]),xy=region['textloc'],xycoords='axes fraction')
 for label in ax.get_xticklabels()[::2]:
     label.set_visible(False)

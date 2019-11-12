@@ -21,7 +21,7 @@ print('done load')
 savepath='{}/png/{}/variogram/{}/'.format(figpath,grid,name)
 if not os.path.exists(savepath): os.makedirs(savepath)
 
-region=regions('mp')
+region=regions('rattling_beach')
 
 speed=np.sqrt(data['ua']**2+data['va']**2)
 mspeed=np.max(speed,axis=0)
@@ -65,24 +65,43 @@ def plot_fun(Zm,xg,yg,cr):
     #ax.clabel(CS,labels=v, fontsize=8, inline=1,zorder=31,fmt='%d')
     f.show()    
 
-xg=np.arange(0,15000,50)
-yg=np.arange(0,6,.1)
+xg=np.arange(0,10000,100)
+
+yg=np.arange(0,5,.1)
 cmin=0; cmax=110
 cr=np.arange(cmin,cmax,20)
 
 grid, _, _ = np.histogram2d(np.ravel(dist), np.ravel(ratio), bins=[xg,yg])
     
-gt=grid[:-1,:]+grid[1:,:]
-ht=gt[:,:-1]+gt[:,1:]
-ft=np.zeros((ht.shape[0]+2,ht.shape[1]+2))
-ft[1:-1,1:-1]=ht/4.0
-Zm = np.ma.masked_where(ft==0,ft)
+# gt=grid[:-1,:]+grid[1:,:]
+# ht=gt[:,:-1]+gt[:,1:]
+# ft=np.zeros((ht.shape[0]+2,ht.shape[1]+2))
+# ft[1:-1,1:-1]=ht/4.0
+# Zm = np.ma.masked_where(ft==0,ft)
     
-plot_fun(Zm,xg,yg,cr)
+#plot_fun(Zm,xg,yg,cr)
+
+ccnts=grid.sum(axis=1)
+
+xl=len(xg)-1
+yl=len(yg)-1
+
+a=grid/np.repeat(ccnts,yl).reshape(xl,yl)
 
 
-
-
+f=plt.figure(); ax=f.add_axes([.125,.1,.775,.8]);
+ax.set_facecolor('.9')
+cax=ax.contourf(xg[:-1],yg[:-1],a.T,extend='max',cmap=mpl.cm.Blues)
+plt.colorbar(cax)
+# CS=ax.contour(xg,yg,100*np.divide(Zm.T,Zm.max()),cr,linestyles='solid',colors='k',zorder=30)
+# ax.clabel(CS,labels=cr, fontsize=8, inline=1,zorder=31,fmt='%d')
+#ax.axhline(1,color='k')
+# ax.axhline(1*1.5,color='r',linestyle='--')
+# ax.axhline(1/1.5,color='r',linestyle='--')
+# ax.axhline(1/2.0,color='m',linestyle='--')
+# ax.axhline(1*2.0,color='m',linestyle='--')
+#ax.clabel(CS,labels=v, fontsize=8, inline=1,zorder=31,fmt='%d')
+f.show()    
 
 
 
