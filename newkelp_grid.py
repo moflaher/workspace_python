@@ -31,7 +31,7 @@ from gridtools import *
 from misctools import *
 import scipy as sp
 import matplotlib as mpl
-np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
 import sys
 
 import h5py as h5

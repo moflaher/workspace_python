@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib as mpl
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 import pandas
 
 pandas.options.display.float_format = '{:,.1f}'.format

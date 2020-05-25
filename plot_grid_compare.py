@@ -14,7 +14,7 @@ from datatools import *
 from misctools import *
 from plottools import *
 from projtools import *
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 
 

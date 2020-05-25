@@ -6,7 +6,7 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 from mytools import *
 import os, sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 
 # Define names and types of data

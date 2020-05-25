@@ -29,7 +29,7 @@ from math import pi
 from datatools import *
 import scipy as sp
 import matplotlib as mpl
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 import sys
 
 

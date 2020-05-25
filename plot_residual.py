@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
 from ttide.t_tide import t_tide

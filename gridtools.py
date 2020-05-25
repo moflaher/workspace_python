@@ -1,25 +1,20 @@
 from __future__ import division,print_function
 import numpy as np
-import matplotlib as mpl
 import scipy as sp
+import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
-import os as os
-import time
-from scipy.io import netcdf
-
+import os, sys, time
 import datatools as dt
 import misctools as mt
 import plottools as pt
 import interptools as ipt
 import projtools as pjt
-
-np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
+from scipy.io import netcdf
 import bisect
 import collections
 import copy
-
 import pyproj as pyp
 
 

@@ -15,7 +15,7 @@ from misctools import *
 from plottools import *
 from projtools import *
 from regions import makeregions
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 sys.path.append('/home/moflaher/Desktop/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide

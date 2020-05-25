@@ -1,13 +1,11 @@
 from __future__ import division,print_function
 import numpy as np
-import matplotlib as mpl
 import scipy as sp
-import scipy.io as sio
+import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
-import os as os
-
+import os, sys
+import scipy.io as sio
 import gridtools as gt
 import datatools as dt
 import plottools as pt
@@ -15,7 +13,7 @@ import projtools as pjt
 import misctools as mt
 from matplotlib.collections import LineCollection as LC
 import seawater as sw
-np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
 import bisect
 import scipy.interpolate as spitp
 import matplotlib.path as path

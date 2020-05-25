@@ -1,17 +1,16 @@
 from __future__ import division,print_function
 import numpy as np
-import matplotlib as mpl
 import scipy as sp
+import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
-import os as os
+import os, sys
 import gridtools as gt
 import datatools as dt
 import plottools as pt
 import misctools as mt
 import interptools as ipt
-np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
 import pandas as pd
 from collections import OrderedDict
 import copy

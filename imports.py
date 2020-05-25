@@ -28,7 +28,7 @@ from plottools import *
 from projtools import *
 
 from regions import makeregions
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 
 

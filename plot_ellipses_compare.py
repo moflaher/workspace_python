@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 from matplotlib.patches import Ellipse
 sys.path.append('/home/moe46/Desktop/school/workspace_python/ttide_py/ttide/')
 from t_tide import t_tide

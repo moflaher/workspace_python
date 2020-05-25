@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 import pyproj as pyp
 from scipy.optimize import curve_fit
 import matplotlib.tri as tri

@@ -5,7 +5,7 @@ from mytools import *
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os, sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 import pandas as pd
 import matplotlib.dates as dates
 import argparse

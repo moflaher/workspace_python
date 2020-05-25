@@ -11,7 +11,7 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 import os as os
 import sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 #import multiprocessing
 #import pymp
 import seawater as sw

@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 #from mpl_toolkits.basemap import Basemap
 import os as os
 import sys
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 name='drifter_2015-10-07'
 grid='sjh_lr_v1'

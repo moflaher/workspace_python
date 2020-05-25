@@ -5,7 +5,7 @@ import scipy as sp
 import matplotlib as mpl
 import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
-np.set_printoptions(precision=16,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
 
 from scipy.io import netcdf
 

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import os as os
 import sys
 from numba import jit
-np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
+np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 
 # Define names and types of data
