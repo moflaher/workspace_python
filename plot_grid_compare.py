@@ -6,41 +6,35 @@ import matplotlib.tri as mplt
 import matplotlib.pyplot as plt
 import scipy.io as sio
 #from mpl_toolkits.basemap import Basemap
-import os as os
-import sys
-from StringIO import StringIO
-from gridtools import *
-from datatools import *
-from misctools import *
-from plottools import *
-from projtools import *
+import os, sys
+from mytools import *
 np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
 
 
 
 # Define names and types of data
-name1='sjh_hr_v3_misc'
-grid1='sjh_hr_v3'
-name2='sjh_lr_v1_wet'
-grid2='sjh_lr_v1'
+name1='passbay_v4'
+grid1='passbay_v4'
+name2='uscoast_11'
+grid2='passbay_v5'
 regionlist=regions()
 #regionlist=['fr_whole','fr_mouth','pitt_lake','fr_area1','fr_area2','vh_whole','firstnarrows','secondnarrows','vhfr_whole']
 #regionlist=['kelp_channel']
 regionlist=['gp','pp','gp_tight','dg','dg_upper','sfmwhole','bof','mp','pp','blackrock','blackrock_ebb','blackrock_fld','capedor','northgrid','northgrid_cape']
-regionlist=['stjohn_nemo','bof_nemo','sfmwhole']#,'sjr_kl']#,'stjohn_harbour']
-
-
+regionlist=['stjohn_nemo','bof_nemo','sfmwhole','musq_large','musq_cage','musq_cage_tight','musq_cage_tight2','musq','musq_4cage','passbay_all','lubec_passage','cobsbay','standrews','passbay_tight','grandmanan']
+#regionlist=['standrews']
+#regionlist=['passbay_tight','grandmanan']
 
 
 ### load the mesh files #####
-data1=load_nei2fvcom('/media/moflaher/data/grids/stj_harbour/add_dn/9_makerun_fixcoastline/sjh_hr_v3_fixcoastdepth_dclean_2.nei')
+data1=load_nei2fvcom('/home/moflaher/Desktop/work/compare_grid/passbay_v4.nei')
 data1=get_sidelength(data1)
 
-data2=load_nei2fvcom('/media/moflaher/data/grids/stj_harbour/sjh_lr_v1/dry_mesh/dry.nei')
+data2=load_nei2fvcom('/home/moflaher/Desktop/work/compare_grid/uscoast_11.nei')
 data2=get_sidelength(data2)
 
 
-savepath='figures/png/grid_compare/' +grid1 + '_' +grid2 + '/'
+savepath='figures/png/grid_compare_nocoast/' +grid1 + '_' +grid2 + '/'
 if not os.path.exists(savepath): os.makedirs(savepath)
 
 
@@ -60,20 +54,40 @@ for regionname in regionlist:
 
 
     # Plot mesh    
-    f,ax=plt.subplots(1,2)  
-    ax[0].triplot(data1['trigrid'],lw=.1,color='k')
-    ax[1].triplot(data2['trigrid'],lw=.1,color='k')
+    f=plt.figure(figsize=(20,10))  
+    ax0=f.add_axes([.125,.1,.375,.8])
+    ax1=f.add_axes([.125+.375+.1,.1,.375,.8])
+    ax0.triplot(data1['trigrid'],lw=.1,color='k')
+    ax1.triplot(data2['trigrid'],lw=.1,color='k')
+    ax0.axis(region['region'])
+    ax1.axis(region['region'])
     #ppll_sub(ax,setregion=region,llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
-    ABC=['A','B']
-    figW, figH = f.get_size_inches()
-    plt.draw()
-    for i,axi in enumerate(ax):
-        plotcoast(ax[i],filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5)
-        axbb=ax[i].get_axes().get_position().bounds
-        ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+    #ABC=['A','B']
+    #figW, figH = f.get_size_inches()
+    #plt.draw()
+    #for i,axi in enumerate(ax):
+    #plotcoast(ax0,filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5)
+    #plotcoast(ax1,filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5)
+        #axbb=ax[i].get_axes().get_position().bounds
+        #ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
     f.savefig(savepath + name1+'_'+name2 +'_'+regionname+'_mesh.png',dpi=300)
     plt.close(f)
 
+
+    # # Plot mesh    
+    # f,ax=plt.subplots(1,2,figsize=(20,10))  
+    # ax[0].triplot(data1['trigrid'],lw=.1,color='k')
+    # ax[1].triplot(data2['trigrid'],lw=.1,color='k')
+    # ppll_sub(ax,setregion=region,llfontsize=10,fontsize=8,cblabelsize=6,cbticksize=6,cbtickrotation=-45)
+    # ABC=['A','B']
+    # figW, figH = f.get_size_inches()
+    # plt.draw()
+    # for i,axi in enumerate(ax):
+        # plotcoast(ax[i],filename='mid_nwatl6c_sjh_lr.nc',color='k',fill=True,lw=.5)
+        # #axbb=ax[i].get_axes().get_position().bounds
+        # #ax[i].annotate(ABC[i],xy=(axbb[0]+.0075,axbb[1]+axbb[3]-.03),xycoords='figure fraction')
+    # f.savefig(savepath + name1+'_'+name2 +'_'+regionname+'_mesh.png',dpi=300)
+    # plt.close(f)
 
 
 

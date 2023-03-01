@@ -39,6 +39,11 @@ def makeregions():
     allregions['musq'] = {'regionname' : 'musq', 'group' : 'aquaculture', 'region' : [-67.5, -66.0, 44.5, 45.3]}   
     allregions['musq_4cage'] = {'regionname' : 'musq_4cage', 'group' : 'aquaculture', 'region' : [-66.85, -66.82, 45.0275, 45.0475]}
     allregions['passbay_all'] = {'regionname' : 'passbay_all', 'group' : 'aquaculture', 'region' : [-67.46, -66.18, 43.93, 45.365]}
+    allregions['passbay_tight'] = {'regionname' : 'passbay_tight', 'group' : 'aquaculture', 'region' : [-67.3003, -66.7635, 44.8013, 45.2506]}
+    allregions['lubec_passage'] = {'regionname' : 'lubec_passage', 'group' : 'aquaculture', 'region' : [-67.02, -66.93, 44.837, 44.9]}
+    allregions['cobsbay'] = {'regionname' : 'cobsbay', 'group' : 'aquaculture', 'region' : [-67.238, -66.896, 44.757, 45.015]}
+    allregions['standrews'] = {'regionname' : 'standrews', 'group' : 'aquaculture', 'region' : [-67.153, -66.9716, 44.977, 45.1345]}
+    allregions['grandmanan'] = {'regionname' : 'grandmanan', 'group' : 'aquaculture', 'region' : [-66.9247, -66.6185, 44.5523, 44.8106]}
         
     
     #STJOHN

@@ -83,6 +83,9 @@ def loadnc(datadir, singlename=[], fvcom=True, suppress=False):
         data['dims'] = {}
         for key in ncid.dimensions.keys():
             data['dims'][key] = ncid.dimensions[key]
+            
+        if hasattr(ncid,'CoordinateProjection'):
+            data['projstr']=ncid.CoordinateProjection.decode()
     except TypeError:
         if not suppress:
             print('File is netcdf4 type')
@@ -867,18 +870,24 @@ def pydate2mdate(date):
 def load_ctd_obs(filename):
     tmp=np.genfromtxt(filename,dtype=str)
     
-    out={}
-    out[tmp[0,0]]=tmp[1,0].astype(int)
-    out[tmp[0,1]]=tmp[1,1]
-    out['time']=dates.datestr2num(tmp[1,1])
-    out[tmp[0,2]]=tmp[1,2].astype(float)
-    out[tmp[0,3]]=tmp[1,3].astype(float)
-    out[tmp[0,4]]=tmp[1:,4].astype(float)
-    out[tmp[0,5]]=tmp[1:,5].astype(float)
-    out[tmp[0,6]]=tmp[1:,6].astype(float)
-    out[tmp[0,7]]=tmp[1:,7].astype(float)
+    if np.atleast_2d(tmp).shape[0]>1:
     
-    return out
+        out={}
+        out[tmp[0,0]]=tmp[1,0].astype(int)
+        out[tmp[0,1]]=tmp[1,1]
+        out['time']=dates.datestr2num(tmp[1,1])
+        out[tmp[0,2]]=tmp[1,2].astype(float)
+        out[tmp[0,3]]=tmp[1,3].astype(float)
+        out[tmp[0,4]]=tmp[1:,4].astype(float)
+        out[tmp[0,5]]=tmp[1:,5].astype(float)
+        out[tmp[0,6]]=tmp[1:,6].astype(float)
+        out[tmp[0,7]]=tmp[1:,7].astype(float)
+    
+        return out
+    else:
+        out=True
+        print('No data in {}'.format(filename))
+        return out
     
     
 def load_ctd_mod(filename):

@@ -70,7 +70,7 @@ def prettyplot_ll(axin,**kwargs):
     axlabels=True
 
     if kwargs is not None:
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             if ((key=='grid') and (value==True)):
                 axin.grid()
             if (key=='title'):
@@ -728,7 +728,7 @@ def scalebar(axin,region,dist,**kwargs):
     drawn=False
 
     if kwargs is not None:
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             if (key=='fontsize'):
                 fontsize=value 
             if (key=='loc'):
@@ -752,7 +752,7 @@ def scalebar(axin,region,dist,**kwargs):
     if loc==0:
         lldist=pjt.ll_dist(region,dist)
 
-        axbb=axin.get_axes().get_position().bounds
+        axbb=axin.axes.get_position().bounds
         t=axin.annotate(label,xy=(axbb[0]+.02,axbb[1]+.0275),xycoords='figure fraction',fontsize=fontsize,color=color)
         t.set_zorder(100)
         
@@ -762,7 +762,7 @@ def scalebar(axin,region,dist,**kwargs):
     if loc==2:
         lldist=pjt.ll_dist(region,dist)
 
-        axbb=axin.get_axes().get_position().bounds
+        axbb=axin.axes.get_position().bounds
         t=axin.annotate(label,xy=(axbb[0]+axbb[2]-.085,axbb[1]+axbb[3]-.0225),xycoords='figure fraction',fontsize=fontsize,color=color)
         t.set_zorder(100)
         
@@ -772,7 +772,7 @@ def scalebar(axin,region,dist,**kwargs):
     if loc==3:
         lldist=pjt.ll_dist(region,dist)
 
-        axbb=axin.get_axes().get_position().bounds
+        axbb=axin.axes.get_position().bounds
         t=axin.annotate(label,xy=(axbb[0]+axbb[2]-.075,axbb[1]+axbb[3]-.0925),xycoords='figure fraction',fontsize=fontsize,color=color)
         t.set_zorder(100)
         
