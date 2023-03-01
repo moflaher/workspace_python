@@ -16,6 +16,8 @@ import bisect
 import collections
 import copy
 import pyproj as pyp
+from osgeo import ogr
+
 
 
 
@@ -381,7 +383,7 @@ def save_nodfile(segfile,filename=None,bnum=[]):
    
     return 
         
-def save_array(data,filename=None):
+def save_array(data,filename=None,header=None):
     """
     Saves a array as a file. 
     """
@@ -404,6 +406,9 @@ def save_array(data,filename=None):
     for i in range(data.shape[1]):
         sout += '{} '
     sout = sout[:-1] + '\n'
+
+    if header!=None:
+        fp.write('{}\n'.format(header))
 
     for i in range(len(data)):
         fp.write(sout.format(*data[i,:]))
@@ -817,6 +822,36 @@ def get_sidelength(data):
             sidemin[i]=np.min([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemin[i]])
             sidemax[i]=np.max([np.sqrt((data['nodexy'][data['nv'][i,j-1],0]-data['nodexy'][data['nv'][i,j],0])**2+(data['nodexy'][data['nv'][i,j-1],1]-data['nodexy'][data['nv'][i,j],1])**2),sidemax[i]])
         sl[i]=slmin/3
+        
+    data['sl']=sl
+    data['slmin']=sidemin
+    data['slmax']=sidemax
+    
+    return data
+    
+def get_sidelength_node(data):
+    """
+        Takes an FVCOM dictionary and returns it with the min/max/mean sidelength of each connected node.
+    """
+    sl=np.zeros([len(data['lon']),])
+    sidemin=np.zeros([len(data['lon']),])+100000000
+    sidemax=np.zeros([len(data['lon']),])
+    
+    for i in range(0,len(data['lon'])):
+        slmin=0
+        cnt=0
+        for j in range(len(data['neigh'][i,])):
+            tnei=data['neigh'][i,j]
+            if tnei==-1:
+                pass
+            else:
+                dist=np.sqrt((data['nodexy'][i,0]-data['nodexy'][tnei,0])**2+(data['nodexy'][i,1]-data['nodexy'][tnei,1])**2)
+                
+                cnt=cnt+1
+                slmin=dist+slmin
+                sidemin[i]=np.min([dist,sidemin[i]])
+                sidemax[i]=np.max([dist,sidemax[i]])
+        sl[i]=slmin/cnt
         
     data['sl']=sl
     data['slmin']=sidemin

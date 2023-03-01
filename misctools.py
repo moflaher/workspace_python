@@ -13,7 +13,12 @@ np.set_printoptions(precision=16,suppress=True,threshold=sys.maxsize)
 import pandas as pd
 import netCDF4 as n4
 import time as ttime
-import ttide
+try:
+    import ttide
+    ttideTF=True
+except ImportError:
+    print('Could not import ttide')
+    ttideTF=False
 import matplotlib.dates as dates
 
 def runstats(datain=None):
@@ -46,7 +51,7 @@ def dic_shape(indic):
 
 
 def dic_shape2(d,parent=''):
-    for k, v in d.iteritems():
+    for k, v in d.items():
         if isinstance(v, dict):
             if parent!='':
                 k= '{} - {}'.format(parent,k)
@@ -60,7 +65,7 @@ def dic_shape2(d,parent=''):
 
 
 def dic_shape3(d,level=0):
-    for k, v in d.iteritems():
+    for k, v in d.items():
         if isinstance(v, dict):
             print("    "*level + k+":")
             dic_shape3(v,level+1)

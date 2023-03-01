@@ -272,7 +272,7 @@ def plotcoast(axin,**kwargs):
     zorder=1
 
     if kwargs is not None:
-        for key, value in kwargs.iteritems():            
+        for key, value in kwargs.items():            
             if (key=='color'):
                 color=value
             if (key=='lw'):
