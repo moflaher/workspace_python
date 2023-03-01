@@ -5,7 +5,7 @@ from mytools import *
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os, sys
-np.set_printoptions(precision=8,suppress=True,threshold=sys.maxsize)
+np.set_printoptions(precision=8,suppress=True,threshold=np.nan)
 import pandas as pd
 import matplotlib.dates as dates
 import argparse
@@ -64,8 +64,11 @@ newfile=args.oldfile.replace(args.oldfile[-12:-3],'')
 #newfile='test/Creg12-CMC-ANAL_1d_grid_T_20151028_test.nc'
 
 
-ncid = n4.Dataset(oldfile, 'r',format='NETCDF4')
-g = n4.Dataset(newfile, 'w',format='NETCDF4')
+#print(oldpath+oldfile)
+#print(newpath+newfile)
+
+ncid = n4.Dataset(oldpath+oldfile, 'r',format='NETCDF4')
+g = n4.Dataset(newpath+newfile, 'w',format='NETCDF4')
 
 
 for attname in ncid.ncattrs():
@@ -78,7 +81,7 @@ for dimname,dim in ncid.dimensions.iteritems():
         g.createDimension(dimname,ll[3]-ll[2])
     elif dimname=='time_counter':
         g.createDimension('time',len(dim))
-        print(len(dim))
+#        print(len(dim))
     elif dimname=='deptht':
         g.createDimension('depth',75)
     elif dimname=='axis_nbounds':
@@ -88,13 +91,13 @@ for dimname,dim in ncid.dimensions.iteritems():
 
 
 for varname,ncvar in ncid.variables.iteritems():
-    print('='*80)
-    print(varname)
+#    print('='*80)
+#    print(varname)
     if varname=='tdhm' or varname=='ssh_ib':
         continue
     dims=tuple([t.replace('deptht','depth').replace('time_counter','time') for t in ncvar.dimensions])
     varname=varname.replace('deptht','depth').replace('time_counter','time').replace('thetao','votemper').replace('so','vosaline').replace('zos','sossheig')
-    print(dims,varname)
+#    print(dims,varname)
     if varname=='votemper':
         var = g.createVariable(varname,ncvar.dtype,dims,fill_value=ncid.variables['thetao']._FillValue)
     elif varname=='vosaline':
